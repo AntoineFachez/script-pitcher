@@ -1,48 +1,77 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# -----------------------------------------------------------------------------
+# 1. GENERATED ARTIFACTS AND BUILD OUTPUTS
+# -----------------------------------------------------------------------------
 
-# dependencies
+# Next.js Build and Cache
+# Ignore the Next.js build output directory and the static export directory.
+/.next/
+/out/
+/build
+
+# Typescript Artifacts
+# Ignore the TypeScript build cache and auto-generated declaration files.
+*.tsbuildinfo
+next-env.d.ts
+
+# -----------------------------------------------------------------------------
+# 2. DEPENDENCIES AND PACKAGE MANAGER FILES
+# -----------------------------------------------------------------------------
+
+# Node Package Manager Folders (Yarn / npm)
 /node_modules
+
+# Yarn Plug-n-Play (PnP)
+# Ignore PnP files which manage dependency linking.
 /.pnp
 .pnp.*
+
+# Yarn 2+ Cache and Internal Files
+# Ignore all of .yarn/ except for necessary configuration files.
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
+# -----------------------------------------------------------------------------
+# 3. ENVIRONMENT SECRETS AND SENSITIVE FILES
+# -----------------------------------------------------------------------------
 
-# next.js
-/.next/
-/out/
+# Environment Variables
+# These files contain secrets (API keys, connection strings) and should never be committed.
+.env*
+*serviceaccount*.json
 
-# production
-/build
+# -----------------------------------------------------------------------------
+# 4. DEBUG, LOGS, AND LOCAL DATA
+# -----------------------------------------------------------------------------
 
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Logs and Debug Files
+# Ignore various package manager and application debug logs.
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 firebase-debug.log
 
-# env files (can opt-in for committing if needed)
-.env*
+# -----------------------------------------------------------------------------
+# 5. LOCAL TOOLS AND CONFIGURATION
+# -----------------------------------------------------------------------------
 
-# vercel
-.vercel
+# Local Development/Testing
+/coverage
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
+# Firebase / Google Cloud Local Files
+# Ignore local Firebase configuration and virtual environments.
 .firebase
 .venv
 
-# Ignore logs and service account files
-*serviceaccount*.json
+# IDE and OS Files
+# Ignore IDE settings (VS Code) and Operating System metadata (macOS).
+.vscode
+.DS_Store
+*.pem
+
+# Local Artifacts from Cleanup / Temporary Repos
+# This is the bare repo created during Git history cleanup and must be ignored.
+script-pitcher-final.git
