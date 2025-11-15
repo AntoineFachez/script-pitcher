@@ -1,0 +1,10 @@
+.next
+.firebase/*/functions/.next
+
+# Node Modules and Dependencies
+node_modules
+.firebase/*/functions/node_modules
+
+# OS-Specific Binaries (like the one causing the 100MB error)
+# The file is: .firebase/script-pitcher/functions/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node
+# We should ignore the entire node_modules structure in functions

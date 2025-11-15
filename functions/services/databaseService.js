@@ -1,0 +1,264 @@
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/FUNCTIONS/SERVICES/DATABASESERVICE.JS
+
+const { logger } = require("firebase-functions/v2");
+const {
+  onDocumentWritten,
+  onDocumentCreated,
+} = require("firebase-functions/v2/firestore");
+const functions = require("firebase-functions/v1");
+
+// --- CONFIGURATION ---
+// const DATABASE_ID = "script-pitcher-extracted-data-stylesheets";
+const SUMMARY_DOC_ID = "summary"; // Use a constant for the subcollection doc name
+
+/**
+ * Creates the onProjectWrite trigger.
+ * @param {FirebaseFirestore.Firestore} db The Firestore database instance.
+ * @param {FirebaseFirestore.FieldValue} FieldValue The Firestore FieldValue class.
+ * @returns {import("firebase-functions/v2/firestore").CloudFunction<import("firebase-functions/v2/firestore").Change<import("firebase-functions/v2/firestore").DocumentSnapshot>>}
+ */
+exports.createOnProjectWriteHandler = (db, FieldValue) => {
+  const triggerOptions = {
+    document: "projects/{projectId}",
+    // database: DATABASE_ID,
+  };
+
+  return onDocumentWritten(triggerOptions, async (event) => {
+    const projectId = event.params.projectId;
+    const dataBefore = event.data.before.data() || {};
+    const dataAfter = event.data.after.data() || {};
+    logger.info("onProjectWrite triggered for project:", projectId);
+
+    const membersBefore = new Set(Object.keys(dataBefore.members || {}));
+    const membersAfter = new Set(Object.keys(dataAfter.members || {}));
+
+    const projectName =
+      dataAfter.name || dataAfter.title || dataBefore.name || dataBefore.title;
+    if (!projectName) {
+      logger.warn(`Project ${projectId} has no name. Aborting.`);
+      return;
+    }
+
+    const batch = db.batch();
+
+    // --- Handle users added to the project ---
+    const addedMembers = new Set(
+      [...membersAfter].filter((x) => !membersBefore.has(x))
+    );
+    for (const userId of addedMembers) {
+      const userRef = db.collection("users").doc(userId);
+
+      // Check if user exists (this is an async operation)
+      const userDoc = await userRef.get();
+
+      if (!userDoc.exists) {
+        logger.info(`Adding user ${userId} to batch for creation.`);
+        batch.set(userRef, {
+          createdAt: FieldValue.serverTimestamp(),
+          // TODO: Add Auth logic here to get user email/name
+        });
+      }
+
+      // Add summary doc creation to batch
+      const summaryRef = db
+        .collection("users")
+        .doc(userId)
+        .collection("private")
+        .doc(SUMMARY_DOC_ID);
+      const role = dataAfter.members?.[userId] || "viewer";
+      batch.set(
+        summaryRef,
+        { projects: { [projectId]: { projectName: projectName, role } } },
+        { merge: true }
+      );
+    }
+
+    // --- Handle users removed from the project ---
+    const removedMembers = new Set(
+      [...membersBefore].filter((x) => !membersAfter.has(x))
+    );
+    removedMembers.forEach((userId) => {
+      // ADJUSTED PATH: Point to the 'summary' document.
+      const summaryRef = db
+        .collection("users")
+        .doc(userId)
+        .collection("private")
+        .doc(SUMMARY_DOC_ID);
+      logger.info(`Removing project ${projectId} from user ${userId}.`);
+      batch.update(summaryRef, {
+        [`projects.${projectId}`]: FieldValue.delete(),
+      });
+    });
+
+    // --- Handle project name or role changes for existing members ---
+    const updatedMembers = new Set(
+      [...membersBefore].filter((x) => membersAfter.has(x))
+    );
+    updatedMembers.forEach((userId) => {
+      if (
+        dataBefore.name !== dataAfter.name ||
+        dataBefore.members?.[userId] !== dataAfter.members?.[userId]
+      ) {
+        // ADJUSTED PATH: Point to the 'summary' document.
+        const summaryRef = db
+          .collection("users")
+          .doc(userId)
+          .collection("private")
+          .doc(SUMMARY_DOC_ID);
+        const roleAfter = dataAfter.members?.[userId];
+        logger.info(
+          `Updating project ${projectId} details for user ${userId}.`
+        );
+        batch.set(
+          summaryRef,
+          {
+            projects: {
+              [projectId]: { projectName: projectName, role: roleAfter },
+            },
+          },
+          { merge: true }
+        );
+      }
+    });
+
+    await batch
+      .commit()
+      .catch((err) =>
+        logger.error("Error committing batch for project updates:", err)
+      );
+  });
+};
+
+/**
+ * Creates the onFileCreate trigger.
+ * @param {FirebaseFirestore.Firestore} db The Firestore database instance.
+ * @returns {import("firebase-functions/v2/firestore").CloudFunction<import("firebase-functions/v2/firestore").DocumentSnapshot>}
+ */
+exports.createOnFileCreateHandler = (db) => {
+  const triggerOptions = {
+    document: "projects/{projectId}/files/{fileId}",
+    // database: DATABASE_ID,
+  };
+  return onDocumentCreated(triggerOptions, async (event) => {
+    const { projectId, fileId } = event.params;
+    logger.info(
+      "onFileCreate triggered for project:",
+      projectId,
+      "and file:",
+      fileId
+    );
+
+    const fileData = event.data.data();
+
+    if (!fileData) {
+      logger.warn(`File ${fileId} has no data. Aborting.`);
+      return;
+    }
+
+    const projectRef = db.collection("projects").doc(projectId);
+    const projectDoc = await projectRef.get();
+
+    if (!projectDoc.exists) {
+      logger.warn(`Parent project ${projectId} not found. Aborting.`);
+      return;
+    }
+    const projectData = projectDoc.data();
+    const members = projectData.members || {};
+
+    if (Object.keys(members).length === 0) {
+      return;
+    }
+
+    const lastTouchedFile = {
+      projectId,
+      projectName: projectData.name || projectData.title || "Unknown Project",
+      fileId,
+      fileName: fileData.name || "untitled.pdf",
+      timestamp: fileData.createdAt || new Date().toISOString(),
+    };
+
+    const batch = db.batch();
+    for (const userId of Object.keys(members)) {
+      // ADJUSTED PATH: Point to the 'summary' document in the 'private' subcollection.
+      const summaryRef = db
+        .collection("users")
+        .doc(userId)
+        .collection("private")
+        .doc(SUMMARY_DOC_ID);
+      logger.info(`Updating lastTouchedFile for user ${userId}.`);
+      batch.set(summaryRef, { lastTouchedFile }, { merge: true });
+    }
+
+    await batch
+      .commit()
+      .catch((err) =>
+        logger.error("Error committing batch for file update:", err)
+      );
+  });
+};
+
+/**
+ * Creates the v1 style onUserCreate trigger (V1).
+ * @param {FirebaseFirestore.Firestore} db The Firestore database instance.
+ * @returns {functions.CloudFunction<functions.auth.UserRecord>}
+ */
+exports.createProcessUserInvitationHandlerV1 = (db) => {
+  // This is a V1 function, using the imported 'functions' object
+  return functions.auth.user().onCreate(async (user, context) => {
+    // <-- v1 signature
+    // 'user' directly contains UserRecord (no event.data)
+    const email = user.email;
+    const newUserId = user.uid;
+
+    if (!email) {
+      // Use v2 logger if available, otherwise console.log
+      logger.info(
+        `User ${newUserId} created without email (v1), skipping invitation check.`
+      );
+      return null;
+    }
+
+    logger.info(`Checking invitations for new user (v1): ${email}`);
+
+    // Firestore logic remains the same, using the passed 'db' instance
+    const invitationsRef = db.collectionGroup("invitations");
+    const querySnapshot = await invitationsRef
+      .where("email", "==", email.toLowerCase())
+      .get();
+
+    if (querySnapshot.empty) {
+      logger.info(`No invitations found for ${email} (v1).`);
+      return null;
+    }
+
+    const batch = db.batch();
+
+    for (const doc of querySnapshot.docs) {
+      const invitation = doc.data();
+      const projectRef = doc.ref.parent.parent;
+
+      if (!projectRef) continue;
+
+      logger.info(
+        `Found invitation for ${email} to project ${projectRef.id} (v1).`
+      );
+
+      batch.update(projectRef, {
+        [`members.${newUserId}`]: invitation.role,
+      });
+      batch.delete(doc.ref);
+    }
+
+    await batch
+      .commit()
+      .catch((err) =>
+        logger.error("Error committing batch for user invitations:", err)
+      );
+
+    logger.info(
+      `Successfully processed ${querySnapshot.size} invitation(s) for ${email} (v1).`
+    );
+
+    return null;
+  });
+};

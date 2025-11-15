@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "script-pitcher",
+    "staging": "script-pitcher"
+  },
+  "targets": {},
+  "etags": {}
+}

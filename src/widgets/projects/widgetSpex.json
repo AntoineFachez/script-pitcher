@@ -1,0 +1,12 @@
+{
+  "widgetSpex": { "widgetName": "scripts", "title": "Projects" },
+  "schemeDefinition": {
+    "id": "id",
+    "title": "title",
+    "subtitleArray": "genres",
+    "subtitleArrayItem": "genre",
+    "description": "",
+    "imageUrl": "imageUrl",
+    "avatarUrl": "avatarUrl"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "database": "(default)"
+  },
+  "storage": [
+    {
+      "bucket": "script-pitcher.firebasestorage.app",
+      "rules": "storage.rules"
+    },
+    {
+      "bucket": "script-pitcher-extracted-images",
+      "rules": "storage.rules"
+    }
+  ],
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "region": "europe-west4",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        ".runtimeconfig.json",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        ".runtimeconfig.json"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    },
+    {
+      "source": ".firebase/script-pitcher/functions",
+      "codebase": "firebase-frameworks-script-pitcher"
+    }
+  ],
+  "apphosting": [
+    {
+      "backendId": "script-pitcher-backend",
+      "region": "europe-west4",
+      "rootDir": "/",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "functions"
+      ],
+      "secretEnvironmentVariables": [
+        {
+          "key": "NEXTAUTH_SECRET",
+          "secret": "NEXTAUTH_SECRET"
+        },
+        {
+          "key": "NEXTAUTH_URL",
+          "secret": "NEXTAUTH_URL"
+        },
+        {
+          "key": "GOOGLE_CLIENT_ID",
+          "secret": "GOOGLE_CLIENT_ID"
+        },
+        {
+          "key": "GOOGLE_CLIENT_SECRET",
+          "secret": "GOOGLE_CLIENT_SECRET"
+        },
+        {
+          "key": "FIREBASE_SERVICE_ACCOUNT_KEY",
+          "secret": "FIREBASE_SERVICE_ACCOUNT_KEY"
+        }
+      ],
+      "env": [
+        {
+          "variable": "NEXTAUTH_URL",
+          "secret": "NEXTAUTH_URL"
+        },
+        {
+          "variable": "NEXTAUTH_SECRET",
+          "secret": "NEXTAUTH_SECRET"
+        },
+        {
+          "variable": "GOOGLE_CLIENT_ID",
+          "secret": "GOOGLE_CLIENT_ID"
+        },
+        {
+          "variable": "GOOGLE_CLIENT_SECRET",
+          "secret": "GOOGLE_CLIENT_SECRET"
+        },
+        {
+          "key": "FIREBASE_SERVICE_ACCOUNT_KEY",
+          "secret": "FIREBASE_SERVICE_ACCOUNT_KEY"
+        }
+      ],
+      "alwaysDeployFromSource": true
+    }
+  ],
+  "hosting": {
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "frameworksBackend": {
+      "region": "europe-west4"
+    }
+  }
+}

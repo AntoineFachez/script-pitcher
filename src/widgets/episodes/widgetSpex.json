@@ -1,0 +1,25 @@
+{
+  "widgetSpex": { "widgetName": "episodes", "title": "Episodes" },
+  "schemeDefinition": {
+    "id": "id",
+    "title": "title",
+    "subtitle": "archetype",
+    "subtitleArray": "",
+    "subtitleArrayItem": "",
+    "description": "description",
+    "imageUrl": "imageUrl",
+    "avatarUrl": "avatarUrl"
+  },
+
+  "columns": [
+    { "field": "id", "headerName": "ID", "width": 60 },
+    { "field": "title", "headerName": "Title", "width": 200 },
+    { "field": "archetype", "headerName": "Archetype", "width": 120 },
+    {
+      "field": "description",
+      "headerName": "Description",
+      "flex": 1,
+      "minWidth": 200
+    }
+  ]
+}

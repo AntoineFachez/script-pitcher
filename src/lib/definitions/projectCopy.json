@@ -1,0 +1,29 @@
+{
+  "project": "string",
+  "status": "string",
+  "published": "bool",
+  "id": "string",
+  "projectId": "string",
+  "format": "string",
+  "genres": [{ "genre": "string" }],
+  "title": "string",
+  "tagline": "string",
+  "logline": "string",
+  "imageUrl": "url",
+  "avatarUrl": "url",
+  "files": [
+    {
+      "createdAt": "dateTime",
+      "lastEditAt": "dateTime",
+      "publishedAt": "dateTime",
+      "published": "bool",
+      "title": "string",
+      "subtitle": "string",
+      "description": "string",
+      "version": "string",
+      "imageUrl": "string",
+      "filePurpose": "string",
+      "fileId": "string"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // (KEEP AS-IS) This is correct for self-read/write.
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // (KEEP AS-IS) This is correct.
+    match /fileId_to_projectId_lookup/{fileId} {
+      allow read: if request.auth != null;
+    }
+
+    // ⭐ CRITICAL MODIFICATION: Use request.resource.data for 'get/list' rules on projects
+    // This rule will now be checked for every document retrieved by your query.
+    match /projects/{projectId} {
+      
+      // Allow read/get/list if the user's UID is in the project's 'members' map.
+      // This is the most common way to secure a bulk read on projects where membership is stored inside the document.
+      allow read: if request.auth != null && 
+                    request.auth.uid in resource.data.members;
+
+      // Sub-collections must now also use 'resource.data' from the parent context,
+      // or re-fetch the project data via 'get()' if security is layered.
+      // Since 'files', 'characters', and 'episodes' rules reference the parent project, 
+      // the existing 'get(...)' is correct for those nested rules.
+
+      match /files/{fileId} {
+        allow get, list, read: if request.auth != null && 
+                                  request.auth.uid in get(/databases/$(database)/documents/projects/$(projectId)).data.members;
+      }
+
+      match /characters/{characterId} {
+        allow read: if request.auth.uid in get(/databases/$(database)/documents/projects/$(projectId)).data.members;
+        allow write: if false; 
+      }
+      
+      match /episodes/{episodeId} {
+        allow read: if request.auth.uid in get(/databases/$(database)/documents/projects/$(projectId)).data.members;
+        allow write: if false; 
+      }
+    }
+  }
+}

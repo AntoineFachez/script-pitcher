@@ -1,0 +1,178 @@
+[
+  {
+    "projectId": "SERIE_The-Showrunner",
+    "userId": "sebastian_user-1",
+    "admin": "sebastian_user-1",
+    "role": "author",
+    "roleActive": true,
+    "files": [
+      {
+        "fileId": "20250901_TheShowrunner_Elevator-Pitch-dt_d89db2ad-e28c-4557-8955-c520d07253e7"
+      },
+      {
+        "fileId": "20250901_The-Showrunner_Konzept-Paper_1adcf638-dedd-4f4b-afcb-6ddafdeee1b8"
+      }
+    ]
+  },
+
+  {
+    "projectId": "SERIE_NICHT-GANZ-SAUBER",
+    "userId": "sebastian_user-1",
+    "admin": "sebastian_user-1",
+    "role": "author",
+    "roleActive": true,
+    "files": [
+      {
+        "fileId": "nicht-ganz-sauber-af2e0d05-a970-4a2b-8291-80e5b32f9c7c"
+      }
+    ]
+  },
+  {
+    "projectId": "SERIE_NICHT-GANZ-SAUBER",
+    "userId": "daniel_user-1",
+    "admin": "sebastian_user-1",
+    "role": "author",
+    "roleActive": true,
+    "files": [
+      {
+        "fileId": "nicht-ganz-sauber-af2e0d05-a970-4a2b-8291-80e5b32f9c7c"
+      }
+    ]
+  },
+  {
+    "projectId": "SERIE_THE-STARDUST-HOTEL",
+    "userId": "sebastian_user-1",
+    "admin": "sebastian_user-1",
+    "role": "author",
+    "roleActive": true,
+    "files": [{}]
+  },
+  {
+    "projectId": "SERIE_THE-STARDUST-HOTEL",
+    "userId": "shahin_user-1",
+    "admin": "sebastian_user-1",
+    "role": "guest",
+    "roleActive": true,
+    "files": [{}]
+  },
+  {
+    "projectId": "SERIE_BIGGI-THE-PRIVATE-INVESTIGATOR",
+    "userId": "sebastian_user-1",
+    "admin": "sebastian_user-1",
+    "role": "author",
+    "roleActive": true,
+    "files": [{}]
+  },
+  {
+    "projectId": "SERIE_SERIE_THE-HOLY-SPIRIT",
+    "userId": "sebastian_user-1",
+    "admin": "sebastian_user-1",
+    "role": "author",
+    "roleActive": true,
+    "files": [
+      {
+        "fileId": "TheHolySpirit-88f78bc10d-8291-4482-af89-33f9b975fe"
+      }
+    ]
+  },
+  {
+    "projectId": "SERIE_CONNECT-THE-DOTS",
+    "userId": "emanuel_user-1",
+    "admin": "sebastian_user-1",
+    "role": "guest",
+    "roleActive": true,
+    "files": [{}]
+  },
+  {
+    "projectId": "SERIE_THE-STARDUST-HOTEL",
+    "userId": "emanuel_user-1",
+    "admin": "sebastian_user-1",
+    "role": "author",
+    "roleActive": true,
+    "files": [{}]
+  },
+  {
+    "projectId": "SERIE_THE-STARDUST-HOTEL",
+    "userId": "anthony_user-1",
+    "admin": "sebastian_user-1",
+    "role": "guest",
+    "roleActive": true,
+    "files": [{}]
+  },
+  {
+    "projectId": "SERIE_CONNECT-THE-DOTS",
+    "userId": "sebastian_user-1",
+    "admin": "sebastian_user-1",
+    "role": "author",
+    "roleActive": true,
+    "files": [
+      { "fileId": "connect-the-dots-33f9b975-ff7d-4482-af89-fe8bc10d88f7" }
+    ]
+  },
+  {
+    "projectId": "SERIE_CONNECT-THE-DOTS",
+    "userId": "netflix_producer_user-1",
+    "admin": "sebastian_user-1",
+    "role": "guest",
+    "roleActive": true,
+    "files": [
+      { "fileId": "connect-the-dots-33f9b975-ff7d-4482-af89-fe8bc10d88f7" }
+    ]
+  },
+  {
+    "projectId": "SERIE_The-Showrunner",
+    "userId": "netflix_producer_user-1",
+    "admin": "sebastian_user-1",
+    "role": "guest",
+    "roleActive": true,
+    "files": [
+      {
+        "fileId": "20250901_TheShowrunner_Elevator-Pitch-dt_d89db2ad-e28c-4557-8955-c520d07253e7"
+      }
+    ]
+  },
+  {
+    "projectId": "SERIE_The-Showrunner",
+    "userId": "shahin_user-1",
+    "admin": "sebastian_user-1",
+    "role": "guest",
+    "roleActive": true,
+    "files": [
+      {
+        "fileId": "20250901_TheShowrunner_Elevator-Pitch-dt_d89db2ad-e28c-4557-8955-c520d07253e7"
+      }
+    ]
+  },
+  {
+    "projectId": "SERIE_CONNECT-THE-DOTS",
+    "userId": "anthony_user-1",
+    "admin": "sebastian_user-1",
+    "role": "guest",
+    "roleActive": true,
+    "files": [
+      {
+        "fileId": "20250901_TheShowrunner_Elevator-Pitch-dt_d89db2ad-e28c-4557-8955-c520d07253e7"
+      }
+    ]
+  },
+  {
+    "projectId": "SERIE_THE-STARDUST-HOTEL",
+    "userId": "bene-3",
+    "admin": "sebastian_user-1",
+    "role": "producer",
+    "roleActive": true,
+    "files": [{}]
+  },
+  {
+    "projectId": "SERIE_CONNECT-THE-DOTS",
+    "userId": "amazon_producer_user-1",
+    "admin": "sebastian_user-1",
+    "role": "guest",
+    "roleActive": true,
+    "files": [
+      {
+        "fileId": "20250901_TheShowrunner_Elevator-Pitch-dt_d89db2ad-e28c-4557-8955-c520d07253e7"
+      }
+    ]
+  }
+]

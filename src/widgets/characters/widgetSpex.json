@@ -1,0 +1,13 @@
+{
+  "widgetSpex": { "widgetName": "characters", "title": "Characters" },
+  "schemeDefinition": {
+    "id": "id",
+    "title": "name",
+    "subtitle": "archetype",
+    "subtitleArray": "",
+    "subtitleArrayItem": "",
+    "description": "description",
+    "imageUrl": "imageUrl",
+    "avatarUrl": "avatarUrl"
+  }
+}

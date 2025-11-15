@@ -1,0 +1,74 @@
+[
+  {
+    "userId": "sebastian_user-1",
+    "userActive": true,
+    "personId": "sebastian_person-1",
+    "fullName": "Sebastian LastName",
+    "displayName": "Sebastian",
+    "company": "freelance",
+    "email": "sebastian@example.com"
+  },
+  {
+    "userId": "daniel_user-1",
+    "userActive": true,
+    "personId": "daniel_person-1",
+    "fullName": "Daniel LastName",
+    "displayName": "Daniel Theobald",
+    "company": "freelance",
+    "email": "daniel@example.com"
+  },
+  {
+    "userId": "emanuel_user-1",
+    "userActive": true,
+    "personId": "emanuel_person-1",
+    "fullName": "Emanuel LastName",
+    "displayName": "Emanuel Tessema",
+    "company": "freelance",
+    "email": "emanuel@example.com"
+  },
+  {
+    "userId": "bene-3",
+    "userActive": true,
+    "personId": "bene-letterbox-1",
+    "fullName": "Benedict",
+    "displayName": "Bene",
+    "company": "Letterbox",
+    "email": "bene@producer.example.com"
+  },
+  {
+    "userId": "anthony_user-1",
+    "userActive": false,
+    "personId": "anthony_person-1",
+    "fullName": "Anthony",
+    "displayName": "Anthony",
+    "company": "freelance",
+    "email": "anthony.zornig@gmx.de"
+  },
+  {
+    "userId": "shahin_user-1",
+    "userActive": true,
+    "personId": "shahin_person-1",
+    "fullName": "Shahin",
+    "displayName": "Shahin",
+    "company": "freelance",
+    "email": "shahin@example.com"
+  },
+  {
+    "userId": "netflix_producer_user-1",
+    "userActive": true,
+    "personId": "netflix_producer_person-1",
+    "fullName": "Netflix Producer 1",
+    "displayName": "Netflix Producer 1",
+    "company": "Netflix",
+    "email": "producer-1@production.netflix.com"
+  },
+  {
+    "userId": "amazon_producer_user-1",
+    "userActive": true,
+    "personId": "amazon_producer_person-1",
+    "fullName": "Amazon Producer 1",
+    "displayName": "Amazon Producer 1",
+    "company": "Amazon",
+    "email": "producer-1@production.amazon.com"
+  }
+]

@@ -1,0 +1,44 @@
+rules_version = '2';
+
+service firebase.storage {
+  // --- THIS IS THE FIX ---
+  // We explicitly target your extracted images bucket instead of the default.
+  match /b/script-pitcher-extracted-images/o {
+  
+    // 1. Your user-specific rule (if you use this bucket for that)
+    // Note: If /users/ is in your *default* bucket, remove this rule.
+    match /users/{userId}/{allPaths=**} {
+      allow read, write: if (request.auth != null && request.auth.uid == userId) ||
+        (request.auth.token.email == "842344725685-compute@developer.gserviceaccount.com");
+    }
+
+    // 2. The PDF upload rule (if you upload PDFs here)
+    // Note: If your PDFs upload to the *default* bucket, remove this rule.
+    match /{uid}/projects/{projectId}/files/{fileName} {
+      allow write: if request.auth != null 
+                    && request.auth.uid == uid
+                    && fileName.matches('.*\\.pdf$');
+    }
+    
+    // 3. The DYNAMIC rule for reading images. This will now work.
+    //    (The hardcoded diagnostic rule is removed)
+    match /{folderId}/{allImages=**} {
+      allow read, list: if 
+        request.auth != null &&
+        firestore.get(
+          /databases/(default)/documents/projects/$(
+            firestore.get(/databases/(default)/documents/fileId_to_projectId_lookup/$(folderId)).data.projectId
+          )
+        ).data.members[request.auth.uid] in ["owner", "editor"];
+    }
+  }
+  
+  // --- OPTIONAL ---
+  // If you also need rules for your DEFAULT bucket, you add a
+  // separate block for it here:
+  //
+  // match /b/script-pitcher.appspot.com/o {
+  //   // ... rules for your default bucket ...
+  // }
+  
+}

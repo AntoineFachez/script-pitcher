@@ -1,0 +1,47 @@
+{
+  "widgetSpex": { "widgetName": "users", "title": "Team" },
+  "schemeDefinition": {
+    "id": "uid",
+    "title": "displayName",
+    "subtitleArray": "roles",
+    "subtitleArrayItem": "role",
+    "description": "",
+    "imageUrl": "imageUrl",
+    "avatarUrl": "avatarUrl"
+  },
+  "columns": [
+    {
+      "field": "imageUrl",
+      "headerName": "Image",
+      "align": "right",
+      "width": 60
+    },
+    { "field": "displayName", "headerName": "user", "width": 130 },
+    {
+      "field": "company",
+      "headerName": "Company",
+      "align": "right",
+      "width": 100
+    },
+    {
+      "field": "userActive",
+      "headerName": "Active",
+      "align": "right",
+      "width": 60
+    },
+
+    { "field": "role", "headerName": "Role", "align": "center", "width": 80 },
+    {
+      "field": "lastLogin",
+      "headerName": "Last Login",
+      "align": "right",
+      "width": 60
+    },
+    {
+      "field": "topReadDocIds",
+      "headerName": "topReadDocIds",
+      "align": "right",
+      "width": 80
+    }
+  ]
+}

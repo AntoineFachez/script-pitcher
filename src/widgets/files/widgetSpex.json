@@ -1,0 +1,12 @@
+{
+  "widgetSpex": { "widgetName": "files", "title": "Files" },
+  "schemeDefinition": {
+    "id": "id",
+    "title": "title",
+    "subtitleArray": "",
+    "subtitleArrayItem": "",
+    "description": "",
+    "imageUrl": "imageUrl",
+    "avatarUrl": "avatarUrl"
+  }
+}
