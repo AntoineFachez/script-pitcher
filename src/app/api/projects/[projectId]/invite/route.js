@@ -6,19 +6,24 @@ import { FieldValue } from "firebase-admin/firestore";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
 
 /**
- * POST /api/characters
+ * POST /api/projects/[projectId]/invite
  * Creates a new character document in a project's subcollection.
+ * * @param {Request} request The incoming Next.js request object.
+ * @param {{params: {projectId: string}}} context Context object containing dynamic params.
  */
-export async function POST(request) {
+export async function POST(request, { params }) {
   let decodedToken;
   let db, auth;
 
+  // ✅ FIX: projectId is now correctly destructured from params
   const { projectId } = params;
+
   try {
     // 2. CRITICAL FIX: Get the stable services inside the handler
     const services = getAdminServices();
     db = services.db;
     auth = services.auth;
+
     // 1. Secure the route: Verify the person calling is logged in
     const idToken = request.headers.get("authorization")?.split("Bearer ")[1];
     if (!idToken) {

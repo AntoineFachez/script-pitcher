@@ -1,3 +1,5 @@
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/CRUDITEM/INVITEUSERFORM.JS
+
 "use client";
 
 import { useState } from "react";
@@ -16,13 +18,17 @@ import {
 } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { useAuth } from "@/context/AuthContext";
+import { useInFocus } from "@/context/InFocusContext";
 
 /**
  * A form for project owners to invite new users.
- * @param {string} projectId - The ID of the project to invite to.
+ * @param {object} props - Component props.
+ * @param {string} props.crud - The operation mode (e.g., 'inviteUser').
  */
-export default function InviteUserForm({ projectId }) {
+export default function InviteUserForm({ crud }) {
   const { firebaseUser } = useAuth();
+  const { projectInFocus } = useInFocus(); // Get the current project ID
+
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("viewer"); // Default role
   const [isUploading, setIsUploading] = useState(false);
@@ -36,6 +42,10 @@ export default function InviteUserForm({ projectId }) {
       setError("You must be logged in to send invitations.");
       return;
     }
+    if (!projectInFocus?.id) {
+      setError("Project context missing. Cannot send invitation.");
+      return;
+    }
     if (!email) {
       setError("Email is required.");
       return;
@@ -45,7 +55,8 @@ export default function InviteUserForm({ projectId }) {
     setError("");
     setSuccess("");
 
-    const url = `/api/projects/${projectId}/invite`;
+    // Use projectInFocus.id which is available from context
+    const url = `/api/projects/${projectInFocus.id}/invite`;
     const method = "POST";
     const body = JSON.stringify({ email, role });
 
@@ -54,6 +65,7 @@ export default function InviteUserForm({ projectId }) {
         method: method,
         headers: {
           "Content-Type": "application/json",
+          // Get the Firebase ID token for authorization in the API route
           Authorization: `Bearer ${await firebaseUser.getIdToken()}`,
         },
         body: body,
