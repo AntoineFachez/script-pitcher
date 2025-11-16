@@ -271,7 +271,7 @@ exports.createProcessUserInvitationHandlerV1 = (db) => {
  * @param {FirebaseFirestore.Firestore} db The Firestore database instance.
  * @returns {import("firebase-functions/v2/firestore").CloudFunction<import("firebase-functions/v2/firestore").DocumentSnapshot>}
  */
-exports.sendinvitationemail = (db) => {
+exports.createOnInvitationCreateHandler = (db) => {
   const triggerOptions = {
     document: "projects/{projectId}/invitations/{invitationId}",
   };

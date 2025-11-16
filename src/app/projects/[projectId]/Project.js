@@ -155,7 +155,7 @@ function ProjectContent({ initialProject, initialFiles }) {
 
   return (
     <>
-      <Box sx={{ height: "fit-content" }}>
+      <Box sx={{ position: "relative", height: "fit-content" }}>
         <Box
           sx={{
             // 1. Set the fixed dimensions of the banner
