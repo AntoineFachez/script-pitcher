@@ -77,66 +77,64 @@ export function AuthProvider({ children }) {
   // State for auth *actions* (login, signup, logout) (KEEP AS-IS)
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState(null);
-  console.log("firebaseUser", firebaseUser);
 
+  // 1. EFFECT: Initialize Firebase Auth Instance
   useEffect(() => {
-    // This runs on mount and cleans up on unmount.
+    const initializeAuth = async () => {
+      setAuth(await getFirebaseAuth());
+    };
+    initializeAuth();
+  }, []);
+
+  // 2. 🚀 CONSOLIDATED EFFECT: Listener and Sync Initiation
+  useEffect(() => {
+    // 1. Prerequisites: Must have Auth instance and must not be loading NextAuth status.
     if (!auth || status === "loading") return;
 
-    // This listener fires on successful login, logout, and token refresh.
+    // --- A. Setup the Listener (Runs FIRST) ---
+    // This listener is the stable source of truth. It sets the user and releases the lock.
     const unsubscribe = onIdTokenChanged(auth, (user) => {
       console.log("Listener Fired. User:", !!user);
       setFirebaseUser(user);
-      // 🛑 CRITICAL: This is the ONLY place that confirms the session is established.
+      // 🛑 CRITICAL: This MUST run to allow the application to render.
       setIsFirebaseSyncing(false);
     });
 
-    // Cleanup the listener
-    return () => unsubscribe();
-  }, [auth, status]); // Depends only on auth instance and NextAuth status
-
-  // 2. --- SYNC INITIATOR EFFECT (Triggers the Custom Token Exchange) ---
-  useEffect(() => {
-    // Only proceed if NextAuth has confirmed a session AND Firebase user hasn't been set yet.
-    if (!auth || status !== "authenticated" || firebaseUser) return;
-
+    // --- B. Kick off the Async Sync (Only if NextAuth is 'authenticated') ---
     const syncFirebaseUser = async () => {
-      try {
-        const customToken = await createFirebaseCustomToken();
-        if (customToken) {
-          // This sign-in will trigger the onIdTokenChanged listener (Effect 1)
-          await signInWithCustomToken(auth, customToken);
-        } else {
-          console.warn(
-            "Sync failed: No custom token returned. Releasing lock."
+      // Check for user internally to prevent unnecessary token generation on re-runs
+      if (!auth.currentUser && status === "authenticated") {
+        try {
+          const customToken = await createFirebaseCustomToken();
+          if (customToken) {
+            // This sign-in successfully triggers the onIdTokenChanged listener (A).
+            await signInWithCustomToken(auth, customToken);
+          } else {
+            console.warn(
+              "Sync failed: No custom token returned. Releasing lock."
+            );
+            setIsFirebaseSyncing(false); // Failure release
+          }
+        } catch (err) {
+          console.error(
+            "Firebase Custom Token Sign-In failed, releasing lock:",
+            err.message
           );
-          setIsFirebaseSyncing(false); // Immediate failure release
+          setIsFirebaseSyncing(false); // Failure release
+          // Set error message if needed
         }
-      } catch (err) {
-        console.error(
-          "Firebase Custom Token Sign-In failed, releasing lock:",
-          err.message
-        );
-        setIsFirebaseSyncing(false); // Explicit failure release
-        setAuthError(err.message);
+      } else if (status === "unauthenticated") {
+        // If NextAuth confirms log-out, immediately release lock.
+        setIsFirebaseSyncing(false);
       }
     };
 
-    console.log(
-      "SYNC KICKOFF: NextAuth Authenticated. Starting Firebase sync..."
-    );
+    // Run the sync function if we are authenticated but haven't synced yet.
     syncFirebaseUser();
 
-    // No cleanup function needed here, as the listener is handled by Effect 1.
-  }, [auth, status, firebaseUser]); // Reruns if these change
-
-  // 3. --- LOGOUT CLEANUP (Simplified) ---
-  useEffect(() => {
-    if (status === "unauthenticated" && !isFirebaseSyncing && firebaseUser) {
-      // If NextAuth transitions to logged out, force Firebase state cleanup.
-      setFirebaseUser(null);
-    }
-  }, [status, isFirebaseSyncing, firebaseUser]);
+    // --- C. Cleanup ---
+    return () => unsubscribe();
+  }, [auth, status, router]); // 🛑 Removed firebaseUser from dependency list to stop thrashing
 
   // --- Auth Functions ---
   const handleLogin = useCallback(
@@ -144,18 +142,16 @@ export function AuthProvider({ children }) {
       setAuthLoading(true);
       setAuthError(null);
       try {
-        // 1. Firebase Sign-In (Creates the necessary ID Token)
+        // 1. Firebase Sign-In (This success will trigger the onIdTokenChanged listener)
         const userCredential = await signInWithEmailAndPassword(
           auth,
           email,
           password
         );
-        const firebaseUser = userCredential.user;
+        const firebaseUser = userCredential.user; // User object is available here
 
-        // 2. Get the current Firebase ID Token
+        // 2. Get ID Token and sync with NextAuth server
         const idToken = await firebaseUser.getIdToken();
-
-        // 3. CRITICAL: Call the API Route to set the NextAuth session cookie
         const res = await fetch("/api/auth/session-sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -166,13 +162,9 @@ export function AuthProvider({ children }) {
           throw new Error("Failed to sync session with NextAuth server.");
         }
 
-        // ❌ REMOVED: setFirebaseUser(firebaseUser); (Removed in previous turn, correct)
-
-        // ⭐️ CRITICAL FIX: REMOVE router.refresh() and replace with router.push()
-        // This prevents the full component tree remount that causes state thrashing.
-        router.push("/dashboard"); // Redirect to a protected page (e.g., dashboard)
-
-        // The onIdTokenChanged listener will handle setting the final, stable firebaseUser state.
+        // ⭐️ CRITICAL FIX: The entire application relies on the listener to set the state.
+        // After successfully setting the cookie, client-side navigation is safe.
+        router.push("/");
       } catch (error) {
         // ... (error handling)
         setFirebaseUser(null);

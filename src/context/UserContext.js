@@ -13,7 +13,7 @@ const UserContext = createContext(null);
 
 // 2. Create the Provider component
 export function UserProvider({ documentId, children }) {
-  const { firebaseUser } = useAuth();
+  const { firebaseUser, isUserLoading } = useAuth(); // 🛑 CHANGE: Pull in isUserLoading
   const [db, setDb] = useState(null);
 
   const [myProjects, setMyProjects] = useState({});
@@ -32,11 +32,16 @@ export function UserProvider({ documentId, children }) {
 
   useEffect(() => {
     // 1. Reset everything if the user logs out
-    if (!firebaseUser) {
+    if (!firebaseUser && !isUserLoading) {
       setIsLoading(false);
       setUserProfile(null);
       setMyProjects({});
       setLastFile(null);
+      return;
+    }
+
+    if (!firebaseUser) {
+      // If we are here, we must be loading, so just return
       return;
     }
     if (!db || !firebaseUser) {
