@@ -6,6 +6,7 @@ const {
   onDocumentCreated,
 } = require("firebase-functions/v2/firestore");
 const functions = require("firebase-functions/v1");
+const { sendInviteEmail } = require("./emailService"); // Import the new email service
 
 // --- CONFIGURATION ---
 // const DATABASE_ID = "script-pitcher-extracted-data-stylesheets";
@@ -260,5 +261,82 @@ exports.createProcessUserInvitationHandlerV1 = (db) => {
     );
 
     return null;
+  });
+};
+
+/**
+ * Creates the onInvitationCreate trigger.
+ * This function is triggered when a new invitation document is created.
+ * It is responsible for sending an email to the invited user.
+ * @param {FirebaseFirestore.Firestore} db The Firestore database instance.
+ * @returns {import("firebase-functions/v2/firestore").CloudFunction<import("firebase-functions/v2/firestore").DocumentSnapshot>}
+ */
+exports.sendinvitationemail = (db) => {
+  const triggerOptions = {
+    document: "projects/{projectId}/invitations/{invitationId}",
+  };
+
+  return onDocumentCreated(triggerOptions, async (event) => {
+    const { projectId, invitationId } = event.params;
+    logger.info(
+      "onInvitationCreate triggered for project:",
+      projectId,
+      "and invitation:",
+      invitationId
+    );
+
+    const invitationData = event.data?.data();
+
+    if (!invitationData || !invitationData.email) {
+      logger.warn(`Invitation document ${invitationId} is invalid. Aborting.`);
+      return;
+    }
+
+    const { email, role, invitedBy } = invitationData;
+
+    // 1. Fetch Project Name
+    const projectRef = db.collection("projects").doc(projectId);
+    const projectSnap = await projectRef.get();
+    const projectName = projectSnap.exists
+      ? projectSnap.data().name || projectSnap.data().title || "a project"
+      : "a project";
+
+    // 2. Fetch Inviter's Name AND EMAIL 🚨 MODIFIED BLOCK 🚨
+    let inviterName = "A team member";
+    let inviterEmail = ""; // Initialize inviterEmail
+
+    if (invitedBy) {
+      const inviterRef = db.collection("users").doc(invitedBy);
+      const inviterSnap = await inviterRef.get();
+      if (inviterSnap.exists) {
+        const inviterData = inviterSnap.data();
+        // Assuming the 'users' document has an 'email' field
+        inviterEmail = inviterData.email || "";
+        inviterName =
+          inviterData.displayName || inviterData.email || inviterName;
+      }
+    }
+
+    if (!inviterEmail) {
+      logger.warn(
+        `Inviter (UID: ${invitedBy}) email not found. Cannot send personalized email.`
+      );
+      // Fallback or use a default if needed, but we proceed with what we have
+      inviterEmail = process.env.MAIL_USER;
+    }
+
+    // 3. 🚀 SEND THE EMAIL 🚀 🚨 MODIFIED CALL 🚨
+    try {
+      await sendInviteEmail(
+        email,
+        projectName,
+        role,
+        inviterName,
+        inviterEmail
+      );
+    } catch (error) {
+      logger.error(`Failed to send invitation email to ${email}.`, error);
+      // You might consider updating the invitation document here to mark it as failed.
+    }
   });
 };

@@ -8,6 +8,7 @@ const {
   createOnProjectWriteHandler,
   createOnFileCreateHandler,
   createProcessUserInvitationHandlerV1,
+  createOnInvitationCreateHandler,
 } = require("./services/databaseService");
 
 // --- CONFIGURATION ---
@@ -25,3 +26,4 @@ setGlobalOptions({ region: "europe-west4", maxInstances: 10 });
 exports.onProjectWrite = createOnProjectWriteHandler(db, FieldValue);
 exports.onFileCreate = createOnFileCreateHandler(db);
 exports.processUserInvitation = createProcessUserInvitationHandlerV1(db);
+exports.sendInvitationEmail = createOnInvitationCreateHandler(db);
