@@ -29,7 +29,7 @@ service firebase.storage {
           /databases/(default)/documents/projects/$(
             firestore.get(/databases/(default)/documents/fileId_to_projectId_lookup/$(folderId)).data.projectId
           )
-        ).data.members[request.auth.uid] in ["owner", "editor"];
+        ).data.members[request.auth.uid].role in ["owner", "editor"];
     }
   }
   

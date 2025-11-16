@@ -21,7 +21,7 @@ export default function Menu({
           width: "100%",
           display: "flex",
           flexFlow: "row nowrap",
-          justifyContent: "center",
+          justifyContent: "flex-end",
           alignItems: "center",
         }}
       >

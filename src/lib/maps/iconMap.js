@@ -118,7 +118,7 @@ export const getButton = (
   asTextButton = false,
   startIcon = null
 ) => {
-  // console.log("sx", sx);
+  // console.log("startIcon", startIcon);
 
   const IconComponent = iconName ? iconMap[iconName] : null;
   const StartIcon = iconMap[startIcon];

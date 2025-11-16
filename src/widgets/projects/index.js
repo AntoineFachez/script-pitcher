@@ -50,8 +50,11 @@ export default function Widget({
   };
 
   const handleClickTitle = (item) => {
-    setProjectInFocus(item);
     setAppContext("projects");
+    setProjectInFocus(item);
+    if (item.id) {
+      router.push(`/projects/${item.id}`);
+    }
   };
 
   const handleClickSubTitle = (item) => {
@@ -98,7 +101,7 @@ export default function Widget({
           onClick={() =>
             toggleProjectPublishState(project.id, project.published)
           }
-          color={project?.published ? "success" : "default"}
+          sx={{ color: project?.published ? "success.main" : "inactive.main" }}
         >
           {project?.published ? <Public /> : <PublicOff />}
         </IconButton>

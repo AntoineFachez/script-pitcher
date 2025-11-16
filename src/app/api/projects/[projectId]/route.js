@@ -8,7 +8,7 @@ import { getAdminServices } from "@/lib/firebase/firebase-admin";
  * POST /api/characters
  * Creates a new character document in a project's subcollection.
  */
-export async function POST(request) {
+export async function PUT(request, { params }) {
   let decodedToken;
   let db, auth;
 

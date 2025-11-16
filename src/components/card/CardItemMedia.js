@@ -16,6 +16,7 @@ export default function CardItemMedia({ cardProps }) {
     handleClickAvatar,
     handleClickTitle,
     handleClickSubTitle,
+    handleAddImteImage,
     alertElement,
   } = cardProps;
   const projectTitle = (
@@ -100,9 +101,20 @@ export default function CardItemMedia({ cardProps }) {
           >
             {toggleDetails ? (
               <>
-                {" "}
-                Add Cover Image{" "}
-                {getButton(null, "Add", null, null, null, null, "add")}
+                {getButton(
+                  null, // index
+                  "Add", // iconName
+                  handleAddImteImage, // onClick
+                  false, // disable
+                  null, // sx
+                  "outlined", // variant
+                  null, // href
+                  "Add Cover Image", // label
+                  "Add Cover Image", // tooltip
+                  false, // asNavigationAction
+                  false, // asTextButton
+                  true // startIcon
+                )}
               </>
             ) : (
               <>{projectTitle}</>
