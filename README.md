@@ -2,7 +2,7 @@
 
 A **secure, full-stack application** built on **Next.js 14+** and **Firebase** designed for managing creative projects, scripts, characters, and team collaboration. This project utilizes a sophisticated **hybrid authentication system** combining Firebase Auth with NextAuth.js using a custom JWT synchronization strategy.
 
-### Core Value Proposition
+### 🏆 Core Value Proposition
 
 We eliminate the friction of manual script breakdown by combining robust, scalable cloud technology with state-of-the-art machine learning. The project converts a static document into a live, collaborative project entity in **four seamless steps**:
 
@@ -11,7 +11,7 @@ We eliminate the friction of manual script breakdown by combining robust, scalab
 - **AI-Powered Analysis:** A dedicated Python microservice leverages **Gemini/LLM analysis** to intelligently and automatically extract key entities like **Characters** and **Episodes** directly from the script's content.
 - **Dynamic Webpage Transformation:** The frontend utilizes the interactive **`pdfviewer`** components (`PDFEditor.js`, `PdfViewer.js`) to present the analyzed content as a dynamic, interactive webpage, where data extracted by the AI is seamlessly linked back to the original text.
 
-### Key Features for Creative Teams
+### 🎯 Key Features for Creative Teams
 
 - **Real-time Collaboration & Editing:** Leveraging Firestore listeners, all users experience instant synchronization of project data, making co-editing and annotation a real-time experience.
 - **Full Project Management:** Provides complete **CRUD** (Create, Read, Update, Delete) management for Projects, Characters, Episodes, and Users.
