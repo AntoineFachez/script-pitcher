@@ -166,21 +166,21 @@ export function AuthProvider({ children }) {
           throw new Error("Failed to sync session with NextAuth server.");
         }
 
-        // ❌ REMOVE: setFirebaseUser(firebaseUser);
-        // This causes the unstable state flicker.
+        // ❌ REMOVED: setFirebaseUser(firebaseUser); (Removed in previous turn, correct)
 
-        // ⭐️ FIX: Force a server-side refresh to read the newly set cookie.
-        // This refresh will trigger the entire component lifecycle,
-        // allowing the stable onIdTokenChanged listener to set the state.
-        router.refresh();
+        // ⭐️ CRITICAL FIX: REMOVE router.refresh() and replace with router.push()
+        // This prevents the full component tree remount that causes state thrashing.
+        router.push("/dashboard"); // Redirect to a protected page (e.g., dashboard)
+
+        // The onIdTokenChanged listener will handle setting the final, stable firebaseUser state.
       } catch (error) {
         // ... (error handling)
-        setFirebaseUser(null); // Keep this on failure path
+        setFirebaseUser(null);
       } finally {
         setAuthLoading(false);
       }
     },
-    [auth, setFirebaseUser]
+    [auth, router] // Use 'router' in the dependency array
   );
 
   const handleSignUp = useCallback(
