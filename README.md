@@ -118,6 +118,36 @@ Use Vercel, Netlify, or another Node.js hosting service. Ensure all `NEXTAUTH` a
 **Example (Vercel):**
 Connect your GitHub repository to Vercel and set the environment variables via the dashboard. Vercel automatically detects the Next.js framework and handles deployment.
 
+### 3. Google Cloud / Firebase Structure and Configuration
+
+The Script-Pitcher project is built for deployment on Google Cloud and Firebase, utilizing several core services:
+
+#### a. Deployment and Hosting
+
+- **Firebase Hosting (`firebase.json`, `.firebaserc`):** Used for deploying the Next.js frontend and setting up site configurations.
+
+- **App Hosting (`apphosting.production.yaml`):** Implies the Next.js application leverages Google Cloud's App Hosting service (potentially via Firebase Hosting extensions or direct Google Cloud Run/App Engine setup) for server-side rendering (SSR) and API routing.
+
+- **Serverless Backend:** **Firebase Cloud Functions** (Node.js) and isolated **Microservices** on **Cloud Run** or Google Cloud Functions (Python) handle specific, intensive tasks like PDF processing and LLM analysis.
+
+#### b. Environment Variables and Security Keys (`.env.local` snippet)
+
+The application requires specific environment variables for both the client (public) and server (admin) environments:
+
+| Variable Type                       | Purpose                                                                                                                                                                            | Key Examples                                                       |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| **Client Firebase Config** (Public) | Used by the Next.js client for connecting to Firebase services (e.g., Firestore, Storage, Auth).                                                                                   | `NEXT_PUBLIC_FIREBASE_API_KEY`, `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` |
+| **NextAuth Configuration** (Server) | Critical for session security and NextAuth.js JWT operations.                                                                                                                      | `NEXTAUTH_SECRET`, `NEXTAUTH_URL`                                  |
+| **Firebase Admin Config** (Server)  | Provides administrative access for the backend (Cloud Functions, Next.js APIs) to perform privileged actions (e.g., managing user tokens, inviting users, direct database access). | `FIREBASE_SERVICE_ACCOUNT_KEY` (JSON object)                       |
+
+#### c. Data Storage and Security
+
+- **Google Firestore:** The primary database for project data, characters, and episodes, utilizing real-time listeners. Access is governed by **Firestore Security Rules** (`firestore.rules`).
+
+- **Firebase Storage:** Used for secure file storage (scripts, media), governed by **Storage Security Rules** (`storage.rules`).
+
+- **GCloud Ignore (`.gcloudignore`):** Ensures sensitive files (like `node_modules` or local credentials) are excluded when deploying the Cloud Functions and other Python microservices.
+
 ## 🤝 Contributing
 
 We welcome contributions! Please follow these steps:
