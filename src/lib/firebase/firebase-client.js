@@ -3,7 +3,11 @@
 "use client";
 
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import {
+  getAuth,
+  setPersistence,
+  indexedDBLocalPersistence,
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getFunctions } from "firebase/functions";
@@ -23,8 +27,15 @@ const getFirebaseApp = () => {
 // Export functions that get the service on demand.
 // This ensures getFirebaseApp() is only called when a service is needed.
 
-export const getFirebaseAuth = () => {
-  return getAuth(getFirebaseApp());
+export const getFirebaseAuth = async () => {
+  const auth = getAuth(getFirebaseApp());
+  // Explicitly set persistence before running any auth operations
+  try {
+    await setPersistence(auth, indexedDBLocalPersistence);
+  } catch (error) {
+    console.error("Failed to set Firebase Auth persistence:", error);
+  }
+  return auth;
 };
 
 export const getFirebaseDb = () => {
