@@ -2,6 +2,22 @@
 
 A **secure, full-stack application** built on **Next.js 14+** and **Firebase** designed for managing creative projects, scripts, characters, and team collaboration. This project utilizes a sophisticated **hybrid authentication system** combining Firebase Auth with NextAuth.js using a custom JWT synchronization strategy.
 
+### Core Value Proposition
+
+We eliminate the friction of manual script breakdown by combining robust, scalable cloud technology with state-of-the-art machine learning. The project converts a static document into a live, collaborative project entity in **four seamless steps**:
+
+- **Secure Upload:** Scripts (likely PDFs) are uploaded and stored securely via Firebase Storage.
+- **Structured Data Extraction:** The Python-based **`pdf-processor`** microservice extracts clean, structured text and maps the precise spatial coordinates (visuals) of every element, breaking the script out of the PDF structure.
+- **AI-Powered Analysis:** A dedicated Python microservice leverages **Gemini/LLM analysis** to intelligently and automatically extract key entities like **Characters** and **Episodes** directly from the script's content.
+- **Dynamic Webpage Transformation:** The frontend utilizes the interactive **`pdfviewer`** components (`PDFEditor.js`, `PdfViewer.js`) to present the analyzed content as a dynamic, interactive webpage, where data extracted by the AI is seamlessly linked back to the original text.
+
+### Key Features for Creative Teams
+
+- **Real-time Collaboration & Editing:** Leveraging Firestore listeners, all users experience instant synchronization of project data, making co-editing and annotation a real-time experience.
+- **Full Project Management:** Provides complete **CRUD** (Create, Read, Update, Delete) management for Projects, Characters, Episodes, and Users.
+- **Seamless Integration:** The entire application is designed to be embeddable via an `<iframe>` as a **plugin** (`Skript Pitcher Plugin`), allowing users to access core functionality within their existing external workflows, supporting full-screen access and clipboard functions.
+- **Enterprise-Grade Security:** A sophisticated **hybrid authentication system** uses NextAuth.js JWT strategy synced with Firebase Auth and Firebase Admin SDK for secure session and access control.
+
 ## ✨ Features
 
 Based on the project structure, Script-Pitcher offers the following core functionalities:
