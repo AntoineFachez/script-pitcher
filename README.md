@@ -8,9 +8,17 @@ Based on the project structure, Script-Pitcher offers the following core functio
 
 - **Project & CRUD Management:** Full **Create, Read, Update, and Delete (CRUD)** operations for core entities (Projects, Characters, Episodes, Users).
 
-- **Secure File Handling:** Integration with **Google Cloud Storage/Firebase Storage** for secure file uploads (`api/uploads/initiate`) and management, including PDF script processing via dedicated microservices.
+- **Dynamic Script Viewer & Editor:** Transforms static PDF scripts into an **interactive webpage** via the dedicated `pdfviewer` components (e.g., `PDFEditor.js`). This provides a collaborative environment featuring **source-text linking and annotation**, allowing users to link extracted data (like character objects) directly back to their appearance in the script using spatial coordinates.
 
-- **Real-time Collaboration:** Uses **Firestore listeners** for real-time synchronization of project data and user summaries.
+- **Secure File Handling & Processing Pipeline:** Integration with **Google Cloud Storage/Firebase Storage** for secure file uploads (`api/uploads/initiate`) and management. Script processing is a dedicated, multi-stage microservice pipeline that transforms the static PDF into structured, searchable data:
+
+  - The **`pdf-processor`** service performs **OCR, text structuring, and extracts spatial coordinates (bounding boxes)** for every element.
+
+- **AI/LLM Integration:** Utilizes external Python services (via Cloud Run/Functions) for advanced processing, specifically leveraging **Gemini/LLM analysis** to perform tasks like **auto-extracting characters and episodes** from the structured script data.
+
+- **Real-time Collaboration:** Uses **Firestore listeners** for real-time synchronization of project data and user summaries, ensuring collaborators are always viewing the latest script breakdown.
+
+- **Plugin Integration:** The application is designed to be fully embeddable via an `<iframe>` as a **full-featured plugin** (`Skript Pitcher Plugin`), allowing users to access the entire dynamic interface and collaboration tools directly within external creative platforms or documents.
 
 - **Serverless Backend:** Uses **Firebase Cloud Functions** for critical backend tasks, such as:
 
@@ -18,20 +26,19 @@ Based on the project structure, Script-Pitcher offers the following core functio
 
   - Updating user project summaries upon changes (e.g., `onProjectWrite`).
 
-- **AI/LLM Integration:** Utilizes external Python services (via Cloud Run/Functions) for advanced processing, likely auto-extracting data like characters and episodes from uploaded scripts.
-
 - **Robust Authentication:** Secure session management using **NextAuth.js JWT strategy** synced with Firebase Auth for client-side SDK access.
 
 ## ⚙️ Tech Stack
 
-| Category          | Technology                                     | Purpose                                                                        |
-| ----------------- | ---------------------------------------------- | ------------------------------------------------------------------------------ |
-| **Frontend**      | Next.js (App Router), MUI (Material-UI)        | Full-stack framework with React, component library for fast UI development.    |
-| **Backend/Auth**  | Firebase Auth, NextAuth.js, Firebase Admin SDK | Primary identity provider and secure session management (Hybrid JWT Strategy). |
-| **Database**      | Google Firestore                               | Primary NoSQL database.                                                        |
-| **Storage**       | Firebase Storage                               | Used for file storage (scripts, avatars, project images).                      |
-| **Serverless**    | Firebase Cloud Functions (Node.js)             | Backend event triggers and database synchronization.                           |
-| **Microservices** | Cloud Run / Cloud Functions (Python, jose)     | PDF processing, Gemini/LLM analysis, and JWT signing/verification.             |
+| Category          | Technology                                     | Purpose                                                                                                     |
+| ----------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Frontend**      | Next.js (App Router), MUI (Material-UI)        | Full-stack framework with React, component library for fast UI development.                                 |
+| **Script Viewer** | `pdfviewer` components (e.g., `PDFEditor.js`)  | Provides the interactive, dynamic script editing and source-text linking view.                              |
+| **Backend/Auth**  | Firebase Auth, NextAuth.js, Firebase Admin SDK | Primary identity provider and secure session management (Hybrid JWT Strategy).                              |
+| **Database**      | Google Firestore                               | Primary NoSQL database for project data and real-time collaboration.                                        |
+| **Storage**       | Firebase Storage                               | Used for secure file storage (scripts, avatars, project images).                                            |
+| **Serverless**    | Firebase Cloud Functions (Node.js)             | Backend event triggers and database synchronization.                                                        |
+| **Microservices** | Cloud Run / Cloud Functions (Python, jose)     | **`pdf-processor`** (OCR/Structuring), **`gemini-processor`** (LLM analysis), and JWT signing/verification. |
 
 ## 🚀 Setup and Installation
 
