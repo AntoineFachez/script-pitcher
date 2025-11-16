@@ -1,5 +1,3 @@
-# This README.md provides an overview, setup instructions, and deployment guide for your Script-Pitcher project.
-
 # 🎬 Script-Pitcher
 
 A **secure, full-stack application** built on **Next.js 14+** and **Firebase** designed for managing creative projects, scripts, characters, and team collaboration. This project utilizes a sophisticated **hybrid authentication system** combining Firebase Auth with NextAuth.js using a custom JWT synchronization strategy.
