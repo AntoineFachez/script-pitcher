@@ -4,18 +4,18 @@
 import React from "react";
 import CrudItem from "@/widgets/crudItem";
 import { Edit, Public, PublicOff } from "@mui/icons-material";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 
 export default function Menu({
   appContext,
+  setAppContext,
   setOpenModal,
   setModalContent,
-  projectProfile,
+  projectInFocus,
   togglePublishProject,
 }) {
   return (
     <>
-      {" "}
       <Box
         sx={{
           width: "100%",
@@ -26,16 +26,17 @@ export default function Menu({
         }}
       >
         <Typography variant="subtitle1" color="text.secondary">
-          {projectProfile.status}
+          {projectInFocus.status}
         </Typography>
         <IconButton
           onClick={() => {
             setOpenModal(true);
+            setAppContext("projects");
             return setModalContent(
               <CrudItem
                 context={appContext}
                 crud="update"
-                profile={projectProfile}
+                profile={projectInFocus}
               />
             );
           }}
@@ -43,17 +44,17 @@ export default function Menu({
           <Edit />
         </IconButton>
         <Typography variant="subtitle1" color="text.secondary">
-          <IconButton
+          <Button
             aria-label="publish"
             onClick={togglePublishProject}
+            variant="outlined"
+            startIcon={projectInFocus.published ? <Public /> : <PublicOff />}
             sx={{
-              color: projectProfile.published ? "success.main" : "#ffffff",
+              color: projectInFocus.published ? "success.main" : "#aaa",
             }}
           >
-            {projectProfile.published ? <Public /> : <PublicOff />}
-          </IconButton>
-
-          {projectProfile.published ? "Published" : "Not Published"}
+            {projectInFocus.published ? "Published" : "Archived"}
+          </Button>
         </Typography>
       </Box>
     </>

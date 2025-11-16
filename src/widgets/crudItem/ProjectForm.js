@@ -13,7 +13,6 @@ import {
   LinearProgress,
   Autocomplete, // <-- 1. IMPORT Autocomplete
   Chip,
-  Avatar, // <-- 2. IMPORT Chip (for styling)
 } from "@mui/material";
 import { Save } from "@mui/icons-material";
 import { Timestamp } from "firebase/firestore";
@@ -22,7 +21,7 @@ import { useCrud } from "@/context/CrudItemContext";
 import FileUploader from "./FileUploader";
 import { useInFocus } from "@/context/InFocusContext";
 import { useRouter } from "next/navigation";
-import AllProjectImages from "@/components/imageGallery/ImageGallery";
+import BasicSelect from "@/components/select/BasicSelect";
 
 export default function CrudProjectForm({ crud }) {
   const router = useRouter();
@@ -83,7 +82,7 @@ export default function CrudProjectForm({ crud }) {
       genres: genresArray,
       formats: formatsArray,
       logline: crudProject.logline || "",
-      status: crudProject.status || "in developement",
+      status: crudProject.status,
       published: crudProject.published || false,
       avatarUrl: crudProject.avatarUrl || null,
       imageUrl: crudProject.imageUrl || null,
@@ -232,7 +231,16 @@ export default function CrudProjectForm({ crud }) {
     crudProject.projectId,
     setCrudProject,
   ]);
-
+  const selectOptions = [
+    { status: "concept phase" },
+    { status: "under option" },
+    { status: "in developement" },
+    { status: "in production" },
+    { status: "in postproduction" },
+    { status: "completed" },
+    { status: "rejected/ cancelled" },
+    { status: "deleted" },
+  ];
   return (
     <Paper
       component="form"
@@ -248,39 +256,6 @@ export default function CrudProjectForm({ crud }) {
             : "Project Details"}
         </Typography>
       </Box>{" "}
-      <Box
-        sx={{
-          width: "100%",
-          height: "100%",
-          maxHeight: "50vh",
-          overflowY: "scroll",
-        }}
-      >
-        <AllProjectImages setFormData={setCrudProject} />
-      </Box>{" "}
-      {/* <Avatar
-        src={crudProject.avatarUrl || crudProject.imageUrl}
-        sx={{ width: 56, height: 56, alignSelf: "center" }}
-      />
-      <Box
-        sx={{
-          // 1. Set the fixed dimensions of the banner
-          width: "100%",
-          height: 200, // Adjust the height as needed (e.g., 200px)
-
-          // 2. Add the background image
-          backgroundImage: `url(${crudProject.imageUrl})`,
-
-          // 3. Control how the image fills the space
-          backgroundSize: "cover", // Scales the image to cover the box
-          backgroundPosition: "center", // Centers the image in the box
-          backgroundRepeat: "no-repeat", // Prevents tiling
-
-          // Optional: Add a rounded top edge for a modern look
-          borderTopLeftRadius: 8,
-          borderTopRightRadius: 8,
-        }}
-      /> */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <TextField
           label="Project Title"
@@ -289,7 +264,11 @@ export default function CrudProjectForm({ crud }) {
           onChange={handleChange}
           required={crud === "create" ? true : false}
         />
-
+        <BasicSelect
+          selectOptions={selectOptions}
+          crudProject={crudProject}
+          setCrudProject={setCrudProject}
+        />
         {/* --- 7. REPLACE TEXTFIELDS WITH AUTOCOMPLETE --- */}
         <Autocomplete
           multiple

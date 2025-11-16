@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { doc, onSnapshot, collection } from "firebase/firestore";
 import {
   Box,
   Typography,
@@ -11,6 +12,8 @@ import {
   Avatar,
 } from "@mui/material";
 
+import { getFirebaseDb } from "@/lib/firebase/firebase-client";
+
 import { useApp } from "@/context/AppContext";
 import { useData } from "@/context/DataContext";
 import { useInFocus } from "@/context/InFocusContext";
@@ -18,6 +21,7 @@ import { ProjectProvider, useProject } from "@/context/ProjectContext";
 import { useUi } from "@/context/UiContext";
 
 import BasicModal from "@/components/modal/Modal";
+import BasicTabs from "@/components/tabs/BasicTabs";
 
 import UsersList from "@/widgets/users";
 import CrudItem from "@/widgets/crudItem";
@@ -26,28 +30,27 @@ import CharacterSection from "@/widgets/characters";
 import EpisodesSection from "@/widgets/episodes";
 
 import Menu from "./Menu";
-import BasicTabs from "@/components/tabs/BasicTabs";
 
 // Receive the data fetched by the Server Component
 function ProjectContent({ initialProject, initialFiles }) {
   const { appContext, setAppContext } = useApp();
   const { modalContent, setModalContent, openModal, setOpenModal } = useUi();
-  const { setProjectInFocus } = useInFocus();
+  const { projectInFocus, setProjectInFocus } = useInFocus(initialProject);
   const { characters, episodes, loading } = useProject();
   const { handleTogglePublishProject } = useData();
 
   // Use local state, initialized by the prop
-  const [projectProfile, setProjectProfile] = useState(initialProject);
+  // const [projectInFocus, setProjectInFocus] = useState(initialProject);
   const [files, setFiles] = useState(initialFiles);
 
   const togglePublishProject = async () => {
     // We use the local state for the "current" value
-    const currentPublishedState = projectProfile.published;
+    const currentPublishedState = projectInFocus?.published;
     const newPublishedState = !currentPublishedState;
 
     try {
       // 3. Optimistically update the LOCAL UI first
-      setProjectProfile((prev) => ({
+      setProjectInFocus((prev) => ({
         ...prev,
         published: newPublishedState,
       }));
@@ -55,21 +58,44 @@ function ProjectContent({ initialProject, initialFiles }) {
       // 4. Call the GLOBAL handler
       // This updates the global list and calls the server action
       await handleTogglePublishProject(
-        projectProfile.id,
+        projectInFocus?.id,
         currentPublishedState
       );
     } catch (error) {
       // 5. Rollback LOCAL UI on error
       // The global handler already logged the error and rolled back global state
       console.error("Local rollback:", error.message);
-      setProjectProfile((prev) => ({
+      setProjectInFocus((prev) => ({
         ...prev,
         published: currentPublishedState, // Revert
       }));
       // Show an error toast to the user
     }
   };
+  const db = getFirebaseDb(); // Get the Firestore instance
 
+  useEffect(() => {
+    if (!projectInFocus?.id || !db) return;
+
+    // 🛑 FIX: Use the imported modular functions
+    const projectRef = doc(db, "projects", projectInFocus?.id);
+
+    const unsubscribe = onSnapshot(projectRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setProjectInFocus({ id: docSnap.id, ...docSnap.data() });
+      } else {
+        setProjectInFocus(null);
+      }
+    });
+
+    // Cleanup
+    return () => unsubscribe();
+  }, [db, projectInFocus?.id, setProjectInFocus]);
+  useEffect(() => {
+    if (initialProject && !projectInFocus) {
+      setProjectInFocus(initialProject);
+    }
+  }, [initialProject, setProjectInFocus, projectInFocus]);
   useEffect(() => {
     setAppContext("projects");
     setProjectInFocus(initialProject);
@@ -77,22 +103,22 @@ function ProjectContent({ initialProject, initialFiles }) {
       <CrudItem
         context={appContext}
         crud="inviteUser"
-        profile={projectProfile}
+        profile={projectInFocus}
       />
     );
 
     return () => {};
   }, []);
 
-  if (!projectProfile) {
+  if (!projectInFocus) {
     return <Typography>Project not found.</Typography>;
   }
   const tabsArray = [
     {
       label: "Team",
       content:
-        projectProfile?.members?.length > 0 ? (
-          <UsersList data={projectProfile.members} />
+        initialProject?.members?.length > 0 ? (
+          <UsersList data={initialProject?.members} />
         ) : (
           <Typography color="text.secondary">No Team Members.</Typography>
         ),
@@ -126,6 +152,7 @@ function ProjectContent({ initialProject, initialFiles }) {
     },
   ];
   const styles = { leftMargin: "2rem" };
+
   return (
     <>
       <Box sx={{ height: "fit-content" }}>
@@ -136,7 +163,7 @@ function ProjectContent({ initialProject, initialFiles }) {
             height: 200, // Adjust the height as needed (e.g., 200px)
 
             // 2. Add the background image
-            backgroundImage: `url(${projectProfile.imageUrl})`,
+            backgroundImage: `url(${projectInFocus?.imageUrl})`,
 
             // 3. Control how the image fills the space
             backgroundSize: "cover", // Scales the image to cover the box
@@ -149,7 +176,7 @@ function ProjectContent({ initialProject, initialFiles }) {
           }}
         />{" "}
         <Avatar
-          src={projectProfile.avatarUrl || projectProfile.imageUrl}
+          src={projectInFocus?.avatarUrl || projectInFocus?.imageUrl}
           sx={{
             position: "absolute",
             left: styles.leftMargin,
@@ -160,22 +187,35 @@ function ProjectContent({ initialProject, initialFiles }) {
         />
         <Menu
           appContext={appContext}
+          setAppContext={setAppContext}
           setOpenModal={setOpenModal}
           setModalContent={setModalContent}
-          projectProfile={projectProfile}
+          projectInFocus={projectInFocus}
           togglePublishProject={togglePublishProject}
         />
         <Typography
           variant="h4"
           sx={{ width: "100%", pl: styles.leftMargin, textAlign: "left" }}
         >
-          {projectProfile.title}
+          {projectInFocus?.title}
         </Typography>
       </Box>
+      <Typography
+        variant="subtitle1"
+        color="text.main"
+        sx={{
+          width: "100%",
+          pl: styles.leftMargin,
+          pr: styles.leftMargin,
+          textAlign: "left",
+        }}
+      >
+        {projectInFocus?.logline}
+      </Typography>
       <BasicTabs tabsArray={tabsArray} />
       {/* <Box sx={{ height: "50%" }}>
-        {projectProfile?.members?.length > 0 ? (
-          <UsersList data={projectProfile.members} />
+        {projectInFocus?.members?.length > 0 ? (
+          <UsersList data={projectInFocus?.members} />
         ) : (
           <Typography color="text.secondary">No Team Members.</Typography>
         )}
