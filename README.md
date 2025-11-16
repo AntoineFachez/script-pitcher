@@ -167,4 +167,4 @@ We welcome contributions! Please follow these steps:
 Distributed under the MIT License. See `LICENSE` for more information.
 
 **Project Status:** Active Development
-**Contact:** [Your Contact Email]
+**Contact:** happy to receive a DM
