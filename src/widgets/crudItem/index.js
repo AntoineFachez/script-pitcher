@@ -33,8 +33,6 @@ export default function CrudItem({ context, crud }) {
   }, [context, crud, projectInFocus, setCrudProject]);
 
   if (context === "projects") {
-    console.log("context", context, crud);
-
     // 'create' or 'update' a project
     return <CrudProjectForm crud={crud} />;
   }

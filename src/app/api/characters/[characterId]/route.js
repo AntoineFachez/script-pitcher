@@ -68,7 +68,7 @@ export async function PUT(request, { params }) {
     ) {
       console.warn(
         `Permission denied: User ${userId} with role ${
-          userMember ? userMember.role : "none"
+          userMember?.role || "none"
         } tried to update character ${characterId} in project ${projectId}`
       );
       return NextResponse.json(

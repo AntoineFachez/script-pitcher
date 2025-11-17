@@ -25,6 +25,7 @@ export function DataProvider({ children }) {
   const [data, setData] = useState(null);
 
   const [projects, setProjects] = useState(null);
+  console.log("projects", projects);
 
   // console.log("projects", projects);
   const [rolesInProjects, setRolesInProjects] = useState(null);
@@ -34,33 +35,21 @@ export function DataProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (!firebaseUser) {
-      setLoading(false); // Not logged in, so not loading
-      setProjects([]); // Clear projects
-      setUsers([]); // Clear users
-      return;
-    }
+  // This function will be called from a page component with server-fetched data
+  const setInitialData = useCallback((initialProjects, initialUsers) => {
+    setProjects(initialProjects || []);
+    setUsers(initialUsers || []);
+    setLoading(false);
+  }, []);
 
-    async function fetchData() {
-      try {
-        setLoading(true);
-        setError(null);
-        // Call the server action
-        const { projects: fetchedProjects, users: fetchedUsers } =
-          await getProjectsAndMembers(firebaseUser.uid);
-        setProjects(fetchedProjects || []);
-        console.log("fetchedProjects", fetchedProjects);
-        setUsers(fetchedUsers || []);
-      } catch (err) {
-        console.error("DataContext failed to fetch data:", err);
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
+  // We keep the loading state true by default until the initial data is set.
+  useEffect(() => {
+    if (projects === null) {
+      setLoading(true);
+    } else {
+      setLoading(false);
     }
-    fetchData();
-  }, [firebaseUser]);
+  }, [projects]);
 
   const handleTogglePublishProject = useCallback(
     async (projectId, currentPublishedState) => {
@@ -111,6 +100,7 @@ export function DataProvider({ children }) {
       setProjects,
       rolesInProjects,
       users,
+      setInitialData, // 👈 Expose the new function
       integratedProjects,
       handleTogglePublishProject,
       handleToggleUserAccessProject,
@@ -123,6 +113,7 @@ export function DataProvider({ children }) {
       setProjects,
       rolesInProjects,
       users,
+      setInitialData,
       integratedProjects,
       handleTogglePublishProject,
       handleToggleUserAccessProject,

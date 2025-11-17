@@ -68,7 +68,39 @@ export async function POST(request) {
       );
     }
 
-    // TODO: Implement actual membership check here using 'db'
+    // --- START: AUTHORIZATION CHECK ---
+    const projectRef = db.collection("projects").doc(projectId);
+    const projectDoc = await projectRef.get();
+
+    if (!projectDoc.exists) {
+      return NextResponse.json(
+        { error: "Project not found." },
+        { status: 404 }
+      );
+    }
+
+    const projectData = projectDoc.data();
+    const membersMap = projectData.members || {};
+    const userMember = membersMap[decodedToken.uid];
+
+    if (
+      !userMember ||
+      (userMember.role !== "owner" && userMember.role !== "editor")
+    ) {
+      console.warn(
+        `Permission denied: User ${decodedToken.uid} with role ${
+          userMember?.role || "none"
+        } tried to create a character in project ${projectId}`
+      );
+      return NextResponse.json(
+        {
+          error:
+            "Forbidden: You must be an owner or editor to create a character in this project.",
+        },
+        { status: 403 }
+      );
+    }
+    // --- END: AUTHORIZATION CHECK ---
 
     // 3. Define the new character data
     const newCharacterDoc = {

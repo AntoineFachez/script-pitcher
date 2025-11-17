@@ -6,8 +6,8 @@ import { FieldValue } from "firebase-admin/firestore";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
 
 /**
- * POST /api/characters
- * Creates a new character document in a project's subcollection.
+ * POST /api/episodes
+ * Creates a new episode document in a project's subcollection.
  */
 export async function POST(request) {
   let decodedToken;
@@ -42,7 +42,39 @@ export async function POST(request) {
       );
     }
 
-    // TODO: Verify user (decodedToken.uid) is a member of this project.
+    // --- START: AUTHORIZATION CHECK ---
+    const projectRef = db.collection("projects").doc(projectId);
+    const projectDoc = await projectRef.get();
+
+    if (!projectDoc.exists) {
+      return NextResponse.json(
+        { error: "Project not found." },
+        { status: 404 }
+      );
+    }
+
+    const projectData = projectDoc.data();
+    const membersMap = projectData.members || {};
+    const userMember = membersMap[decodedToken.uid];
+
+    if (
+      !userMember ||
+      (userMember.role !== "owner" && userMember.role !== "editor")
+    ) {
+      console.warn(
+        `Permission denied: User ${decodedToken.uid} with role ${
+          userMember?.role || "none"
+        } tried to create an episode in project ${projectId}`
+      );
+      return NextResponse.json(
+        {
+          error:
+            "Forbidden: You must be an owner or editor to create an episode in this project.",
+        },
+        { status: 403 }
+      );
+    }
+    // --- END: AUTHORIZATION CHECK ---
 
     // 3. Define the new episode data
     const newEpisodeDoc = {

@@ -53,23 +53,23 @@ export async function PUT(request, { params }) {
     }
 
     const members = projectSnap.data()?.members;
-    const userRole = members?.[decodedToken.uid]; // Get the user's role
+    const userMember = members?.[decodedToken.uid]; // Get the user's role object
 
     // Check if user is a member (e.g., "owner", "editor", "viewer")
-    if (!userRole) {
+    if (!userMember) {
       return NextResponse.json(
         { error: "Forbidden: You are not a member of this project." },
         { status: 403 }
       );
     }
 
-    // Optional: You could add a more granular check here if needed
-    // if (userRole !== "owner" && userRole !== "editor") {
-    //   return NextResponse.json(
-    //     { error: "Forbidden: You must be an owner or editor to make changes." },
-    //     { status: 403 }
-    //   );
-    // }
+    // CRITICAL: Enforce that only owners or editors can update.
+    if (userMember.role !== "owner" && userMember.role !== "editor") {
+      return NextResponse.json(
+        { error: "Forbidden: You must be an owner or editor to make changes." },
+        { status: 403 }
+      );
+    }
 
     // 4. Prepare the data for update
     // We trust the client has sent the correct `projectData` object

@@ -102,18 +102,22 @@ export default async function ViewProjectPage({ params }) {
     members: projectProfile?.members?.map((member) => ({
       ...member,
 
-      // THIS WAS THE MISSING LINE:
       // Serialize the User's createdAt field
       createdAt: member?.createdAt
         ? member?.createdAt?.toDate().toISOString()
         : null,
 
-      // This one you already had, which was correct
       lastLogin: member?.lastLogin
         ? member?.lastLogin.toDate().toISOString()
         : null,
 
-      // Add any other Timestamp fields a member might have here
+      // --- START FIX ---
+      // Serialize the nested 'joinedAt' timestamp inside the 'role' object
+      role: {
+        ...member.role,
+        joinedAt: member.role?.joinedAt?.toDate().toISOString() || null,
+      },
+      // --- END FIX ---
     })),
   };
 

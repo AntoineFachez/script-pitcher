@@ -12,14 +12,9 @@ import { getAdminServices } from "@/lib/firebase/firebase-admin";
  * Example: GET /api/document?projectId=...&fileId=...
  */
 export async function GET(request) {
-  let db, auth;
-
   try {
-    // 2. CRITICAL FIX: Get the stable services inside the handler
-    const services = getAdminServices();
-    db = services.db;
-    auth = services.auth;
     // 1. Authenticate the user
+    const { db, auth } = getAdminServices();
     const idToken = request.headers.get("Authorization")?.split("Bearer ")[1];
     if (!idToken) {
       return NextResponse.json(

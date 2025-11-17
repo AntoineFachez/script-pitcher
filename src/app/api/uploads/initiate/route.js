@@ -11,7 +11,7 @@ import { getAdminServices } from "@/lib/firebase/firebase-admin";
  */
 export async function POST(request) {
   let decodedToken;
-  let db, auth;
+  let db, auth, storage;
   // Use the imported services directly
 
   // NOTE: FIREBASE_STORAGE_BUCKET must be retrieved from process.env
@@ -25,6 +25,7 @@ export async function POST(request) {
     const services = getAdminServices();
     db = services.db;
     auth = services.auth;
+    storage = services.storage;
 
     const idToken = request.headers.get("authorization")?.split("Bearer ")[1];
     if (!idToken) {
@@ -91,7 +92,7 @@ export async function POST(request) {
         uploaderId: decodedToken.uid,
         createdAt: FieldValue.serverTimestamp(),
         members: {
-          [userId]: {
+          [decodedToken.uid]: {
             role: "owner",
             joinedAt: FieldValue.serverTimestamp(), // Use server timestamp
             invitedBy: null, // The owner wasn't invited

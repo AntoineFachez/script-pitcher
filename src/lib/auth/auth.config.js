@@ -1,6 +1,6 @@
 // file: src/auth.config.js
 
-import GoogleProvider from "@auth/nextjs/providers/google";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authConfig = {
   providers: [

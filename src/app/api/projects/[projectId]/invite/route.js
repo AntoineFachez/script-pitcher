@@ -8,7 +8,7 @@ import { getAdminServices } from "@/lib/firebase/firebase-admin";
 /**
  * POST /api/projects/[projectId]/invite
  * Creates a new character document in a project's subcollection.
- * * @param {Request} request The incoming Next.js request object.
+ * * @param {object} request The incoming Next.js request object.
  * @param {{params: {projectId: string}}} context Context object containing dynamic params.
  */
 export async function POST(request, { params }) {

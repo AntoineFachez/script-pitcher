@@ -28,7 +28,7 @@ import GernresList from "./elements/GernresList";
 // Styles
 import { pageStyles, titleStyle } from "@/theme/muiProps";
 
-export default function ProjectsPage() {
+export default function ProjectsPage({ initialData }) {
   const { appContext, setAppContext } = useApp();
   const {
     modalContent,
@@ -44,7 +44,12 @@ export default function ProjectsPage() {
 
   // 1. Get MASTER data from the global DataContext
   // This 'projects' is the object from your user's summary doc.
-  const { projects, isLoading: isDataLoading } = useData();
+  const {
+    projects,
+    users,
+    setInitialData,
+    isLoading: isDataLoading,
+  } = useData();
 
   // 2. Manage all LOCAL UI state here
   const [filteredData, setFilteredData] = useState([]);
@@ -107,6 +112,14 @@ export default function ProjectsPage() {
 
     return () => {};
   }, [appContext, setModalContent]);
+  useEffect(() => {
+    // On initial render, populate the DataContext with server-fetched data
+    if (initialData) {
+      setInitialData(initialData.projects, initialData.users);
+    }
+    // The empty dependency array ensures this runs only once on mount.
+  }, [initialData, setInitialData]);
+
   useEffect(() => {
     setAppContext("projects");
     return () => {};

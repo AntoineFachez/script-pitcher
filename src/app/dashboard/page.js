@@ -1,39 +1,29 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/DASHBOARD/PAGE.JS
 
 // This is a Server Component, indicated by the 'async' function and lack of 'use client'.
+import { cloneElement } from "react";
 import { getProjectsAndMembers } from "@/lib/data/projectFetchers";
 import { getCurrentUser } from "@/lib/auth/auth"; // Assume a server utility to get the user ID
 
-export default async function DashboardPage() {
+export default async function DashboardLayout({ children }) {
   const user = await getCurrentUser(); // Get the authenticated user on the server
-  console.log(user);
 
   if (!user) {
-    // Handle unauthenticated state (e.g., redirect to login)
+    // Handle unauthenticated state. You could also redirect to a login page.
     return <div>Please log in to view your dashboard.</div>;
   }
 
+  let initialData = { projects: [], users: [] };
   try {
     // --- SERVER-SIDE DATA FETCHING ---
-    const { projects, users } = await getProjectsAndMembers(user.uid);
-
-    // This data is now available *before* the component renders on the server.
-    const projectCount = projects.length;
-
-    return (
-      <main>
-        <h1>Welcome back, {user.name}</h1>
-        <p>You are currently a member of {projectCount} project(s).</p>
-
-        {/* You can pass the fetched data to Client Components as props */}
-        {/* <ProjectList clientProjects={projects} clientUsers={users} /> */}
-
-        {/* ... rest of your server-rendered content */}
-      </main>
-    );
+    initialData = await getProjectsAndMembers(user.uid);
   } catch (error) {
     console.error(error);
     // Render an error page or a fallback UI
     return <div>An error occurred while loading your projects.</div>;
   }
+  console.log("initialData", initialData);
+
+  // Pass the server-fetched data as props to the child client component (ProjectsPage)
+  return <>{cloneElement(children, { initialData })}</>;
 }

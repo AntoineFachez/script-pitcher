@@ -61,7 +61,7 @@ export default function CrudProjectForm({ crud }) {
       return;
     }
     // Check local state arrays
-    if (!crudProject.title || genres.length === 0 || formats.length === 0) {
+    if (!crudProject?.title || genres.length === 0 || formats.length === 0) {
       setError("Project Title, Genre, and Format are required.");
       return;
     }
@@ -78,14 +78,14 @@ export default function CrudProjectForm({ crud }) {
     // --- END ---
 
     const projectData = {
-      title: crudProject.title,
+      title: crudProject?.title,
       genres: genresArray,
       formats: formatsArray,
-      logline: crudProject.logline || "",
-      status: crudProject.status,
-      published: crudProject.published || false,
-      avatarUrl: crudProject.avatarUrl || null,
-      imageUrl: crudProject.imageUrl || null,
+      logline: crudProject?.logline || "",
+      status: crudProject?.status,
+      published: crudProject?.published || false,
+      avatarUrl: crudProject?.avatarUrl || null,
+      imageUrl: crudProject?.imageUrl || null,
     };
 
     try {
@@ -129,7 +129,7 @@ export default function CrudProjectForm({ crud }) {
         };
         xhr.onload = () => {
           if (xhr.status >= 200 && xhr.status < 300) {
-            setSuccess(`Successfully created project "${crudProject.title}".`);
+            setSuccess(`Successfully created project "${crudProject?.title}".`);
             clearCrudProjectDraft();
             setFile(null);
             setFilePurpose("");
@@ -209,14 +209,15 @@ export default function CrudProjectForm({ crud }) {
   // (This useEffect for projectId generation can stay the same)
   useEffect(() => {
     if (crud === "create") {
-      const formattedTitle = crudProject.title?.trim().replace(/ /g, "-") || "";
+      const formattedTitle =
+        crudProject?.title?.trim().replace(/ /g, "-") || "";
       const formattedPurpose = filePurpose?.trim().replace(/ /g, "-") || "";
       // Use the local 'formats' array now
       const firstFormat = (formats[0] || "").trim().replace(/ /g, "-");
 
       const crudProjectId = `${firstFormat}_${formattedTitle}_${formattedPurpose}`;
 
-      if (crudProject.projectId !== crudProjectId) {
+      if (crudProject?.projectId !== crudProjectId) {
         setCrudProject((prev) => ({
           ...prev,
           projectId: crudProjectId,
@@ -225,10 +226,10 @@ export default function CrudProjectForm({ crud }) {
     }
   }, [
     crud,
-    crudProject.title,
+    crudProject?.title,
     formats, // Use local state
     filePurpose,
-    crudProject.projectId,
+    crudProject?.projectId,
     setCrudProject,
   ]);
   const selectOptions = [
@@ -260,7 +261,7 @@ export default function CrudProjectForm({ crud }) {
         <TextField
           label="Project Title"
           name="title"
-          value={crudProject.title || ""}
+          value={crudProject?.title || ""}
           onChange={handleChange}
           required={crud === "create" ? true : false}
         />
@@ -330,7 +331,7 @@ export default function CrudProjectForm({ crud }) {
         <TextField
           label="Logline"
           name="logline"
-          value={crudProject.logline || ""}
+          value={crudProject?.logline || ""}
           onChange={handleChange}
           multiline
           rows={3}

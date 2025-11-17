@@ -6,10 +6,10 @@ import { FieldValue } from "firebase-admin/firestore";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
 
 /**
- * POST /api/characters
- * Creates a new character document in a project's subcollection.
+ * PUT /api/episodes/[episodeId]
+ * Updates an existing episode document in a project's subcollection.
  */
-export async function POST(request, { params }) {
+export async function PUT(request, { params }) {
   // ⬅️ FIX 1: Add { params }
   let db, auth, decodedToken; // ⬅️ FIX 2: Declare decodedToken here
 
@@ -51,8 +51,39 @@ export async function POST(request, { params }) {
       );
     }
 
-    // TODO: Verify that the authenticated user (decodedToken.uid)
-    // is a member of this project before allowing the update.
+    // --- START: AUTHORIZATION CHECK ---
+    const projectRef = db.collection("projects").doc(projectId);
+    const projectDoc = await projectRef.get();
+
+    if (!projectDoc.exists) {
+      return NextResponse.json(
+        { error: "Project not found." },
+        { status: 404 }
+      );
+    }
+
+    const projectData = projectDoc.data();
+    const membersMap = projectData.members || {};
+    const userMember = membersMap[decodedToken.uid];
+
+    if (
+      !userMember ||
+      (userMember.role !== "owner" && userMember.role !== "editor")
+    ) {
+      console.warn(
+        `Permission denied: User ${decodedToken.uid} with role ${
+          userMember?.role || "none"
+        } tried to update episode ${episodeId} in project ${projectId}`
+      );
+      return NextResponse.json(
+        {
+          error:
+            "Forbidden: You must be an owner or editor to update this episode.",
+        },
+        { status: 403 }
+      );
+    }
+    // --- END: AUTHORIZATION CHECK ---
 
     // 3. Define the episode document reference
     const episodeRef = db
