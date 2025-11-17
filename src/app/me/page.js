@@ -25,7 +25,7 @@ export default function Page() {
     showPublishedProjects,
     setShowPublishedProjects,
   } = useUi();
-  const { userProfile } = useUser();
+  const { userProfile, myProjects, lastFile } = useUser();
 
   useEffect(() => {
     setModalContent(<CrudItem context={appContext} crud="create" />);
@@ -40,6 +40,7 @@ export default function Page() {
       >
         Me
       </Typography>
+      {JSON.stringify(myProjects)}
       <Box
         sx={{
           ...containerStyles.sx,

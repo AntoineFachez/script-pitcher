@@ -66,7 +66,9 @@ exports.createOnProjectWriteHandler = (db, FieldValue) => {
         .doc(userId)
         .collection("private")
         .doc(SUMMARY_DOC_ID);
-      const role = dataAfter.members?.[userId] || "viewer";
+      const role = dataAfter.members?.[userId]?.role || "viewer";
+      logger.info(`Adding project ${projectId} to user ${userId}.`);
+
       batch.set(
         summaryRef,
         { projects: { [projectId]: { projectName: projectName, role } } },
@@ -106,7 +108,8 @@ exports.createOnProjectWriteHandler = (db, FieldValue) => {
           .doc(userId)
           .collection("private")
           .doc(SUMMARY_DOC_ID);
-        const roleAfter = dataAfter.members?.[userId];
+        const roleAfter = dataAfter.members?.[userId]?.role;
+
         logger.info(
           `Updating project ${projectId} details for user ${userId}.`
         );
@@ -203,7 +206,7 @@ exports.createOnFileCreateHandler = (db) => {
  * @param {FirebaseFirestore.Firestore} db The Firestore database instance.
  * @returns {functions.CloudFunction<functions.auth.UserRecord>}
  */
-exports.createProcessUserInvitationHandlerV1 = (db) => {
+exports.createProcessUserInvitationHandlerV1 = (db, FieldValue) => {
   // This is a V1 function, using the imported 'functions' object
   return functions.auth.user().onCreate(async (user, context) => {
     // <-- v1 signature
@@ -244,8 +247,14 @@ exports.createProcessUserInvitationHandlerV1 = (db) => {
         `Found invitation for ${email} to project ${projectRef.id} (v1).`
       );
 
+      const newMemberData = {
+        role: invitation.role,
+        joinedAt: FieldValue.serverTimestamp(), // Sets the join time
+        invitedBy: invitation.invitedBy || null, // Uses the ID from the invitation
+      };
+
       batch.update(projectRef, {
-        [`members.${newUserId}`]: invitation.role,
+        [`members.${newUserId}`]: newMemberData,
       });
       batch.delete(doc.ref);
     }

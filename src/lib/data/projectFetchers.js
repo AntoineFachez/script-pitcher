@@ -55,6 +55,7 @@ export async function getProjectsAndMembers(userId) {
       ...doc.data(),
     }));
 
+    console.log("fetchedProjects", JSON.stringify(fetchedProjects));
     // 4. Get all unique member IDs from all projects
     const allMemberIds = new Set();
     fetchedProjects.forEach((project) => {
