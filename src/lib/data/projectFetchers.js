@@ -147,7 +147,9 @@ export async function getProjectsAndMembers(userId) {
     console.log("[getProjectsAndMembers] 🎉 Fetch complete. Returning data.");
     return { projects: fetchedProjects, users: fetchedUsers }; // 👈 Standardize return object
   } catch (err) {
-    console.error("Error fetching projects and members:", err);
-    throw new Error("Failed to load project data."); // Re-throw to be handled by the Server Component
+    // ⭐️ LOG the original error message
+    console.error("Error fetching projects and members:", err.message);
+    // ⭐️ THROW the original error message
+    throw new Error(err.message);
   }
 }
