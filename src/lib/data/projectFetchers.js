@@ -51,6 +51,8 @@ async function getDocsInBatches(collectionRef, ids) {
  * @returns {Promise<{projects: Array<Object>, users: Array<Object>}>}
  */
 export async function getProjectsAndMembers(userId) {
+  console.log(userId);
+
   console.log(
     `[getProjectsAndMembers] 🚀 Starting fetch for userId: ${userId}`
   );

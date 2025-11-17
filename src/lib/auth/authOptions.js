@@ -6,6 +6,17 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "@/lib/firebase/firebase-client"; // Client DB for Server/Action
 import { doc, getDoc } from "firebase/firestore"; // Import Firestore functions
 
+// 1. ✅ The variable is defined first from the environment
+const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
+
+// ⭐️ ADD THIS LOG
+console.log(
+  `[AuthOptions] Secret loaded (first 5 chars): ${NEXTAUTH_SECRET?.substring(
+    0,
+    5
+  )}`
+);
+
 export const authOptions = {
   providers: [
     GoogleProvider({
@@ -20,25 +31,36 @@ export const authOptions = {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
   },
-
+  // ✅ ADD THIS BLOCK
+  // This tells NextAuth how long the JWT itself is valid
+  jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days (must match session)
+  },
   callbacks: {
     // 1. Session Callback (CRITICALLY REFACTORED)
     // The 'token' contains all user data embedded by the JWT callback.
     async session({ session, token }) {
-      // 🛑 CRITICAL DEBUGGING LOG 🛑
-      console.log("SERVER DEBUG: Session Callback Fired");
-      console.log("Token received:", !!token);
-      console.log("Token ID:", token?.id);
+      // ⭐️ DEBUG: See what token is coming from the JWT callback
+      console.log("[Auth Callback: SESSION] Received token:", token);
 
-      if (token) {
-        // Map required fields from the JWT payload (token) to the session.user object
+      if (token?.id) {
         session.user.id = token.id;
-        session.user.name = token.name || session.user.name; // Keep existing name if present
-        session.user.email = token.email || session.user.email; // Keep existing email if present
-
-        // 🛑 CRITICAL FIX: Transfer custom properties
-        session.user.profileData = token.profileData || {}; // Get profile data from token
+      } else {
+        // ⭐️ DEBUG: If this logs, session.user.id will be missing
+        console.warn(
+          "[Auth Callback: SESSION] WARN: No 'id' on token for session."
+        );
       }
+
+      if (token?.profileData) {
+        session.user.profileData = token.profileData;
+      }
+
+      session.user.name = token.name;
+      session.user.email = token.email;
+
+      // ⭐️ DEBUG: See the final session object
+      console.log("[Auth Callback: SESSION] Returning session:", session);
       return session;
     },
 
@@ -46,8 +68,25 @@ export const authOptions = {
     async jwt({ token, user, trigger }) {
       // 'user' is present only on first sign-in (social or credentials)
       // The NextAuth session cookie is manually created in session-sync/route.js
+      console.log("[Auth Callback: JWT] Received token:", token);
+      console.log("[Auth Callback: JWT] Received user:", user);
 
-      const userId = user?.id || token.id;
+      if (token && token.profileData) {
+        console.log("[Auth Callback: JWT] Token already enriched.");
+        return token;
+      }
+
+      const userId = token?.id || token?.sub;
+
+      if (!userId) {
+        // ⭐️ DEBUG: This is a critical failure point
+        console.error(
+          "[Auth Callback: JWT] FAILED: No userId (id or sub) in token."
+        );
+        return null; // This will cause getServerSession to return null
+      }
+
+      console.log(`[Auth Callback: JWT] Enriching token for userId: ${userId}`);
 
       // Logic runs on sign-in (user is present) OR on session refresh/update (no user, only token)
       if (user || trigger === "update" || !token.id) {
