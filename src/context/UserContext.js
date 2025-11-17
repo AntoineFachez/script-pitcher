@@ -18,6 +18,7 @@ export function UserProvider({ documentId, children }) {
 
   const [myProjects, setMyProjects] = useState({});
   const [lastFile, setLastFile] = useState(null);
+  console.log("myProjects", myProjects);
 
   const [userProfile, setUserProfile] = useState(null);
   const [meInFocus, setMeInFocus] = useState(null);
@@ -118,6 +119,7 @@ export function UserProvider({ documentId, children }) {
       myProjects,
       lastFile,
       setLastFile,
+      myProjects,
       setMyProjects,
       userSummaryData,
       isLoading,

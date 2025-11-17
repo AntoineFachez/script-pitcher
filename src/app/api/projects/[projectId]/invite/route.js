@@ -51,9 +51,11 @@ export async function POST(request, { params }) {
     }
 
     const projectData = projectSnap.data();
-    const adminRole = projectData.members?.[decodedToken.uid];
+    // Get the member object
+    const adminMember = projectData.members?.[decodedToken.uid];
 
-    if (adminRole !== "owner") {
+    // Check the 'role' property inside the object
+    if (adminMember?.role !== "owner") {
       return NextResponse.json(
         { error: "Forbidden: You must be an owner to invite users." },
         { status: 403 }

@@ -25,5 +25,8 @@ setGlobalOptions({ region: "europe-west4", maxInstances: 10 });
 // They now contain the deploy-time database info.
 exports.onProjectWrite = createOnProjectWriteHandler(db, FieldValue);
 exports.onFileCreate = createOnFileCreateHandler(db);
-exports.processUserInvitation = createProcessUserInvitationHandlerV1(db);
+exports.processUserInvitation = createProcessUserInvitationHandlerV1(
+  db,
+  FieldValue
+);
 exports.sendInvitationEmail = createOnInvitationCreateHandler(db);

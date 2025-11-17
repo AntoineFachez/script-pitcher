@@ -90,7 +90,13 @@ export async function POST(request) {
         project: finalProjectId,
         uploaderId: decodedToken.uid,
         createdAt: FieldValue.serverTimestamp(),
-        members: { [decodedToken.uid]: "owner" },
+        members: {
+          [userId]: {
+            role: "owner",
+            joinedAt: FieldValue.serverTimestamp(), // Use server timestamp
+            invitedBy: null, // The owner wasn't invited
+          },
+        },
       };
       batch.set(projectRef, newProjectDoc);
     } else {
