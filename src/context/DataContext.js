@@ -25,7 +25,6 @@ export function DataProvider({ children }) {
   const [data, setData] = useState(null);
 
   const [projects, setProjects] = useState(null);
-  console.log("projects", projects);
 
   // console.log("projects", projects);
   const [rolesInProjects, setRolesInProjects] = useState(null);
@@ -35,21 +34,22 @@ export function DataProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // This function will be called from a page component with server-fetched data
+  // ✅ NEW: A function to set the initial data from a Server Component
   const setInitialData = useCallback((initialProjects, initialUsers) => {
     setProjects(initialProjects || []);
     setUsers(initialUsers || []);
     setLoading(false);
   }, []);
 
-  // We keep the loading state true by default until the initial data is set.
   useEffect(() => {
-    if (projects === null) {
-      setLoading(true);
-    } else {
-      setLoading(false);
+    if (!firebaseUser) {
+      setLoading(false); // Not logged in, so not loading
+      setProjects([]); // Clear projects
+      setUsers([]); // Clear users
     }
-  }, [projects]);
+    // The data fetching is now handled by a parent Server Component.
+    // We just clear data on logout.
+  }, [firebaseUser]);
 
   const handleTogglePublishProject = useCallback(
     async (projectId, currentPublishedState) => {
@@ -100,8 +100,8 @@ export function DataProvider({ children }) {
       setProjects,
       rolesInProjects,
       users,
-      setInitialData, // 👈 Expose the new function
       integratedProjects,
+      setInitialData, // ✅ Expose the new function
       handleTogglePublishProject,
       handleToggleUserAccessProject,
       handleTogglePublishFile,
@@ -113,8 +113,8 @@ export function DataProvider({ children }) {
       setProjects,
       rolesInProjects,
       users,
-      setInitialData,
       integratedProjects,
+      setInitialData,
       handleTogglePublishProject,
       handleToggleUserAccessProject,
       handleTogglePublishFile,

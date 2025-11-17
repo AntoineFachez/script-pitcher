@@ -80,8 +80,13 @@ export async function getProjectsAndMembers(userId) {
       summaryData
     );
 
-    // ⭐️ FIX: Convert Firestore Map to a plain JavaScript object
-    const projectsMap = { ...(summaryData.projects || {}) };
+    // ⭐️ FIX: Correctly convert Firestore Map to a plain JavaScript object.
+    // The spread operator (...) does not work on a Firestore Map object.
+    const projectsMap = {};
+    if (summaryData.projects && summaryData.projects.forEach) {
+      // Firestore returns a Map-like object, so we iterate and build a plain object.
+      summaryData.projects.forEach((value, key) => (projectsMap[key] = value));
+    }
 
     if (!projectsMap || Object.keys(projectsMap).length === 0) {
       console.log(

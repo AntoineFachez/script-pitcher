@@ -10,7 +10,7 @@ const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
 
 /**
  * POST /api/auth/session-sync
- * Takes a Firebase ID Token (from client login) and uses it to create and set
+ * * Takes a Firebase ID Token (from client login) and uses it to create and set
  * a NextAuth session cookie, completing the authentication flow.
  */
 export async function POST(req) {
@@ -22,9 +22,7 @@ export async function POST(req) {
 
   // Ensure the secret is available for JWT signing
   if (!NEXTAUTH_SECRET) {
-    console.error(
-      "Server Error: NEXTAUTH_SECRET environment variable is not set."
-    );
+    console.error("NEXTAUTH_SECRET is not configured.");
     return NextResponse.json(
       { message: "Server configuration error." },
       { status: 500 }

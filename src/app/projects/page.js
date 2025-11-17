@@ -118,7 +118,7 @@ export default function ProjectsPage({ initialData }) {
       setInitialData(initialData.projects, initialData.users);
     }
     // The empty dependency array ensures this runs only once on mount.
-  }, [initialData, setInitialData]);
+  }, []);
 
   useEffect(() => {
     setAppContext("projects");

@@ -1,8 +1,11 @@
 // file: src/middleware.js
 
-import { auth } from "@/auth";
+import { withAuth } from "next-auth/middleware";
 
-export default auth;
+export default withAuth({
+  // You can add custom behavior here, like redirecting to a custom login page.
+  // pages: { signIn: "/login" }
+});
 
 // This config specifies which routes the middleware should run on.
 // Adjust as needed for your app.

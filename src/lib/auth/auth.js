@@ -1,61 +1,39 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/AUTH/AUTH.JS
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/AUTH.JS
+// This is the server-side utility file.
 
-import { getServerSession } from "next-auth/next";
-import { authConfig } from "./auth.config";
-import { getAdminServices } from "../firebase/firebase-admin";
-
-/**
- * These are your full NextAuth options.
- * We are extending the basic authConfig with callbacks to handle the
- * integration with Firebase.
- */
-export const authOptions = {
-  ...authConfig, // Spread in your providers (Google, etc.)
-  callbacks: {
-    /**
-     * This callback is called whenever a JSON Web Token is created (i.e., at sign-in)
-     * or updated (i.e., whenever a session is accessed in the client).
-     * We use this to persist the Firebase UID in the token.
-     */
-    async jwt({ token, user, account }) {
-      // On initial sign-in, `user` and `account` are available.
-      if (user && account) {
-        const { db, auth } = getAdminServices();
-        const { uid, email, name, picture } = user;
-
-        // Update or create the user in Firebase Admin
-        // This is an "upsert" operation.
-        await auth.updateUser(uid, {
-          email,
-          displayName: name,
-          photoURL: picture,
-        });
-
-        // Store the Firebase UID in the JWT token.
-        token.uid = uid;
-      }
-      return token;
-    },
-
-    /**
-     * The session callback is called whenever a session is checked.
-     * We use this to add the Firebase UID to the `session.user` object.
-     */
-    async session({ session, token }) {
-      if (session.user && token.uid) {
-        session.user.uid = token.uid;
-      }
-      return session;
-    },
-  },
-};
+import { getServerSession } from "next-auth";
+import { headers } from "next/headers"; // Next.js utility for Server Components
+import { authOptions } from "./authOptions";
 
 /**
- * A server-side utility to get the currently authenticated user.
- * This is the function you should use in Server Components and API Routes.
- * It securely reads the session from the request cookies.
+ * Retrieves the authenticated user's session data from NextAuth on the server.
+ * Returns null if the user is unauthenticated or the session is invalid.
+ *
+ * @returns {Promise<{ uid: string, name: string, email: string, ... } | null>}
  */
-export const getCurrentUser = async () => {
+export async function getCurrentUser() {
+  // 1. Next.js utility to ensure headers() is called before getServerSession runs
+  //    (This is often needed to correctly trigger Server Component behavior).
+  headers();
+
+  // 2. Get the session using the imported config.
+  //    NextAuth reads the 'next-auth.session-token' cookie, verifies the JWT,
+  //    and runs the 'jwt' and 'session' callbacks defined in authOptions.
   const session = await getServerSession(authOptions);
-  return session?.user ?? null;
-};
+
+  // Check for session and the necessary user ID
+  if (!session || !session.user || !session.user.id) {
+    return null;
+  }
+
+  // 3. Extract user data directly from the session (populated by the JWT/session callbacks)
+  const profileData = session.user.profileData || {};
+
+  // 4. Return a consolidated user object
+  return {
+    uid: session.user.id, // The user's Firebase UID / Firestore document ID
+    name: session.user.name,
+    email: session.user.email,
+    ...profileData, // Include all other profile data retrieved from Firestore via callbacks
+  };
+}
