@@ -15,7 +15,7 @@ import { knitProjectData } from "@/lib/maps/actions";
 
 import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 
-import { getProjectsAndMembers } from "@/lib/data/projectFetchers";
+import { getProjectsAndMembers } from "@/lib/data/projectFetchers"; // This is now a Server Action
 // Make sure you export your 'db' instance from your Firebase config file
 
 const DataContext = createContext(null);
@@ -33,18 +33,33 @@ export function DataProvider({ children }) {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   useEffect(() => {
-    if (!firebaseUser) return;
+    if (!firebaseUser) {
+      setLoading(false); // Not logged in, so not loading
+      setProjects([]); // Clear projects
+      setUsers([]); // Clear users
+      return;
+    }
+
     async function fetchData() {
-      const { fetchedProjects, fetchedUsers } = await getProjectsAndMembers(
-        firebaseUser?.uid
-      );
-      setProjects(fetchedProjects);
-      setUsers(fetchedUsers);
+      try {
+        setLoading(true);
+        setError(null);
+        // Call the server action
+        const { projects: fetchedProjects, users: fetchedUsers } =
+          await getProjectsAndMembers(firebaseUser.uid);
+        setProjects(fetchedProjects || []);
+        console.log("fetchedProjects", fetchedProjects);
+        setUsers(fetchedUsers || []);
+      } catch (err) {
+        console.error("DataContext failed to fetch data:", err);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchData();
-    // This hook runs ONLY on the client after mounting.
-    // setDb(getFirebaseDb());
   }, [firebaseUser]);
 
   const handleTogglePublishProject = useCallback(

@@ -49,14 +49,8 @@ export default function ProjectsPage() {
   // 2. Manage all LOCAL UI state here
   const [filteredData, setFilteredData] = useState([]);
 
-  // 3. Create the list from the 'projects' object
-  const projectsList = useMemo(
-    () =>
-      Object.entries(projects || {}).map(([id, data]) => ({
-        ...data,
-      })),
-    [projects]
-  );
+  // 3. The 'projects' from context is already an array. No conversion needed.
+  const projectsList = useMemo(() => projects || [], [projects]);
 
   // 4. Perform all filtering here, in the page
   const uniqueGenres = useMemo(() => {

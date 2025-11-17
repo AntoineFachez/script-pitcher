@@ -7,8 +7,6 @@ import { getAdminServices } from "@/lib/firebase/firebase-admin";
 
 // This is a Server Action. It only runs on the server.
 export async function toggleProjectPublishState(projectId, newPublishedState) {
-  console.log("projectId", projectId);
-
   if (!projectId) {
     return { error: "Missing project ID." };
   }

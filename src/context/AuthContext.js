@@ -94,7 +94,6 @@ export function AuthProvider({ children }) {
     // --- A. Setup the Listener (Runs FIRST) ---
     // This listener is the stable source of truth. It sets the user and releases the lock.
     const unsubscribe = onIdTokenChanged(auth, (user) => {
-      console.log("Listener Fired. User:", !!user);
       setFirebaseUser(user);
       // 🛑 CRITICAL: This MUST run to allow the application to render.
       setIsFirebaseSyncing(false);
