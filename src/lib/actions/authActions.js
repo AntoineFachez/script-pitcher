@@ -4,7 +4,7 @@
 "use server";
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/authOptions";
+import { authOptions } from "@/lib/auth/authOptions";
 // Assume you have initialized the Firebase Admin SDK globally or here
 import { auth } from "@/lib/firebase/firebase-admin"; // Custom utility
 

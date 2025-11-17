@@ -93,7 +93,7 @@ export default function Page() {
     setModalContent(<CrudItem context={appContext} crud="create" />);
 
     return () => {};
-  }, [appContext]);
+  }, [appContext, setModalContent]);
   return (
     <Box sx={widgetContainerStyles.sx}>
       <Typography variant={titleStyle.variant} sx={titleStyle.sx}>

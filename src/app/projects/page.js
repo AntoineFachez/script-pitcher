@@ -112,11 +112,11 @@ export default function ProjectsPage() {
     setModalContent(<CrudItem context={appContext} crud="create" />);
 
     return () => {};
-  }, [appContext]);
+  }, [appContext, setModalContent]);
   useEffect(() => {
     setAppContext("projects");
     return () => {};
-  }, []);
+  }, [setAppContext]);
 
   return (
     <Box sx={{ ...pageStyles.sx }}>

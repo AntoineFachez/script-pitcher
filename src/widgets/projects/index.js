@@ -18,7 +18,8 @@ import KebabMenu from "@/components/menus/KebabMenu";
 import CardGrid from "@/components/cardGrid/CardGrid"; // Import generic CardGrid
 import ShareButton from "@/components/share/ShareButton";
 
-import { widgetSpex, schemeDefinition } from "./widgetSpex.json"; // Assuming columns are not in this file
+import widgetData from "./widgetSpex.json"; // Assuming columns are not in this file
+const { widgetSpex, schemeDefinition } = widgetData;
 import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 
 // Receive handlers as props

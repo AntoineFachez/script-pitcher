@@ -81,7 +81,7 @@ export const WidgetContext = ({ children }) => {
   const clearFilter = useCallback(() => {
     setRoleInFocus("");
     setFilteredData(data);
-  }, [data]);
+  }, [data, setRoleInFocus]);
 
   useEffect(() => {
     setData(users);

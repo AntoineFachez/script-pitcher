@@ -16,7 +16,8 @@ import KebabMenu from "@/components/menus/KebabMenu";
 import CardGrid from "@/components/cardGrid/CardGrid";
 import ShareButton from "@/components/share/ShareButton";
 
-import { widgetSpex, schemeDefinition } from "./widgetSpex.json";
+import widgetData from "./widgetSpex.json";
+const { widgetSpex, schemeDefinition } = widgetData;
 import Image from "next/image";
 import CrudItem from "../crudItem";
 import SectionMenu from "@/components/menus/SectionMenu";

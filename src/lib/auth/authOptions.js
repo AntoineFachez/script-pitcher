@@ -2,8 +2,7 @@
 
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-// Removed: import { FirestoreAdapter } from "@auth/firebase-adapter";
-import { db } from "@/lib/firebase/firebase-client"; // Client DB for Server/Action
+import { getFirebaseDb } from "@/lib/firebase/firebase-client"; // Client DB for Server/Action
 import { doc, getDoc } from "firebase/firestore"; // Import Firestore functions
 
 export const authOptions = {
@@ -56,7 +55,7 @@ export const authOptions = {
           try {
             // ⚠️ WARNING: Client DB import (db) used on server is unstable.
             // This is kept but should ideally use Firestore Admin SDK.
-            const userDocRef = doc(db, "users", userId);
+            const userDocRef = doc(getFirebaseDb(), "users", userId);
             const userDocSnap = await getDoc(userDocRef);
 
             if (userDocSnap.exists()) {

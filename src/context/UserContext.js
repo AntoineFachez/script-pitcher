@@ -18,7 +18,7 @@ export function UserProvider({ documentId, children }) {
 
   const [myProjects, setMyProjects] = useState({});
   const [lastFile, setLastFile] = useState(null);
-  console.log("myProjects", myProjects);
+  // console.log("myProjects", myProjects);
 
   const [userProfile, setUserProfile] = useState(null);
   const [meInFocus, setMeInFocus] = useState(null);
@@ -110,7 +110,7 @@ export function UserProvider({ documentId, children }) {
 
     // 5. Clean up the listener when the user logs out or component unmounts
     return () => unsubscribe();
-  }, [firebaseUser, db]); // Rerun if user or db instance changes
+  }, [firebaseUser, db, isUserLoading]); // Rerun if user or db instance changes
 
   // Memoize the context value to prevent unnecessary re-renders of consumers
   const value = useMemo(

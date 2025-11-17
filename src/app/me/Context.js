@@ -24,7 +24,7 @@ export const WidgetContext = ({ children }) => {
     setData(userProfile);
 
     return () => {};
-  }, []);
+  }, [userProfile]);
 
   const contextValue = useMemo(
     () => ({

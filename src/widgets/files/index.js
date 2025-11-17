@@ -21,7 +21,8 @@ import { useUi } from "@/context/UiContext";
 
 import KebabMenu from "@/components/menus/KebabMenu";
 
-import { widgetSpex, schemeDefinition } from "./widgetSpex.json";
+import widgetData from "./widgetSpex.json";
+const { widgetSpex, schemeDefinition } = widgetData;
 
 import { formatShortTime, useRelativeTime } from "@/hooks/useRelativeTime";
 import CardGrid from "@/components/cardGrid/CardGrid";

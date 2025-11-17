@@ -2,7 +2,7 @@
 
 // This is a Server Component, indicated by the 'async' function and lack of 'use client'.
 import { getProjectsAndMembers } from "@/lib/data/projectFetchers";
-import { getCurrentUser } from "@/lib/auth"; // Assume a server utility to get the user ID
+import { getCurrentUser } from "@/lib/auth/auth"; // Assume a server utility to get the user ID
 
 export default async function DashboardPage() {
   const user = await getCurrentUser(); // Get the authenticated user on the server

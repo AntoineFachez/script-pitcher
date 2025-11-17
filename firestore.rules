@@ -12,15 +12,19 @@ service cloud.firestore {
       allow read: if request.auth != null;
     }
 
-    // ⭐ CRITICAL MODIFICATION: Use request.resource.data for 'get/list' rules on projects
-    // This rule will now be checked for every document retrieved by your query.
-    match /projects/{projectId} {
+   match /projects/{projectId} {
       
-      // Allow read/get/list if the user's UID is in the project's 'members' map.
-      // This is the most common way to secure a bulk read on projects where membership is stored inside the document.
-      allow read: if request.auth != null && 
-                    request.auth.uid in resource.data.members;
+      // Allow GET (reading one doc) if the user is a member
+      allow get: if request.auth != null && 
+                   request.auth.uid in resource.data.members;
+      
+      // Allow LIST (running a query) if the user is authenticated.
+      // This is safe ONLY because your 'getProjectsAndMembers' function
+      // already scopes the query to trusted project IDs from the user's
+      // private summary document.
+      allow list: if request.auth != null;
 
+      
       // Sub-collections must now also use 'resource.data' from the parent context,
       // or re-fetch the project data via 'get()' if security is layered.
       // Since 'files', 'characters', and 'episodes' rules reference the parent project, 

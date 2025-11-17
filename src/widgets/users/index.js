@@ -19,7 +19,8 @@ import ShareButton from "@/components/share/ShareButton";
 import { subtitleStyles } from "@/theme/muiProps";
 
 // Assuming columns are in widgetSpex.json or defined here
-import { widgetSpex, schemeDefinition, columns } from "./widgetSpex.json";
+import widgetData from "./widgetSpex.json";
+const { widgetSpex, schemeDefinition, columns } = widgetData;
 import SectionMenu from "@/components/menus/SectionMenu";
 import CrudItem from "../crudItem";
 

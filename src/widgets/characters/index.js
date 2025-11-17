@@ -15,8 +15,8 @@ import DataTable from "@/components/dataGridElements/DataTable";
 import KebabMenu from "@/components/menus/KebabMenu";
 import CardGrid from "@/components/cardGrid/CardGrid";
 import ShareButton from "@/components/share/ShareButton";
-
-import { widgetSpex, schemeDefinition } from "./widgetSpex.json";
+import widgetData from "./widgetSpex.json";
+const { widgetSpex, schemeDefinition } = widgetData;
 import CrudItem from "../crudItem";
 import BasicModal from "@/components/modal/Modal";
 import Image from "next/image";

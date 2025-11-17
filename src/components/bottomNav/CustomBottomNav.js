@@ -69,7 +69,7 @@ export default function CustomBottomNav() {
           action.href, // href = null,
           action.buttonText, // label = "",
           false, // toolTip,
-          false, // asNavigationAction = false,
+          true, // asNavigationAction = false,
           false, // asTextButton = false,
           false // startIcon = null
         )
