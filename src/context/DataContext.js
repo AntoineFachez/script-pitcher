@@ -34,39 +34,39 @@ export function DataProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (!firebaseUser) {
-      setLoading(false); // Not logged in, so not loading
-      setProjects([]); // Clear projects
-      setUsers([]); // Clear users
-      return;
-    }
+  // useEffect(() => {
+  //   if (!firebaseUser) {
+  //     setLoading(false); // Not logged in, so not loading
+  //     setProjects([]); // Clear projects
+  //     setUsers([]); // Clear users
+  //     return;
+  //   }
 
-    async function fetchData() {
-      try {
-        setLoading(true);
-        setError(null);
-        // console.log("firebaseUser", firebaseUser.uid);
-        // Call the server action
-        const { projects: fetchedProjects, users: fetchedUsers } =
-          await getProjectsAndMembers(firebaseUser.uid);
-        // 2. (Optional) Now you can safely log the data variable.
-        // console.log("DataContext fetched data:", {
-        //   fetchedProjects,
-        //   fetchedUsers,
-        // });
-        setProjects(fetchedProjects || []);
-        // console.log("fetchedProjects", fetchedProjects);
-        setUsers(fetchedUsers || []);
-      } catch (err) {
-        console.error("DataContext failed to fetch data:", err);
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, [firebaseUser]);
+  //   async function fetchData() {
+  //     try {
+  //       setLoading(true);
+  //       setError(null);
+  //       // console.log("firebaseUser", firebaseUser.uid);
+  //       // Call the server action
+  //       const { projects: fetchedProjects, users: fetchedUsers } =
+  //         await getProjectsAndMembers(firebaseUser.uid);
+  //       // 2. (Optional) Now you can safely log the data variable.
+  //       // console.log("DataContext fetched data:", {
+  //       //   fetchedProjects,
+  //       //   fetchedUsers,
+  //       // });
+  //       setProjects(fetchedProjects || []);
+  //       // console.log("fetchedProjects", fetchedProjects);
+  //       setUsers(fetchedUsers || []);
+  //     } catch (err) {
+  //       console.error("DataContext failed to fetch data:", err);
+  //       setError(err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+  //   fetchData();
+  // }, [firebaseUser]);
 
   const handleTogglePublishProject = useCallback(
     async (projectId, currentPublishedState) => {

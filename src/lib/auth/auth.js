@@ -1,5 +1,3 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/AUTH/AUTH.JS
-
 import { cookies } from "next/headers";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
 
