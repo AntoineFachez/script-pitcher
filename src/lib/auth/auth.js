@@ -129,7 +129,7 @@ export async function getCurrentUser() {
   }
   // --- END ENHANCED DIAGNOSTICS ---
 
-  // --- START FIX ---
+  // --- START DEFINITIVE FIX ---
   // 1. Get current request headers
   const reqHeaders = Object.fromEntries(headers());
 
@@ -148,23 +148,28 @@ export async function getCurrentUser() {
     }`
   );
 
-  // ✅ CRITICAL FIX: Overwrite the host header in the request object
-  // passed to getServerSession with the NEXTAUTH_URL host ONLY IF the cookie is present.
+  // ✅ CRITICAL FIX: Overwrite the host and protocol headers ONLY IF the session cookie exists.
   if (
     sessionCookieValue &&
     publicHost !== "UNKNOWN" &&
     publicHost !== "INVALID_URL"
   ) {
-    // Overwrite Host header to trick NextAuth into accepting the cookie domain
+    // 1. Overwrite Host header to pass NextAuth's host check
     req.headers["host"] = publicHost;
     req.headers["x-forwarded-host"] = publicHost;
+
+    // 2. VITAL FIX: Force protocol to HTTPS for secure cookie validation (for __Secure-next-auth cookie)
+    req.headers["x-forwarded-proto"] = "https";
 
     console.log(
       `[getCurrentUser: DIAG] Host Overwritten to: ${req.headers["host"]}`
     );
+    console.log(
+      `[getCurrentUser: DIAG] Protocol set to: ${req.headers["x-forwarded-proto"]}`
+    );
   } else if (!sessionCookieValue) {
     console.warn(
-      "[getCurrentUser: DIAG] WARNING: Session Cookie is EMPTY. Skipping Host Overwrite."
+      "[getCurrentUser: DIAG] WARNING: Session Cookie is EMPTY. Skipping Host/Protocol Overwrite."
     );
   }
 
@@ -181,7 +186,7 @@ export async function getCurrentUser() {
 
   // Pass (req, res, authOptions) to getServerSession
   const session = await getServerSession(req, res, authOptions);
-  // --- END FIX ---
+  // --- END DEFINITIVE FIX ---
 
   // 🔎 DIAGNOSTIC LOG:
   console.log(
