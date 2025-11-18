@@ -11,6 +11,9 @@ import { getToken } from "next-auth/jwt";
 // 1. Extend the lite config with Node.js-specific providers/callbacks
 export const authOptions = {
   ...authConfig,
+  url: process.env.NEXTAUTH_URL, // e.g., "https://script-pitcher.web.app"
+
+  trustHost: true,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
