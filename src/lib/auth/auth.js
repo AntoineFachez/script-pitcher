@@ -2,6 +2,7 @@
 
 import { getServerSession } from "next-auth";
 import { cookies, headers } from "next/headers";
+import { getToken } from "next-auth/jwt"; // <--- ADD THIS IMPORT
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
@@ -96,120 +97,74 @@ export const authOptions = {
 
 // 2. Your getCurrentUser helper (This is correct)
 export async function getCurrentUser() {
-  console.log(
-    `[getCurrentUser] Secret (first 5): ${process.env.NEXTAUTH_SECRET?.substring(
-      0,
-      5
-    )}`
-  );
-
-  // Use the established secure cookie name
-  const cookieName = "__Secure-next-auth.session-token";
-  const sessionCookieValue = cookies().get(cookieName)?.value || "";
-
-  // --- ENHANCED DIAGNOSTICS: Check environment setup ---
+  // Use the standard environment variable to determine the public host
   const nextAuthUrl = process.env.NEXTAUTH_URL || "NOT SET";
   let publicHost = "UNKNOWN";
 
   if (nextAuthUrl !== "NOT SET") {
     try {
       publicHost = new URL(nextAuthUrl).host;
-      console.log(`[getCurrentUser: DIAG] NEXTAUTH_URL: ${nextAuthUrl}`);
-      console.log(`[getCurrentUser: DIAG] Parsed Public Host: ${publicHost}`);
     } catch (e) {
-      console.error(
-        `[getCurrentUser: DIAG] Error parsing NEXTAUTH_URL: ${e.message}`
-      );
       publicHost = "INVALID_URL";
     }
-  } else {
-    console.warn(
-      "[getCurrentUser: DIAG] WARNING: NEXTAUTH_URL environment variable is NOT SET."
-    );
   }
-  // --- END ENHANCED DIAGNOSTICS ---
 
-  // --- START DEFINITIVE FIX ---
   // 1. Get current request headers
   const reqHeaders = Object.fromEntries(headers());
 
-  // 2. CONSTRUCT THE `req` OBJECT
-  const req = {
-    headers: reqHeaders,
-    cookies: {
-      [cookieName]: sessionCookieValue,
-    },
-  };
-
-  // 🔎 DIAGNOSTIC LOGS: Displaying the raw host from the environment
-  console.log(
-    `[getCurrentUser: DIAG] Raw Request Host Header: ${
-      req.headers["host"] || "Missing"
-    }`
-  );
-
-  // ✅ CRITICAL FIX: Overwrite the host and protocol headers ONLY IF the session cookie exists.
-  if (
-    sessionCookieValue &&
-    publicHost !== "UNKNOWN" &&
-    publicHost !== "INVALID_URL"
-  ) {
-    // 1. Overwrite Host header to pass NextAuth's host check
-    req.headers["host"] = publicHost;
-    req.headers["x-forwarded-host"] = publicHost;
-
-    // 2. VITAL FIX: Force protocol to HTTPS for secure cookie validation
-    req.headers["x-forwarded-proto"] = "https";
-
-    console.log(
-      `[getCurrentUser: DIAG] Host Overwritten to: ${req.headers["host"]}`
-    );
-    console.log(
-      `[getCurrentUser: DIAG] Protocol set to: ${req.headers["x-forwarded-proto"]}`
-    );
-  } else if (!sessionCookieValue) {
-    console.warn(
-      "[getCurrentUser: DIAG] WARNING: Session Cookie is EMPTY. Skipping Host/Protocol Overwrite."
-    );
+  // 2. SPOOF HEADERS (Required for NextAuth token validation in a proxied environment)
+  if (publicHost !== "UNKNOWN" && publicHost !== "INVALID_URL") {
+    reqHeaders["host"] = publicHost;
+    reqHeaders["x-forwarded-host"] = publicHost;
+    reqHeaders["x-forwarded-proto"] = "https"; // Crucial for __Secure-next-auth cookie
   }
 
-  // We pass a fake 'res' object. It's not used but is required by v4.
-  const res = { getHeader() {}, setHeader() {} };
+  // 3. Construct the minimal mock request object for getToken
+  const req = { headers: reqHeaders };
 
-  // 🔎 DIAGNOSTIC LOGS:
+  // 4. Use getToken to read the JWT directly (bypasses getServerSession complexity)
+  const token = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+    // We pass the NEXTAUTH_OPTIONS here, which allows getToken to read the JWT options
+    cookieName: "__Secure-next-auth.session-token",
+  });
+
+  // --- DIAGNOSTICS ---
   console.log(
-    `[getCurrentUser: DIAG] Session Cookie Found (first 10 chars): ${sessionCookieValue.substring(
+    `[getCurrentUser] Secret (first 5): ${process.env.NEXTAUTH_SECRET?.substring(
       0,
-      10
-    )}... (Length: ${sessionCookieValue.length})`
+      5
+    )}`
   );
-
-  // Pass (req, res, authOptions) to getServerSession
-  const session = await getServerSession(req, res, authOptions);
-  // --- END DEFINITIVE FIX ---
-
-  // 🔎 DIAGNOSTIC LOG:
+  console.log(`[getCurrentUser: DIAG] NEXTAUTH_URL: ${nextAuthUrl}`);
+  console.log(`[getCurrentUser: DIAG] Parsed Public Host: ${publicHost}`);
   console.log(
-    `[getCurrentUser: DIAG] getServerSession Result: ${
-      session ? "FOUND" : "NULL"
-    }`
+    `[getCurrentUser: DIAG] Injected Request Host: ${reqHeaders["host"]}`
   );
+  console.log(
+    `[getCurrentUser: DIAG] Injected Protocol: ${reqHeaders["x-forwarded-proto"]}`
+  );
+  console.log(
+    `[getCurrentUser: DIAG] getToken Result: ${token ? "FOUND" : "NULL"}`
+  );
+  // --- END DIAGNOSTICS ---
 
-  if (!session || !session.user || !session.user.id) {
+  if (!token || !token.id) {
     console.log(
-      "[getCurrentUser] Session missing or user.id not found. Cannot proceed to data fetch."
+      "[getCurrentUser] Token missing or token.id not found. Cannot proceed to data fetch."
     );
     return null;
   }
 
   // This will finally work in production
-  console.log("[getCurrentUser] Found session for user.id:", session.user.id);
-  const profileData = session.user.profileData || {};
+  console.log("[getCurrentUser] Found session for user.id:", token.id);
+  const profileData = token.profileData || {};
 
   return {
-    uid: session.user.id,
-    name: session.user.name,
-    email: session.user.email,
+    uid: token.id,
+    name: token.name,
+    email: token.email,
     ...profileData,
   };
 }
