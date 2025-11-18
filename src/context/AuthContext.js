@@ -22,13 +22,13 @@ import {
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
-import {
-  signOut as nextAuthSignOut,
-  useSession,
-  // --- START FIX ---
-  signIn, // 👈 We still need this
-  // --- END FIX ---
-} from "next-auth/react";
+// import {
+//   signOut as nextAuthSignOut,
+//   useSession,
+//   // --- START FIX ---
+//   signIn, // 👈 We still need this
+//   // --- END FIX ---
+// } from "next-auth/react";
 
 import { getFirebaseAuth } from "@/lib/firebase/firebase-client";
 import { createFirebaseCustomToken } from "@/lib/actions/authActions";
@@ -67,40 +67,59 @@ export function AuthProvider({ children }) {
     initializeAuth();
   }, []);
 
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
   const [firebaseUser, setFirebaseUser] = useState(null);
   const [isFirebaseSyncing, setIsFirebaseSyncing] = useState(true);
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState(null);
 
-  // (This useEffect for sync remains the same)
+  // 🛑 RE-ACTIVATE AND SIMPLIFY THIS USE EFFECT
   useEffect(() => {
-    if (!auth || status === "loading") return;
+    if (!auth) return;
 
+    // This listener is purely for Firebase client state, not NextAuth sync
     const unsubscribe = onIdTokenChanged(auth, (user) => {
       setFirebaseUser(user);
       setIsFirebaseSyncing(false);
     });
 
-    const syncFirebaseUser = async () => {
-      if (!auth.currentUser && status === "authenticated") {
-        try {
-          const customToken = await createFirebaseCustomToken();
-          if (customToken) {
-            await signInWithCustomToken(auth, customToken);
-          } else {
-            setIsFirebaseSyncing(false);
-          }
-        } catch (err) {
-          setIsFirebaseSyncing(false);
-        }
-      } else if (status === "unauthenticated") {
-        setIsFirebaseSyncing(false);
-      }
-    };
-    syncFirebaseUser();
+    // The entire syncFirebaseUser logic (creating custom token/signInWithCustomToken)
+    // must be REMOVED as it relies on the flawed NextAuth synchronization.
+
+    // Immediately set syncing to false if user is null/ready
+    if (!auth.currentUser) setIsFirebaseSyncing(false);
+
     return () => unsubscribe();
-  }, [auth, status, router]);
+  }, [auth]); // Status is removed from dependency array
+
+  // (This useEffect for sync remains the same)
+  // useEffect(() => {
+  //   if (!auth || status === "loading") return;
+
+  //   const unsubscribe = onIdTokenChanged(auth, (user) => {
+  //     setFirebaseUser(user);
+  //     setIsFirebaseSyncing(false);
+  //   });
+
+  //   const syncFirebaseUser = async () => {
+  //     if (!auth.currentUser && status === "authenticated") {
+  //       try {
+  //         const customToken = await createFirebaseCustomToken();
+  //         if (customToken) {
+  //           await signInWithCustomToken(auth, customToken);
+  //         } else {
+  //           setIsFirebaseSyncing(false);
+  //         }
+  //       } catch (err) {
+  //         setIsFirebaseSyncing(false);
+  //       }
+  //     } else if (status === "unauthenticated") {
+  //       setIsFirebaseSyncing(false);
+  //     }
+  //   };
+  //   syncFirebaseUser();
+  //   return () => unsubscribe();
+  // }, [auth, status, router]);
 
   // --- START REFACTOR ---
   // Revert handleLogin to use Firebase client sign-in
