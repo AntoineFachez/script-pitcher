@@ -13,19 +13,27 @@ import {
 import {
   onIdTokenChanged,
   signOut as firebaseSignOut,
-  signInWithEmailAndPassword,
+  // --- START FIX ---
+  signInWithEmailAndPassword, // 👈 ADD THIS BACK
+  // --- END FIX ---
   createUserWithEmailAndPassword,
   Auth,
   signInWithCustomToken,
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
-import { signOut as nextAuthSignOut, useSession } from "next-auth/react";
+import {
+  signOut as nextAuthSignOut,
+  useSession,
+  // --- START FIX ---
+  signIn, // 👈 We still need this
+  // --- END FIX ---
+} from "next-auth/react";
 
 import { getFirebaseAuth } from "@/lib/firebase/firebase-client";
 import { createFirebaseCustomToken } from "@/lib/actions/authActions";
 
-// Helper function to create user-friendly error messages
+// (getFirebaseAuthErrorMessage helper remains the same)
 const getFirebaseAuthErrorMessage = (errorCode) => {
   switch (errorCode) {
     case "auth/user-not-found":
@@ -48,130 +56,108 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const router = useRouter();
 
-  // --- THIS IS THE FIX ---
-  // 1. Initialize auth as null.
-  // --- JSDoc FIX ---
   /** @type {[Auth | null, React.Dispatch<React.SetStateAction<Auth | null>>]} */
   const [auth, setAuth] = useState(null);
 
-  // 2. Use useEffect to set the auth instance.
-  // This hook ONLY runs on the client, after the component mounts.
+  // (This useEffect to set auth is correct)
   useEffect(() => {
-    // 🛑 CRITICAL FIX: Define an inner async function
     const initializeAuth = async () => {
       setAuth(await getFirebaseAuth());
     };
     initializeAuth();
   }, []);
 
-  // -----------------------
-  // State for the user object and session loading
-  // ✅ REFACTOR 1: Integrate NextAuth session for primary status
   const { data: session, status } = useSession();
-
-  // State for the Firebase user object (used for SDK interaction and ID token refresh)
   const [firebaseUser, setFirebaseUser] = useState(null);
-
   const [isFirebaseSyncing, setIsFirebaseSyncing] = useState(true);
-
-  // State for auth *actions* (login, signup, logout) (KEEP AS-IS)
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState(null);
 
-  // 1. EFFECT: Initialize Firebase Auth Instance
+  // (This useEffect for sync remains the same)
   useEffect(() => {
-    const initializeAuth = async () => {
-      setAuth(await getFirebaseAuth());
-    };
-    initializeAuth();
-  }, []);
-
-  // 2. 🚀 CONSOLIDATED EFFECT: Listener and Sync Initiation
-  useEffect(() => {
-    // 1. Prerequisites: Must have Auth instance and must not be loading NextAuth status.
     if (!auth || status === "loading") return;
 
-    // --- A. Setup the Listener (Runs FIRST) ---
-    // This listener is the stable source of truth. It sets the user and releases the lock.
     const unsubscribe = onIdTokenChanged(auth, (user) => {
       setFirebaseUser(user);
-      // 🛑 CRITICAL: This MUST run to allow the application to render.
       setIsFirebaseSyncing(false);
     });
 
-    // --- B. Kick off the Async Sync (Only if NextAuth is 'authenticated') ---
     const syncFirebaseUser = async () => {
-      // Check for user internally to prevent unnecessary token generation on re-runs
       if (!auth.currentUser && status === "authenticated") {
         try {
           const customToken = await createFirebaseCustomToken();
           if (customToken) {
-            // This sign-in successfully triggers the onIdTokenChanged listener (A).
             await signInWithCustomToken(auth, customToken);
           } else {
-            console.warn(
-              "Sync failed: No custom token returned. Releasing lock."
-            );
-            setIsFirebaseSyncing(false); // Failure release
+            setIsFirebaseSyncing(false);
           }
         } catch (err) {
-          console.error(
-            "Firebase Custom Token Sign-In failed, releasing lock:",
-            err.message
-          );
-          setIsFirebaseSyncing(false); // Failure release
-          // Set error message if needed
+          setIsFirebaseSyncing(false);
         }
       } else if (status === "unauthenticated") {
-        // If NextAuth confirms log-out, immediately release lock.
         setIsFirebaseSyncing(false);
       }
     };
-
-    // Run the sync function if we are authenticated but haven't synced yet.
     syncFirebaseUser();
-
-    // --- C. Cleanup ---
     return () => unsubscribe();
-  }, [auth, status, router]); // 🛑 Removed firebaseUser from dependency list to stop thrashing
+  }, [auth, status, router]);
 
-  // --- Auth Functions ---
+  // --- START REFACTOR ---
+  // Revert handleLogin to use Firebase client sign-in
+  // AND THEN sync with NextAuth
   const handleLogin = useCallback(
     async (email, password) => {
+      if (!auth) {
+        console.error("Auth service is not initialized yet.");
+        setAuthError("Auth service is not ready. Please wait.");
+        return;
+      }
+
       setAuthLoading(true);
       setAuthError(null);
+
       try {
-        // 1. Firebase Sign-In (This success will trigger the onIdTokenChanged listener)
+        // 1. Sign in to Firebase on the CLIENT first
         const userCredential = await signInWithEmailAndPassword(
           auth,
           email,
           password
         );
-        const firebaseUser = userCredential.user; // User object is available here
 
-        // 2. Get ID Token and sync with NextAuth server
+        const firebaseUser = userCredential.user;
+
+        // 2. Get the ID token from the successful Firebase login
         const idToken = await firebaseUser.getIdToken();
-        const res = await fetch("/api/auth/session-sync", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ idToken }),
+
+        // 3. Pass that token to NextAuth's 'credentials' provider
+        const result = await signIn("credentials", {
+          idToken: idToken,
+          redirect: false, // We handle the redirect
         });
 
-        if (!res.ok) {
-          throw new Error("Failed to sync session with NextAuth server.");
+        // This log is no longer needed:
+        // console.log("AuthContext.js:134 result", result);
+
+        if (result.error) {
+          // This error comes from NextAuth (e.g., token verification failed)
+          throw new Error(result.error);
         }
 
-        // ⭐️ CRITICAL FIX: The entire application relies on the listener to set the state.
-        // After successfully setting the cookie, client-side navigation is safe.
+        // 4. Success! Push to home page.
+        // The 'useSession' hook will update, and the 'onIdTokenChanged'
+        // listener will set the 'firebaseUser' state.
         router.push("/");
       } catch (error) {
-        // ... (error handling)
+        // This catch block now handles errors from BOTH
+        // signInWithEmailAndPassword AND the NextAuth signIn
+        console.error("handleLogin Error:", error);
+        setAuthError(getFirebaseAuthErrorMessage(error.code));
         setFirebaseUser(null);
       } finally {
         setAuthLoading(false);
       }
     },
-    [auth, router] // Use 'router' in the dependency array
+    [auth, router] // 👈 'auth' is now a dependency again
   );
 
   const handleSignUp = useCallback(
