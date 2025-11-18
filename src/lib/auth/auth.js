@@ -105,6 +105,20 @@ export const authOptions = {
     signOut: "/",
     error: "/",
   },
+  // This is the standard for production sites.
+  cookies: {
+    sessionToken: {
+      name: `__Secure-next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: true,
+        // This is the critical line
+        domain: ".script-pitcher.web.app",
+      },
+    },
+  },
 };
 // --- END of authOptions ---
 

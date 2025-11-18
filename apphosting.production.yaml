@@ -6,15 +6,13 @@ cpu: 0.5
 memoryMiB: 1024
 
 environmentVariables:
-  NEXTAUTH_URL: https://questionthem.web.app
+  NODE_ENV: production
 
 secrets:
   - secret: GOOGLE_CLIENT_SECRET
   - secret: GOOGLE_CLIENT_ID
   - secret: NEXTAUTH_SECRET
+  - secret: NEXTAUTH_URL
   - secret: YOUTUBE_API_KEY
-  # === THIS IS THE FIX ===
-  # 1. Reference the secret by its lowercase ID in Secret Manager.
-  # 2. Use 'exposeAs' to give it the uppercase name your code expects.
   - secret: firebase-service-account-key
     exposeAs: FIREBASE_SERVICE_ACCOUNT_KEY
