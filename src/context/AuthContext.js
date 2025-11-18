@@ -13,25 +13,17 @@ import {
 import {
   onIdTokenChanged,
   signOut as firebaseSignOut,
-  // --- START FIX ---
-  signInWithEmailAndPassword, // 👈 ADD THIS BACK
-  // --- END FIX ---
+  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   Auth,
-  signInWithCustomToken,
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
-// import {
-//   signOut as nextAuthSignOut,
-//   useSession,
-//   // --- START FIX ---
-//   signIn, // 👈 We still need this
-//   // --- END FIX ---
-// } from "next-auth/react";
+// 🛑 IMPORTANT: ALL NEXTAUTH IMPORTS ARE REMOVED HERE
+// (signOut, useSession, signIn, etc.)
 
 import { getFirebaseAuth } from "@/lib/firebase/firebase-client";
-import { createFirebaseCustomToken } from "@/lib/actions/authActions";
+// import { createFirebaseCustomToken } from "@/lib/actions/authActions"; // Removed, as this was for NextAuth sync
 
 // (getFirebaseAuthErrorMessage helper remains the same)
 const getFirebaseAuthErrorMessage = (errorCode) => {
@@ -59,7 +51,7 @@ export function AuthProvider({ children }) {
   /** @type {[Auth | null, React.Dispatch<React.SetStateAction<Auth | null>>]} */
   const [auth, setAuth] = useState(null);
 
-  // (This useEffect to set auth is correct)
+  // Initialization is correct
   useEffect(() => {
     const initializeAuth = async () => {
       setAuth(await getFirebaseAuth());
@@ -67,121 +59,29 @@ export function AuthProvider({ children }) {
     initializeAuth();
   }, []);
 
-  // const { data: session, status } = useSession();
+  // 🛑 NextAuth state variables are removed (session, status)
   const [firebaseUser, setFirebaseUser] = useState(null);
-  const [isFirebaseSyncing, setIsFirebaseSyncing] = useState(true);
+  const [isUserLoading, setIsUserLoading] = useState(true); // Renamed from isFirebaseSyncing for clarity
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState(null);
 
-  // 🛑 RE-ACTIVATE AND SIMPLIFY THIS USE EFFECT
+  // 🟢 CLEANED UP USE EFFECT: Only listens to Firebase state changes
   useEffect(() => {
     if (!auth) return;
 
-    // This listener is purely for Firebase client state, not NextAuth sync
+    // This listener is purely for Firebase client state
     const unsubscribe = onIdTokenChanged(auth, (user) => {
       setFirebaseUser(user);
-      setIsFirebaseSyncing(false);
+      setIsUserLoading(false); // Authentication state is now resolved
     });
 
-    // The entire syncFirebaseUser logic (creating custom token/signInWithCustomToken)
-    // must be REMOVED as it relies on the flawed NextAuth synchronization.
-
-    // Immediately set syncing to false if user is null/ready
-    if (!auth.currentUser) setIsFirebaseSyncing(false);
-
     return () => unsubscribe();
-  }, [auth]); // Status is removed from dependency array
+  }, [auth]);
 
-  // (This useEffect for sync remains the same)
-  // useEffect(() => {
-  //   if (!auth || status === "loading") return;
-
-  //   const unsubscribe = onIdTokenChanged(auth, (user) => {
-  //     setFirebaseUser(user);
-  //     setIsFirebaseSyncing(false);
-  //   });
-
-  //   const syncFirebaseUser = async () => {
-  //     if (!auth.currentUser && status === "authenticated") {
-  //       try {
-  //         const customToken = await createFirebaseCustomToken();
-  //         if (customToken) {
-  //           await signInWithCustomToken(auth, customToken);
-  //         } else {
-  //           setIsFirebaseSyncing(false);
-  //         }
-  //       } catch (err) {
-  //         setIsFirebaseSyncing(false);
-  //       }
-  //     } else if (status === "unauthenticated") {
-  //       setIsFirebaseSyncing(false);
-  //     }
-  //   };
-  //   syncFirebaseUser();
-  //   return () => unsubscribe();
-  // }, [auth, status, router]);
-
-  // --- START REFACTOR ---
-  // Revert handleLogin to use Firebase client sign-in
-  // AND THEN sync with NextAuth
-  // const handleLogin = useCallback(
-  //   async (email, password) => {
-  //     if (!auth) {
-  //       console.error("Auth service is not initialized yet.");
-  //       setAuthError("Auth service is not ready. Please wait.");
-  //       return;
-  //     }
-
-  //     setAuthLoading(true);
-  //     setAuthError(null);
-
-  //     try {
-  //       // 1. Sign in to Firebase on the CLIENT first
-  //       const userCredential = await signInWithEmailAndPassword(
-  //         auth,
-  //         email,
-  //         password
-  //       );
-
-  //       const firebaseUser = userCredential.user;
-
-  //       // 2. Get the ID token from the successful Firebase login
-  //       const idToken = await firebaseUser.getIdToken();
-
-  //       // 3. Pass that token to NextAuth's 'credentials' provider
-  //       const result = await signIn("credentials", {
-  //         idToken: idToken,
-  //         redirect: false, // We handle the redirect
-  //       });
-
-  //       // This log is no longer needed:
-  //       // console.log("AuthContext.js:134 result", result);
-
-  //       if (result.error) {
-  //         // This error comes from NextAuth (e.g., token verification failed)
-  //         throw new Error(result.error);
-  //       }
-
-  //       // 4. Success! Push to home page.
-  //       // The 'useSession' hook will update, and the 'onIdTokenChanged'
-  //       // listener will set the 'firebaseUser' state.
-  //       router.push("/");
-  //     } catch (error) {
-  //       // This catch block now handles errors from BOTH
-  //       // signInWithEmailAndPassword AND the NextAuth signIn
-  //       console.error("handleLogin Error:", error);
-  //       setAuthError(getFirebaseAuthErrorMessage(error.code));
-  //       setFirebaseUser(null);
-  //     } finally {
-  //       setAuthLoading(false);
-  //     }
-  //   },
-  //   [auth, router] // 👈 'auth' is now a dependency again
-  // );
+  // --- Login Handler (Uses Firebase session API) ---
   const handleLogin = useCallback(
     async (email, password) => {
       if (!auth) {
-        console.error("Auth service is not initialized yet.");
         setAuthError("Auth service is not ready. Please wait.");
         return;
       }
@@ -190,7 +90,6 @@ export function AuthProvider({ children }) {
       setAuthError(null);
 
       try {
-        // 1. Sign in to Firebase on the CLIENT first
         const userCredential = await signInWithEmailAndPassword(
           auth,
           email,
@@ -198,11 +97,9 @@ export function AuthProvider({ children }) {
         );
 
         const firebaseUser = userCredential.user;
-
-        // 2. Get the ID token from the successful Firebase login
         const idToken = await firebaseUser.getIdToken();
 
-        // 3. 🟢 NEW: Exchange the ID token for the secure session cookie
+        // 1. Exchange the ID token for the secure session cookie (__session)
         const response = await fetch("/api/session/login", {
           method: "POST",
           headers: {
@@ -212,7 +109,6 @@ export function AuthProvider({ children }) {
         });
 
         if (!response.ok) {
-          // If the server failed to set the cookie, throw an error
           const errorData = await response
             .json()
             .catch(() => ({ error: "Server session error" }));
@@ -223,14 +119,10 @@ export function AuthProvider({ children }) {
           );
         }
 
-        // 4. Success! Secure session cookie is set. Redirect home.
-        // The subsequent server-side request for '/' will now successfully read the __session cookie.
+        // 2. Success! Redirect home.
         router.push("/");
       } catch (error) {
-        // This catch block handles errors from Firebase, token fetching, or the API call.
         console.error("handleLogin Error:", error);
-
-        // Safely extract the Firebase error message if available
         const errorCode = error.code || null;
         setAuthError(getFirebaseAuthErrorMessage(errorCode) || error.message);
         setFirebaseUser(null);
@@ -241,12 +133,12 @@ export function AuthProvider({ children }) {
     [auth, router]
   );
 
+  // --- Sign Up Handler (Uses Firebase session API) ---
   const handleSignUp = useCallback(
     async (email, password) => {
       setAuthLoading(true);
       setAuthError(null);
       try {
-        // 1. Create user on the client side
         const userCredential = await createUserWithEmailAndPassword(
           auth,
           email,
@@ -254,11 +146,9 @@ export function AuthProvider({ children }) {
         );
 
         const firebaseUser = userCredential.user;
-
-        // 2. Get the ID token for the new user
         const idToken = await firebaseUser.getIdToken();
 
-        // 3. 🟢 NEW: Exchange the ID token for the secure session cookie
+        // 1. Exchange the ID token for the secure session cookie
         const response = await fetch("/api/session/login", {
           method: "POST",
           headers: {
@@ -268,7 +158,6 @@ export function AuthProvider({ children }) {
         });
 
         if (!response.ok) {
-          // If the server failed to set the cookie, throw an error
           const errorData = await response
             .json()
             .catch(() => ({ error: "Server session error" }));
@@ -279,20 +168,19 @@ export function AuthProvider({ children }) {
           );
         }
 
-        // 4. Success! Session cookie is set. Redirect home.
+        // 2. Success! Redirect home.
         router.push("/");
       } catch (error) {
         console.error("handleSignUp Error:", error.code, error.message);
-
-        // Handle client-side error (e.g., email already in use)
         setAuthError(getFirebaseAuthErrorMessage(error.code) || error.message);
       } finally {
         setAuthLoading(false);
       }
     },
-    [auth, router] // Added router to dependencies
+    [auth, router]
   );
 
+  // --- Logout Handler (Clears Firebase cookie and client state) ---
   const handleLogout = useCallback(async () => {
     setAuthLoading(true);
     setAuthError(null);
@@ -300,8 +188,7 @@ export function AuthProvider({ children }) {
       // 1. Sign out of Firebase Auth (clears the client state/token)
       await firebaseSignOut(auth);
 
-      // 2. 🟢 NEW: Call server endpoint to clear the secure session cookie (__session)
-      // This is now a simple POST request, eliminating the complex NextAuth utility calls.
+      // 2. Call server endpoint to clear the secure session cookie (__session)
       await fetch("/api/session/logout", {
         method: "POST",
       });
@@ -313,23 +200,20 @@ export function AuthProvider({ children }) {
     } catch (error) {
       console.error("handleLogout Error:", error);
 
-      // Ensure we attempt to clear the client state even on error, and clear the cookie client-side
+      // Attempt clean up, and clear the cookie client-side as a fallback
       setFirebaseUser(null);
       document.cookie = "__session=; Max-Age=0; path=/;";
       setAuthError(getFirebaseAuthErrorMessage(error.code) || error.message);
     } finally {
       setAuthLoading(false);
     }
-  }, [auth, router, setFirebaseUser]); // Ensure setFirebaseUser is in dependencies
+  }, [auth, router, setFirebaseUser]);
 
   // The value provided to consuming components
   const value = useMemo(
     () => ({
       firebaseUser,
-      // ✅ ADDED: Expose a boolean status based on NextAuth loading state
-      isUserLoading: status === "loading" || isFirebaseSyncing,
-      // Expose the raw NextAuth status for more granular control if needed
-      authStatus: status,
+      isUserLoading,
       authLoading,
       authError,
       handleLogin,
@@ -338,8 +222,7 @@ export function AuthProvider({ children }) {
     }),
     [
       firebaseUser,
-      status, // 👈 New dependency
-      isFirebaseSyncing,
+      isUserLoading,
       authLoading,
       authError,
       handleLogin,
