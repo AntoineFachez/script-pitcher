@@ -13,6 +13,27 @@ const sessionCookieName = useSecureCookies
   ? `__Secure-next-auth.session-token` // Use secure prefix in prod (Cloud Run)
   : `next-auth.session-token`; // Use standard prefix locally (localhost)
 
+// 🟢 FIX 1 (BUILD CRASH): Safe function to derive cookie domain.
+const getCookieDomain = () => {
+  const url = process.env.NEXTAUTH_URL;
+  if (!url) return undefined; // Prevents TypeError: Invalid URL during build
+  try {
+    const hostname = new URL(url).hostname;
+    // Return .domain.com format for production only
+    return useSecureCookies && !hostname.includes("localhost")
+      ? `.${hostname}`
+      : undefined;
+  } catch (e) {
+    console.error(
+      "Failed to parse NEXTAUTH_URL during config initialization:",
+      e.message
+    );
+    return undefined;
+  }
+};
+
+const dynamicCookieDomain = getCookieDomain();
+
 // --- AUTH OPTIONS (Must be stable) ---
 export const authOptions = {
   ...authConfig,
@@ -92,12 +113,8 @@ export const authOptions = {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        // FIX 2 (CRITICAL): Set secure based on environment
         secure: useSecureCookies,
-        // 🛑 CRITICAL FIX 3: Add explicit domain for production to resolve Cookie Visibility Failure
-        domain: useSecureCookies
-          ? `.${new URL(process.env.NEXTAUTH_URL).hostname}`
-          : undefined,
+        domain: dynamicCookieDomain,
       },
     },
   },
