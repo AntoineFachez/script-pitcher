@@ -63,16 +63,29 @@ export async function POST(request, { params }) {
     }
 
     // 3. Create the invitation document.
-    // We use the email (lowercased) as the ID for easy lookup.
+
+    // Generate a unique token for the document ID (e.g., a simple UUID or KSUID)
+    // For this example, we'll use a placeholder for a unique ID generator
+    const invitationId = db.collection("projects").doc().id; // Firestore's auto-ID generator is a good choice
+
+    // Set expiration (e.g., 7 days)
+    const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
+    const expiresAt = new Date(Date.now() + sevenDaysInMs);
+
     const invitationRef = projectRef
       .collection("invitations")
-      .doc(email.toLowerCase());
+      .doc(invitationId); // Use the unique ID
 
     const invitationData = {
-      email: email.toLowerCase(),
+      // Use a unique ID as the token in the URL
+      token: invitationId,
+      projectId: projectId, // Add projectId for easier retrieval and rules
+      invitedEmail: email.toLowerCase(),
       role: role,
       invitedBy: decodedToken.uid,
+      status: "pending", // Add status field
       createdAt: FieldValue.serverTimestamp(),
+      expiresAt: expiresAt, // Add expiration field (as a Date object)
     };
 
     await invitationRef.set(invitationData);
