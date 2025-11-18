@@ -10,6 +10,7 @@ import { authConfig } from "./auth.config";
 // 1. Extend the lite config with Node.js-specific providers/callbacks
 export const authOptions = {
   ...authConfig,
+  trustHost: true,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -85,7 +86,9 @@ export const authOptions = {
         sameSite: "lax",
         path: "/",
         secure: true,
-        // domain: ".script-pitcher.web.app",
+        domain:
+          process.env.NEXT_PUBLIC_BASE_COOKIE_DOMAIN ||
+          ".script-pitcher.web.app",
       },
     },
   },
