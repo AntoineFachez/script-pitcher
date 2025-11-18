@@ -99,26 +99,26 @@ export default async function ViewProjectPage({ params }) {
       : null,
 
     // Serialize all fields within the members array
-    members: projectProfile?.members?.map((member) => ({
-      ...member,
+    members: Array.isArray(projectProfile?.members)
+      ? projectProfile.members.map((member) => ({
+          ...member,
 
-      // Serialize the User's createdAt field
-      createdAt: member?.createdAt
-        ? member?.createdAt?.toDate().toISOString()
-        : null,
+          // User Profile Timestamps
+          createdAt: member?.createdAt?.toDate().toISOString() || null,
+          lastLogin: member?.lastLogin?.toDate().toISOString() || null,
 
-      lastLogin: member?.lastLogin
-        ? member?.lastLogin.toDate().toISOString()
-        : null,
+          // 🔴 CRITICAL FIX: Serialize the Nested Role Object
+          role: {
+            ...member.role, // Spreads existing properties (including the raw Timestamp!)
 
-      // --- START FIX ---
-      // Serialize the nested 'joinedAt' timestamp inside the 'role' object
-      role: {
-        ...member.role,
-        joinedAt: member.role?.joinedAt?.toDate().toISOString() || null,
-      },
-      // --- END FIX ---
-    })),
+            // Overwrite 'joinedAt' with a string
+            joinedAt: member.role?.joinedAt?.toDate().toISOString() || null,
+
+            // 🛡️ SAFETY: If you have other timestamps like 'invitedAt', fix them here too:
+            // invitedAt: member.role?.invitedAt?.toDate().toISOString() || null,
+          },
+        }))
+      : [],
   };
 
   // 4. Pass the server-fetched data as a prop
