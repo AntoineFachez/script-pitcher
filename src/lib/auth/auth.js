@@ -2,9 +2,11 @@ import { cookies } from "next/headers";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
 
 // 🟢 NEW getCurrentUser: Reads and verifies a simple Firebase session cookie
+const SESSION_COOKIE_NAME = "__session";
+
 export async function getCurrentUser() {
-  // We expect the session to be stored in a cookie named '__session'
-  const sessionCookie = cookies().get("__session")?.value;
+  // 1. Read the correct session cookie name
+  const sessionCookie = cookies().get(SESSION_COOKIE_NAME)?.value;
 
   if (!sessionCookie) {
     return null;
@@ -13,8 +15,7 @@ export async function getCurrentUser() {
   try {
     const { auth, db } = getAdminServices();
 
-    // 1. Verify the session cookie with Firebase Admin SDK
-    // The checkRevoked: true flag ensures security
+    // 2. Verify the session cookie with Firebase Admin SDK
     const decodedToken = await auth.verifySessionCookie(sessionCookie, true);
     const userId = decodedToken.uid;
 
@@ -40,14 +41,13 @@ export async function getCurrentUser() {
       return null;
     }
   } catch (error) {
-    // This catches expired or invalid cookies
     console.error(
       "[getCurrentUser] Firebase Session verification failed:",
       error.message
     );
 
-    // Clear the invalid cookie so the client attempts sign-in again
-    cookies().set("__session", "", { maxAge: 0, path: "/" });
+    // 3. Clear the cookie using the correct name on failure
+    cookies().set(SESSION_COOKIE_NAME, "", { maxAge: 0, path: "/" });
 
     return null;
   }
