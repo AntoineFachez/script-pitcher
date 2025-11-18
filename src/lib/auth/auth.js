@@ -126,7 +126,7 @@ export const authOptions = {
 export async function getCurrentUser() {
   // --- START FIX ---
   // REMOVE this line. The page will handle dynamic rendering.
-  // headers();
+  headers();
   // --- END FIX ---
 
   console.log(
