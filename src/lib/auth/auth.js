@@ -93,20 +93,39 @@ export const authOptions = {
 
 // 2. Your getCurrentUser helper (This is correct)
 export async function getCurrentUser() {
-  headers(); // 👈 Keep this
   console.log(
     `[getCurrentUser] Secret (first 5): ${process.env.NEXTAUTH_SECRET?.substring(
       0,
       5
     )}`
   );
-  const session = await getServerSession(authOptions); // 👈 Uses the full config
+
+  // --- START FIX ---
+  // getServerSession (v4) in App Router needs a manual 'req' and 'res' object.
+  const req = {
+    headers: Object.fromEntries(headers()), // Get headers
+    cookies: Object.fromEntries(
+      cookies()
+        .getAll()
+        .map((c) => [c.name, c.value])
+    ), // Get cookies
+  };
+  // We pass a fake 'res' object. It's not used but is required by v4.
+  const res = { getHeader() {}, setHeader() {} };
+
+  // Pass (req, res, authOptions) to getServerSession
+  const session = await getServerSession(req, res, authOptions);
+  // --- END FIX ---
+
   if (!session || !session.user || !session.user.id) {
     console.log("[getCurrentUser] Session missing or user.id not found.");
     return null;
   }
+
+  // This will finally work in production
   console.log("[getCurrentUser] Found session for user.id:", session.user.id);
   const profileData = session.user.profileData || {};
+
   return {
     uid: session.user.id,
     name: session.user.name,
