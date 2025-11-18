@@ -85,7 +85,7 @@ export const authOptions = {
         sameSite: "lax",
         path: "/",
         secure: true,
-        domain: ".script-pitcher.web.app",
+        // domain: ".script-pitcher.web.app",
       },
     },
   },
