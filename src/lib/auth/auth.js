@@ -103,33 +103,81 @@ export async function getCurrentUser() {
     )}`
   );
 
+  // Use the established secure cookie name
+  const cookieName = "__Secure-next-auth.session-token";
+  const sessionCookieValue = cookies().get(cookieName)?.value || "";
+
+  // --- ENHANCED DIAGNOSTICS: Check environment setup ---
+  const nextAuthUrl = process.env.NEXTAUTH_URL || "NOT SET";
+  let publicHost = "UNKNOWN";
+
+  if (nextAuthUrl !== "NOT SET") {
+    try {
+      publicHost = new URL(nextAuthUrl).host;
+      console.log(`[getCurrentUser: DIAG] NEXTAUTH_URL: ${nextAuthUrl}`);
+      console.log(`[getCurrentUser: DIAG] Parsed Public Host: ${publicHost}`);
+    } catch (e) {
+      console.error(
+        `[getCurrentUser: DIAG] Error parsing NEXTAUTH_URL: ${e.message}`
+      );
+      publicHost = "INVALID_URL";
+    }
+  } else {
+    console.warn(
+      "[getCurrentUser: DIAG] WARNING: NEXTAUTH_URL environment variable is NOT SET."
+    );
+  }
+  // --- END ENHANCED DIAGNOSTICS ---
+
   // --- START FIX ---
-  const sessionCookieValue =
-    cookies().get("__Secure-next-auth.session-token")?.value || "";
+  // 1. Get current request headers
+  const reqHeaders = Object.fromEntries(headers());
 
-  // getServerSession (v4) in App Router needs a manual 'req' and 'res' object.
+  // 2. CONSTRUCT THE `req` OBJECT
   const req = {
-    headers: Object.fromEntries(headers()), // Get headers
-
-    // ✅ REFINED FIX: Construct the cookies object by explicitly looking
-    // up the session token. This is the most reliable pattern for v4 in the App Router.
+    headers: reqHeaders,
     cookies: {
-      "__Secure-next-auth.session-token":
-        cookies().get("__Secure-next-auth.session-token")?.value || "",
+      [cookieName]: sessionCookieValue,
     },
   };
+
+  // 🔎 DIAGNOSTIC LOGS: Displaying the raw host from the environment
+  console.log(
+    `[getCurrentUser: DIAG] Raw Request Host Header: ${
+      req.headers["host"] || "Missing"
+    }`
+  );
+
+  // ✅ CRITICAL FIX: Overwrite the host header in the request object
+  // passed to getServerSession with the NEXTAUTH_URL host ONLY IF the cookie is present.
+  if (
+    sessionCookieValue &&
+    publicHost !== "UNKNOWN" &&
+    publicHost !== "INVALID_URL"
+  ) {
+    // Overwrite Host header to trick NextAuth into accepting the cookie domain
+    req.headers["host"] = publicHost;
+    req.headers["x-forwarded-host"] = publicHost;
+
+    console.log(
+      `[getCurrentUser: DIAG] Host Overwritten to: ${req.headers["host"]}`
+    );
+  } else if (!sessionCookieValue) {
+    console.warn(
+      "[getCurrentUser: DIAG] WARNING: Session Cookie is EMPTY. Skipping Host Overwrite."
+    );
+  }
+
   // We pass a fake 'res' object. It's not used but is required by v4.
   const res = { getHeader() {}, setHeader() {} };
 
   // 🔎 DIAGNOSTIC LOGS:
-  console.log(`[getCurrentUser: DIAG] Request Host: ${req.headers["host"]}`);
   console.log(
     `[getCurrentUser: DIAG] Session Cookie Found (first 10 chars): ${sessionCookieValue.substring(
       0,
       10
-    )}...`
+    )}... (Length: ${sessionCookieValue.length})`
   );
-  // console.log("[getCurrentUser: DIAG] Full Request Cookies:", req.cookies); // Optional: if you need to see the full value
 
   // Pass (req, res, authOptions) to getServerSession
   const session = await getServerSession(req, res, authOptions);
@@ -143,7 +191,9 @@ export async function getCurrentUser() {
   );
 
   if (!session || !session.user || !session.user.id) {
-    console.log("[getCurrentUser] Session missing or user.id not found.");
+    console.log(
+      "[getCurrentUser] Session missing or user.id not found. Cannot proceed to data fetch."
+    );
     return null;
   }
 
