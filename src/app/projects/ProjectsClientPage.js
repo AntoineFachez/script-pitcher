@@ -1,4 +1,5 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/PROJECTS/PROJECTSCLIENTPAGE.JS
+
 "use client";
 
 import React, { useEffect, useMemo, useState, useOptimistic } from "react";
@@ -6,9 +7,9 @@ import { Box } from "@mui/material";
 
 // Global Contexts
 import { useApp } from "@/context/AppContext";
-// ⭐️ We no longer need useData() for fetching projects/users
 import { useInFocus } from "@/context/InFocusContext";
 import { useUi } from "@/context/UiContext";
+// ⭐️ DELETED: useUser() is no longer needed to get projects
 
 // Components
 import BasicModal from "@/components/modal/Modal";
@@ -19,10 +20,11 @@ import ProjectsWidget from "@/widgets/projects";
 import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 
 // Local elements
-import Menu from "./elements/Menu"; // Moved from parent
+import Menu from "./elements/Menu";
 import GernresList from "./elements/GernresList";
+// ⭐️ DELETED: useUser import
 
-// (Make sure to import your styles)
+// Styles
 // import { pageStyles, titleStyle } from "@/theme/muiProps";
 
 // We receive the server-fetched data as props
@@ -37,13 +39,13 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
     showPublishedProjects,
     setShowPublishedProjects,
   } = useUi();
-
+  // ⭐️ DELETED: const { myProjects } = useUser();
   const { setProjectInFocus, genreInFocus, setGenreInFocus } = useInFocus();
 
-  // 1. Use 'useOptimistic' to manage the projects list
-  // It will instantly show the "new" state, then revert if the action fails.
+  // 1. --- START FIX ---
+  // Use 'serverProjects' (from props) as the initial state for 'useOptimistic'
   const [optimisticProjects, setOptimisticProjects] = useOptimistic(
-    serverProjects || [],
+    serverProjects || [], // 👈 USE THE PROP HERE
     (currentProjects, { projectId, newPublishedState }) => {
       // This is the "optimistic" update function
       return currentProjects.map((p) =>
@@ -51,10 +53,11 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
       );
     }
   );
+  // --- END FIX ---
 
-  // 2. Manage all LOCAL UI state here (users are not mutated, so useState is fine)
+  // 2. Use 'serverUsers' (from props) for the initial user state
   const [users, setUsers] = useState(serverUsers || []);
-  const [filteredData, setFilteredData] = useState([]); // This seems for a different feature
+  const [filteredData, setFilteredData] = useState([]);
 
   // 3. Perform all filtering here, using the OPTIMISTIC data
   const uniqueGenres = useMemo(() => {
@@ -83,7 +86,7 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
   const clearFilter = () => setGenreInFocus(null);
   const handleFilterByPublish = () => setShowPublishedProjects((prev) => !prev);
 
-  // This is our new Server Action handler
+  // This Server Action handler is correct
   const handleTogglePublish = async (project) => {
     const newPublishedState = !project.published;
 
@@ -93,9 +96,7 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
       newPublishedState: newPublishedState,
     });
 
-    // 2. Call the server action.
-    // The server will revalidate the data, and Next.js will
-    // merge the "real" data with your optimistic state.
+    // 2. Call the server action
     await toggleProjectPublishState(project.id, newPublishedState);
   };
 
@@ -107,20 +108,20 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
     },
   ];
 
-  // 5. Cleanup Obsolete Effects
-  // ❌ DELETED: useEffect for setModalContent (moved to where it's needed)
-  // ❌ DELETED: useEffect for setInitialData (data now comes from props)
-
+  // 5. Set app context
   useEffect(() => {
     setAppContext("projects");
     return () => {};
   }, [setAppContext]);
 
+  // 6. Set modal content
+  useEffect(() => {
+    setModalContent(<CrudItem context={appContext} crud="create" />);
+  }, [appContext, setModalContent]);
+
   return (
     <>
-      {/* This <Menu> was in the server component, but since its actions
-        depend on client state (showPublishedProjects), it belongs here.
-      */}
+      {/* All client-side UI and interactivity lives here */}
       <Menu menuActions={menuActions} />
       {toggleDetails && (
         <GernresList
@@ -140,7 +141,7 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
           data={displayedData}
           filteredData={filteredData}
           setFilteredData={setFilteredData}
-          isLoading={false} // Data is pre-fetched, so it's never loading here
+          isLoading={false} // Data is pre-fetched
           onTogglePublish={handleTogglePublish}
           onSetGenreFocus={handleGenreClick}
         />

@@ -26,25 +26,25 @@ async function getDocsInBatches(collectionRef, ids) {
 }
 
 export async function getProjectsAndMembers(userId) {
-  console.log(
-    `[getProjectsAndMembers] 🚀 Starting fetch for userId: ${userId}`
-  );
+  // console.log(
+  //   `[getProjectsAndMembers] 🚀 Starting fetch for userId: ${userId}`
+  // );
   const { db } = getAdminServices();
   if (!db || !userId) {
-    console.log("[getProjectsAndMembers] 🛑 DB or userId is missing. Exiting.");
+    // console.log("[getProjectsAndMembers] 🛑 DB or userId is missing. Exiting.");
     return { projects: [], users: [] };
   }
 
   try {
-    console.log("[getProjectsAndMembers] 1. Fetching user summary document...");
+    // console.log("[getProjectsAndMembers] 1. Fetching user summary document...");
     const summaryRef = db.doc(`users/${userId}/private/summary`);
     const summarySnap = await summaryRef.get();
 
     if (!summarySnap.exists) {
       // This is correct (it's a property)
-      console.log(
-        `[getProjectsAndMembers] ⚠️ No summary document found for user ${userId}. Returning empty data.`
-      );
+      // console.log(
+      //   `[getProjectsAndMembers] ⚠️ No summary document found for user ${userId}. Returning empty data.`
+      // );
       return { projects: [], users: [] };
     }
 
@@ -52,23 +52,23 @@ export async function getProjectsAndMembers(userId) {
     const projectsMap = summaryData.projects || {};
 
     if (Object.keys(projectsMap).length === 0) {
-      console.log(
-        "[getProjectsAndMembers] ℹ️  User has no projects in their summary. Returning empty data."
-      );
+      // console.log(
+      //   "[getProjectsAndMembers] ℹ️  User has no projects in their summary. Returning empty data."
+      // );
       return { projects: [], users: [] };
     }
 
     const projectIds = Object.keys(projectsMap);
-    console.log(
-      `[getProjectsAndMembers] 3. Found ${projectIds.length} project ID(s):`
-    );
+    // console.log(
+    //   `[getProjectsAndMembers] 3. Found ${projectIds.length} project ID(s):`
+    // );
 
     const projectsRef = db.collection("projects");
     const fetchedProjects = await getDocsInBatches(projectsRef, projectIds);
 
-    console.log(
-      `[getProjectsAndMembers] 5. ✅ Fetched ${fetchedProjects.length} project documents.`
-    );
+    // console.log(
+    //   `[getProjectsAndMembers] 5. ✅ Fetched ${fetchedProjects.length} project documents.`
+    // );
 
     const allMemberIds = new Set();
     fetchedProjects.forEach((project) => {
@@ -78,20 +78,20 @@ export async function getProjectsAndMembers(userId) {
     });
 
     const uniqueUserIds = Array.from(allMemberIds);
-    console.log(
-      `[getProjectsAndMembers] 6. Found ${uniqueUserIds.length} unique member ID(s).`
-    );
+    // console.log(
+    //   `[getProjectsAndMembers] 6. Found ${uniqueUserIds.length} unique member ID(s).`
+    // );
 
     let fetchedUsers = [];
     if (uniqueUserIds.length > 0) {
-      console.log(
-        "[getProjectsAndMembers] 7. Fetching user profile documents..."
-      );
+      // console.log(
+      //   "[getProjectsAndMembers] 7. Fetching user profile documents..."
+      // );
       const usersRef = db.collection("users");
       fetchedUsers = await getDocsInBatches(usersRef, uniqueUserIds);
-      console.log(
-        `[getProjectsAndMembers] 8. ✅ Fetched ${fetchedUsers.length} user profiles.`
-      );
+      // console.log(
+      //   `[getProjectsAndMembers] 8. ✅ Fetched ${fetchedUsers.length} user profiles.`
+      // );
     } else {
       console.log(
         "[getProjectsAndMembers] 7. ℹ️ No member IDs found, skipping user profile fetch."
@@ -132,9 +132,9 @@ export async function getProjectsAndMembers(userId) {
     });
     // --- END FIX ---
 
-    console.log(
-      "[getProjectsAndMembers] 🎉 Fetch complete. Returning SERIALIZED data."
-    );
+    // console.log(
+    //   "[getProjectsAndMembers] 🎉 Fetch complete. Returning SERIALIZED data."
+    // );
 
     // Return the serialized, client-safe data
     return { projects: serializableProjects, users: serializableUsers };

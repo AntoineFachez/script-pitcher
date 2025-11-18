@@ -116,7 +116,6 @@ export function UserProvider({ documentId, children }) {
   const value = useMemo(
     () => ({
       userProfile,
-      myProjects,
       lastFile,
       setLastFile,
       myProjects,

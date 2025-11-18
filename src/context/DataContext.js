@@ -46,17 +46,17 @@ export function DataProvider({ children }) {
       try {
         setLoading(true);
         setError(null);
-        console.log("firebaseUser", firebaseUser.uid);
+        // console.log("firebaseUser", firebaseUser.uid);
         // Call the server action
         const { projects: fetchedProjects, users: fetchedUsers } =
           await getProjectsAndMembers(firebaseUser.uid);
         // 2. (Optional) Now you can safely log the data variable.
-        console.log("DataContext fetched data:", {
-          fetchedProjects,
-          fetchedUsers,
-        });
+        // console.log("DataContext fetched data:", {
+        //   fetchedProjects,
+        //   fetchedUsers,
+        // });
         setProjects(fetchedProjects || []);
-        console.log("fetchedProjects", fetchedProjects);
+        // console.log("fetchedProjects", fetchedProjects);
         setUsers(fetchedUsers || []);
       } catch (err) {
         console.error("DataContext failed to fetch data:", err);

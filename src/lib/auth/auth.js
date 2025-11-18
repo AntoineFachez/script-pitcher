@@ -72,19 +72,19 @@ export const authOptions = {
   callbacks: {
     // This session callback is correct and will now get a full token
     async session({ session, token }) {
-      console.log("[Auth Callback: SESSION] Received token:", token);
+      // console.log("[Auth Callback: SESSION] Received token:", token);
       if (token?.id) session.user.id = token.id;
       if (token?.profileData) session.user.profileData = token.profileData;
       session.user.name = token.name;
       session.user.email = token.email;
-      console.log("[Auth Callback: SESSION] Returning session:", session);
+      // console.log("[Auth Callback: SESSION] Returning session:", session);
       return session;
     },
 
     // This jwt callback will now run after 'authorize' succeeds
     async jwt({ token, user, trigger }) {
-      console.log("[Auth Callback: JWT] Received token:", token);
-      console.log("[Auth Callback: JWT] Received user:", user);
+      // console.log("[Auth Callback: JWT] Received token:", token);
+      // console.log("[Auth Callback: JWT] Received user:", user);
 
       // 'user' object comes from the 'authorize' function on first login
       if (user) {
@@ -101,12 +101,12 @@ export const authOptions = {
 
       // Check if it's already enriched
       if (token.profileData) {
-        console.log("[Auth Callback: JWT] Token already enriched.");
+        // console.log("[Auth Callback: JWT] Token already enriched.");
         return token;
       }
 
       // Enrich the token from Firestore (this code is correct)
-      console.log(`[Auth Callback: JWT] Enriching token for userId: ${userId}`);
+      // console.log(`[Auth Callback: JWT] Enriching token for userId: ${userId}`);
       try {
         const { db } = getAdminServices();
         const userDocRef = db.doc(`users/${userId}`);
@@ -117,7 +117,7 @@ export const authOptions = {
           token.id = userId;
           token.name = userData.displayName || userData.name || null;
           token.profileData = { ...userData, uid: userId };
-          console.log("[Auth Callback: JWT] SUCCESS: Token enriched.");
+          // console.log("[Auth Callback: JWT] SUCCESS: Token enriched.");
         } else {
           console.warn(
             `[Auth Callback: JWT] WARN: User ${userId} not found in Firestore.`
@@ -146,12 +146,12 @@ export const authOptions = {
 // This helper is correct and will now work
 export async function getCurrentUser() {
   headers();
-  console.log(
-    `[getCurrentUser] Secret (first 5): ${process.env.NEXTAUTH_SECRET?.substring(
-      0,
-      5
-    )}`
-  );
+  // console.log(
+  //   `[getCurrentUser] Secret (first 5): ${process.env.NEXTAUTH_SECRET?.substring(
+  //     0,
+  //     5
+  //   )}`
+  // );
 
   const session = await getServerSession(authOptions);
 
@@ -160,7 +160,7 @@ export async function getCurrentUser() {
     return null;
   }
 
-  console.log("[getCurrentUser] Found session for user.id:", session.user.id);
+  // console.log("[getCurrentUser] Found session for user.id:", session.user.id);
   const profileData = session.user.profileData || {};
 
   return {
