@@ -4,12 +4,12 @@ import { getServerSession } from "next-auth";
 import { cookies, headers } from "next/headers";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getAdminServices } from "@/lib/firebase/firebase-admin"; // 👈 Node.js API
-import { authConfig } from "./auth.config"; // 👈 Import the lite config
+import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { authConfig } from "./auth.config";
 
 // 1. Extend the lite config with Node.js-specific providers/callbacks
 export const authOptions = {
-  ...authConfig, // 👈 Spread the lite config (secret, pages, session, jwt)
+  ...authConfig,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -101,21 +101,43 @@ export async function getCurrentUser() {
   );
 
   // --- START FIX ---
+  const sessionCookieValue =
+    cookies().get("__Secure-next-auth.session-token")?.value || "";
+
   // getServerSession (v4) in App Router needs a manual 'req' and 'res' object.
   const req = {
     headers: Object.fromEntries(headers()), // Get headers
-    cookies: Object.fromEntries(
-      cookies()
-        .getAll()
-        .map((c) => [c.name, c.value])
-    ), // Get cookies
+
+    // ✅ REFINED FIX: Construct the cookies object by explicitly looking
+    // up the session token. This is the most reliable pattern for v4 in the App Router.
+    cookies: {
+      "__Secure-next-auth.session-token":
+        cookies().get("__Secure-next-auth.session-token")?.value || "",
+    },
   };
   // We pass a fake 'res' object. It's not used but is required by v4.
   const res = { getHeader() {}, setHeader() {} };
 
+  // 🔎 DIAGNOSTIC LOGS:
+  console.log(`[getCurrentUser: DIAG] Request Host: ${req.headers["host"]}`);
+  console.log(
+    `[getCurrentUser: DIAG] Session Cookie Found (first 10 chars): ${sessionCookieValue.substring(
+      0,
+      10
+    )}...`
+  );
+  // console.log("[getCurrentUser: DIAG] Full Request Cookies:", req.cookies); // Optional: if you need to see the full value
+
   // Pass (req, res, authOptions) to getServerSession
   const session = await getServerSession(req, res, authOptions);
   // --- END FIX ---
+
+  // 🔎 DIAGNOSTIC LOG:
+  console.log(
+    `[getCurrentUser: DIAG] getServerSession Result: ${
+      session ? "FOUND" : "NULL"
+    }`
+  );
 
   if (!session || !session.user || !session.user.id) {
     console.log("[getCurrentUser] Session missing or user.id not found.");
