@@ -1,7 +1,7 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/AUTH/AUTH.JS
 
 import { getServerSession } from "next-auth";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getAdminServices } from "@/lib/firebase/firebase-admin"; // 👈 Node.js API
