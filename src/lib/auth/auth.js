@@ -158,7 +158,7 @@ export async function getCurrentUser() {
     req.headers["host"] = publicHost;
     req.headers["x-forwarded-host"] = publicHost;
 
-    // 2. VITAL FIX: Force protocol to HTTPS for secure cookie validation (for __Secure-next-auth cookie)
+    // 2. VITAL FIX: Force protocol to HTTPS for secure cookie validation
     req.headers["x-forwarded-proto"] = "https";
 
     console.log(
