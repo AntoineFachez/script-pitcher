@@ -1,14 +1,20 @@
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/AUTH/AUTH.JS
+
 import { cookies } from "next/headers";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
 
-// 🟢 NEW getCurrentUser: Reads and verifies a simple Firebase session cookie
+// 🟢 FINAL CLEANUP: REMOVE all NextAuth imports (NextAuth, getServerSession, etc.)
+
+// The intended cookie name for Firebase Admin Sessions
 const SESSION_COOKIE_NAME = "__session";
 
+// 🟢 getCurrentUser: Reads and verifies a simple Firebase session cookie
 export async function getCurrentUser() {
   // 1. Read the correct session cookie name
   const sessionCookie = cookies().get(SESSION_COOKIE_NAME)?.value;
 
   if (!sessionCookie) {
+    // console.log("[getCurrentUser] Session cookie not found. User is logged out.");
     return null;
   }
 
@@ -19,7 +25,7 @@ export async function getCurrentUser() {
     const decodedToken = await auth.verifySessionCookie(sessionCookie, true);
     const userId = decodedToken.uid;
 
-    // 2. Fetch User Data (Re-using existing logic)
+    // 3. Fetch User Data
     const userDocSnap = await db.doc(`users/${userId}`).get();
 
     if (userDocSnap.exists) {
@@ -46,13 +52,12 @@ export async function getCurrentUser() {
       error.message
     );
 
-    // 3. Clear the cookie using the correct name on failure
+    // Clear the invalid cookie
     cookies().set(SESSION_COOKIE_NAME, "", { maxAge: 0, path: "/" });
 
     return null;
   }
 }
-
 // // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/AUTH/AUTH.JS
 
 // import { getServerSession } from "next-auth";
@@ -67,27 +72,6 @@ export async function getCurrentUser() {
 // const sessionCookieName = useSecureCookies
 //   ? `__Secure-next-auth.session-token` // Use secure prefix in prod (Cloud Run)
 //   : `next-auth.session-token`; // Use standard prefix locally (localhost)
-
-// // 🟢 FIX 1 (BUILD CRASH): Safe function to derive cookie domain.
-// const getCookieDomain = () => {
-//   const url = process.env.NEXTAUTH_URL;
-//   if (!url) return undefined; // Prevents TypeError: Invalid URL during build
-//   try {
-//     const hostname = new URL(url).hostname;
-//     // Return .domain.com format for production only
-//     return useSecureCookies && !hostname.includes("localhost")
-//       ? `.${hostname}`
-//       : undefined;
-//   } catch (e) {
-//     console.error(
-//       "Failed to parse NEXTAUTH_URL during config initialization:",
-//       e.message
-//     );
-//     return undefined;
-//   }
-// };
-
-// const dynamicCookieDomain = getCookieDomain();
 
 // // --- AUTH OPTIONS (Must be stable) ---
 // export const authOptions = {
@@ -168,8 +152,12 @@ export async function getCurrentUser() {
 //         httpOnly: true,
 //         sameSite: "lax",
 //         path: "/",
+//         // FIX 2 (CRITICAL): Set secure based on environment
 //         secure: useSecureCookies,
-//         domain: dynamicCookieDomain,
+//         // 🛑 CRITICAL FIX 3: Add explicit domain for production to resolve Cookie Visibility Failure
+//         domain: useSecureCookies
+//           ? `.${new URL(process.env.NEXTAUTH_URL).hostname}`
+//           : undefined,
 //       },
 //     },
 //   },
