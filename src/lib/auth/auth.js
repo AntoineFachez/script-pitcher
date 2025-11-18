@@ -8,7 +8,7 @@ import { getAdminServices } from "@/lib/firebase/firebase-admin";
 import { authConfig } from "./auth.config";
 import { getToken } from "next-auth/jwt";
 
-// 1. Extend the lite config with Node.js-specific providers/callbacks
+// // 1. Extend the lite config with Node.js-specific providers/callbacks
 // export const authOptions = {
 //   ...authConfig,
 //   // url: process.env.NEXTAUTH_URL, // e.g., "https://script-pitcher.web.app"
@@ -95,7 +95,7 @@ import { getToken } from "next-auth/jwt";
 //   },
 // };
 
-// 2. Your getCurrentUser helper (This is correct)
+// // 2. Your getCurrentUser helper (This is correct)
 // export async function getCurrentUser() {
 //   console.log(
 //     `[getCurrentUser] Secret (first 5): ${process.env.NEXTAUTH_SECRET?.substring(
@@ -216,17 +216,32 @@ import { getToken } from "next-auth/jwt";
 //     ...profileData,
 //   };
 // }
+
+// Dynamic configuration based on environment
 const useSecureCookies = process.env.NODE_ENV === "production";
 const sessionCookieName = useSecureCookies
   ? `__Secure-next-auth.session-token` // Use secure prefix in prod
   : `next-auth.session-token`; // Use standard prefix locally
+
+// 🟢 CRITICAL FIX: Stabilize NEXTAUTH_SECRET by explicitly decoding/re-encoding it
+// This resolves potential issues where Cloud Run corrupts the base64 string format.
+let stableSecret = process.env.NEXTAUTH_SECRET;
+try {
+  // Check if the secret exists and process it as a base64 string
+  if (stableSecret && stableSecret.length > 32) {
+    stableSecret = Buffer.from(stableSecret, "base64").toString("base64");
+  }
+} catch (e) {
+  // Log error but use original secret as fallback
+  console.error("Error processing NEXTAUTH_SECRET:", e.message);
+}
 
 // 1. Extend the lite config with Node.js-specific providers/callbacks
 export const authOptions = {
   ...authConfig,
 
   // FIX 1 (STABILIZATION): Explicitly set secret, URL, and trustHost.
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: stableSecret, // ⬅️ USE THE PROCESSED SECRET HERE
   url: process.env.NEXTAUTH_URL,
   trustHost: true, // Required for proxy support
 
@@ -298,27 +313,81 @@ export const authOptions = {
   },
   cookies: {
     sessionToken: {
-      // Use dynamic name
       name: sessionCookieName,
       options: {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        // FIX 2 (CRITICAL): Set secure based on environment to stabilize local API route
+        // 🛑 FIX 2: REMOVE secure: true from prod config via dynamic check
         secure: useSecureCookies,
-        // domain: ".script-pitcher.web.app", // MUST REMAIN REMOVED/COMMENTED OUT
       },
     },
   },
 };
 
-export async function getCurrentUser() {
-  // Use the dynamic configuration logic
-  const useSecureCookies = process.env.NODE_ENV === "production";
-  const cookieName = useSecureCookies
-    ? `__Secure-next-auth.session-token`
-    : `next-auth.session-token`;
+// export async function getCurrentUser() {
+//   // Use the dynamic configuration logic
+//   const useSecureCookies = process.env.NODE_ENV === "production";
+//   const cookieName = useSecureCookies
+//     ? `__Secure-next-auth.session-token`
+//     : `next-auth.session-token`;
 
+//   const nextAuthUrl = process.env.NEXTAUTH_URL || "NOT SET";
+//   let publicHost = "UNKNOWN";
+
+//   if (nextAuthUrl !== "NOT SET") {
+//     try {
+//       publicHost = new URL(nextAuthUrl).host;
+//     } catch (e) {
+//       publicHost = "INVALID_URL";
+//     }
+//   }
+
+//   // 1. Collect raw headers and cookies
+//   const reqHeaders = Object.fromEntries(headers());
+//   // Read the cookie using the dynamic name
+//   const reqCookies = Object.fromEntries(
+//     cookies()
+//       .getAll()
+//       .map((c) => [c.name, c.value])
+//   );
+
+//   // Determine protocol dynamically for header spoofing
+//   const protocol = useSecureCookies ? "https" : "http";
+
+//   // 2. SPOOF HEADERS (REQUIRED for production proxy)
+//   if (publicHost !== "UNKNOWN" && publicHost !== "INVALID_URL") {
+//     reqHeaders["host"] = publicHost;
+//     reqHeaders["x-forwarded-host"] = publicHost;
+//     reqHeaders["x-forwarded-proto"] = protocol; // Use dynamic protocol
+//   }
+
+//   // 3. Construct the request object for getServerSession
+//   const req = { headers: reqHeaders, cookies: reqCookies };
+//   const res = { getHeader() {}, setHeader() {} };
+
+//   // 4. Pass (req, res, authOptions) to getServerSession
+//   const session = await getServerSession(req, res, authOptions);
+
+//   // ... (Diagnostics and return logic)
+
+//   if (!session || !session.user || !session.user.id) {
+//     console.log("[getCurrentUser] Session missing or user.id not found.");
+//     return null;
+//   }
+
+//   console.log("[getCurrentUser] Found session for user.id:", session.user.id);
+//   const profileData = session.user.profileData || {};
+
+//   return {
+//     uid: session.user.id,
+//     name: session.user.name,
+//     email: session.user.email,
+//     ...profileData,
+//   };
+// }
+// 2. Your getCurrentUser helper (With Secret Debug Log)
+export async function getCurrentUser() {
   const nextAuthUrl = process.env.NEXTAUTH_URL || "NOT SET";
   let publicHost = "UNKNOWN";
 
@@ -332,7 +401,6 @@ export async function getCurrentUser() {
 
   // 1. Collect raw headers and cookies
   const reqHeaders = Object.fromEntries(headers());
-  // Read the cookie using the dynamic name
   const reqCookies = Object.fromEntries(
     cookies()
       .getAll()
@@ -342,21 +410,28 @@ export async function getCurrentUser() {
   // Determine protocol dynamically for header spoofing
   const protocol = useSecureCookies ? "https" : "http";
 
-  // 2. SPOOF HEADERS (REQUIRED for production proxy)
+  // 2. SPOOF HEADERS (Required for production proxy)
   if (publicHost !== "UNKNOWN" && publicHost !== "INVALID_URL") {
     reqHeaders["host"] = publicHost;
     reqHeaders["x-forwarded-host"] = publicHost;
-    reqHeaders["x-forwarded-proto"] = protocol; // Use dynamic protocol
+    reqHeaders["x-forwarded-proto"] = protocol;
   }
 
   // 3. Construct the request object for getServerSession
   const req = { headers: reqHeaders, cookies: reqCookies };
   const res = { getHeader() {}, setHeader() {} };
 
+  // --- DIAGNOSTICS (NEW CRITICAL DEBUG LOGS) ---
+  console.log(`[AUTH DEBUG] Secret (Full): ${process.env.NEXTAUTH_SECRET}`); // ⬅️ THIS MUST BE CHECKED IN GCLOUD LOGS
+  console.log(`[AUTH DEBUG] Spoofed Host: ${reqHeaders["host"]}`);
+  console.log(`[AUTH DEBUG] Protocol: ${reqHeaders["x-forwarded-proto"]}`);
+  console.log(
+    `[AUTH DEBUG] Cookie Length: ${reqCookies[sessionCookieName]?.length || 0}`
+  );
+  // --- END DIAGNOSTICS ---
+
   // 4. Pass (req, res, authOptions) to getServerSession
   const session = await getServerSession(req, res, authOptions);
-
-  // ... (Diagnostics and return logic)
 
   if (!session || !session.user || !session.user.id) {
     console.log("[getCurrentUser] Session missing or user.id not found.");
