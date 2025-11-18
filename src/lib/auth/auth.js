@@ -1,17 +1,17 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/AUTH/AUTH.JS
 
-import NextAuth from "next-auth";
+import { getServerSession } from "next-auth";
 // --- START FIX ---
-// REMOVE getServerSession, it's not used in v5 this way
-// import { getServerSession } from "next-auth";
+// REMOVE the import for 'headers'
+// import { headers } from "next/headers";
 // --- END FIX ---
-import { headers } from "next/headers";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
 
-// 1. This object is your single source of truth
+// ... (your entire authOptions object remains here, it is correct) ...
 export const authOptions = {
+  // ... (providers, callbacks, etc.)
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -57,35 +57,12 @@ export const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    // This authorized callback is for middleware
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const isProtectedRoute =
-        nextUrl.pathname.startsWith("/dashboard") ||
-        nextUrl.pathname.startsWith("/me") ||
-        nextUrl.pathname.startsWith("/projects") ||
-        nextUrl.pathname.startsWith("/users");
-
-      if (isProtectedRoute) {
-        if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
-      }
-      return true;
-    },
-    // This session callback adds the ID to the session object
     async session({ session, token }) {
-      console.log("[Auth Callback: SESSION] Received token:", token);
       if (token?.id) session.user.id = token.id;
       if (token?.profileData) session.user.profileData = token.profileData;
-      session.user.name = token.name;
-      session.user.email = token.email;
-      console.log("[Auth Callback: SESSION] Returning session:", session);
       return session;
     },
-    // This jwt callback enriches the token
     async jwt({ token, user, trigger }) {
-      console.log("[Auth Callback: JWT] Received token:", token);
-      console.log("[Auth Callback: JWT] Received user:", user);
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -93,18 +70,16 @@ export const authOptions = {
       }
       const userId = token?.id || token?.sub;
       if (!userId) {
-        console.error("[Auth Callback: JWT] FAILED: No userId in token.");
         return null;
       }
       if (token.profileData) {
-        console.log("[Auth Callback: JWT] Token already enriched.");
         return token;
       }
-      console.log(`[Auth Callback: JWT] Enriching token for userId: ${userId}`);
       try {
         const { db } = getAdminServices();
         const userDocRef = db.doc(`users/${userId}`);
         const userDocSnap = await userDocRef.get();
+
         if (userDocSnap.exists) {
           const userData = userDocSnap.data();
           token.id = userId;
@@ -131,17 +106,15 @@ export const authOptions = {
     error: "/",
   },
 };
+// --- END of authOptions ---
 
-// 2. ⭐️ EXPORT THE HANDLERS AND AUTH FUNCTION
-// This is the correct v5 syntax
-export const {
-  handlers: { GET, POST },
-  auth,
-} = NextAuth(authOptions);
-
-// 3. ⭐️ REFACTOR getCurrentUser
+// 2. Your getCurrentUser helper
 export async function getCurrentUser() {
-  headers(); // Force dynamic rendering
+  // --- START FIX ---
+  // REMOVE this line. The page will handle dynamic rendering.
+  // headers();
+  // --- END FIX ---
+
   console.log(
     `[getCurrentUser] Secret (first 5): ${process.env.NEXTAUTH_SECRET?.substring(
       0,
@@ -149,10 +122,7 @@ export async function getCurrentUser() {
     )}`
   );
 
-  // --- START FIX ---
-  // Use the 'auth' function we exported above, NOT getServerSession
-  const session = await auth();
-  // --- END FIX ---
+  const session = await getServerSession(authOptions);
 
   if (!session || !session.user || !session.user.id) {
     console.log("[getCurrentUser] Session missing or user.id not found.");

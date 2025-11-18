@@ -1,15 +1,39 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/AUTH/MIDDLEWARE.JS
 
-// --- START FIX ---
-// Import the new 'auth' function from your main auth.js file
-import { auth } from "./auth";
-// -----------------
+import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
+import { authOptions } from "./auth"; // 👈 Correct: Import the unified options
 
-// ⭐️ This is now your middleware
-export default auth;
+export default withAuth(
+  function middleware(req) {
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ token, req }) => {
+        const isLoggedIn = !!token;
+        const nextUrl = req.nextUrl;
+        const isProtectedRoute =
+          nextUrl.pathname.startsWith("/dashboard") ||
+          nextUrl.pathname.startsWith("/me") ||
+          nextUrl.pathname.startsWith("/projects") ||
+          nextUrl.pathname.startsWith("/users");
 
-// This config remains the same
+        if (isProtectedRoute) {
+          if (isLoggedIn) return true;
+          return false; // Redirect to signIn page
+        }
+        return true;
+      },
+    },
+    // ⭐️ Pass the core options so middleware can decrypt the cookie
+    secret: authOptions.secret,
+    session: authOptions.session,
+    jwt: authOptions.jwt,
+    pages: authOptions.pages,
+  }
+);
+
 export const config = {
-  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
   matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };
