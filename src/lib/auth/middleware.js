@@ -1,23 +1,15 @@
-// file: src/middleware.js
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/AUTH/MIDDLEWARE.JS
 
-import { withAuth } from "next-auth/middleware";
+// --- START FIX ---
+// Import the new 'auth' function from your main auth.js file
+import { auth } from "./auth";
+// -----------------
 
-export default withAuth({
-  // You can add custom behavior here, like redirecting to a custom login page.
-  // pages: { signIn: "/login" }
-});
+// ⭐️ This is now your middleware
+export default auth;
 
-// This config specifies which routes the middleware should run on.
-// Adjust as needed for your app.
+// This config remains the same
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
-  ],
+  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };

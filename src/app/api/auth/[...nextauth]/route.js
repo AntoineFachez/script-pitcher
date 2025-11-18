@@ -1,11 +1,9 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/API/AUTH/[...NEXTAUTH]/ROUTE.JS
 
-import NextAuth from "next-auth";
-// Import the single source of truth for your auth config
-import { authOptions } from "@/lib/auth/auth";
+// --- START FIX ---
+// Import the new GET and POST handlers
+import { GET, POST } from "@/lib/auth/auth";
 
-// Create the handlers
-const handler = NextAuth(authOptions);
-
-// Export them for Next.js to use
-export { handler as GET, handler as POST };
+// Export them directly
+export { GET, POST };
+// --- END FIX ---
