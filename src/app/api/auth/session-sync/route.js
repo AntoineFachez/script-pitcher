@@ -1,15 +1,15 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/API/AUTH/SESSION-SYNC/ROUTE.JS
 
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/firebase/firebase-admin"; // Admin SDK for token verification
+import { encode } from "next-auth/jwt";
 import { serialize } from "cookie";
+
+import { auth } from "@/lib/firebase/firebase-admin"; // Admin SDK for token verification
+// 2. ✅ ADD NextAuth's 'encode' function and your 'authOptions'
+import { authOptions } from "@/lib/auth/auth";
 
 // 1. ❌ REMOVE 'jose'
 // import { SignJWT } from "jose";
-
-// 2. ✅ ADD NextAuth's 'encode' function and your 'authOptions'
-import { encode } from "next-auth/jwt";
-import { authOptions } from "@/lib/auth/authOptions";
 
 // Environment variable containing the secret key for signing the JWT
 const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
@@ -38,44 +38,38 @@ export async function POST(req) {
   }
 
   try {
-    // 1. Verify the Firebase ID token
     const decodedToken = await auth.verifyIdToken(idToken);
     const userId = decodedToken.uid;
     const userEmail = decodedToken.email;
 
-    // 2. ✅ Create the NextAuth token PAYLOAD
-    // This is the object that will be passed to your `callbacks.jwt`
+    // 2. ✅ FIX: Ensure 'name' is 'null', not 'undefined'
     const tokenPayload = {
       id: userId,
       email: userEmail,
-      name: decodedToken.name || decodedToken.displayName,
-      // 'sub' is the standard JWT field for ID, which NextAuth also uses
+      // This guarantees the value is 'null' if both are missing
+      name: decodedToken.name || decodedToken.displayName || null,
       sub: userId,
     };
 
-    // ⭐️ ADD THIS LOG
     console.log("[Session-Sync] Encoding token with payload:", tokenPayload);
 
-    // 3. ✅ Use NextAuth's 'encode' function to create the session token
-    // This signs the token with the *exact* same algorithm and keys
-    // that 'getServerSession' will use to decode it.
+    // 3. ✅ SIMPLIFY: Use session.maxAge directly
     const sessionToken = await encode({
       token: tokenPayload,
       secret: NEXTAUTH_SECRET,
-      // Pass your JWT maxAge from authOptions
-      ...authOptions.jwt,
+      // This is the only other property 'encode' needs
+      maxAge: authOptions.session.maxAge,
     });
 
-    // ⭐️ ADD THIS LOG
     console.log("[Session-Sync] Token encoded successfully.");
 
-    // 4. Set the NextAuth session cookie (your logic was correct here)
+    // 4. Set the cookie (your code was correct)
     const sessionCookie = serialize("next-auth.session-token", sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: authOptions.session.maxAge, // Use maxAge from config
+      maxAge: authOptions.session.maxAge,
     });
 
     const response = NextResponse.json({ success: true, userId });

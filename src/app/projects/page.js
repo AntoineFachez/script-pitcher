@@ -1,43 +1,36 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/PROJECTS/PAGE.JS
-// This is now the main Server Component for this route.
 
-// 1. ❌ REMOVE direct imports for getServerSession and authOptions
-// import { getServerSession } from "next-auth";
-// import { authOptions } from "@/lib/auth/authOptions";
+// 1. ❌ REMOVE manual trace imports
+// import { cookies } from "next/headers";
+// import { decode } from "next-auth/jwt";
 
-// 2. ✅ ADD the import for your helper
-import { getCurrentUser } from "@/lib/auth/auth"; // Assumes @/lib/auth maps to your file
-
+import { getCurrentUser } from "@/lib/auth/auth";
 import { getProjectsAndMembers } from "@/lib/data/projectFetchers";
-import ProjectsClientPage from "./ProjectsClientPage"; // Import the client component
+import ProjectsClientPage from "./ProjectsClientPage";
 import { Box, Typography } from "@mui/material";
 import { pageStyles, titleStyle } from "@/theme/muiProps";
-// import Menu from "./elements/Menu"; // This should be in the Client Page
 
 export default async function ProjectsPage() {
-  // 3. ✅ Use your helper function to get the user
-  // This function calls headers() and getServerSession internally.
-  const user = await getCurrentUser();
-  console.log("Server user:", user); // This should now log the user object or null
+  // 2. ❌ REMOVE the manual trace logic
+  // --- START MANUAL TRACE ---
+  // ...
+  // --- END MANUAL TRACE ---
 
-  // 4. ✅ Get the userId directly from the user object
+  // 3. ✅ Use the original, correct logic
+  const user = await getCurrentUser(); // This will now work
+  console.log("Server user (from getServerSession):", user);
   const userId = user?.uid;
-  console.log("Server userId:", userId);
+  console.log("Server userId (from getServerSession):", userId);
 
-  // 2. Fetch data directly.
-  // We provide default empty arrays if the user isn't logged in.
   const { projects, users } = userId
-    ? await getProjectsAndMembers(userId)
+    ? await getProjectsAndMembers(userId) // This will also work now
     : { projects: [], users: [] };
 
-  // This layout is rendered on the server
   return (
     <Box sx={{ ...pageStyles.sx }}>
       <Typography variant={titleStyle.variant} sx={titleStyle.sx}>
         Projects
       </Typography>
-
-      {/* 3. Pass server data as props to the client component */}
       <ProjectsClientPage serverProjects={projects} serverUsers={users} />
     </Box>
   );

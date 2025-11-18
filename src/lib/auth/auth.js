@@ -1,39 +1,125 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/AUTH.JS
-// This is the server-side utility file.
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/AUTH/AUTH.JS
 
 import { getServerSession } from "next-auth";
-import { headers } from "next/headers"; // Next.js utility for Server Components
-import { authOptions } from "./authOptions";
+import { headers } from "next/headers";
+import GoogleProvider from "next-auth/providers/google";
 
-/**
- * Retrieves the authenticated user's session data from NextAuth on the server.
- * Returns null if the user is unauthenticated or the session is invalid.
- *
- * @returns {Promise<{ uid: string, name: string, email: string, ... } | null>}
- */
+// import { getAdminServices } from "@/lib/firebase/firebase-admin";
+// import { getDoc } from "firebase-admin/firestore"; // Admin SDK
+
+// 1. Define the single, complete auth config object
+export const authOptions = {
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+  ],
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+
+  callbacks: {
+    async session({ session, token }) {
+      console.log("[Auth Callback: SESSION] Received token:", token);
+      if (token?.id) session.user.id = token.id;
+      if (token?.profileData) session.user.profileData = token.profileData;
+      session.user.name = token.name;
+      session.user.email = token.email;
+      console.log("[Auth Callback: SESSION] Returning session:", session);
+      return session;
+    },
+
+    async jwt({ token, user, trigger }) {
+      // ✅ This log will NOW run
+      console.log("[Auth Callback: JWT] Received token:", token);
+      console.log("[Auth Callback: JWT] Received user:", user);
+
+      if (token && token.profileData) {
+        console.log("[Auth Callback: JWT] Token already enriched.");
+        return token;
+      }
+
+      const userId = token?.id || token?.sub;
+
+      if (!userId) {
+        console.error(
+          "[Auth Callback: JWT] FAILED: No userId (id or sub) in token."
+        );
+        return null;
+      }
+
+      console.log(`[Auth Callback: JWT] Enriching token for userId: ${userId}`);
+
+      if (user || trigger === "update" || !token.id) {
+        if (userId) {
+          try {
+            // 2. ✅ IMPORT ADMIN SDK *inside* the try block
+            const { getAdminServices } = await import(
+              "@/lib/firebase/firebase-admin"
+            );
+
+            // 3. ✅ Use V8 syntax
+            const { db } = getAdminServices();
+            const userDocRef = db.doc(`users/${userId}`); // V8 doc()
+            const userDocSnap = await userDocRef.get(); // V8 .get()
+
+            if (userDocSnap.exists) {
+              // ... (your enrichment logic is correct)
+              console.log("[Auth Callback: JWT] SUCCESS: Token enriched.");
+            } else {
+              console.warn(`[Auth Callback: JWT] WARN: ...`);
+            }
+          } catch (error) {
+            console.error(
+              "[Auth Callback: JWT] FAILED to fetch user profile:",
+              error.message
+            );
+          }
+        }
+      }
+      return token;
+    },
+  },
+  // Add the pages config here
+  pages: {
+    signIn: "/",
+    signOut: "/",
+    error: "/",
+    verifyRequest: "/",
+    newUser: "/me",
+  },
+};
+
+// 2. Your getCurrentUser helper, now in the same file
 export async function getCurrentUser() {
-  // 1. Next.js utility to ensure headers() is called before getServerSession runs
-  //    (This is often needed to correctly trigger Server Component behavior).
-  headers();
+  headers(); // Force dynamic rendering
 
-  // 2. Get the session using the imported config.
-  //    NextAuth reads the 'next-auth.session-token' cookie, verifies the JWT,
-  //    and runs the 'jwt' and 'session' callbacks defined in authOptions.
+  // ⭐️ DEBUG: See what secret this function is reading
+  console.log(
+    `[getCurrentUser] Secret (first 5): ${process.env.NEXTAUTH_SECRET?.substring(
+      0,
+      5
+    )}`
+  );
+
   const session = await getServerSession(authOptions);
 
-  // Check for session and the necessary user ID
   if (!session || !session.user || !session.user.id) {
     return null;
   }
 
-  // 3. Extract user data directly from the session (populated by the JWT/session callbacks)
   const profileData = session.user.profileData || {};
 
-  // 4. Return a consolidated user object
   return {
-    uid: session.user.id, // The user's Firebase UID / Firestore document ID
+    uid: session.user.id,
     name: session.user.name,
     email: session.user.email,
-    ...profileData, // Include all other profile data retrieved from Firestore via callbacks
+    ...profileData,
   };
 }

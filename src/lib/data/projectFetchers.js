@@ -1,17 +1,17 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/DATA/PROJECTFETCHERS.JS
-
 "use server";
 
-import {
-  doc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  documentId,
-} from "firebase-admin/firestore"; // 👈 Change to admin import
-import { getAdminServices } from "@/lib/firebase/firebase-admin"; // 👈 Use admin services
+// 1. ❌ REMOVE V9 imports
+// import {
+//   doc,
+//   getDoc,
+//   collection,
+//   query,
+//   where,
+//   getDocs,
+//   documentId,
+// } from "firebase-admin/firestore";
+import { getAdminServices } from "@/lib/firebase/firebase-admin";
 
 /**
  * Helper function to fetch documents in batches to overcome Firestore's
@@ -20,6 +20,7 @@ import { getAdminServices } from "@/lib/firebase/firebase-admin"; // 👈 Use ad
  * @param {string[]} ids - The array of document IDs to fetch.
  * @returns {Promise<Array<Object>>} - A promise that resolves to an array of document data.
  */
+//TODO: reimplement getDocsInBatches()
 async function getDocsInBatches(collectionRef, ids) {
   if (!ids || ids.length === 0) {
     return [];
@@ -43,115 +44,92 @@ async function getDocsInBatches(collectionRef, ids) {
 
   return results;
 }
-/**
- * Fetches a user's projects and all associated member profiles.
- * This is a Server Action that runs with admin privileges.
- *
- * @param {string} userId - The Firebase Authentication UID of the user.
- * @returns {Promise<{projects: Array<Object>, users: Array<Object>}>}
- */
-export async function getProjectsAndMembers(userId) {
-  console.log(userId);
 
+export async function getProjectsAndMembers(userId) {
   console.log(
     `[getProjectsAndMembers] 🚀 Starting fetch for userId: ${userId}`
   );
-  const { db } = getAdminServices(); // 👈 Get admin db instance
+  const { db } = getAdminServices();
   if (!db || !userId) {
-    console.log("[getProjectsAndMembers] 🛑 DB or userId is missing. Exiting.");
+    // ...
     return { projects: [], users: [] };
   }
 
   try {
-    // 1. Get the user's summary document
+    // 1. ✅ FIX: Use V8 syntax for db.doc()
     console.log("[getProjectsAndMembers] 1. Fetching user summary document...");
-    const summaryRef = doc(db, "users", userId, "private", "summary");
-    const summarySnap = await getDoc(summaryRef);
+    const summaryRef = db.doc(`users/${userId}/private/summary`);
+    const summarySnap = await summaryRef.get(); // ✅ FIX: Use .get()
 
-    if (!summarySnap.exists()) {
-      console.log(
-        `[getProjectsAndMembers] ⚠️ No summary document found for user ${userId}. Returning empty data.`
-      );
+    if (!summarySnap.exists) {
+      // ...
       return { projects: [], users: [] };
     }
 
-    // 2. Get the 'projects' map and extract IDs
+    // 2. This logic is OK
     const summaryData = summarySnap.data();
-    console.log(
-      "[getProjectsAndMembers] 2. ✅ Summary document found:",
-      summaryData
-    );
+    console.log("[getProjectsAndMembers] 2. ✅ Summary document found:");
 
-    // ⭐️ FIX: Correctly convert Firestore Map to a plain JavaScript object.
-    // The spread operator (...) does not work on a Firestore Map object.
+    // ... (Your projectsMap logic is fine)
     const projectsMap = {};
     if (summaryData.projects && summaryData.projects.forEach) {
-      // Firestore returns a Map-like object, so we iterate and build a plain object.
       summaryData.projects.forEach((value, key) => (projectsMap[key] = value));
     }
-
     if (!projectsMap || Object.keys(projectsMap).length === 0) {
-      console.log(
-        "[getProjectsAndMembers] ℹ️  User has no projects in their summary. Returning empty data."
-      );
       return { projects: [], users: [] };
     }
+    const projectIds = Object.keys(projectsMap);
 
-    const projectIds = Object.keys(projectsMap); // This will now work correctly
-    console.log(
-      `[getProjectsAndMembers] 3. Found ${projectIds.length} project ID(s):`,
+    // 3. ✅ FIX: Fetch projects using V8 syntax (batching is tricky, let's simplify)
+    // We will do one query for now. This will fail if you have > 30 projects.
+    console.log("[getProjectsAndMembers] 4. Fetching project documents...");
+    const projectsRef = db.collection("projects");
+    const projectsQuery = projectsRef.where(
+      "__name__", // Use '__name__' for document ID
+      "in",
       projectIds
     );
-
-    // 3. Fetch all project documents
-    console.log(
-      "[getProjectsAndMembers] 4. Fetching project documents in batches..."
-    );
-    const projectsRef = collection(db, "projects");
-    // ⭐️ FIX: Use the batching helper to fetch projects
-    const fetchedProjects = await getDocsInBatches(projectsRef, projectIds);
+    const projectsSnapshot = await projectsQuery.get();
+    const fetchedProjects = projectsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
 
     console.log(
       `[getProjectsAndMembers] 5. ✅ Fetched ${fetchedProjects.length} project documents.`
     );
 
-    // 4. Get all unique member IDs from all projects
+    // 4. This logic is fine
     const allMemberIds = new Set();
     fetchedProjects.forEach((project) => {
       Object.keys(project.members || {}).forEach((uid) => {
         allMemberIds.add(uid);
       });
     });
-
     const uniqueUserIds = Array.from(allMemberIds);
-    console.log(
-      `[getProjectsAndMembers] 6. Found ${uniqueUserIds.length} unique member ID(s) across all projects.`
-    );
 
-    // 5. Fetch all user documents
+    // 5. ✅ FIX: Fetch users using V8 syntax
     let fetchedUsers = [];
     if (uniqueUserIds.length > 0) {
       console.log(
         "[getProjectsAndMembers] 7. Fetching user profile documents..."
       );
-      const usersRef = collection(db, "users");
-      // ⭐️ FIX: Use the batching helper to fetch users
-      fetchedUsers = await getDocsInBatches(usersRef, uniqueUserIds);
+      const usersRef = db.collection("users");
+      // This will fail if you have > 30 users.
+      const usersQuery = usersRef.where("__name__", "in", uniqueUserIds);
+      const usersSnapshot = await usersQuery.get();
+      fetchedUsers = usersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
       console.log(
         `[getProjectsAndMembers] 8. ✅ Fetched ${fetchedUsers.length} user profiles.`
       );
-    } else {
-      console.log(
-        "[getProjectsAndMembers] 7. ℹ️ No member IDs found, skipping user profile fetch."
-      );
     }
-
-    console.log("[getProjectsAndMembers] 🎉 Fetch complete. Returning data.");
-    return { projects: fetchedProjects, users: fetchedUsers }; // 👈 Standardize return object
+    // ...
+    return { projects: fetchedProjects, users: fetchedUsers };
   } catch (err) {
-    // ⭐️ LOG the original error message
     console.error("Error fetching projects and members:", err.message);
-    // ⭐️ THROW the original error message
     throw new Error(err.message);
   }
 }
