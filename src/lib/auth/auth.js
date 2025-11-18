@@ -134,7 +134,7 @@ export const authOptions = {
 //     ...profileData,
 //   };
 // }
-/ 2. Your getCurrentUser helper (Combined fix using getServerSession + Header Spoofing)
+// 2. Your getCurrentUser helper (Combined fix using getServerSession + Header Spoofing)
 export async function getCurrentUser() {
   const nextAuthUrl = process.env.NEXTAUTH_URL || "NOT SET";
   let publicHost = "UNKNOWN";
@@ -148,7 +148,7 @@ export async function getCurrentUser() {
   }
 
   // --- START DEFINITIVE FIX: Use getServerSession with Spoofed Headers ---
-  
+
   // 1. Collect raw headers and cookies
   const reqHeaders = Object.fromEntries(headers());
   const reqCookies = Object.fromEntries(
@@ -165,7 +165,7 @@ export async function getCurrentUser() {
   }
 
   // 3. Construct the request object for getServerSession
-  const req = { 
+  const req = {
     headers: reqHeaders,
     cookies: reqCookies,
   };
@@ -185,9 +185,17 @@ export async function getCurrentUser() {
   );
   console.log(`[getCurrentUser: DIAG] NEXTAUTH_URL: ${nextAuthUrl}`);
   console.log(`[getCurrentUser: DIAG] Parsed Public Host: ${publicHost}`);
-  console.log(`[getCurrentUser: DIAG] Final Request Host: ${reqHeaders["host"]}`);
-  console.log(`[getCurrentUser: DIAG] Final Protocol: ${reqHeaders["x-forwarded-proto"]}`);
-  console.log(`[getCurrentUser: DIAG] Session Cookie Found (Length): ${reqCookies["__Secure-next-auth.session-token"]?.length || 0}`);
+  console.log(
+    `[getCurrentUser: DIAG] Final Request Host: ${reqHeaders["host"]}`
+  );
+  console.log(
+    `[getCurrentUser: DIAG] Final Protocol: ${reqHeaders["x-forwarded-proto"]}`
+  );
+  console.log(
+    `[getCurrentUser: DIAG] Session Cookie Found (Length): ${
+      reqCookies["__Secure-next-auth.session-token"]?.length || 0
+    }`
+  );
   console.log(
     `[getCurrentUser: DIAG] getServerSession Result: ${
       session ? "FOUND" : "NULL"
@@ -195,9 +203,10 @@ export async function getCurrentUser() {
   );
   // --- END DIAGNOSTICS ---
 
-
   if (!session || !session.user || !session.user.id) {
-    console.log("[getCurrentUser] Session missing or user.id not found. Cannot proceed to data fetch.");
+    console.log(
+      "[getCurrentUser] Session missing or user.id not found. Cannot proceed to data fetch."
+    );
     return null;
   }
 
