@@ -3,7 +3,7 @@
 import { getServerSession } from "next-auth";
 // --- START FIX ---
 // REMOVE the import for 'headers'
-// import { headers } from "next/headers";
+import { headers } from "next/headers";
 // --- END FIX ---
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
