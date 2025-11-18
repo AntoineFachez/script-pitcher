@@ -236,6 +236,16 @@ try {
   console.error("Error processing NEXTAUTH_SECRET:", e.message);
 }
 
+const publicDomain = process.env.NEXTAUTH_URL
+  ? new URL(process.env.NEXTAUTH_URL).hostname
+  : "script-pitcher.web.app";
+
+// 🟢 FINAL FIX LOGIC: Ensure the domain is set to include all subdomains (leading dot)
+const cookieDomain = publicDomain.includes("localhost")
+  ? undefined
+  : `.${publicDomain}`;
+// Example Result: ".script-pitcher.web.app"
+
 // 1. Extend the lite config with Node.js-specific providers/callbacks
 export const authOptions = {
   ...authConfig,
@@ -320,6 +330,7 @@ export const authOptions = {
         path: "/",
         // 🛑 FIX 2: REMOVE secure: true from prod config via dynamic check
         secure: useSecureCookies,
+        domain: cookieDomain,
       },
     },
   },
@@ -401,11 +412,16 @@ export async function getCurrentUser() {
 
   // 1. Collect raw headers and cookies
   const reqHeaders = Object.fromEntries(headers());
-  const reqCookies = Object.fromEntries(
-    cookies()
-      .getAll()
-      .map((c) => [c.name, c.value])
-  );
+  const rawCookieHeader = reqHeaders["cookie"] || "";
+  let reqCookies = {};
+  rawCookieHeader.split(";").forEach((cookie) => {
+    const parts = cookie.split("=");
+    const name = parts[0].trim();
+    const value = parts[1];
+    if (name) {
+      reqCookies[name] = value;
+    }
+  });
 
   // Determine protocol dynamically for header spoofing
   const protocol = useSecureCookies ? "https" : "http";
