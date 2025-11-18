@@ -105,6 +105,60 @@ export function AuthProvider({ children }) {
   // --- START REFACTOR ---
   // Revert handleLogin to use Firebase client sign-in
   // AND THEN sync with NextAuth
+  // const handleLogin = useCallback(
+  //   async (email, password) => {
+  //     if (!auth) {
+  //       console.error("Auth service is not initialized yet.");
+  //       setAuthError("Auth service is not ready. Please wait.");
+  //       return;
+  //     }
+
+  //     setAuthLoading(true);
+  //     setAuthError(null);
+
+  //     try {
+  //       // 1. Sign in to Firebase on the CLIENT first
+  //       const userCredential = await signInWithEmailAndPassword(
+  //         auth,
+  //         email,
+  //         password
+  //       );
+
+  //       const firebaseUser = userCredential.user;
+
+  //       // 2. Get the ID token from the successful Firebase login
+  //       const idToken = await firebaseUser.getIdToken();
+
+  //       // 3. Pass that token to NextAuth's 'credentials' provider
+  //       const result = await signIn("credentials", {
+  //         idToken: idToken,
+  //         redirect: false, // We handle the redirect
+  //       });
+
+  //       // This log is no longer needed:
+  //       // console.log("AuthContext.js:134 result", result);
+
+  //       if (result.error) {
+  //         // This error comes from NextAuth (e.g., token verification failed)
+  //         throw new Error(result.error);
+  //       }
+
+  //       // 4. Success! Push to home page.
+  //       // The 'useSession' hook will update, and the 'onIdTokenChanged'
+  //       // listener will set the 'firebaseUser' state.
+  //       router.push("/");
+  //     } catch (error) {
+  //       // This catch block now handles errors from BOTH
+  //       // signInWithEmailAndPassword AND the NextAuth signIn
+  //       console.error("handleLogin Error:", error);
+  //       setAuthError(getFirebaseAuthErrorMessage(error.code));
+  //       setFirebaseUser(null);
+  //     } finally {
+  //       setAuthLoading(false);
+  //     }
+  //   },
+  //   [auth, router] // 👈 'auth' is now a dependency again
+  // );
   const handleLogin = useCallback(
     async (email, password) => {
       if (!auth) {
@@ -129,35 +183,43 @@ export function AuthProvider({ children }) {
         // 2. Get the ID token from the successful Firebase login
         const idToken = await firebaseUser.getIdToken();
 
-        // 3. Pass that token to NextAuth's 'credentials' provider
-        const result = await signIn("credentials", {
-          idToken: idToken,
-          redirect: false, // We handle the redirect
+        // 3. 🟢 NEW: Exchange the ID token for the secure session cookie
+        const response = await fetch("/api/session/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ idToken }),
         });
 
-        // This log is no longer needed:
-        // console.log("AuthContext.js:134 result", result);
-
-        if (result.error) {
-          // This error comes from NextAuth (e.g., token verification failed)
-          throw new Error(result.error);
+        if (!response.ok) {
+          // If the server failed to set the cookie, throw an error
+          const errorData = await response
+            .json()
+            .catch(() => ({ error: "Server session error" }));
+          throw new Error(
+            `Session establishment failed: ${
+              errorData.error || "Unknown error"
+            }`
+          );
         }
 
-        // 4. Success! Push to home page.
-        // The 'useSession' hook will update, and the 'onIdTokenChanged'
-        // listener will set the 'firebaseUser' state.
+        // 4. Success! Secure session cookie is set. Redirect home.
+        // The subsequent server-side request for '/' will now successfully read the __session cookie.
         router.push("/");
       } catch (error) {
-        // This catch block now handles errors from BOTH
-        // signInWithEmailAndPassword AND the NextAuth signIn
+        // This catch block handles errors from Firebase, token fetching, or the API call.
         console.error("handleLogin Error:", error);
-        setAuthError(getFirebaseAuthErrorMessage(error.code));
+
+        // Safely extract the Firebase error message if available
+        const errorCode = error.code || null;
+        setAuthError(getFirebaseAuthErrorMessage(errorCode) || error.message);
         setFirebaseUser(null);
       } finally {
         setAuthLoading(false);
       }
     },
-    [auth, router] // 👈 'auth' is now a dependency again
+    [auth, router]
   );
 
   const handleSignUp = useCallback(
@@ -165,38 +227,77 @@ export function AuthProvider({ children }) {
       setAuthLoading(true);
       setAuthError(null);
       try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        // Success! The onIdTokenChanged listener will handle the rest.
+        // 1. Create user on the client side
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        const firebaseUser = userCredential.user;
+
+        // 2. Get the ID token for the new user
+        const idToken = await firebaseUser.getIdToken();
+
+        // 3. 🟢 NEW: Exchange the ID token for the secure session cookie
+        const response = await fetch("/api/session/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ idToken }),
+        });
+
+        if (!response.ok) {
+          // If the server failed to set the cookie, throw an error
+          const errorData = await response
+            .json()
+            .catch(() => ({ error: "Server session error" }));
+          throw new Error(
+            `Sign-up complete, but session failed: ${
+              errorData.error || "Unknown error"
+            }`
+          );
+        }
+
+        // 4. Success! Session cookie is set. Redirect home.
+        router.push("/");
       } catch (error) {
-        console.error("Sign up failed:", error.code);
-        setAuthError(getFirebaseAuthErrorMessage(error.code));
+        console.error("handleSignUp Error:", error.code, error.message);
+
+        // Handle client-side error (e.g., email already in use)
+        setAuthError(getFirebaseAuthErrorMessage(error.code) || error.message);
       } finally {
         setAuthLoading(false);
       }
     },
-    [auth]
+    [auth, router] // Added router to dependencies
   );
 
   const handleLogout = useCallback(async () => {
     setAuthLoading(true);
     setAuthError(null);
     try {
-      // 1. Sign out of NextAuth (clears the secure session cookie/database entry)
-      await nextAuthSignOut({ redirect: false });
-
-      // 2. Sign out of Firebase Auth (clears the Firebase user state/token)
+      // 1. Sign out of Firebase Auth (clears the client state/token)
       await firebaseSignOut(auth);
 
-      // ✅ CRITICAL FIX: Explicitly set the client state to null immediately
+      // 2. 🟢 NEW: Call server endpoint to clear the secure session cookie (__session)
+      // This is now a simple POST request, eliminating the complex NextAuth utility calls.
+      await fetch("/api/session/logout", {
+        method: "POST",
+      });
+
+      // 3. Explicitly set the client state to null immediately
       setFirebaseUser(null);
 
       router.push("/");
     } catch (error) {
-      console.error("Logout failed:", error);
-      // Ensure we attempt to clear the client state even on error,
-      // as one of the sign-outs might have succeeded.
+      console.error("handleLogout Error:", error);
+
+      // Ensure we attempt to clear the client state even on error, and clear the cookie client-side
       setFirebaseUser(null);
-      setAuthError(getFirebaseAuthErrorMessage(error.code));
+      document.cookie = "__session=; Max-Age=0; path=/;";
+      setAuthError(getFirebaseAuthErrorMessage(error.code) || error.message);
     } finally {
       setAuthLoading(false);
     }

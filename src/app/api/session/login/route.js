@@ -4,11 +4,14 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
 
+// Define the maximum age for the session cookie (e.g., 5 days in milliseconds)
+const MAX_AGE = 60 * 60 * 24 * 5 * 1000;
+
 export async function POST(request) {
   const { idToken } = await request.json();
   if (!idToken) {
     return NextResponse.json(
-      { error: "No ID Token provided" },
+      { error: "Missing Firebase ID token" },
       { status: 400 }
     );
   }
@@ -16,27 +19,27 @@ export async function POST(request) {
   try {
     const { auth } = getAdminServices();
 
-    // 1. Verify the Firebase ID token and get the decoded user data
-    const decodedToken = await auth.verifyIdToken(idToken);
-    const uid = decodedToken.uid;
-
-    // 2. OPTIONAL: Create a Firebase Session Cookie (for longer sessions)
-    // For simplicity, we just use the user's UID in a custom cookie.
-
-    // 3. Set a simple, secure, HTTP-only cookie using Next.js native API
-    cookies().set("session_uid", uid, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Must be true in production
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 30, // 30 days
+    // 1. Create a secure session cookie using the Firebase Admin SDK
+    const sessionCookie = await auth.createSessionCookie(idToken, {
+      expiresIn: MAX_AGE,
     });
 
-    return NextResponse.json({ uid }, { status: 200 });
+    // 2. Set the secure HTTP-only cookie using the Next.js native API
+    cookies().set("__session", sessionCookie, {
+      maxAge: MAX_AGE / 1000, // Max age in seconds
+      httpOnly: true,
+      // secure: process.env.NODE_ENV === "production" is often enough, but
+      // setting true ensures it's always secure behind your proxy.
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+    });
+
+    return NextResponse.json({ status: "success" }, { status: 200 });
   } catch (error) {
-    console.error("Session creation error:", error);
+    console.error("Firebase Session Cookie creation failed:", error);
     return NextResponse.json(
-      { error: "Invalid token or server error" },
+      { error: "Authentication failed" },
       { status: 401 }
     );
   }
