@@ -4,9 +4,7 @@ import { getAdminServices } from "@/lib/firebase/firebase-admin";
 // 🟢 NEW getCurrentUser: Reads and verifies a simple Firebase session cookie
 export async function getCurrentUser() {
   // We expect the session to be stored in a cookie named '__session'
-  const sessionCookie = cookies().get(
-    "__Secure-next-auth.session-token"
-  )?.value;
+  const sessionCookie = cookies().get("__session")?.value;
 
   if (!sessionCookie) {
     return null;
