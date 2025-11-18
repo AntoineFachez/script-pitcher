@@ -2,7 +2,10 @@
 
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
-import { authOptions } from "./auth"; // 👈 Correct: Import the unified options
+// --- START FIX ---
+// Import from the "lite" config, which is Edge-safe
+import { authConfig } from "./auth.config";
+// --- END FIX ---
 
 export default withAuth(
   function middleware(req) {
@@ -26,11 +29,14 @@ export default withAuth(
         return true;
       },
     },
-    // ⭐️ Pass the core options so middleware can decrypt the cookie
-    secret: authOptions.secret,
-    session: authOptions.session,
-    jwt: authOptions.jwt,
-    pages: authOptions.pages,
+
+    // --- START FIX ---
+    // Pass the options from the lite config
+    secret: authConfig.secret,
+    session: authConfig.session,
+    jwt: authConfig.jwt,
+    pages: authConfig.pages,
+    // --- END FIX ---
   }
 );
 

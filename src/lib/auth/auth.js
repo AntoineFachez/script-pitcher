@@ -1,17 +1,15 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/AUTH/AUTH.JS
 
 import { getServerSession } from "next-auth";
-// --- START FIX ---
-// REMOVE the import for 'headers'
 import { headers } from "next/headers";
-// --- END FIX ---
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { getAdminServices } from "@/lib/firebase/firebase-admin"; // 👈 Node.js API
+import { authConfig } from "./auth.config"; // 👈 Import the lite config
 
-// ... (your entire authOptions object remains here, it is correct) ...
+// 1. Extend the lite config with Node.js-specific providers/callbacks
 export const authOptions = {
-  // ... (providers, callbacks, etc.)
+  ...authConfig, // 👈 Spread the lite config (secret, pages, session, jwt)
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -23,12 +21,10 @@ export const authOptions = {
         idToken: { label: "ID Token", type: "text" },
       },
       async authorize(credentials, req) {
-        if (!credentials.idToken) {
-          console.error("CredentialsProvider: No idToken provided.");
-          return null;
-        }
+        // 👈 This uses Node.js APIs
+        if (!credentials.idToken) return null;
         try {
-          const { auth } = getAdminServices();
+          const { auth } = getAdminServices(); // 👈 Node.js API
           const decodedToken = await auth.verifyIdToken(credentials.idToken);
           if (decodedToken) {
             return {
@@ -39,47 +35,32 @@ export const authOptions = {
           }
           return null;
         } catch (error) {
-          console.error(
-            "CredentialsProvider Error (verifyIdToken):",
-            error.message
-          );
+          console.error("CredentialsProvider Error:", error.message);
           return null;
         }
       },
     }),
   ],
-  session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60,
-  },
-  jwt: {
-    maxAge: 30 * 24 * 60 * 60,
-  },
-  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
+    // These callbacks also use the Admin SDK, so they belong here
     async session({ session, token }) {
       if (token?.id) session.user.id = token.id;
       if (token?.profileData) session.user.profileData = token.profileData;
       return session;
     },
     async jwt({ token, user, trigger }) {
+      // 👈 This uses Node.js APIs
       if (user) {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
       }
       const userId = token?.id || token?.sub;
-      if (!userId) {
-        return null;
-      }
-      if (token.profileData) {
-        return token;
-      }
+      if (!userId) return null;
+      if (token.profileData) return token;
       try {
-        const { db } = getAdminServices();
-        const userDocRef = db.doc(`users/${userId}`);
-        const userDocSnap = await userDocRef.get();
-
+        const { db } = getAdminServices(); // 👈 Node.js API
+        const userDocSnap = await db.doc(`users/${userId}`).get();
         if (userDocSnap.exists) {
           const userData = userDocSnap.data();
           token.id = userId;
@@ -87,25 +68,15 @@ export const authOptions = {
           token.profileData = { ...userData, uid: userId };
           console.log("[Auth Callback: JWT] SUCCESS: Token enriched.");
         } else {
-          console.warn(
-            `[Auth Callback: JWT] WARN: User ${userId} not found in Firestore.`
-          );
+          console.warn(`[Auth Callback: JWT] WARN: User ${userId} not found.`);
         }
       } catch (error) {
-        console.error(
-          "Error fetching user profile in JWT callback:",
-          error.message
-        );
+        console.error("Error in JWT callback:", error.message);
       }
       return token;
     },
   },
-  pages: {
-    signIn: "/",
-    signOut: "/",
-    error: "/",
-  },
-  // This is the standard for production sites.
+  // This cookie config is fine to keep here
   cookies: {
     sessionToken: {
       name: `__Secure-next-auth.session-token`,
@@ -114,38 +85,28 @@ export const authOptions = {
         sameSite: "lax",
         path: "/",
         secure: true,
-        // This is the critical line
         domain: ".script-pitcher.web.app",
       },
     },
   },
 };
-// --- END of authOptions ---
 
-// 2. Your getCurrentUser helper
+// 2. Your getCurrentUser helper (This is correct)
 export async function getCurrentUser() {
-  // --- START FIX ---
-  // REMOVE this line. The page will handle dynamic rendering.
-  headers();
-  // --- END FIX ---
-
+  headers(); // 👈 Keep this
   console.log(
     `[getCurrentUser] Secret (first 5): ${process.env.NEXTAUTH_SECRET?.substring(
       0,
       5
     )}`
   );
-
-  const session = await getServerSession(authOptions);
-
+  const session = await getServerSession(authOptions); // 👈 Uses the full config
   if (!session || !session.user || !session.user.id) {
     console.log("[getCurrentUser] Session missing or user.id not found.");
     return null;
   }
-
   console.log("[getCurrentUser] Found session for user.id:", session.user.id);
   const profileData = session.user.profileData || {};
-
   return {
     uid: session.user.id,
     name: session.user.name,
