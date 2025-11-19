@@ -1,0 +1,16 @@
+#TODO: connect to dataconnect
+
+# The Firebase Data Connect API version to target. Optional.
+specVersion: "v1"
+
+# The ID of the Firebase Data Connect service resource. Required.
+serviceId: "my-first-service"
+
+# The location (region) of the Firebase Data Connect service. Required.
+location: "us-central1"
+
+# Configuration for where to find the GraphQL schema files. Optional, defaults to ./schema.
+schema:
+  source: "./schema"
+# Configuration for schema migration behavior during deployment. Optional.
+# schemaValidation: "COMPATIBLE" # or "STRICT"

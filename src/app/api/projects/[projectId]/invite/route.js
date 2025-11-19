@@ -36,65 +36,74 @@ export async function POST(request, { params }) {
 
   try {
     const { email, role } = await request.json();
-    if (!email || !role) {
-      return NextResponse.json(
-        { error: "Email and role are required." },
-        { status: 400 }
-      );
-    }
+    const targetEmail = email.toLowerCase();
 
-    // 2. Authorization Check: Is the caller an owner of this project?
-    const projectRef = db.collection("projects").doc(projectId);
-    const projectSnap = await projectRef.get();
-    if (!projectSnap.exists) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 });
-    }
-
-    const projectData = projectSnap.data();
-    // Get the member object
-    const adminMember = projectData.members?.[decodedToken.uid];
-
-    // Check the 'role' property inside the object
-    if (adminMember?.role !== "owner") {
-      return NextResponse.json(
-        { error: "Forbidden: You must be an owner to invite users." },
-        { status: 403 }
-      );
-    }
-
-    // 3. Create the invitation document.
-
-    // Generate a unique token for the document ID (e.g., a simple UUID or KSUID)
-    // For this example, we'll use a placeholder for a unique ID generator
-    const invitationId = db.collection("projects").doc().id; // Firestore's auto-ID generator is a good choice
-
-    // Set expiration (e.g., 7 days)
+    // 1. Create the invitation doc (Your existing logic)
+    const invitationId = db.collection("projects").doc().id;
     const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
-    const expiresAt = new Date(Date.now() + sevenDaysInMs);
-
-    const invitationRef = projectRef
-      .collection("invitations")
-      .doc(invitationId); // Use the unique ID
 
     const invitationData = {
-      // Use a unique ID as the token in the URL
       token: invitationId,
-      projectId: projectId, // Add projectId for easier retrieval and rules
-      invitedEmail: email.toLowerCase(),
+      projectId: projectId,
+      invitedEmail: targetEmail,
       role: role,
       invitedBy: decodedToken.uid,
-      status: "pending", // Add status field
+      status: "pending",
       createdAt: FieldValue.serverTimestamp(),
-      expiresAt: expiresAt, // Add expiration field (as a Date object)
+      expiresAt: new Date(Date.now() + sevenDaysInMs),
     };
 
-    await invitationRef.set(invitationData);
+    const projectRef = db.collection("projects").doc(projectId);
 
-    // 4. Respond with success
-    // (Optional: You would also trigger an invitation email here)
+    // Start a batch or transaction to ensure consistency
+    const batch = db.batch();
+
+    // A. Write the invitation to the project subcollection
+    const invitationRef = projectRef
+      .collection("invitations")
+      .doc(invitationId);
+    batch.set(invitationRef, invitationData);
+
+    // 2. 🚀 NEW: Try to find the user to give them a badge
+    try {
+      const userRecord = await auth.getUserByEmail(targetEmail);
+
+      if (userRecord) {
+        // The user exists! We can add this invite to their summary directly.
+        const userSummaryRef = db.doc(
+          `users/${userRecord.uid}/private/summary`
+        );
+
+        // Atomically add the invitation ID to a 'pendingInvitations' array
+        batch.set(
+          userSummaryRef,
+          {
+            invitations: {
+              [invitationId]: {
+                projectId: projectId,
+                role: role,
+                invitedBy: decodedToken.uid,
+                sentAt: FieldValue.serverTimestamp(),
+              },
+            },
+          },
+          { merge: true }
+        );
+
+        console.log(`Added badge to user ${userRecord.uid}`);
+      }
+    } catch (authError) {
+      // If getUserByEmail fails, the user doesn't exist yet.
+      // That's fine, they will rely on the email link.
+      console.log("User not found, skipping badge update.");
+    }
+
+    // Commit the batch
+    await batch.commit();
+
     return NextResponse.json(invitationData, { status: 201 });
   } catch (error) {
-    console.error("Error creating invitation:", error.message);
+    console.error("Error creating invitation:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

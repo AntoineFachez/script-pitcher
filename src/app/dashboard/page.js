@@ -22,6 +22,7 @@ export default async function DashboardLayout({ children }) {
     // Render an error page or a fallback UI
     return <div>An error occurred while loading your projects.</div>;
   }
+  if (!initialData) return;
   console.log("initialData", initialData);
 
   // Pass the server-fetched data as props to the child client component (ProjectsPage)

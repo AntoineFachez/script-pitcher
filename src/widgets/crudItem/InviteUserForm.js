@@ -19,6 +19,7 @@ import {
 import { Send } from "@mui/icons-material";
 import { useAuth } from "@/context/AuthContext";
 import { useInFocus } from "@/context/InFocusContext";
+import { useUser } from "@/context/UserContext";
 
 /**
  * A form for project owners to invite new users.
@@ -28,6 +29,7 @@ import { useInFocus } from "@/context/InFocusContext";
 export default function InviteUserForm({ crud }) {
   const { firebaseUser } = useAuth();
   const { projectInFocus } = useInFocus(); // Get the current project ID
+  const { userProfile } = useUser(); // Get the current project ID
 
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("viewer"); // Default role
@@ -75,7 +77,17 @@ export default function InviteUserForm({ crud }) {
         const err = await response.json();
         throw new Error(err.error || "Failed to send invitation.");
       }
+      const data = await response.json();
+      if (response.ok) {
+        // ✅ MECHANIC: Build the URL client-side using the window object
+        // This creates: https://your-app.com/invite/project_123/invitation_456
+        const inviteUrl = `${window.location.origin}/invite/${data.projectId}/${data.token}`;
 
+        // Now display this 'inviteUrl' to the user (e.g., put it in state to show a "Copy Link" box)
+
+        if (inviteUrl)
+          handleMailTo({ email: email, role: role, inviteUrl: inviteUrl });
+      }
       setSuccess(`Successfully invited ${email} as a ${role}.`);
       setEmail(""); // Clear form
       setRole("viewer");
@@ -85,6 +97,9 @@ export default function InviteUserForm({ crud }) {
       setIsUploading(false);
     }
   };
+  const handleMailTo = (mailData) => {
+    window.location.href = `mailto:${mailData.email}?subject=You got invited to ${projectInFocus.title}&body=Please click ${mailData.inviteUrl}`;
+  };
 
   return (
     <Paper
@@ -92,6 +107,9 @@ export default function InviteUserForm({ crud }) {
       onSubmit={handleSubmit}
       sx={{ width: "100%", maxWidth: "50ch", mx: "auto", p: 2 }}
     >
+      <Button onClick={() => handleMailTo({ email: email, role: role })}>
+        send
+      </Button>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <Typography variant="h5" gutterBottom sx={{ fontWeight: 100 }}>
           Invite New Team Member
@@ -134,7 +152,7 @@ export default function InviteUserForm({ crud }) {
           sx={{ mt: 2 }}
           startIcon={<Send />}
         >
-          {isUploading ? "Sending..." : "Send Invitation"}
+          {isUploading ? "Creating..." : "Create Invitation"}
         </Button>
       </Box>
     </Paper>
