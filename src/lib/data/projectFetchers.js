@@ -127,6 +127,7 @@ export async function getProjectsAndMembers(userId) {
       return {
         ...user,
         createdAt: user?.createdAt?.toDate().toISOString() || null,
+        updatedAt: user?.updatedAt?.toDate().toISOString() || null,
         lastLogin: user?.lastLogin?.toDate().toISOString() || null, //TODO: implement lastLogIn Project Setter
       };
     });

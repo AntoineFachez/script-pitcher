@@ -107,6 +107,7 @@ export default async function ViewProjectPage({ params }) {
           createdAt: member?.createdAt?.toDate().toISOString() || null,
           //TODO: implement lastLogIn Project
           lastLogin: member?.lastLogin?.toDate().toISOString() || null,
+          updatedAt: member?.updatedAt?.toDate().toISOString() || null,
 
           // 🔴 CRITICAL FIX: Serialize the Nested Role Object
           role: {

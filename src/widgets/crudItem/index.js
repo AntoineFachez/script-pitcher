@@ -53,6 +53,10 @@ export default function CrudItem({ context, crud }) {
     // 'create' or 'update' a project
     return <UserForm crud={crud} />;
   }
+  if (context === "me" && crud === "update") {
+    // 'create' or 'update' a project
+    return <UserForm crud={crud} />;
+  }
   if (context === "users" && crud === "inviteUser") {
     // 'inviteUser' a user to a project
     return <InviteUserForm crud={crud} />;

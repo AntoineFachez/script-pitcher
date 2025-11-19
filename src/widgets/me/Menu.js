@@ -11,7 +11,7 @@ export default function Menu({
   setAppContext,
   setOpenModal,
   setModalContent,
-  projectInFocus,
+  userInFocus,
   togglePublishProject,
 }) {
   return (
@@ -26,17 +26,17 @@ export default function Menu({
         }}
       >
         <Typography variant="subtitle1" color="text.secondary">
-          {/* {projectInFocus.status} */}
+          {/* {userInFocus.status} */}
         </Typography>
         <IconButton
           onClick={() => {
             setOpenModal(true);
-            setAppContext("projects");
+            setAppContext("me");
             return setModalContent(
               <CrudItem
                 context={appContext}
                 crud="update"
-                profile={projectInFocus}
+                profile={userInFocus}
               />
             );
           }}

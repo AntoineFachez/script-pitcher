@@ -15,37 +15,50 @@ import CrudItem from "@/widgets/crudItem";
 
 import ReceivedInvitationsList from "@/widgets/receivedInvitations";
 
-import { widgetContainerStyles, containerStyles } from "@/theme/muiProps";
+import { useInFocus } from "@/context/InFocusContext";
+import { useAuth } from "@/context/AuthContext";
+import { useUser } from "@/context/UserContext";
+
 import Menu from "./Menu";
+
+import { widgetContainerStyles, containerStyles } from "@/theme/muiProps";
 
 // Receive initial data as props from the Server Component
 export default function MeContent({ initialProfile, initialInvitations }) {
   const { appContext, setAppContext } = useApp();
+  const { firebaseUser } = useAuth();
+  const { userProfile } = useUser();
+
   const { modalContent, setModalContent, openModal, setOpenModal } = useUi();
+  const { userInFocus, setUserInFocus } = useInFocus();
   // Use local state initialized by props to allow client-side updates (e.g., removing an invite)
-  const [profile, setProfile] = useState(initialProfile);
+
   const [invitations, setInvitations] = useState(initialInvitations);
 
   useEffect(() => {
     // Set the default modal content for the page's context
-    setModalContent(<CrudItem context={appContext} crud="create" />);
+    setModalContent(<CrudItem context={appContext} crud="update" />);
 
     // NOTE: If you need real-time updates (e.g., a new invite arrives while on this page),
     // you would add a client-side listener here, but it would start with the initial data.
 
     return () => {};
   }, [appContext, setModalContent]);
+
   useEffect(() => {
     // 1. Check if the local state is empty (length=0)
     // AND the server prop is NOT empty (length > 0)
     if (invitations.length === 0 && initialInvitations?.length > 0) {
       // 2. If true, explicitly reset the state to the authoritative server prop value.
-      console.log(
-        "Hydration fix applied: Resetting invitations state from prop."
-      );
+
       setInvitations(initialInvitations);
     }
   }, [initialInvitations]);
+  useEffect(() => {
+    setUserInFocus(firebaseUser);
+    return () => {};
+  }, []);
+
   const tabsArray = [
     {
       label: "Invitations",
@@ -70,7 +83,7 @@ export default function MeContent({ initialProfile, initialInvitations }) {
             height: 200, // Adjust the height as needed (e.g., 200px)
 
             // 2. Add the background image
-            backgroundImage: `url(${profile?.imageUrl})`,
+            backgroundImage: `url(${userProfile?.imageUrl})`,
 
             // 3. Control how the image fills the space
             backgroundSize: "cover", // Scales the image to cover the box
@@ -83,7 +96,7 @@ export default function MeContent({ initialProfile, initialInvitations }) {
           }}
         />{" "}
         <Avatar
-          src={profile?.avatarUrl || profile?.imageUrl}
+          src={userProfile?.avatarUrl || userProfile?.imageUrl}
           sx={{
             position: "absolute",
             left: styles.leftMargin,
@@ -97,14 +110,14 @@ export default function MeContent({ initialProfile, initialInvitations }) {
           setAppContext={setAppContext}
           setOpenModal={setOpenModal}
           setModalContent={setModalContent}
-          // projectInFocus={profile}
+          userInFocus={userInFocus}
           // togglePublishProject={togglePublishProject}
         />
         <Typography
           variant="h4"
           sx={{ width: "100%", pl: styles.leftMargin, textAlign: "left" }}
         >
-          {profile?.title}
+          {userProfile?.title}
         </Typography>
       </Box>
       <Typography
@@ -118,7 +131,7 @@ export default function MeContent({ initialProfile, initialInvitations }) {
           alignItems: "center",
         }}
       >
-        Welcome back {profile?.displayName}
+        Welcome back {userProfile.displayName}
       </Typography>{" "}
       <BasicTabs tabsArray={tabsArray} />
       <BasicModal
