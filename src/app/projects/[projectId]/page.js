@@ -125,12 +125,10 @@ export default async function ViewProjectPage({ params }) {
   // 4. Pass the server-fetched data as a prop
   return (
     <>
-      <Box sx={{ height: "100%" }}>
-        <Project
-          initialProject={serializableProjectProfile}
-          initialFiles={serializableFilesData}
-        />
-      </Box>
+      <Project
+        initialProject={serializableProjectProfile}
+        initialFiles={serializableFilesData}
+      />
     </>
   );
 }

@@ -5,76 +5,60 @@ import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useAuth } from "./AuthContext";
 import { getFirebaseDb } from "@/lib/firebase/firebase-client";
-import { useData } from "./DataContext";
-// import { useData } from "./DataContext";
 
 // 1. Create the context
 const UserContext = createContext(null);
 
 // 2. Create the Provider component
-export function UserProvider({ documentId, children }) {
-  const { firebaseUser, isUserLoading } = useAuth(); // 🛑 CHANGE: Pull in isUserLoading
+// The 'meData' prop is the key to hydrating this client component with SSR data.
+export function UserProvider({ children, meData }) {
+  const { firebaseUser } = useAuth(); // Authentication state is managed by AuthContext
   const [db, setDb] = useState(null);
 
+  // --- 1. STATE INITIALIZATION (Hydrated from SSR) ---
+
+  // User Profile: Initialized by the SC, listened to in real-time below.
+  const [userProfile, setUserProfile] = useState(meData?.userProfile || null);
+
+  // Dynamic Data (from private/summary): Initialized by SC array, updated via listener map->array conversion.
+  const [receivedInvitations, setReceivedInvitations] = useState(
+    meData?.receivedInvitations || []
+  );
+
+  // Project data and last file touched are real-time, but SC didn't provide initial values here.
   const [myProjects, setMyProjects] = useState({});
   const [lastFile, setLastFile] = useState(null);
 
-  const [userProfile, setUserProfile] = useState(null);
-
-  const [meInFocus, setMeInFocus] = useState(null);
-  const [receivedInvitations, setReceivedInvitations] = useState(null);
+  // Loading/Error state for the CONTEXT ITSELF (i.e., listeners establishing connection)
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  // --- END STATE INITIALIZATION ---
 
+  // Initialize Client-side Firestore DB instance once
   useEffect(() => {
     setDb(getFirebaseDb());
   }, []);
 
+  // --- 2. REAL-TIME SYNCHRONIZATION (Core Logic) ---
   useEffect(() => {
-    // 1. Reset everything if the user logs out
-    if (!firebaseUser && !isUserLoading) {
+    // 🛑 STOP LISTENING: If user logs out, clear state and return.
+    if (!firebaseUser) {
       setIsLoading(false);
       setUserProfile(null);
+      setReceivedInvitations([]);
       setMyProjects({});
-      setLastFile(null);
       return;
     }
 
-    if (!firebaseUser) {
-      // If we are here, we must be loading, so just return
-      return;
-    }
-    if (!db || !firebaseUser) {
-      // <-- NOW DEPENDS ON 'db'
-      // If we are waiting for user AND db, keep loading true.
-      if (!firebaseUser && !db) {
-        setLoading(false); // Can stop loading if neither are present
-      }
-      return;
-    }
+    // Stop if the Client DB instance hasn't initialized yet
+    if (!db) return;
+
+    // We set loading true to show that the real-time connection is being established.
     setIsLoading(true);
     setError(null);
 
-    // --- 2. FETCH STATIC DATA (Approach 2) ---
-    // This fetches the user's name, email, etc. one time.
-    const fetchUserProfile = async (userId) => {
-      try {
-        const userResponse = await fetch(`/api/users/${userId}`);
-        if (!userResponse.ok) {
-          throw new Error(
-            `Failed to fetch user profile: ${userResponse.status}`
-          );
-        }
-        const userData = await userResponse.json();
-        setUserProfile(userData);
-      } catch (err) {
-        console.error("Error fetching user profile:", err);
-        setError(err.message);
-      }
-    };
-
-    // --- 3. SET UP REAL-TIME LISTENER (Approach 1) ---
-    // This listens for live updates to the user's project list.
+    // --- A. Real-time Listener for Dynamic User Summary Data ---
+    // This watches the 'private/summary' doc where dynamic data (like projects and invites) reside.
     const summaryDocRef = doc(
       db,
       "users",
@@ -83,35 +67,58 @@ export function UserProvider({ documentId, children }) {
       "summary"
     );
 
-    const unsubscribe = onSnapshot(
+    const unsubscribeSummary = onSnapshot(
       summaryDocRef,
       (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          setReceivedInvitations(data.invitations || {});
+          const rawInvitationsMap = data.invitations || {};
+
+          // ⭐ CENTRALIZED ARRAY CONVERSION: Transform the raw Firestore Map (object)
+          // into the consistent Array format expected by rendering components.
+          const invitationsArray = Object.keys(rawInvitationsMap).map(
+            (token) => ({
+              id: token,
+              ...rawInvitationsMap[token],
+            })
+          );
+
+          setReceivedInvitations(invitationsArray);
           setMyProjects(data.projects || {});
           setLastFile(data.lastTouchedFile || null);
         } else {
           console.log("No summary doc found for this user yet.");
-          setMyProjects({}); // Ensure it's an empty object if no doc
+          setMyProjects({});
+          setReceivedInvitations([]);
         }
-        setIsLoading(false); // Stop loading *after* first snapshot
+        setIsLoading(false); // Connection established, stop loading
       },
       (snapshotError) => {
-        // Handle snapshot errors
-        console.error("Snapshot listener error:", snapshotError);
+        console.error("User Summary Snapshot listener error:", snapshotError);
         setError(snapshotError.message);
         setIsLoading(false);
       }
     );
 
-    // --- 4. RUN THE STATIC FETCH ---
-    fetchUserProfile(firebaseUser.uid);
+    // --- B. Real-time Listener for Static User Profile Data ---
+    // This keeps the userProfile state updated if they change name, avatar, etc.,
+    // even though the initial value came from the SC fetch.
+    const profileDocRef = doc(db, "users", firebaseUser.uid);
+    const unsubscribeProfile = onSnapshot(profileDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setUserProfile(docSnap.data());
+      }
+    });
 
-    // 5. Clean up the listener when the user logs out or component unmounts
-    return () => unsubscribe();
-  }, [firebaseUser, db, isUserLoading]); // Rerun if user or db instance changes
+    // 4. Clean up both listeners when the component unmounts or dependencies change
+    return () => {
+      unsubscribeSummary();
+      unsubscribeProfile();
+    };
+  }, [firebaseUser, db]);
+  // --- END REAL-TIME SYNCHRONIZATION ---
 
+  // --- 3. EXPORT VALUE MEMOIZATION ---
   // Memoize the context value to prevent unnecessary re-renders of consumers
   const value = useMemo(
     () => ({

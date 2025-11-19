@@ -210,31 +210,6 @@ function ProjectContent({ initialProject, initialFiles }) {
         {projectInFocus?.logline}
       </Typography>
       <BasicTabs tabsArray={tabsArray} />
-      {/* <Box sx={{ height: "50%" }}>
-        {projectInFocus?.members?.length > 0 ? (
-          <UsersList data={projectInFocus?.members} />
-        ) : (
-          <Typography color="text.secondary">No Team Members.</Typography>
-        )}
-        {characters?.length > 0 ? (
-          <CharacterSection data={characters} />
-        ) : (
-          <Typography color="text.secondary">No Characters.</Typography>
-        )}
-        {episodes?.length > 0 ? (
-          <EpisodesSection data={episodes} />
-        ) : (
-          <Typography color="text.secondary">No Episodes.</Typography>
-        )}
-        {files?.length > 0 ? (
-          <FilesList data={files} />
-        ) : (
-          <Typography color="text.secondary">No Files.</Typography>
-        )}
-      </Box> */}
-      {/**
-        Crud Item Modal
-       */}
       <BasicModal
         content={modalContent}
         open={openModal}

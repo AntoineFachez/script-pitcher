@@ -17,6 +17,8 @@ export default function NavBar({}) {
   const { toggleColorMode } = useThemeContext();
 
   const handleSetNewAppContext = (context) => {
+    console.log(context);
+
     setAppContext(context);
   };
   const optionsToRender = navActions(
@@ -42,20 +44,23 @@ export default function NavBar({}) {
 
           option.action(option.prop);
         };
-        return getButton(
-          i,
-          option.icon,
-          onClickHandler,
-          false,
-          appContext === option.prop
-            ? {
-                color: "button.active",
-                backgroundColor: "button.activeBackground",
-              }
-            : { color: "button.inactive" },
-          "contained",
-          option.href
-        );
+
+        return option.customNavBarButton
+          ? option.customNavBarButton
+          : getButton(
+              i,
+              option.icon,
+              onClickHandler,
+              false,
+              appContext === option.prop
+                ? {
+                    color: "button.active",
+                    backgroundColor: "button.activeBackground",
+                  }
+                : { color: "button.inactive" },
+              "contained",
+              option.href
+            );
       })}
     </Box>
   );

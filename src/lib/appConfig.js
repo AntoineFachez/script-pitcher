@@ -1,5 +1,7 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/APPCONFIG.JS
 
+import NavBarButton from "@/widgets/me";
+
 export const navActions = (
   toggleColorMode,
   handleLogout,
@@ -31,10 +33,13 @@ export const navActions = (
       prop: "projects",
     },
     {
-      action: (context) => handleSetNewAppContext(context),
-      icon: "Account",
-      href: "/me",
-      prop: "me",
+      customNavBarButton: (
+        <NavBarButton
+          key="me"
+          handleSetNewAppContext={handleSetNewAppContext}
+          layoutContext="navBar"
+        />
+      ),
     },
     { action: toggleColorMode, icon: "LightMode" },
     { action: handleLogout, icon: "Logout" },

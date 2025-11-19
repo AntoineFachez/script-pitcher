@@ -17,14 +17,14 @@ import AuthenticatedLayout from "./Body";
 import { darkTheme } from "../../theme/theme";
 import { CrudProvider } from "@/context/CrudItemContext";
 
-export function Providers({ children }) {
+export function Providers({ children, meData }) {
   return (
     <ThemeProvider>
       {/* <SessionProvider> */}
       <AuthProvider>
         <AppProvider>
           <UiProvider>
-            <UserProvider>
+            <UserProvider meData={meData}>
               <DataProvider>
                 <InFocusProvider>
                   <CrudProvider>

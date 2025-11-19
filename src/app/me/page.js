@@ -1,74 +1,50 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/ME/PAGE.JS
 
-"use client";
+import React from "react";
+import { Box, Typography } from "@mui/material";
+import { notFound } from "next/navigation";
 
-import React, { useEffect } from "react";
-import { Box, Divider, Typography } from "@mui/material";
+// --- CLEANER IMPORTS ---
+import { getCurrentUser } from "@/lib/auth/auth";
+// ⭐ Import the unified function from the new module
 
-import { useApp } from "@/context/AppContext";
-import { useUi } from "@/context/UiContext";
-import { useUser } from "@/context/UserContext";
+import { getMeData } from "@/lib/data/meFetchers";
 
-import BasicModal from "@/components/modal/Modal";
-import CrudItem from "@/widgets/crudItem";
+import MeContent from "@/widgets/me/index";
 
-import ReceivedInvitationsList from "@/widgets/receivedInvitations";
+// 🛑 REMOVE: These functions are now in userFetchers.js
+// async function getMeData(userId) { ... }
+// const serializeTimestamp = (timestamp) => { ... }
+// -----------------------
 
-import { widgetContainerStyles, containerStyles } from "@/theme/muiProps";
+/**
+ * This is the main SERVER COMPONENT for the /me route.
+ * It fetches all necessary data on the server first.
+ */
+export default async function MePage() {
+  const user = await getCurrentUser();
+  const userId = user?.uid;
 
-export default function Page() {
-  const { appContext } = useApp();
-  const {
-    modalContent,
-    setModalContent,
-    openModal,
-    setOpenModal,
-    toggleDetails,
-    showPublishedProjects,
-    setShowPublishedProjects,
-  } = useUi();
-  const { userProfile, receivedInvitations, myProjects, lastFile } = useUser();
+  if (!userId) {
+    return notFound();
+  }
 
-  useEffect(() => {
-    setModalContent(<CrudItem context={appContext} crud="create" />);
+  // ⭐ Call the unified function (which returns pre-serialized data)
+  const { userProfile, receivedInvitations } = await getMeData(userId);
 
-    return () => {};
-  }, [appContext, setModalContent]);
+  // 🛑 REMOVE: The serialization logic is now inside getMeData, so you don't need this block:
+  /*
+    // --- SERIALIZATION ---
+    const serializableProfile = { ... }
+    const serializableInvitations = initialInvitations.map((invite) => ({ ... }))
+    // --- END SERIALIZATION ---
+    */
+
+  // Pass the already serialized data to the client component
   return (
-    <Box sx={widgetContainerStyles.sx}>
-      <Typography
-        variant="h1"
-        sx={{ width: "100%", height: "fit-content", fontSize: "3rem", pt: 10 }}
-      >
-        Me
-      </Typography>
-      {/* {JSON.stringify(myProjects)} */}
-      <Box
-        sx={{
-          ...containerStyles.sx,
-          // backgroundColor: "background.paper",
-        }}
-      >
-        <Typography
-          variant="body1"
-          sx={{
-            width: "100%",
-            height: "fit-content",
-            display: "flex",
-            flexFlow: "column nowrap",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          Welcome back {userProfile?.displayName}
-        </Typography>{" "}
-        <ReceivedInvitationsList data={receivedInvitations} />
-      </Box>{" "}
-      <BasicModal
-        content={modalContent}
-        open={openModal}
-        setOpen={setOpenModal}
-      />
-    </Box>
+    <MeContent
+      initialProfile={userProfile}
+      initialInvitations={receivedInvitations}
+    />
   );
 }
