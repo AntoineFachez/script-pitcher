@@ -8,7 +8,7 @@ import NavBarButton from "./NavBarButton";
 import MeContent from "./MeContent";
 import { useUser } from "@/context/UserContext";
 
-export default function index({
+export default function MeIndex({
   handleSetNewAppContext,
   layoutContext,
   initialProfile,

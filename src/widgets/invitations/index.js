@@ -38,10 +38,15 @@ const columns = [
       return <ExpirationTimeCell value={params.value} />;
     },
   },
-
   {
     field: "invitedEmail",
     headerName: "invitedEmail",
+    align: "right",
+    width: 200,
+  },
+  {
+    field: "state",
+    headerName: "state",
     align: "right",
     width: 200,
   },
