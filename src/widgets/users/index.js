@@ -20,9 +20,63 @@ import { subtitleStyles } from "@/theme/muiProps";
 
 // Assuming columns are in widgetSpex.json or defined here
 import widgetData from "./widgetSpex.json";
-const { widgetSpex, schemeDefinition, columns } = widgetData;
 import SectionMenu from "@/components/menus/SectionMenu";
 import CrudItem from "../crudItem";
+
+const { widgetSpex, schemeDefinition } = widgetData;
+
+const columns = [
+  {
+    field: "imageUrl",
+    headerName: "Image",
+    align: "right",
+    width: 60,
+  },
+  { field: "displayName", headerName: "user", width: 130 },
+  {
+    field: "company",
+    headerName: "Company",
+    align: "right",
+    width: 100,
+  },
+  {
+    field: "userActive",
+    headerName: "Active",
+    align: "right",
+    width: 60,
+  },
+
+  {
+    field: "avatarUrl",
+    headerName: "Image",
+    align: "center",
+    width: 80,
+    // 4. Add a renderCell to make the icon clickable
+    renderCell: (params) => {
+      console.log("params", params.row.role.role);
+
+      const { avatarUrl } = params.row;
+      return <>{params.row.role.role}</>;
+    },
+  },
+  {
+    field: "joinedAt",
+    headerName: "Last Login", // Change header name for clarity
+    align: "center",
+    // Increased width slightly to accommodate longer strings like "1y" or "10mo"
+    width: 60,
+
+    // renderCell: (params) => {
+    //   return <ExpirationTimeCell value={params.value} />;
+    // },
+  },
+  {
+    field: "topReadDocIds",
+    headerName: "topReadDocIds",
+    align: "right",
+    width: 80,
+  },
+];
 
 export default function Widget({
   data,
@@ -174,6 +228,7 @@ export default function Widget({
       return <KebabMenu actions={actions} />;
     },
   };
+  console.log(data);
 
   return (
     <>

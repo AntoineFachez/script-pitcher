@@ -32,7 +32,7 @@ const columns = [
     headerName: "Expires", // Change header name for clarity
     align: "center",
     // Increased width slightly to accommodate longer strings like "1y" or "10mo"
-    width: 60,
+    width: 80,
 
     renderCell: (params) => {
       return <ExpirationTimeCell value={params.value} />;
@@ -45,13 +45,7 @@ const columns = [
     align: "right",
     width: 200,
   },
-  { field: "role", headerName: "role", width: 130 },
-  {
-    field: "status",
-    headerName: "status",
-    align: "center",
-    width: 100,
-  },
+  { field: "role", headerName: "role", align: "center", width: 130 },
 ];
 
 export default function Widget({

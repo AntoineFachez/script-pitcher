@@ -46,28 +46,10 @@ const ExpirationTimeCell = ({ value }) => {
   const isExpired = dateValue && dateValue < new Date();
 
   if (isExpired) {
-    return (
-      <Typography
-        variant="body2"
-        color="error.main"
-        sx={{ fontVariantNumeric: "tabular-nums" }}
-      >
-        Expired
-      </Typography>
-    );
+    return "Expired";
   }
 
-  return (
-    <Typography
-      variant="body2"
-      sx={{
-        fontVariantNumeric: "tabular-nums",
-        fontWeight: 600,
-      }}
-    >
-      {relativeTime}
-    </Typography>
-  );
+  return relativeTime;
 };
 
 export default ExpirationTimeCell;

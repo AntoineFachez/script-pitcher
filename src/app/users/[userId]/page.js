@@ -83,6 +83,7 @@ export default async function ViewUserPage({ params }) {
       : null,
 
     // Serialize the User's lastLogin field
+    //TODO: implement lastLogIn Project Setter
     lastLogin: userProfile?.lastLogin
       ? userProfile?.lastLogin.toDate().toISOString()
       : null,
