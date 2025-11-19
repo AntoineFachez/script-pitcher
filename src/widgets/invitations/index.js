@@ -22,7 +22,7 @@ import { subtitleStyles } from "@/theme/muiProps";
 import widgetData from "./widgetSpex.json";
 import SectionMenu from "@/components/menus/SectionMenu";
 import CrudItem from "../crudItem";
-import ExpirationTimeCell from "@/components/expirationTimeCell/ExpirationTimeCell";
+import ExpirationTimeCell from "@/components/timeCells/ExpirationTimeCell";
 
 const { widgetSpex, schemeDefinition } = widgetData;
 

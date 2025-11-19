@@ -22,20 +22,21 @@ import { subtitleStyles } from "@/theme/muiProps";
 import widgetData from "./widgetSpex.json";
 import SectionMenu from "@/components/menus/SectionMenu";
 import CrudItem from "../crudItem";
-import ExpirationTimeCell from "@/components/expirationTimeCell/ExpirationTimeCell";
+
+import ProcessingTimeCell from "@/components/timeCells/ProcessingTimeCell";
 
 const { widgetSpex, schemeDefinition } = widgetData;
 
 const columns = [
   {
     field: "sentAt",
-    headerName: "Expires", // Change header name for clarity
+    headerName: "sentAt", // Change header name for clarity
     align: "center",
     // Increased width slightly to accommodate longer strings like "1y" or "10mo"
     width: 80,
 
     renderCell: (params) => {
-      return <ExpirationTimeCell value={params.value} />;
+      return <ProcessingTimeCell value={params.value} />;
     },
   },
 
