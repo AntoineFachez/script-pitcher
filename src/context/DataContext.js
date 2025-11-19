@@ -72,13 +72,12 @@ export function DataProvider({ children }) {
     async (projectId, currentPublishedState) => {
       const newPublishedState = !currentPublishedState;
 
-      // 1. Optimistic UI update (for the GLOBAL projects list)
+      // 1. Optimistic UI update (GLOBAL projects list)
       setProjects((prevProjects) =>
         (prevProjects || []).map((p) =>
           p.id === projectId ? { ...p, published: newPublishedState } : p
         )
       );
-
       try {
         // 2. Call the Server Action
         const result = await toggleProjectPublishState(
@@ -86,17 +85,18 @@ export function DataProvider({ children }) {
           newPublishedState
         );
         if (result?.error) {
-          throw new Error(result.error); // Handle server-returned errors
+          throw new Error(result.error);
         }
+        // 3. Success: No action needed, database is updated.
       } catch (error) {
-        // 3. Rollback GLOBAL state on error
+        // 4. Rollback GLOBAL state on error
         console.error("Failed to update publish state:", error);
         setProjects((prevProjects) =>
           (prevProjects || []).map((p) =>
             p.id === projectId ? { ...p, published: currentPublishedState } : p
           )
         );
-        // Re-throw error so the calling component can also react
+        // Re-throw error so the calling component (Project.js) can show a notification
         throw error;
       }
     },

@@ -53,8 +53,6 @@ const columns = [
     width: 80,
     // 4. Add a renderCell to make the icon clickable
     renderCell: (params) => {
-      console.log("params", params.row.role.role);
-
       const { avatarUrl } = params.row;
       return <>{params.row.role.role}</>;
     },

@@ -44,33 +44,24 @@ function ProjectContent({ initialProject, initialFiles }) {
   // const [projectInFocus, setProjectInFocus] = useState(initialProject);
   const [files, setFiles] = useState(initialFiles);
 
+  // SIMPLIFIED LOCAL HANDLER:
   const togglePublishProject = async () => {
-    // We use the local state for the "current" value
+    // 1. Get the current state (before the change)
     const currentPublishedState = projectInFocus?.published;
-    const newPublishedState = !currentPublishedState;
 
     try {
-      // 3. Optimistically update the LOCAL UI first
-      setProjectInFocus((prev) => ({
-        ...prev,
-        published: newPublishedState,
-      }));
-
-      // 4. Call the GLOBAL handler
-      // This updates the global list and calls the server action
+      // 2. Call the GLOBAL handler (which handles server action and global state rollback)
       await handleTogglePublishProject(
         projectInFocus?.id,
         currentPublishedState
       );
+
+      // 3. NO LOCAL ROLLBACK OR OPTIMISTIC UPDATE NEEDED HERE.
+      // The useEffect/onSnapshot listener will automatically update
+      // setProjectInFocus() when the database commit succeeds.
     } catch (error) {
-      // 5. Rollback LOCAL UI on error
-      // The global handler already logged the error and rolled back global state
-      console.error("Local rollback:", error.message);
-      setProjectInFocus((prev) => ({
-        ...prev,
-        published: currentPublishedState, // Revert
-      }));
-      // Show an error toast to the user
+      console.error("Failed to toggle project state:", error.message);
+      // Show an error toast/snackbar here if needed.
     }
   };
   const db = getFirebaseDb(); // Get the Firestore instance
