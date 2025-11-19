@@ -13,7 +13,7 @@ service cloud.firestore {
     }
 
    match /projects/{projectId} {
-      // TODO: adjust rules for viewers to not see other members
+      // TODO: adjust rules for viewers to not see other members. Only owners and editors should see the other members
       
       // Allow GET (reading one doc) if the user is a member
       allow get: if request.auth != null && 
