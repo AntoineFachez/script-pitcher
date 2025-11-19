@@ -41,10 +41,12 @@ export async function POST(request, { params }) {
     // 1. Create the invitation doc (Your existing logic)
     const invitationId = db.collection("projects").doc().id;
     const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
+    const invitationPart = `/invite/${projectId}/${invitationId}`;
 
     const invitationData = {
       token: invitationId,
       projectId: projectId,
+      invitationPart: invitationPart,
       invitedEmail: targetEmail,
       role: role,
       invitedBy: decodedToken.uid,
@@ -83,7 +85,9 @@ export async function POST(request, { params }) {
                 projectId: projectId,
                 role: role,
                 invitedBy: decodedToken.uid,
+                state: "pending",
                 sentAt: FieldValue.serverTimestamp(),
+                invitationPart: invitationPart,
               },
             },
           },

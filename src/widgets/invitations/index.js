@@ -20,9 +20,39 @@ import { subtitleStyles } from "@/theme/muiProps";
 
 // Assuming columns are in widgetSpex.json or defined here
 import widgetData from "./widgetSpex.json";
-const { widgetSpex, schemeDefinition, columns } = widgetData;
 import SectionMenu from "@/components/menus/SectionMenu";
 import CrudItem from "../crudItem";
+import ExpirationTimeCell from "@/components/expirationTimeCell/ExpirationTimeCell";
+
+const { widgetSpex, schemeDefinition } = widgetData;
+
+const columns = [
+  {
+    field: "expiresAt",
+    headerName: "Expires", // Change header name for clarity
+    align: "center",
+    // Increased width slightly to accommodate longer strings like "1y" or "10mo"
+    width: 60,
+
+    renderCell: (params) => {
+      return <ExpirationTimeCell value={params.value} />;
+    },
+  },
+
+  {
+    field: "invitedEmail",
+    headerName: "invitedEmail",
+    align: "right",
+    width: 200,
+  },
+  { field: "role", headerName: "role", width: 130 },
+  {
+    field: "status",
+    headerName: "status",
+    align: "center",
+    width: 100,
+  },
+];
 
 export default function Widget({
   data,

@@ -13,6 +13,7 @@ const ProjectContext = createContext(null);
 export function ProjectProvider({ projectId, children }) {
   const { firebaseUser } = useAuth();
   const [db, setDb] = useState(null);
+  const [invitations, setInvitations] = useState([]);
   const [characters, setCharacters] = useState([]);
   const [episodes, setEpisodes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -92,12 +93,45 @@ export function ProjectProvider({ projectId, children }) {
     return () => unsubscribe();
   }, [db, projectId, firebaseUser]);
 
+  // Listener for Invitations
+  useEffect(() => {
+    if (!firebaseUser || !projectId) return;
+    if (!db || !firebaseUser) {
+      // This check correctly ensures db is available
+      if (!firebaseUser && !db) {
+        setLoading(false);
+      }
+      return;
+    }
+    setLoading(true);
+    const invitColRef = collection(db, "projects", projectId, "invitations");
+
+    // ⭐ CHANGE THIS LINE: Use 'createdAt' instead of 'orderIndex'
+    const q = query(invitColRef, orderBy("createdAt", "asc"));
+
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const invitData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setInvitations(invitData);
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Error listening to invitations:", error);
+        setLoading(false);
+      }
+    );
+
+    // Cleanup function
+    return () => unsubscribe();
+  }, [db, projectId, firebaseUser]);
+
   const value = useMemo(
-    () => ({
-      characters,
-      episodes,
-      loading,
-    }),
+    () => ({ invitations, characters, episodes, loading }),
     [characters, episodes, loading]
   );
 

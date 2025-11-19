@@ -40,14 +40,14 @@ export async function POST(request) {
     await db.runTransaction(async (transaction) => {
       // A. References
       const projectRef = db.collection("projects").doc(projectId);
-      const invitationRef = projectRef.collection("invitations").doc(token); // Token is the docId based on your invite route
+      const invitationRef = projectRef.collection("invitations").doc(token); // Token is the docId
       const userSummaryRef = db.doc(`users/${userId}/private/summary`);
 
       // B. Reads
       const projectSnap = await transaction.get(projectRef);
       const invitationSnap = await transaction.get(invitationRef);
 
-      // C. Validations
+      // C. Validations (No changes needed here)
       if (!projectSnap.exists) throw new Error("Project does not exist.");
       if (!invitationSnap.exists)
         throw new Error("Invitation not found or expired.");
@@ -65,12 +65,9 @@ export async function POST(request) {
         throw new Error("Invitation has expired.");
       }
 
-      // Optional: Check if the logged-in email matches the invited email
-      // if (inviteData.invitedEmail !== userEmail.toLowerCase()) { ... }
-
       // D. Writes
 
-      // 1. Update Invitation Status
+      // 1. Update Invitation Status (in projects subcollection)
       transaction.update(invitationRef, {
         status: "accepted",
         acceptedBy: userId,
@@ -78,7 +75,6 @@ export async function POST(request) {
       });
 
       // 2. Add User to Project Members
-      // We use the role defined in the invitation
       const newMemberData = {
         role: inviteData.role,
         email: userEmail,
@@ -89,8 +85,7 @@ export async function POST(request) {
         [`members.${userId}`]: newMemberData,
       });
 
-      // 3. Add Project to User Summary (Crucial for your projectFetchers.js)
-      // usage: users/{userId}/private/summary -> projects: { [projectId]: { role: ... } }
+      // 3. Add Project to User Summary (The project list)
       transaction.set(
         userSummaryRef,
         {
@@ -103,6 +98,13 @@ export async function POST(request) {
         },
         { merge: true }
       );
+
+      // 4. ⭐ NEW: Update Invitation Status in User Summary (for the badge)
+      // We use dot notation to target the nested fields within the 'invitations' map.
+      transaction.update(userSummaryRef, {
+        [`invitations.${token}.state`]: "accepted",
+        [`invitations.${token}.acceptedAt`]: FieldValue.serverTimestamp(),
+      });
     });
 
     return NextResponse.json({ success: true, projectId }, { status: 200 });

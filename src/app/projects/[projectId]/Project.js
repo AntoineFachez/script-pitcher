@@ -23,6 +23,7 @@ import { useUi } from "@/context/UiContext";
 import BasicModal from "@/components/modal/Modal";
 import BasicTabs from "@/components/tabs/BasicTabs";
 
+import InvitationsList from "@/widgets/invitations";
 import UsersList from "@/widgets/users";
 import CrudItem from "@/widgets/crudItem";
 import FilesList from "@/widgets/files";
@@ -36,7 +37,7 @@ function ProjectContent({ initialProject, initialFiles }) {
   const { appContext, setAppContext } = useApp();
   const { modalContent, setModalContent, openModal, setOpenModal } = useUi();
   const { projectInFocus, setProjectInFocus } = useInFocus(initialProject);
-  const { characters, episodes, loading } = useProject();
+  const { invitations, characters, episodes, loading } = useProject();
   const { handleTogglePublishProject } = useData();
 
   // Use local state, initialized by the prop
@@ -91,11 +92,13 @@ function ProjectContent({ initialProject, initialFiles }) {
     // Cleanup
     return () => unsubscribe();
   }, [db, projectInFocus?.id, setProjectInFocus]);
+
   useEffect(() => {
     if (initialProject && !projectInFocus) {
       setProjectInFocus(initialProject);
     }
   }, [initialProject, setProjectInFocus, projectInFocus]);
+
   useEffect(() => {
     setAppContext("projects");
     setProjectInFocus(initialProject);
@@ -118,7 +121,10 @@ function ProjectContent({ initialProject, initialFiles }) {
       label: "Team",
       content:
         initialProject?.members?.length > 0 ? (
-          <UsersList data={initialProject?.members} />
+          <>
+            <UsersList data={initialProject?.members} />
+            <InvitationsList data={invitations} />
+          </>
         ) : (
           <Typography color="text.secondary">No Team Members.</Typography>
         ),

@@ -13,6 +13,7 @@ service cloud.firestore {
     }
 
    match /projects/{projectId} {
+      // TODO: adjust rules for viewers to not see other members
       
       // Allow GET (reading one doc) if the user is a member
       allow get: if request.auth != null && 
@@ -41,6 +42,12 @@ service cloud.firestore {
       }
       
       match /episodes/{episodeId} {
+        allow read: if request.auth.uid in get(/databases/$(database)/documents/projects/$(projectId)).data.members;
+        allow write: if false; 
+      }
+    
+      // TODO: adjust rules for non owner to not see invitations
+      match /invitations/{invitationId} {
         allow read: if request.auth.uid in get(/databases/$(database)/documents/projects/$(projectId)).data.members;
         allow write: if false; 
       }

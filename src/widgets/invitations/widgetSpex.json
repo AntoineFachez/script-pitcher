@@ -1,0 +1,40 @@
+{
+  "widgetSpex": { "widgetName": "users", "title": "Invitations" },
+
+  "schemeDefinition": {
+    "id": "uid",
+    "title": "invitedEmail",
+    "subtitleArray": "roles",
+    "subtitleArrayItem": "role",
+    "description": "status",
+    "imageUrl": "imageUrl",
+    "avatarUrl": "avatarUrl"
+  },
+  "columns": [
+    {
+      "field": "invitedEmail",
+      "headerName": "invitedEmail",
+      "align": "right",
+      "width": 60
+    },
+    {
+      "field": "expiresAt",
+      "headerName": "expiresAt",
+      "align": "right",
+      "width": 60
+    },
+    { "field": "role", "headerName": "role", "width": 130 },
+    {
+      "field": "status",
+      "headerName": "status",
+      "align": "right",
+      "width": 100
+    },
+    {
+      "field": "token",
+      "headerName": "token",
+      "align": "right",
+      "width": 60
+    }
+  ]
+}

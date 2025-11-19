@@ -107,9 +107,6 @@ export default function InviteUserForm({ crud }) {
       onSubmit={handleSubmit}
       sx={{ width: "100%", maxWidth: "50ch", mx: "auto", p: 2 }}
     >
-      <Button onClick={() => handleMailTo({ email: email, role: role })}>
-        send
-      </Button>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <Typography variant="h5" gutterBottom sx={{ fontWeight: 100 }}>
           Invite New Team Member
