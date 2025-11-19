@@ -12,6 +12,8 @@ import { useUser } from "@/context/UserContext";
 import BasicModal from "@/components/modal/Modal";
 import CrudItem from "@/widgets/crudItem";
 
+import ReceivedInvitationsList from "@/widgets/receivedInvitations";
+
 import { widgetContainerStyles, containerStyles } from "@/theme/muiProps";
 
 export default function Page() {
@@ -25,7 +27,7 @@ export default function Page() {
     showPublishedProjects,
     setShowPublishedProjects,
   } = useUi();
-  const { userProfile, myProjects, lastFile } = useUser();
+  const { userProfile, receivedInvitations, myProjects, lastFile } = useUser();
 
   useEffect(() => {
     setModalContent(<CrudItem context={appContext} crud="create" />);
@@ -40,7 +42,7 @@ export default function Page() {
       >
         Me
       </Typography>
-      {JSON.stringify(myProjects)}
+      {/* {JSON.stringify(myProjects)} */}
       <Box
         sx={{
           ...containerStyles.sx,
@@ -60,6 +62,7 @@ export default function Page() {
         >
           Welcome back {userProfile?.displayName}
         </Typography>{" "}
+        <ReceivedInvitationsList data={receivedInvitations} />
       </Box>{" "}
       <BasicModal
         content={modalContent}

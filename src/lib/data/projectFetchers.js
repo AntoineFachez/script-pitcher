@@ -26,9 +26,9 @@ async function getDocsInBatches(collectionRef, ids) {
 }
 
 export async function getProjectsAndMembers(userId) {
-  console.log(
-    `[getProjectsAndMembers] 🚀 Starting fetch for userId: ${userId}`
-  );
+  // console.log(
+  //   `[getProjectsAndMembers] 🚀 Starting fetch for userId: ${userId}`
+  // );
   const { db } = getAdminServices();
   if (!db || !userId) {
     // console.log("[getProjectsAndMembers] 🛑 DB or userId is missing. Exiting.");

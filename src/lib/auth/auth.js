@@ -30,10 +30,10 @@ export async function getCurrentUser() {
 
     if (userDocSnap.exists) {
       const userData = userDocSnap.data();
-      console.log(
-        "[getCurrentUser] ✅ Firebase Session verified for user.id:",
-        userId
-      );
+      // console.log(
+      //   "[getCurrentUser] ✅ Firebase Session verified for user.id:",
+      //   userId
+      // );
 
       return {
         uid: userId,

@@ -18,12 +18,11 @@ export function UserProvider({ documentId, children }) {
 
   const [myProjects, setMyProjects] = useState({});
   const [lastFile, setLastFile] = useState(null);
-  // console.log("myProjects", myProjects);
 
   const [userProfile, setUserProfile] = useState(null);
-  const [meInFocus, setMeInFocus] = useState(null);
-  const [userSummaryData, setUserSummaryData] = useState(null);
 
+  const [meInFocus, setMeInFocus] = useState(null);
+  const [receivedInvitations, setReceivedInvitations] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -89,6 +88,7 @@ export function UserProvider({ documentId, children }) {
       (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
+          setReceivedInvitations(data.invitations || {});
           setMyProjects(data.projects || {});
           setLastFile(data.lastTouchedFile || null);
         } else {
@@ -120,7 +120,7 @@ export function UserProvider({ documentId, children }) {
       setLastFile,
       myProjects,
       setMyProjects,
-      userSummaryData,
+      receivedInvitations,
       isLoading,
       error,
     }),
@@ -129,7 +129,7 @@ export function UserProvider({ documentId, children }) {
       myProjects,
       lastFile,
       setLastFile,
-      userSummaryData,
+      receivedInvitations,
       isLoading,
       error,
     ]

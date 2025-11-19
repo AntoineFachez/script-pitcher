@@ -60,7 +60,7 @@ export default function InviteUserForm({ crud }) {
     // Use projectInFocus.id which is available from context
     const url = `/api/projects/${projectInFocus.id}/invite`;
     const method = "POST";
-    const body = JSON.stringify({ email, role });
+    const body = JSON.stringify({ email, role, userProfile });
 
     try {
       const response = await fetch(url, {

@@ -22,14 +22,12 @@ export default async function ProjectsPage() {
   const user = await getCurrentUser();
 
   const userId = user?.uid;
-  console.log("User: ", user);
 
   // 2. Fetch the data using the server action
   // We use the serialized getProjectsAndMembers function.
   const { projects, users } = userId
     ? await getProjectsAndMembers(userId)
     : { projects: [], users: [] };
-  console.log("Projects: ", projects);
 
   // 3. Render the static parts and pass the data to the client
   return (

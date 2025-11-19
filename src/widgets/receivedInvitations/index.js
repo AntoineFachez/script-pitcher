@@ -22,59 +22,36 @@ import { subtitleStyles } from "@/theme/muiProps";
 import widgetData from "./widgetSpex.json";
 import SectionMenu from "@/components/menus/SectionMenu";
 import CrudItem from "../crudItem";
+import ExpirationTimeCell from "@/components/expirationTimeCell/ExpirationTimeCell";
 
 const { widgetSpex, schemeDefinition } = widgetData;
 
 const columns = [
   {
-    field: "imageUrl",
-    headerName: "Image",
-    align: "right",
-    width: 60,
-  },
-  { field: "displayName", headerName: "user", width: 130 },
-  {
-    field: "company",
-    headerName: "Company",
-    align: "right",
-    width: 100,
-  },
-  {
-    field: "userActive",
-    headerName: "Active",
-    align: "right",
-    width: 60,
-  },
-
-  {
-    field: "avatarUrl",
-    headerName: "Image",
-    align: "center",
-    width: 80,
-    // 4. Add a renderCell to make the icon clickable
-    renderCell: (params) => {
-      console.log("params", params.row.role.role);
-
-      const { avatarUrl } = params.row;
-      return <>{params.row.role.role}</>;
-    },
-  },
-  {
-    field: "joinedAt",
-    headerName: "Last Login", // Change header name for clarity
+    field: "sentAt",
+    headerName: "Expires", // Change header name for clarity
     align: "center",
     // Increased width slightly to accommodate longer strings like "1y" or "10mo"
-    width: 60,
-
-    // renderCell: (params) => {
-    //   return <ExpirationTimeCell value={params.value} />;
-    // },
-  },
-  {
-    field: "topReadDocIds",
-    headerName: "topReadDocIds",
-    align: "right",
     width: 80,
+
+    renderCell: (params) => {
+      return <ExpirationTimeCell value={params.value} />;
+    },
+  },
+
+  {
+    field: "invitedBy",
+    headerName: "invitedBy",
+    align: "right",
+    width: 200,
+  },
+  { field: "projectId", headerName: "projectId", align: "center", width: 130 },
+  { field: "role", headerName: "role", align: "center", width: 130 },
+  {
+    field: "invitationPart",
+    headerName: "invitationPart",
+    align: "center",
+    width: 130,
   },
 ];
 
@@ -103,11 +80,10 @@ export default function Widget({
 
   const handleRowClick = (params, event) => {
     event.defaultMuiPrevented = true;
-    const user = params.row;
-    setAppContext("users");
-    setUserInFocus(user);
-    if (user.uid) {
-      router.push(`/users/${user.uid}`);
+    const token = params.row.invitationPart;
+
+    if (token) {
+      router.push(`${token}`);
     }
   };
 

@@ -35,7 +35,7 @@ export async function POST(request, { params }) {
   }
 
   try {
-    const { email, role } = await request.json();
+    const { email, role, userProfile } = await request.json();
     const targetEmail = email.toLowerCase();
 
     // 1. Create the invitation doc (Your existing logic)
@@ -49,7 +49,7 @@ export async function POST(request, { params }) {
       invitationPart: invitationPart,
       invitedEmail: targetEmail,
       role: role,
-      invitedBy: decodedToken.uid,
+      invitedById: decodedToken.uid,
       status: "pending",
       createdAt: FieldValue.serverTimestamp(),
       expiresAt: new Date(Date.now() + sevenDaysInMs),
@@ -84,7 +84,9 @@ export async function POST(request, { params }) {
               [invitationId]: {
                 projectId: projectId,
                 role: role,
-                invitedBy: decodedToken.uid,
+                invitedById: decodedToken.uid,
+                invitedByName: userProfile.displayName,
+                invitedByEmail: userProfile.email,
                 state: "pending",
                 sentAt: FieldValue.serverTimestamp(),
                 invitationPart: invitationPart,
