@@ -1,12 +1,11 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/PROJECTS/[PROJECTID]/PAGE.JS
 
 import React from "react";
-import { Box } from "@mui/material";
 import { notFound } from "next/navigation";
 import { FieldPath } from "firebase-admin/firestore";
 
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
-import Project from "@/app/projects/[projectId]/Project";
+import ProjectClient from "@/app/projects/[projectId]/ProjectClient";
 
 // This is now an async Server Component
 export default async function ViewProjectPage({ params }) {
@@ -125,7 +124,7 @@ export default async function ViewProjectPage({ params }) {
   // 4. Pass the server-fetched data as a prop
   return (
     <>
-      <Project
+      <ProjectClient
         initialProject={serializableProjectProfile}
         initialFiles={serializableFilesData}
       />

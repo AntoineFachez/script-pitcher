@@ -1,21 +1,42 @@
-import { IconButton } from "@mui/material";
-import React from "react";
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/NAVBAR/NAVBARBUTTON/NAVBARBUTTON.JS
+"use client"; // Retain the 'use client' directive
 
-export default function NavBarButton({ widgetProps, styled }) {
-  const { gridMapKey, dropWidgetName, onNavBarButtonClick, iconButton } =
-    widgetProps;
+import React from "react";
+import { AccountCircle } from "@mui/icons-material";
+import { Badge, IconButton } from "@mui/material";
+import Link from "next/link";
+import { useApp } from "@/context/AppContext";
+import { iconMap } from "@/lib/maps/iconMap";
+
+export default function NavBarButton({
+  iconName,
+  prop,
+  href,
+  badgeCount,
+  handleSetNewAppContext,
+}) {
+  const { appContext, setAppContext, loading } = useApp();
+
+  const IconComponent = iconName ? iconMap[iconName] : null;
 
   return (
     <IconButton
-      className="navBarButton"
-      onClick={onNavBarButtonClick}
+      onClick={() => handleSetNewAppContext(prop)}
+      component={Link}
+      href={href}
       sx={
-        gridMapKey === dropWidgetName
-          ? styled?.navBarButton?.active
-          : styled?.navBarButton?.inactive
+        appContext === prop
+          ? {
+              color: "button.active",
+              backgroundColor: "button.activeBackground",
+            }
+          : { color: "button.inactive" }
       }
     >
-      {iconButton}
+      {/* Use the clean 'badgeCount' prop */}
+      <Badge badgeContent={badgeCount} color="secondary">
+        <IconComponent />
+      </Badge>
     </IconButton>
   );
 }

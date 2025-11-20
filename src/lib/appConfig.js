@@ -1,6 +1,7 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/APPCONFIG.JS
 
-import NavBarButton from "@/widgets/me";
+import NavBarButtonMe from "@/widgets/meProfile";
+import NavBarButtonProjects from "@/widgets/projectProfile";
 
 export const navActions = (
   toggleColorMode,
@@ -14,27 +15,36 @@ export const navActions = (
       href: "/",
       prop: "home",
     },
+    // {
+    //   action: (context) => handleSetNewAppContext(context),
+    //   icon: "Dashboard",
+    //   href: "/dashboard",
+    //   prop: "dashboard",
+    // },
+    // {
+    //   action: (context) => handleSetNewAppContext(context),
+    //   icon: "Group",
+    //   href: "/users",
+    //   prop: "users",
+    // },
+    // {
+    //   action: (context) => handleSetNewAppContext(context),
+    //   icon: "Article",
+    //   href: "/projects",
+    //   prop: "projects",
+    // },
     {
-      action: (context) => handleSetNewAppContext(context),
-      icon: "Dashboard",
-      href: "/dashboard",
-      prop: "dashboard",
-    },
-    {
-      action: (context) => handleSetNewAppContext(context),
-      icon: "Group",
-      href: "/users",
-      prop: "users",
-    },
-    {
-      action: (context) => handleSetNewAppContext(context),
-      icon: "Article",
-      href: "/projects",
-      prop: "projects",
+      customNavBarButton: (
+        <NavBarButtonProjects
+          key="projects"
+          handleSetNewAppContext={handleSetNewAppContext}
+          layoutContext="navBar"
+        />
+      ),
     },
     {
       customNavBarButton: (
-        <NavBarButton
+        <NavBarButtonMe
           key="me"
           handleSetNewAppContext={handleSetNewAppContext}
           layoutContext="navBar"

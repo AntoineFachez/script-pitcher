@@ -1,4 +1,4 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/PROJECTS/[PROJECTID]/MENU.JS
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/PROJECTS/MENU.JS
 
 "use client";
 import React from "react";
@@ -11,7 +11,7 @@ export default function Menu({
   setAppContext,
   setOpenModal,
   setModalContent,
-  projectInFocus,
+  itemInFocus,
   togglePublishProject,
 }) {
   return (
@@ -26,17 +26,17 @@ export default function Menu({
         }}
       >
         <Typography variant="subtitle1" color="text.secondary">
-          {projectInFocus.status}
+          {itemInFocus?.status}
         </Typography>
         <IconButton
           onClick={() => {
             setOpenModal(true);
-            setAppContext("projects");
+            // setAppContext("projects");
             return setModalContent(
               <CrudItem
                 context={appContext}
                 crud="update"
-                profile={projectInFocus}
+                profile={itemInFocus}
               />
             );
           }}
@@ -48,12 +48,12 @@ export default function Menu({
             aria-label="publish"
             onClick={togglePublishProject}
             variant="outlined"
-            startIcon={projectInFocus.published ? <Public /> : <PublicOff />}
+            startIcon={itemInFocus?.published ? <Public /> : <PublicOff />}
             sx={{
-              color: projectInFocus.published ? "success.main" : "#aaa",
+              color: itemInFocus?.published ? "success.main" : "#aaa",
             }}
           >
-            {projectInFocus.published ? "Published" : "Archived"}
+            {itemInFocus?.published ? "Published" : "Archived"}
           </Button>
         </Typography>
       </Box>

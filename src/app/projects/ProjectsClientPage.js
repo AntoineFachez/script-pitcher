@@ -14,7 +14,7 @@ import { useUi } from "@/context/UiContext";
 // Components
 import BasicModal from "@/components/modal/Modal";
 import CrudItem from "@/widgets/crudItem";
-import ProjectsWidget from "@/widgets/projects/Widget";
+import ProjectsWidget from "@/widgets/projects/ProjectsList";
 
 // Server Actions
 import { toggleProjectPublishState } from "@/lib/actions/projectActions";

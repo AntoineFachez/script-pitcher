@@ -10,7 +10,7 @@ import { getCurrentUser } from "@/lib/auth/auth";
 
 import { getMeData } from "@/lib/data/meFetchers";
 
-import MeContent from "@/widgets/me/index";
+import MeIndex from "@/widgets/meProfile/index";
 
 // 🛑 REMOVE: These functions are now in userFetchers.js
 // async function getMeData(userId) { ... }
@@ -42,7 +42,7 @@ export default async function MePage() {
 
   // Pass the already serialized data to the client component
   return (
-    <MeContent
+    <MeIndex
       initialProfile={userProfile}
       initialInvitations={receivedInvitations}
     />

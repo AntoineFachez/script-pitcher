@@ -19,9 +19,10 @@ import { useInFocus } from "@/context/InFocusContext";
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
 
-import Menu from "./Menu";
+import ProfileMenu from "@/components/menus/ProfileMenu";
 
 import { widgetContainerStyles, containerStyles } from "@/theme/muiProps";
+import ProfileHeader from "@/components/profileHeader/ProfileHeader";
 
 // Receive initial data as props from the Server Component
 export default function MeContent({ initialProfile, initialInvitations }) {
@@ -75,64 +76,24 @@ export default function MeContent({ initialProfile, initialInvitations }) {
   const styles = { leftMargin: "2rem" };
   return (
     <>
-      <Box sx={{ position: "relative", height: "fit-content" }}>
-        <Box
-          sx={{
-            // 1. Set the fixed dimensions of the banner
-            width: "100%",
-            height: 200, // Adjust the height as needed (e.g., 200px)
-
-            // 2. Add the background image
-            backgroundImage: `url(${userProfile?.imageUrl})`,
-
-            // 3. Control how the image fills the space
-            backgroundSize: "cover", // Scales the image to cover the box
-            backgroundPosition: "center", // Centers the image in the box
-            backgroundRepeat: "no-repeat", // Prevents tiling
-
-            // Optional: Add a rounded top edge for a modern look
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-          }}
-        />{" "}
-        <Avatar
-          src={userProfile?.avatarUrl || userProfile?.imageUrl}
-          sx={{
-            position: "absolute",
-            left: styles.leftMargin,
-            width: 72,
-            height: 72,
-            alignSelf: "center",
-          }}
-        />
-        <Menu
-          appContext={appContext}
-          setAppContext={setAppContext}
-          setOpenModal={setOpenModal}
-          setModalContent={setModalContent}
-          userInFocus={userInFocus}
-          // togglePublishProject={togglePublishProject}
-        />
-        <Typography
-          variant="h4"
-          sx={{ width: "100%", pl: styles.leftMargin, textAlign: "left" }}
-        >
-          {userProfile?.title}
-        </Typography>
-      </Box>
-      <Typography
-        variant="body1"
-        sx={{
-          width: "100%",
-          height: "fit-content",
-          display: "flex",
-          flexFlow: "column nowrap",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        Welcome back {userProfile.displayName}
-      </Typography>{" "}
+      <ProfileHeader
+        bannerImageUrl={userProfile?.imageUrl}
+        avatarImageUrl={userProfile?.avatarUrl || userProfile?.imageUrl}
+        menu={
+          <ProfileMenu
+            appContext={appContext}
+            setAppContext={setAppContext}
+            setOpenModal={setOpenModal}
+            setModalContent={setModalContent}
+            itemInFocus={userInFocus}
+            // togglePublishProject={togglePublishProject}
+          />
+        }
+        titleText={userProfile?.displayName}
+        descriptionText={`Welcome back ${userProfile?.displayName}`}
+        avatarStyles={styles}
+        headerStyles={styles}
+      />
       <BasicTabs tabsArray={tabsArray} />
       <BasicModal
         content={modalContent}

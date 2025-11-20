@@ -3,10 +3,12 @@
 "use client";
 
 import React from "react";
-import { WidgetContext } from "./Context";
-import NavBarButton from "./NavBarButton";
-import MeContent from "./MeContent";
+
+import NavBarButton from "@/components/navBar/navBarButton/NavBarButton";
 import { useUser } from "@/context/UserContext";
+
+import { WidgetContext } from "./Context";
+import Widget from "./Widget";
 
 export default function MeIndex({
   handleSetNewAppContext,
@@ -28,15 +30,16 @@ export default function MeIndex({
       {layoutContext === "navBar" ? (
         <>
           <NavBarButton
-            handleSetNewAppContext={handleSetNewAppContext}
+            iconName="Person"
             href="/me"
             prop="me"
-            invitationCount={invitationCount}
+            badgeCount={invitationCount}
+            handleSetNewAppContext={handleSetNewAppContext}
           />{" "}
         </>
       ) : (
         <>
-          <MeContent
+          <Widget
             initialProfile={initialProfile}
             initialInvitations={pendingInvitations}
           />

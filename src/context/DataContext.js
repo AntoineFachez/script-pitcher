@@ -11,19 +11,11 @@ import {
   useCallback,
 } from "react";
 import { useAuth } from "./AuthContext";
-import { knitProjectData } from "@/lib/maps/actions";
 
 import { toggleProjectPublishState } from "@/lib/actions/projectActions";
-
-import { getProjectsAndMembers } from "@/lib/data/projectFetchers"; // This is now a Server Action
-// Make sure you export your 'db' instance from your Firebase config file
-
 const DataContext = createContext(null);
 
 export function DataProvider({ children }) {
-  const { firebaseUser } = useAuth();
-  const [data, setData] = useState(null);
-
   const [projects, setProjects] = useState(null);
 
   // console.log("projects", projects);
@@ -34,74 +26,40 @@ export function DataProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // useEffect(() => {
-  //   if (!firebaseUser) {
-  //     setLoading(false); // Not logged in, so not loading
-  //     setProjects([]); // Clear projects
-  //     setUsers([]); // Clear users
-  //     return;
-  //   }
+  // const handleTogglePublishProject = useCallback(
+  //   async (projectId, currentPublishedState) => {
+  //     const newPublishedState = !currentPublishedState;
 
-  //   async function fetchData() {
+  //     // 1. Optimistic UI update (GLOBAL projects list)
+  //     setProjects((prevProjects) =>
+  //       (prevProjects || []).map((p) =>
+  //         p.id === projectId ? { ...p, published: newPublishedState } : p
+  //       )
+  //     );
   //     try {
-  //       setLoading(true);
-  //       setError(null);
-  //       // console.log("firebaseUser", firebaseUser.uid);
-  //       // Call the server action
-  //       const { projects: fetchedProjects, users: fetchedUsers } =
-  //         await getProjectsAndMembers(firebaseUser.uid);
-  //       // 2. (Optional) Now you can safely log the data variable.
-  //       // console.log("DataContext fetched data:", {
-  //       //   fetchedProjects,
-  //       //   fetchedUsers,
-  //       // });
-  //       setProjects(fetchedProjects || []);
-  //       // console.log("fetchedProjects", fetchedProjects);
-  //       setUsers(fetchedUsers || []);
-  //     } catch (err) {
-  //       console.error("DataContext failed to fetch data:", err);
-  //       setError(err);
-  //     } finally {
-  //       setLoading(false);
+  //       // 2. Call the Server Action
+  //       const result = await toggleProjectPublishState(
+  //         projectId,
+  //         newPublishedState
+  //       );
+  //       if (result?.error) {
+  //         throw new Error(result.error);
+  //       }
+  //       // 3. Success: No action needed, database is updated.
+  //     } catch (error) {
+  //       // 4. Rollback GLOBAL state on error
+  //       console.error("Failed to update publish state:", error);
+  //       setProjects((prevProjects) =>
+  //         (prevProjects || []).map((p) =>
+  //           p.id === projectId ? { ...p, published: currentPublishedState } : p
+  //         )
+  //       );
+  //       // Re-throw error so the calling component (Project.js) can show a notification
+  //       throw error;
   //     }
-  //   }
-  //   fetchData();
-  // }, [firebaseUser]);
-
-  const handleTogglePublishProject = useCallback(
-    async (projectId, currentPublishedState) => {
-      const newPublishedState = !currentPublishedState;
-
-      // 1. Optimistic UI update (GLOBAL projects list)
-      setProjects((prevProjects) =>
-        (prevProjects || []).map((p) =>
-          p.id === projectId ? { ...p, published: newPublishedState } : p
-        )
-      );
-      try {
-        // 2. Call the Server Action
-        const result = await toggleProjectPublishState(
-          projectId,
-          newPublishedState
-        );
-        if (result?.error) {
-          throw new Error(result.error);
-        }
-        // 3. Success: No action needed, database is updated.
-      } catch (error) {
-        // 4. Rollback GLOBAL state on error
-        console.error("Failed to update publish state:", error);
-        setProjects((prevProjects) =>
-          (prevProjects || []).map((p) =>
-            p.id === projectId ? { ...p, published: currentPublishedState } : p
-          )
-        );
-        // Re-throw error so the calling component (Project.js) can show a notification
-        throw error;
-      }
-    },
-    [setProjects]
-  );
+  //   },
+  //   [setProjects]
+  // );
   const handleToggleUserAccessProject = useCallback(
     async (userId, currentActiveInProjectState) => {},
     []
@@ -118,7 +76,7 @@ export function DataProvider({ children }) {
       rolesInProjects,
       users,
       integratedProjects,
-      handleTogglePublishProject,
+      // handleTogglePublishProject,
       handleToggleUserAccessProject,
       handleTogglePublishFile,
       loading,
@@ -130,7 +88,7 @@ export function DataProvider({ children }) {
       rolesInProjects,
       users,
       integratedProjects,
-      handleTogglePublishProject,
+      // handleTogglePublishProject,
       handleToggleUserAccessProject,
       handleTogglePublishFile,
       loading,
