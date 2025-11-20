@@ -22,7 +22,6 @@ export default function MeIndex({
       .length || 0;
   pendingInvitations =
     receivedInvitations?.filter((invite) => invite.state === "pending") || [];
-  console.log(receivedInvitations);
 
   return (
     <WidgetContext>

@@ -1,6 +1,10 @@
 [
   {
-    "origin": ["http://localhost:3000", "https://script-pitcher.web.app"],
+    "origin": [
+      "http://localhost:3000",
+      "https://script-pitcher.web.app",
+      "https://die-zornigs.web.app"
+    ],
     "method": ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
     "responseHeader": ["Content-Type", "Authorization", "X-Goog-Resumable"],
     "maxAgeSeconds": 3600

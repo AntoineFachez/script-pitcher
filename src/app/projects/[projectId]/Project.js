@@ -107,6 +107,7 @@ function ProjectContent({ initialProject, initialFiles }) {
   if (!projectInFocus) {
     return <Typography>Project not found.</Typography>;
   }
+
   const tabsArray = [
     {
       label: "Team",
