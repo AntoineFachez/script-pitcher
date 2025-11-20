@@ -21,7 +21,13 @@ import { useUser } from "@/context/UserContext";
 
 import ProfileMenu from "@/components/menus/ProfileMenu";
 
-import { widgetContainerStyles, containerStyles } from "@/theme/muiProps";
+import {
+  widgetContainerStyles,
+  containerStyles,
+  profileAvatarStyles,
+  profileHeaderStyles,
+  profileDescriptionTextStyles,
+} from "@/theme/muiProps";
 import ProfileHeader from "@/components/profileHeader/ProfileHeader";
 
 // Receive initial data as props from the Server Component
@@ -73,7 +79,7 @@ export default function MeContent({ initialProfile, initialInvitations }) {
         ),
     },
   ];
-  const styles = { leftMargin: "2rem" };
+
   return (
     <>
       <ProfileHeader
@@ -91,8 +97,6 @@ export default function MeContent({ initialProfile, initialInvitations }) {
         }
         titleText={userProfile?.displayName}
         descriptionText={`Welcome back ${userProfile?.displayName}`}
-        avatarStyles={styles}
-        headerStyles={styles}
       />
       <BasicTabs tabsArray={tabsArray} />
       <BasicModal

@@ -10,7 +10,6 @@ import {
   useMemo,
   useCallback,
 } from "react";
-import { useAuth } from "./AuthContext";
 
 import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 const DataContext = createContext(null);
@@ -26,40 +25,40 @@ export function DataProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // const handleTogglePublishProject = useCallback(
-  //   async (projectId, currentPublishedState) => {
-  //     const newPublishedState = !currentPublishedState;
+  const handleTogglePublishProject = useCallback(
+    async (projectId, currentPublishedState) => {
+      const newPublishedState = !currentPublishedState;
 
-  //     // 1. Optimistic UI update (GLOBAL projects list)
-  //     setProjects((prevProjects) =>
-  //       (prevProjects || []).map((p) =>
-  //         p.id === projectId ? { ...p, published: newPublishedState } : p
-  //       )
-  //     );
-  //     try {
-  //       // 2. Call the Server Action
-  //       const result = await toggleProjectPublishState(
-  //         projectId,
-  //         newPublishedState
-  //       );
-  //       if (result?.error) {
-  //         throw new Error(result.error);
-  //       }
-  //       // 3. Success: No action needed, database is updated.
-  //     } catch (error) {
-  //       // 4. Rollback GLOBAL state on error
-  //       console.error("Failed to update publish state:", error);
-  //       setProjects((prevProjects) =>
-  //         (prevProjects || []).map((p) =>
-  //           p.id === projectId ? { ...p, published: currentPublishedState } : p
-  //         )
-  //       );
-  //       // Re-throw error so the calling component (Project.js) can show a notification
-  //       throw error;
-  //     }
-  //   },
-  //   [setProjects]
-  // );
+      // 1. Optimistic UI update (GLOBAL projects list)
+      setProjects((prevProjects) =>
+        (prevProjects || []).map((p) =>
+          p.id === projectId ? { ...p, published: newPublishedState } : p
+        )
+      );
+      try {
+        // 2. Call the Server Action
+        const result = await toggleProjectPublishState(
+          projectId,
+          newPublishedState
+        );
+        if (result?.error) {
+          throw new Error(result.error);
+        }
+        // 3. Success: No action needed, database is updated.
+      } catch (error) {
+        // 4. Rollback GLOBAL state on error
+        console.error("Failed to update publish state:", error);
+        setProjects((prevProjects) =>
+          (prevProjects || []).map((p) =>
+            p.id === projectId ? { ...p, published: currentPublishedState } : p
+          )
+        );
+        // Re-throw error so the calling component (Project.js) can show a notification
+        throw error;
+      }
+    },
+    [setProjects]
+  );
   const handleToggleUserAccessProject = useCallback(
     async (userId, currentActiveInProjectState) => {},
     []
@@ -76,7 +75,7 @@ export function DataProvider({ children }) {
       rolesInProjects,
       users,
       integratedProjects,
-      // handleTogglePublishProject,
+      handleTogglePublishProject,
       handleToggleUserAccessProject,
       handleTogglePublishFile,
       loading,
@@ -88,7 +87,7 @@ export function DataProvider({ children }) {
       rolesInProjects,
       users,
       integratedProjects,
-      // handleTogglePublishProject,
+      handleTogglePublishProject,
       handleToggleUserAccessProject,
       handleTogglePublishFile,
       loading,

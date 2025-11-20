@@ -3,14 +3,17 @@
 "use client";
 
 import React from "react";
-import { Box, Typography, Avatar } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 
 import { useApp } from "@/context/AppContext";
+import { useInFocus } from "@/context/InFocusContext";
 import { useProject } from "@/context/ProjectContext";
 import { useUi } from "@/context/UiContext";
 
 import BasicModal from "@/components/modal/Modal";
 import BasicTabs from "@/components/tabs/BasicTabs";
+import ProfileHeader from "@/components/profileHeader/ProfileHeader";
+import ProfileMenu from "@/components/menus/ProfileMenu";
 
 import CharacterSection from "@/widgets/characters";
 import EpisodesSection from "@/widgets/episodes";
@@ -18,16 +21,27 @@ import FilesList from "@/widgets/files";
 import InvitationsList from "@/widgets/invitations";
 import UsersList from "@/widgets/users";
 
-// import ProfileMenu from "@/components/menus/ProfileMenu";
-import ProfileMenu from "./Menu";
-import ProfileHeader from "@/components/profileHeader/ProfileHeader";
 import { useWidgetContext } from "./Context";
+import { profileAvatarStyles, profileHeaderStyles } from "@/theme/muiProps";
+import BasicDrawer from "@/components/drawer/Drawer";
 
-export default function Widget({ initialProject, projectInFocus, files }) {
+export default function Widget({
+  initialProject,
+  files,
+  togglePublishProject,
+}) {
   const { appContext, setAppContext } = useApp();
-  const { modalContent, setModalContent, openModal, setOpenModal } = useUi();
+  const {
+    modalContent,
+    setModalContent,
+    openModal,
+    setOpenModal,
+    orientationDrawer,
+    handleToggleDrawer,
+  } = useUi();
   const { invitations, characters, episodes, loading } = useProject();
-  const { togglePublishProject } = useWidgetContext();
+  const { projectInFocus } = useInFocus();
+  // const { togglePublishProject } = useWidgetContext();
 
   const tabsArray = [
     {
@@ -75,34 +89,44 @@ export default function Widget({ initialProject, projectInFocus, files }) {
         ),
     },
   ];
-  const styles = { leftMargin: "2rem" };
+  const styles = { position: "absolute", leftMargin: "2rem" };
 
   return (
     <>
       <ProfileHeader
-        bannerImageUrl={projectInFocus?.imageUrl}
+        bannerImageUrl={projectInFocus?.bannerUrl}
         avatarImageUrl={projectInFocus?.avatarUrl || projectInFocus?.imageUrl}
         menu={
           <ProfileMenu
-            appContext={appContext}
+            appContext={"projects"}
             setAppContext={setAppContext}
             setOpenModal={setOpenModal}
             setModalContent={setModalContent}
-            itemInFocus={initialProject}
+            itemInFocus={projectInFocus}
             togglePublishProject={togglePublishProject}
+            handleToggleDrawer={handleToggleDrawer}
+            orientationDrawer={orientationDrawer}
           />
         }
         titleText={projectInFocus?.title}
         descriptionText={projectInFocus?.logline}
-        avatarStyles={styles}
-        headerStyles={styles}
       />
       <BasicTabs tabsArray={tabsArray} />
       <BasicModal
         content={modalContent}
         open={openModal}
         setOpen={setOpenModal}
+        handleToggleDrawer={handleToggleDrawer}
+        orientationDrawer={orientationDrawer}
       />{" "}
+      {/* <BasicDrawer
+        handleToggleDrawer={handleToggleDrawer}
+        orientationDrawer={orientationDrawer}
+        // menu={menu}
+        // goBack={goBack}
+        // list={list}
+        // element={element}
+      /> */}
     </>
   );
 }

@@ -6,20 +6,19 @@ import { useEffect } from "react";
 import { useCrud } from "@/context/CrudItemContext";
 import { useInFocus } from "@/context/InFocusContext";
 
-import CrudProjectForm from "./ProjectForm";
+import ProjectForm from "./ProjectForm";
 import AddFileForm from "./AddFileForm";
 import UserForm from "./UserForm";
 import InviteUserForm from "./InviteUserForm";
 import CharacterForm from "./CharacterForm";
 import EpisodeForm from "./EpisodesForm";
-
 /**
  * Main wrapper for the CRUD modal.
  * It selects the correct form based on context and crud props.
  * @param {string} context - 'newProject', 'newFile', or 'newUser'
  * @param {string} crud - 'create', 'update', or 'add'
  */
-export default function CrudItem({ context, crud }) {
+export default function CrudItem({ context, crud, type }) {
   const { projectInFocus } = useInFocus(); // This wrapper only needs to know about projects
   const { setCrudProject } = useCrud();
 
@@ -32,9 +31,14 @@ export default function CrudItem({ context, crud }) {
     }
   }, [context, crud, projectInFocus, setCrudProject]);
 
+  // if (type === "bannerImage") {
+  //   console.log("bannerImage");
+  //   // 'create' or 'update' a project
+  //   return;
+  // }
   if (context === "projects") {
     // 'create' or 'update' a project
-    return <CrudProjectForm crud={crud} />;
+    return <ProjectForm crud={crud} />;
   }
 
   if (context === "newFile" && crud === "add") {

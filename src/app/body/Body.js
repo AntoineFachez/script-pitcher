@@ -13,10 +13,20 @@ import SignUpForm from "@/components/auth/appAuth/SignUpForm";
 import CustomBottomNav from "@/components/bottomNav/CustomBottomNav";
 
 import { containerStyles } from "@/theme/muiProps";
+import BasicDrawer from "@/components/drawer/Drawer";
+import { useUi } from "@/context/UiContext";
 
 export default function Body({ children }) {
   // ✅ PULLING OUT THE RE-INTRODUCED isUserLoading
   const { firebaseUser, isUserLoading } = useAuth();
+  const {
+    modalContent,
+    setModalContent,
+    openModal,
+    setOpenModal,
+    orientationDrawer,
+    handleToggleDrawer,
+  } = useUi();
   const [isSigningUp, setIsSigningUp] = useState(false);
 
   const toggleAuthMode = () => {

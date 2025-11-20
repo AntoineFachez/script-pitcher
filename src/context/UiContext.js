@@ -25,10 +25,25 @@ export function UiProvider({ documentId, children }) {
   const [showCardMedia, setShowCardMedia] = useState(true);
   const footerHeight = 60;
 
+  const [orientationDrawer, setOrientationDrawer] = useState({
+    top: false,
+    left: false,
+    bottom: true,
+    right: false,
+  });
+
   const handleOpenAddItem = () => {
     setOpenModal(true);
   };
-
+  const handleToggleDrawer = (anchor, open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setOrientationDrawer({ ...orientationDrawer, [anchor]: open });
+  };
   const value = useMemo(
     () => ({
       uiData,
@@ -51,7 +66,9 @@ export function UiProvider({ documentId, children }) {
       showCardMedia,
       setShowCardMedia,
       footerHeight,
+      orientationDrawer,
       handleOpenAddItem,
+      handleToggleDrawer,
       loading,
       error,
     }),
@@ -76,6 +93,8 @@ export function UiProvider({ documentId, children }) {
       showCardMedia,
       setShowCardMedia,
       footerHeight,
+      orientationDrawer,
+      handleToggleDrawer,
       loading,
       error,
     ]

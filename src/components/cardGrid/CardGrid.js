@@ -3,11 +3,14 @@
 
 import React from "react";
 import { Box, Grid, Typography } from "@mui/material";
-import BasicCard from "../card/BasicCard";
-import { useUi } from "@/context/UiContext";
-import { flexListItemStyles } from "@/theme/muiProps";
+
 import { useInFocus } from "@/context/InFocusContext"; // Assuming a generic itemInFocus
+import { useUi } from "@/context/UiContext";
+
+import BasicCard from "../card/BasicCard";
 import DataTable from "../dataGridElements/DataTable";
+
+import { flexListItemStyles } from "@/theme/muiProps";
 
 export default function CardGrid({
   data,
@@ -54,7 +57,8 @@ export default function CardGrid({
           container
           spacing={0}
           sx={{
-            height: "fit-content",
+            width: "100%",
+            height: "100%",
           }}
         >
           {data.map((item, index) => {

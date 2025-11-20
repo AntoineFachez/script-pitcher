@@ -10,13 +10,18 @@ import {
   useMemo,
   useCallback,
 } from "react";
-import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
+import {
+  collection,
+  query,
+  onSnapshot,
+  orderBy,
+  doc,
+} from "firebase/firestore";
 
 import { getFirebaseDb } from "@/lib/firebase/firebase-client";
 import { useAuth } from "./AuthContext";
 import { useData } from "./DataContext";
 
-import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 import { useInFocus } from "./InFocusContext";
 
 const ProjectContext = createContext(null);
@@ -32,67 +37,56 @@ export function ProjectProvider({ projectId, children }) {
   const [episodes, setEpisodes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const handleTogglePublishProject = useCallback(
-    // CRITICAL: Accept setProjectInFocus as an argument
-    async (projectId, currentPublishedState, setProjectInFocus) => {
-      const newPublishedState = !currentPublishedState;
-
-      // 1. Optimistic UI update (GLOBAL projects list)
-      setProjects((prevProjects) =>
-        (prevProjects || []).map((p) =>
-          p.id === projectId ? { ...p, published: newPublishedState } : p
-        )
-      );
-
-      // 2. Optimistic UI update for the CURRENT project view
-      // This immediately updates the project detail page for a better UX.
-      if (setProjectInFocus) {
-        setProjectInFocus((prev) =>
-          // FIX: Correct syntax for updating a property in the object
-          prev ? { ...prev, published: newPublishedState } : null
-        );
-      }
-
-      try {
-        // 3. Call the Server Action (toggleProjectPublishState)
-        const result = await toggleProjectPublishState(
-          projectId,
-          newPublishedState
-        );
-
-        if (result?.error) {
-          throw new Error(result.error);
-        }
-
-        // 4. Success: No rollback needed, optimistic updates stay.
-      } catch (error) {
-        // 5. Rollback GLOBAL state on error
-        console.error("Failed to update publish state:", error);
-        setProjects((prevProjects) =>
-          (prevProjects || []).map((p) =>
-            p.id === projectId ? { ...p, published: currentPublishedState } : p
-          )
-        );
-
-        // 6. Rollback LOCAL state on error
-        if (setProjectInFocus) {
-          setProjectInFocus((prev) =>
-            prev ? { ...prev, published: currentPublishedState } : null
-          );
-        }
-
-        // Re-throw error so the calling component can display an error notification
-        throw error;
-      }
-    },
-    // Dependency array must include setProjects and any other external references
-    // If toggleProjectPublishState is a dependency, include it here too.
-    [setProjects /*, toggleProjectPublishState */]
-  );
-
   useEffect(() => {
     setDb(getFirebaseDb());
   }, []);
+
+  useEffect(() => {
+    if (!db || !projectId || !firebaseUser) return;
+
+    // Use onSnapshot to listen for changes to the single project document
+    const projectDocRef = doc(db, "projects", projectId);
+
+    const unsubscribe = onSnapshot(
+      projectDocRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const projectData = { id: docSnap.id, ...docSnap.data() };
+
+          // 1. Update project in focus immediately
+          setProjectInFocus((prev) =>
+            // Ensures the project is updated and timestamps are serialized
+            projectData
+              ? {
+                  ...projectData,
+                  createdAt:
+                    projectData?.createdAt?.toDate().toISOString() || null,
+                  updatedAt:
+                    projectData?.updatedAt?.toDate().toISOString() || null,
+                  members: projectData.members, // assuming members are serialized on page load
+                }
+              : null
+          );
+
+          // 2. Update the global projects list (less critical, but good practice)
+          setProjects((prevProjects) =>
+            (prevProjects || []).map((p) =>
+              p.id === projectId
+                ? { ...p, published: projectData.published }
+                : p
+            )
+          );
+        } else {
+          setProjectInFocus(null);
+        }
+      },
+      (error) => {
+        console.error("Error listening to project document:", error);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [db, projectId, firebaseUser, setProjectInFocus, setProjects]); // Add setProjects as dependency
 
   // Listener for Characters
   useEffect(() => {
@@ -207,10 +201,9 @@ export function ProjectProvider({ projectId, children }) {
       invitations,
       characters,
       episodes,
-      handleTogglePublishProject,
       loading,
     }),
-    [invitations, characters, episodes, handleTogglePublishProject, loading]
+    [invitations, characters, episodes, loading]
   );
 
   return (

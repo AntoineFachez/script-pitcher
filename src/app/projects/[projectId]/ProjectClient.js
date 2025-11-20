@@ -13,6 +13,7 @@ import { useInFocus } from "@/context/InFocusContext";
 
 import CrudItem from "@/widgets/crudItem";
 import WidgetIndex from "@/widgets/projectProfile";
+import { useData } from "@/context/DataContext";
 
 export default function ProjectClient({ initialProject, initialFiles }) {
   const projectId = initialProject?.id;
@@ -21,9 +22,29 @@ export default function ProjectClient({ initialProject, initialFiles }) {
   const { appContext, setAppContext } = useApp();
   const { projectInFocus, setProjectInFocus } = useInFocus(initialProject);
   const { setModalContent } = useUi();
+  const { handleTogglePublishProject } = useData();
 
   const [files, setFiles] = useState(initialFiles);
+  // SIMPLIFIED LOCAL HANDLER:
+  const togglePublishProject = async () => {
+    // 1. Get the current state (before the change)
+    const currentPublishedState = projectInFocus?.published;
 
+    try {
+      // 2. Call the GLOBAL handler (which handles server action and global state rollback)
+      await handleTogglePublishProject(
+        projectInFocus?.id,
+        currentPublishedState
+      );
+
+      // 3. NO LOCAL ROLLBACK OR OPTIMISTIC UPDATE NEEDED HERE.
+      // The useEffect/onSnapshot listener will automatically update
+      // setProjectInFocus() when the database commit succeeds.
+    } catch (error) {
+      console.error("Failed to toggle project state:", error.message);
+      // Show an error toast/snackbar here if needed.
+    }
+  };
   useEffect(() => {
     if (!projectInFocus?.id || !db) return;
 
@@ -74,6 +95,7 @@ export default function ProjectClient({ initialProject, initialFiles }) {
         initialFiles={initialFiles}
         projectInFocus={projectInFocus}
         files={files}
+        togglePublishProject={togglePublishProject}
       />
     </>
   );

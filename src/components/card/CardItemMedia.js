@@ -36,7 +36,7 @@ export default function CardItemMedia({ cardProps }) {
   );
   return (
     <Box sx={{ position: "relative", width: "100%" }}>
-      {item?.imageUrl ? (
+      {item?.bannerUrl ? (
         <>
           {toggleDetails && (
             <List
@@ -80,7 +80,7 @@ export default function CardItemMedia({ cardProps }) {
           <CardMedia
             component="img"
             height="194"
-            image={item?.imageUrl}
+            image={item?.bannerUrl}
             alt={item.title}
             sx={{ width: "100%", p: 0, m: 0 }}
           />

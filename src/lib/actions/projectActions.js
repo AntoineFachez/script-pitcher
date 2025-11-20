@@ -14,6 +14,7 @@ import { getCurrentUser } from "@/lib/auth/auth"; // Assuming this utility exist
  * @returns {{success: true} | {error: string}}
  */
 export async function toggleProjectPublishState(projectId, newPublishedState) {
+  console.log("currentPublishedState", newPublishedState);
   // 1. AUTHENTICATION: Get the current authenticated user ID
   const user = await getCurrentUser();
   if (!user || !user.uid) {

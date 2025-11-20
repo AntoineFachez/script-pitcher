@@ -1,19 +1,10 @@
-import { Avatar } from "@mui/material";
 import React from "react";
+import { Avatar } from "@mui/material";
 
 export default function BasicAvatar({ url, styles }) {
   return (
     <>
-      <Avatar
-        src={url}
-        sx={{
-          position: "absolute",
-          left: styles.leftMargin,
-          width: 72,
-          height: 72,
-          alignSelf: "center",
-        }}
-      />
+      <Avatar src={url} sx={styles?.sx} />
     </>
   );
 }

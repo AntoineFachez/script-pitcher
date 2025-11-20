@@ -175,7 +175,7 @@ export default function CharacterForm({ crud }) {
           overflowY: "scroll",
         }}
       >
-        <AllProjectImages setFormData={setFormData} />
+        <AllProjectImages setFormData={setFormData} imageType="avatarUrl" />
       </Box>
 
       <Box

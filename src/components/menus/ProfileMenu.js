@@ -5,6 +5,7 @@ import React from "react";
 import CrudItem from "@/widgets/crudItem";
 import { Edit, Public, PublicOff } from "@mui/icons-material";
 import { Box, Button, IconButton, Typography } from "@mui/material";
+import BasicDrawer from "../drawer/Drawer";
 
 export default function ProfileMenu({
   appContext,
@@ -31,13 +32,15 @@ export default function ProfileMenu({
         <IconButton
           onClick={() => {
             setOpenModal(true);
-            // setAppContext("projects");
+            setAppContext(appContext);
             return setModalContent(
-              <CrudItem
-                context={appContext}
-                crud="update"
-                profile={itemInFocus}
-              />
+              <>
+                <CrudItem
+                  context={appContext}
+                  crud="update"
+                  profile={itemInFocus}
+                />
+              </>
             );
           }}
         >

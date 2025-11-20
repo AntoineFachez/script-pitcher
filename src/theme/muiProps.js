@@ -16,6 +16,26 @@ export const pageStyles = {
     overflow: "auto",
   },
 };
+export const profileAvatarStyles = {
+  sx: {
+    position: "absolute",
+    bottom: 130,
+    left: "2rem",
+  },
+};
+export const profileHeaderStyles = {
+  sx: {
+    width: "100%",
+    pl: "2rem",
+    textAlign: "left",
+    pl: "2rem",
+  },
+};
+export const profileDescriptionTextStyles = {
+  sx: {
+    pl: "2rem",
+  },
+};
 export const widgetContainerStyles = {
   sx: {
     position: "relative",
@@ -438,6 +458,11 @@ export const sharedComponents = {
     },
   },
 
+  MuiAvatar: {
+    styleOverrides: {
+      root: ({ theme }) => ({ width: 72, height: 72 }),
+    },
+  },
   MuiIconButton: {
     styleOverrides: {
       root: ({ theme }) => ({

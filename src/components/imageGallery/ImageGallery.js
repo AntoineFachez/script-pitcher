@@ -30,7 +30,7 @@ import { useAuth } from "@/context/AuthContext";
  * and then lists all images from corresponding Storage folders.
  */
 
-const AllProjectImages = ({ setFormData }) => {
+const AllProjectImages = ({ setFormData, imageType }) => {
   const app = useMemo(() => getFirebaseApp(), []);
   const db = useMemo(() => getFirebaseDb(), []);
   const storage = useMemo(() => getFirebaseStorage(), []);
@@ -145,7 +145,7 @@ const AllProjectImages = ({ setFormData }) => {
               onClick={() =>
                 setFormData((prev) => ({
                   ...prev,
-                  avatarUrl: url,
+                  [imageType]: url,
                 }))
               }
             >

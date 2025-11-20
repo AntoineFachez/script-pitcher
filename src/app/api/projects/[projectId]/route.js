@@ -78,6 +78,18 @@ export async function PUT(request, { params }) {
       updatedAt: FieldValue.serverTimestamp(),
     };
 
+    // New check: Ensure there is data to update beyond just the updatedAt field.
+    // This assumes dataToUpdate should have more than one key if there's a meaningful change.
+    if (Object.keys(projectData || {}).length === 0) {
+      // You may choose to log this or return a successful response since updatedAt still updates,
+      // but a 400 is safer if the intent was to update content.
+      // Alternatively, check if isPublished is explicitly in projectData if that's the expected update.
+      console.warn(
+        "Update request contained no data fields to update besides updatedAt."
+      );
+      // OPTIONAL: return NextResponse.json({ error: "No update data provided." }, { status: 400 });
+    }
+
     // 5. Update the document
     await projectRef.update(dataToUpdate);
 

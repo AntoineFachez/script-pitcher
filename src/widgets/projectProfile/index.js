@@ -10,14 +10,13 @@ import Widget from "./Widget";
 import { WidgetContext } from "./Context";
 
 export default function ProjectIndex({
-  handleSetNewAppContext,
   layoutContext,
-  projectInFocus,
   initialProject,
   initialFiles,
+  handleSetNewAppContext,
+  togglePublishProject,
 }) {
   const projectId = initialProject?.id;
-  console.log("initialProject", initialProject?.published);
   return (
     <>
       <ProjectProvider projectId={projectId}>
@@ -37,7 +36,7 @@ export default function ProjectIndex({
               <Widget
                 initialProject={initialProject}
                 files={initialFiles}
-                projectInFocus={projectInFocus}
+                togglePublishProject={togglePublishProject}
               />
             </>
           )}

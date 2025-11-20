@@ -136,16 +136,15 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
         open={openModal}
         setOpen={setOpenModal}
       />
-      <Box sx={{ height: "100%" }}>
-        <ProjectsWidget
-          data={displayedData}
-          filteredData={filteredData}
-          setFilteredData={setFilteredData}
-          isLoading={false} // Data is pre-fetched
-          onTogglePublish={handleTogglePublish}
-          onSetGenreFocus={handleGenreClick}
-        />
-      </Box>
+
+      <ProjectsWidget
+        data={displayedData}
+        filteredData={filteredData}
+        setFilteredData={setFilteredData}
+        isLoading={false} // Data is pre-fetched
+        onTogglePublish={handleTogglePublish}
+        onSetGenreFocus={handleGenreClick}
+      />
     </>
   );
 }
