@@ -34,6 +34,7 @@ import BasicDrawer from "@/components/drawer/Drawer";
 import BasicSelect from "@/components/select/BasicSelect";
 
 import FileUploader from "./FileUploader";
+import Banner from "@/components/profileBanner/Banner";
 
 export default function CrudProjectForm({ crud }) {
   const router = useRouter();
@@ -57,6 +58,10 @@ export default function CrudProjectForm({ crud }) {
   // Local state for file/form
   const [file, setFile] = useState(null);
   const [filePurpose, setFilePurpose] = useState("");
+
+  // Local state for images
+  const [selectedImageUrlContext, setSelectedImageUrlContext] = useState([]);
+
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [success, setSuccess] = useState("");
@@ -270,7 +275,10 @@ export default function CrudProjectForm({ crud }) {
         overflowY: "scroll",
       }}
     >
-      <AllProjectImages setFormData={setCrudProject} imageType="avatarUrl" />
+      <AllProjectImages
+        setFormData={setCrudProject}
+        imageType={selectedImageUrlContext}
+      />
     </Box>
   );
   const bannerStyles = { topMargin: 0, leftMargin: 0 };
@@ -318,16 +326,44 @@ export default function CrudProjectForm({ crud }) {
         >
           {" "}
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Box sx={{ position: "relative" }}>
+            <Box
+              sx={{
+                position: "relative",
+                width: "100%",
+              }}
+            >
               <IconButton
-                onClick={handleToggleDrawer("bottom", true)}
+                onClick={(e) => {
+                  setSelectedImageUrlContext("bannerUrl");
+                  handleToggleDrawer("bottom", true)(e);
+                }}
                 sx={{
                   position: "absolute",
                   zIndex: 10,
-                  // top: 0,
-                  right: -10,
-                  bottom: 10,
-                  // left: 0,
+                  right: -12,
+                  bottom: -10,
+                }}
+              >
+                <CameraAlt />
+              </IconButton>{" "}
+              <Banner imageUrl={crudProject.bannerUrl} />{" "}
+            </Box>{" "}
+            <Box
+              sx={{
+                position: "relative",
+                width: "fit-content",
+              }}
+            >
+              <IconButton
+                onClick={(e) => {
+                  setSelectedImageUrlContext("avatarUrl");
+                  handleToggleDrawer("bottom", true)(e);
+                }}
+                sx={{
+                  position: "absolute",
+                  zIndex: 10,
+                  right: -12,
+                  bottom: -10,
                 }}
               >
                 <CameraAlt />
