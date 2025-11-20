@@ -6,8 +6,7 @@ import { notFound } from "next/navigation";
 import { FieldPath } from "firebase-admin/firestore";
 
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
-
-import Project from "./Project";
+import Project from "@/app/projects/[projectId]/Project";
 
 // This is now an async Server Component
 export default async function ViewProjectPage({ params }) {

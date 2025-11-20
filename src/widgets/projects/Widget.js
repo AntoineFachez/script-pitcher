@@ -1,5 +1,3 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/PROJECTS/[PROJECTID]/PROJECT.JS
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -31,10 +29,9 @@ import FilesList from "@/widgets/files";
 import CharacterSection from "@/widgets/characters";
 import EpisodesSection from "@/widgets/episodes";
 
-import Menu from "../../../widgets/projects/Menu";
+import Menu from "./Menu";
 
-// Receive the data fetched by the Server Component
-function ProjectContent({ initialProject, initialFiles }) {
+export function ProjectContent({ initialProject, initialFiles }) {
   const { appContext, setAppContext } = useApp();
   const { modalContent, setModalContent, openModal, setOpenModal } = useUi();
   const { projectInFocus, setProjectInFocus } = useInFocus(initialProject);
@@ -218,23 +215,5 @@ function ProjectContent({ initialProject, initialFiles }) {
         setOpen={setOpenModal}
       />{" "}
     </>
-  );
-}
-export default function Widget({ initialProject, initialFiles }) {
-  // The projectId is part of the initialProject data, or if you still need it separately:
-  const projectId = initialProject?.id;
-
-  if (!projectId) {
-    // Handle case where project data is null/undefined after fetch failure
-    return <Typography>Project data error.</Typography>;
-  }
-
-  return (
-    <ProjectProvider projectId={projectId}>
-      <ProjectContent
-        initialProject={initialProject}
-        initialFiles={initialFiles}
-      />
-    </ProjectProvider>
   );
 }

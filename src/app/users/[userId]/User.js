@@ -13,7 +13,7 @@ import {
 import { Person, PersonOff, Public, PublicOff } from "@mui/icons-material";
 
 import { useData } from "@/context/DataContext";
-import ProjectsList from "@/widgets/projects";
+import ProjectsList from "@/widgets/projects/Widget";
 import { useApp } from "@/context/AppContext";
 import CrudItem from "@/widgets/crudItem";
 import BasicModal from "@/components/modal/Modal";
