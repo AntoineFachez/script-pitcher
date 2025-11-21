@@ -1,3 +1,5 @@
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/SECUREIMAGE/SECUREIMAGE.JS
+
 "use client";
 
 import React, { useState, useEffect } from "react";

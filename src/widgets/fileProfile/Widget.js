@@ -9,6 +9,7 @@ import {
   CircularProgress,
   Button,
   Alert,
+  IconButton,
 } from "@mui/material";
 
 import { useFile } from "@/context/FileContext";
@@ -18,15 +19,30 @@ import BasicDrawer from "@/components/drawer/Drawer";
 import PdfViewer from "@/components/pdfviewer/PdfViewer";
 
 import ElementList from "@/widgets/fileProfile/ElementsList";
+import { Edit } from "@mui/icons-material";
+import ProfileHeader from "@/components/profileHeader/ProfileHeader";
+import ProfileMenu from "@/components/menus/ProfileMenu";
+import { useApp } from "@/context/AppContext";
+import { useInFocus } from "@/context/InFocusContext";
+import DownloadFileButton from "@/components/downloadButton/DownloadButton";
 
 /**
  * This component consumes the DocumentContext and renders the UI.
  * It shows loading, error, and success states.
  */
-export default function Widget() {
+export default function Widget({ togglePublishProject }) {
   // 3. Get all data and actions from the context hook
+  const { appContext, setAppContext } = useApp();
+  const { fileInFocus } = useInFocus();
+  const {
+    modalContent,
+    setModalContent,
+    openModal,
+    setOpenModal,
+    orientationDrawer,
+    handleToggleDrawer,
+  } = useUi();
   const { fileData, loading, error, handleDeleteElement } = useFile();
-  const { orientationDrawer, handleToggleDrawer } = useUi();
   // 4. Handle the loading state
   if (loading) {
     return (
@@ -65,15 +81,45 @@ export default function Widget() {
       <ElementList />
     </Box>
   );
+  const menu = (
+    <>
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          flexFlow: "row nowrap",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          pr: "2rem",
+        }}
+      >
+        <IconButton
+          onClick={(e) => {
+            // setSelectedImageUrlContext("bannerUrl");
+            handleToggleDrawer("bottom", true)(e);
+          }}
+          sx={{}}
+        >
+          <Edit />
+        </IconButton>{" "}
+        <DownloadFileButton
+          storagePath={fileData.storagePath}
+          fileName={fileData.fileName} // Assuming fileData holds the original name
+        />
+      </Box>
+    </>
+  );
+  console.log(fileData);
+  const buildDescription = <>{"filePurpose: " + fileData.filePurpose}</>;
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
-        {fileData.title || "Untitled Document"}
-      </Typography>
-
-      <Typography variant="body1" gutterBottom>
-        {fileData.description || "No description."}
-      </Typography>
+      <ProfileHeader
+        bannerImageUrl={"projectInFocus?.bannerUrl"}
+        avatarImageUrl={"projectInFocus?.avatarUrl || projectInFocus?.imageUrl"}
+        menu={menu}
+        titleText={fileData.fileName || "Untitled Document"}
+        descriptionText={buildDescription || "No description."}
+      />
       <Box
         sx={{
           height: "100%",
@@ -82,7 +128,7 @@ export default function Widget() {
           overflow: "hidden",
         }}
       >
-        {" "}
+        <PdfViewer />
         <BasicDrawer
           handleToggleDrawer={handleToggleDrawer}
           orientationDrawer={orientationDrawer}
@@ -91,7 +137,6 @@ export default function Widget() {
           // list={list}
           element={drawerContent}
         />
-        <PdfViewer />
       </Box>
     </Box>
   );

@@ -23,6 +23,7 @@ import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import ImageIcon from "@mui/icons-material/Image";
 import { useFile } from "@/context/FileContext";
 import SecureImage from "@/components/secureImage/SecureImage";
+import Image from "next/image";
 
 /**
  * A component that lists ALL processed elements (text, shapes, lines, images)
@@ -81,11 +82,14 @@ export default function ElementList() {
       subheader={<ListSubheader>All Elements</ListSubheader>} // <-- Updated title
       sx={{
         width: "100%", // <-- Made width flexible
-        maxWidth: "20rem", // <-- Added max-width
+        // maxWidth: "20rem", // <-- Added max-width
         height: "100%",
-        backgroundColor: "background.paper",
+        display: "flex",
+        flexFlow: "column nowrap",
         borderRadius: 1,
         overflowY: "auto", // <-- Added for scrolling
+        gap: 1,
+        backgroundColor: "background.paper",
       }}
     >
       {allElements.map((element) => {
@@ -119,43 +123,73 @@ export default function ElementList() {
           default:
             break;
         }
-        console.log(element.src);
+        const getIsShape = (element) => {
+          if (element.type === "shape") return element;
+        };
+        {
+          /* console.log(JSON.stringify(getIsShape(element))); */
+        }
         return (
-          <ListItem
-            key={element.uniqueId} // <-- Use new unique key
-            divider
-            // Use the 'secondaryAction' prop on ListItem
-            secondaryAction={
-              // **Only show delete button for images (elements with a 'src')**
-              element.src ? (
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() => handleDeleteElement(element.src)}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              ) : null // No delete button for text, shapes, etc.
-            }
-          >
-            {/* Use ListItemIcon to show the element type */}
-            <ListItemIcon>{icon}</ListItemIcon>
-            <SecureImage gcsPath={element.src} sx={{}} />
-            <ListItemText
-              primary={primaryText}
-              secondary={secondaryText}
-              slotProps={{
-                secondary: {
-                  style: {
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    maxWidth: "100%",
+          <>
+            <ListItem
+              key={element.uniqueId} // <-- Use new unique key
+              divider
+              // Use the 'secondaryAction' prop on ListItem
+              secondaryAction={
+                // **Only show delete button for images (elements with a 'src')**
+                element.src ? (
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => handleDeleteElement(element.src)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                ) : null // No delete button for text, shapes, etc.
+              }
+              sx={{ position: "relative", width: "100%" }}
+            >
+              <ListItemIcon>{icon}</ListItemIcon>
+              {/* <SecureImage gcsPath={element.src} sx={{}} /> */}
+              {element.src && (
+                <Image
+                  fill
+                  src={element.src}
+                  alt={element.src}
+                  style={{ objectFit: "contain" }}
+                />
+              )}
+              {element.type === "shape" && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: element.x0,
+                    right: element.x1,
+                    bottom: element.y0,
+                    left: element.y1,
+                    backgroundColor: element.backgroundColor,
+                    opacity: element.opacity,
+                    zIndex: element.zIndex,
+                    // position: element.position,
+                  }}
+                />
+              )}
+              <ListItemText
+                primary={primaryText}
+                secondary={secondaryText}
+                slotProps={{
+                  secondary: {
+                    style: {
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: "100%",
+                    },
                   },
-                },
-              }}
-            />
-          </ListItem>
+                }}
+              />
+            </ListItem>
+          </>
         );
       })}
     </List>

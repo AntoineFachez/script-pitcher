@@ -7,13 +7,16 @@ const nextConfig = {
         protocol: "https",
         hostname: "storage.googleapis.com",
         port: "",
-        pathname: "/script-pitcher-extracted-images/**",
+        // CRITICAL FIX: Allow ANY pathname, as signed URLs have dynamic paths
+        pathname: "/**",
       },
+      // 2. Firebase Storage Default Domain (for files linked via the v0/b/ path)
       {
         protocol: "https",
         hostname: "firebasestorage.googleapis.com",
         port: "",
-        pathname: "/v0/b/script-pitcher-extracted-images/o/**",
+        // Allow ANY pathname, covering both bucket and object access methods
+        pathname: "/**",
       },
     ],
   },
