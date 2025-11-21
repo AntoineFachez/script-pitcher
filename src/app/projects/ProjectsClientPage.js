@@ -122,7 +122,7 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
   return (
     <>
       {/* All client-side UI and interactivity lives here */}
-      <Menu menuActions={menuActions} />
+      {/* <Menu menuActions={menuActions} /> */}
       {toggleDetails && (
         <GernresList
           uniqueGenres={uniqueGenres}
@@ -136,15 +136,23 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
         open={openModal}
         setOpen={setOpenModal}
       />
-
-      <ProjectsWidget
-        data={displayedData}
-        filteredData={filteredData}
-        setFilteredData={setFilteredData}
-        isLoading={false} // Data is pre-fetched
-        onTogglePublish={handleTogglePublish}
-        onSetGenreFocus={handleGenreClick}
-      />
+      <Box
+        sx={{
+          height: "100%",
+          display: "flex",
+          flexFlow: "column nowrap",
+          justifyContent: "center",
+        }}
+      >
+        <ProjectsWidget
+          data={displayedData}
+          filteredData={filteredData}
+          setFilteredData={setFilteredData}
+          isLoading={false} // Data is pre-fetched
+          onTogglePublish={handleTogglePublish}
+          onSetGenreFocus={handleGenreClick}
+        />
+      </Box>
     </>
   );
 }

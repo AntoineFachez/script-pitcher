@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
 import { Box, Chip, Divider } from "@mui/material";
-import { useDocument } from "@/context/DocumentContext";
+import { useFile } from "@/context/FileContext";
 import PDFPage from "./PDFPage";
 
 // A simple loading spinner component
@@ -15,14 +15,14 @@ const Loader = () => (
 
 // The main viewer component
 export default function PdfViewer() {
-  const { documentData, loading, error } = useDocument();
+  const { fileData, loading, error } = useFile();
   const containerRef = useRef(null);
   const [scale, setScale] = useState(0.1);
 
   // Memoize the style map for efficiency
   const styleMap = useMemo(() => {
-    if (!documentData?.processedData?.stylesheet) return {};
-    return Object.values(documentData?.processedData?.stylesheet).reduce(
+    if (!fileData?.processedData?.stylesheet) return {};
+    return Object.values(fileData?.processedData?.stylesheet).reduce(
       (acc, style) => {
         // Store the font size as a number so we can scale it
         acc[style.id] = {
@@ -34,12 +34,12 @@ export default function PdfViewer() {
       },
       {}
     );
-  }, [documentData]);
+  }, [fileData]);
 
   const groupedPages = useMemo(() => {
-    if (!documentData?.processedData?.pages) return [];
+    if (!fileData?.processedData?.pages) return [];
 
-    return documentData.processedData.pages.map((page, pageIndex) => {
+    return fileData.processedData.pages.map((page, pageIndex) => {
       const groupedElements = [];
       let currentParagraph = null;
 
@@ -104,7 +104,7 @@ export default function PdfViewer() {
 
       return { ...page, elements: groupedElements };
     });
-  }, [documentData]);
+  }, [fileData]);
 
   // Effect to measure the container and set the scale
   useEffect(() => {
@@ -112,7 +112,7 @@ export default function PdfViewer() {
 
     // --- UPDATED LOGIC ---
     // Wait for the container AND the document data to be ready
-    if (!container || !documentData?.processedData?.pages?.[0]) {
+    if (!container || !fileData?.processedData?.pages?.[0]) {
       return;
     }
     // --- END UPDATE ---
@@ -123,7 +123,7 @@ export default function PdfViewer() {
 
         // --- UPDATED LOGIC ---
         // Ensure data exists before accessing it
-        const firstPage = documentData?.processedData.pages[0];
+        const firstPage = fileData?.processedData.pages[0];
         if (firstPage && firstPage.dimensions.width > 0) {
           setScale(newWidth / firstPage.dimensions.width);
         }
@@ -137,7 +137,7 @@ export default function PdfViewer() {
     return () => resizeObserver.disconnect();
 
     // --- UPDATED DEPENDENCY ARRAY ---
-  }, [documentData]);
+  }, [fileData]);
 
   if (loading) return <Loader />;
   if (error)
@@ -146,7 +146,7 @@ export default function PdfViewer() {
         {error}
       </Box>
     );
-  if (!documentData)
+  if (!fileData)
     return (
       <Box className="text-center text-gray-500 p-8">
         No document data available.
@@ -219,7 +219,7 @@ export default function PdfViewer() {
           </Box>
         );
       })}
-      {/* {JSON.stringify(documentData?.processedData)} */}
+      {/* {JSON.stringify(fileData?.processedData)} */}
     </Box>
   );
 }

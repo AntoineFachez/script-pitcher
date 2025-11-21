@@ -4,22 +4,21 @@
 import React from "react";
 
 import NavBarButton from "@/components/navBar/navBarButton/NavBarButton";
-import { ProjectProvider, useProject } from "@/context/ProjectContext";
+import { FileProvider } from "@/context/FileContext";
 
 import { WidgetContext } from "./Context";
 import Widget from "./Widget";
 
-export default function ProjectIndex({
+export default function FileIndex({
+  projectId,
+  fileId,
   layoutContext,
-  initialProject,
-  initialFiles,
   handleSetNewAppContext,
   togglePublishProject,
 }) {
-  const projectId = initialProject?.id;
   return (
     <>
-      <ProjectProvider projectId={projectId}>
+      <FileProvider projectId={projectId} fileId={fileId}>
         <WidgetContext>
           {layoutContext === "navBar" ? (
             <>
@@ -33,15 +32,11 @@ export default function ProjectIndex({
             </>
           ) : (
             <>
-              <Widget
-                initialProject={initialProject}
-                files={initialFiles}
-                togglePublishProject={togglePublishProject}
-              />
+              <Widget togglePublishProject={togglePublishProject} />
             </>
           )}
         </WidgetContext>
-      </ProjectProvider>{" "}
+      </FileProvider>
     </>
   );
 }

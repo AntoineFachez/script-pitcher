@@ -15,21 +15,8 @@ import { bottomNavcenterButtonStyles } from "@/theme/muiProps";
 import { useApp } from "@/context/AppContext";
 
 export default function CustomBottomNav() {
-  const {
-    showNewProject,
-    setShowNewProject,
-    showNewFile,
-    setShowNewFile,
-    modalContent,
-    setModalContent,
-    openModal,
-    setOpenModal,
-    setToggleDetails,
-    showDataGrid,
-    setShowDataGrid,
-    footerHeight,
-    handleOpenAddItem,
-  } = useUi();
+  const { setToggleDetails, showDataGrid, setShowDataGrid, handleOpenAddItem } =
+    useUi();
   const { projectInFocus, setProjectInFocus } = useInFocus();
   const { appContext } = useApp();
   const [value, setValue] = React.useState(0);

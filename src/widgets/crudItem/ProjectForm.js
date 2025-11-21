@@ -41,14 +41,7 @@ export default function CrudProjectForm({ crud }) {
   const { firebaseUser } = useAuth();
   const { projectInFocus } = useInFocus();
   const { crudProject, setCrudProject, clearCrudProjectDraft } = useCrud();
-  const {
-    modalContent,
-    setModalContent,
-    openModal,
-    setOpenModal,
-    orientationDrawer,
-    handleToggleDrawer,
-  } = useUi();
+  const { orientationDrawer, handleToggleDrawer } = useUi();
   // --- 3. USE LOCAL STATE FOR TAGS ---
   // This is much cleaner than storing the string in the context
   const [genres, setGenres] = useState([]);

@@ -16,7 +16,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import Image from "next/image";
 
-import { useDocument } from "@/context/DocumentContext"; // Import the custom hook
+import { useDocument } from "@/context/FileContext"; // Import the custom hook
 
 export default function StorageManager({ handleSetImageInFocus }) {
   // Get all data and functions directly from the context.

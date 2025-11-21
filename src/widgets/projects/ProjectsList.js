@@ -5,7 +5,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { IconButton, Typography } from "@mui/material";
+import { IconButton, ImageListItem, Typography } from "@mui/material";
 import { Public, PublicOff, Favorite, Share, Edit } from "@mui/icons-material";
 
 import { useApp } from "@/context/AppContext";
@@ -21,6 +21,7 @@ import ShareButton from "@/components/share/ShareButton";
 import widgetData from "./widgetSpex.json"; // Assuming columns are not in this file
 const { widgetSpex, schemeDefinition } = widgetData;
 import { toggleProjectPublishState } from "@/lib/actions/projectActions";
+import Image from "next/image";
 
 // Receive handlers as props
 export default function Widget({
@@ -121,7 +122,39 @@ export default function Widget({
     };
   };
   const columns = [
-    { field: "imageUrl", headerName: "Image", align: "right", width: 60 },
+    {
+      field: "avatarUrl",
+      headerName: "",
+      align: "center",
+      width: 60,
+      // 4. Add a renderCell to make the icon clickable
+      renderCell: (params) => {
+        const { avatarUrl } = params.row;
+        return (
+          <ImageListItem
+            key={avatarUrl}
+            sx={{
+              display: "block",
+              // position: 'relative' is not needed here
+            }}
+          >
+            <Image
+              // fill
+              width={500}
+              height={500}
+              src={avatarUrl}
+              alt={avatarUrl}
+              // 3. Add responsive styles
+              style={{
+                width: "100%", // This makes it fit the column
+                height: "auto", // This makes it scale with the correct aspect ratio
+                objectFit: "cover",
+              }}
+            />
+          </ImageListItem>
+        );
+      },
+    },
     { field: "title", headerName: "Title", width: 130 },
     // {
     //   field: "published",
@@ -156,8 +189,6 @@ export default function Widget({
         );
       },
     },
-    // { field: "company", headerName: "Company", align: "right", width: 100 },
-    // { field: "accordion", headerName: "Accordion", align: "right", width: 200 },
     {
       field: "genres",
       headerName: "Genres",

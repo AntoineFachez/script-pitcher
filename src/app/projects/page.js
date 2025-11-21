@@ -39,6 +39,7 @@ export default async function ProjectsPage() {
       {/* Render the Client Component and pass the server-fetched
         data as props. The client will handle all state and interactivity.
       */}
+
       <ProjectsClientPage serverProjects={projects} serverUsers={users} />
     </Box>
   );

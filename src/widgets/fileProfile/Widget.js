@@ -3,7 +3,6 @@
 "use client";
 
 import React from "react";
-import { useDocument } from "@/context/DocumentContext";
 import {
   Box,
   Typography,
@@ -11,17 +10,23 @@ import {
   Button,
   Alert,
 } from "@mui/material";
+
+import { useFile } from "@/context/FileContext";
+import { useUi } from "@/context/UiContext";
+
+import BasicDrawer from "@/components/drawer/Drawer";
 import PdfViewer from "@/components/pdfviewer/PdfViewer";
-import ElementList from "@/app/projects/[projectId]/files/[fileId]/ElementsList";
+
+import ElementList from "@/widgets/fileProfile/ElementsList";
 
 /**
  * This component consumes the DocumentContext and renders the UI.
  * It shows loading, error, and success states.
  */
-export default function DocumentClient() {
+export default function Widget() {
   // 3. Get all data and actions from the context hook
-  const { documentData, loading, error, handleDeleteElement } = useDocument();
-
+  const { fileData, loading, error, handleDeleteElement } = useFile();
+  const { orientationDrawer, handleToggleDrawer } = useUi();
   // 4. Handle the loading state
   if (loading) {
     return (
@@ -44,19 +49,30 @@ export default function DocumentClient() {
   }
 
   // 6. Handle the success state (data is loaded)
-  if (!documentData) {
-    return <Alert severity="info">No document data found.</Alert>;
+  if (!fileData) {
+    return <Alert severity="info">No file data found.</Alert>;
   }
 
-  // 7. Render the actual document UI
+  const drawerContent = (
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        maxHeight: "50vh",
+        overflowY: "scroll",
+      }}
+    >
+      <ElementList />
+    </Box>
+  );
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
-        {documentData.title || "Untitled Document"}
+        {fileData.title || "Untitled Document"}
       </Typography>
 
       <Typography variant="body1" gutterBottom>
-        {documentData.description || "No description."}
+        {fileData.description || "No description."}
       </Typography>
       <Box
         sx={{
@@ -66,7 +82,15 @@ export default function DocumentClient() {
           overflow: "hidden",
         }}
       >
-        <ElementList />
+        {" "}
+        <BasicDrawer
+          handleToggleDrawer={handleToggleDrawer}
+          orientationDrawer={orientationDrawer}
+          // menu={menu}
+          // goBack={goBack}
+          // list={list}
+          element={drawerContent}
+        />
         <PdfViewer />
       </Box>
     </Box>

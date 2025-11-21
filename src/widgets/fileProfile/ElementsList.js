@@ -21,7 +21,7 @@ import NotesIcon from "@mui/icons-material/Notes";
 import RectangleIcon from "@mui/icons-material/RectangleOutlined";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import ImageIcon from "@mui/icons-material/Image";
-import { useDocument } from "@/context/DocumentContext";
+import { useFile } from "@/context/FileContext";
 import SecureImage from "@/components/secureImage/SecureImage";
 
 /**
@@ -29,16 +29,16 @@ import SecureImage from "@/components/secureImage/SecureImage";
  * from the document and provides a delete button for image elements.
  */
 export default function ElementList() {
-  const { documentData, loading, error, handleDeleteElement } = useDocument();
+  const { fileData, loading, error, handleDeleteElement } = useFile();
 
   // 1. Create a flat list of ALL elements
   const allElements = useMemo(() => {
-    if (!documentData || !documentData?.processedData?.pages) {
+    if (!fileData || !fileData?.processedData?.pages) {
       return [];
     }
 
     // Use flatMap to turn pages -> elements into a single array
-    return documentData.processedData.pages.flatMap((page, pageIndex) =>
+    return fileData.processedData.pages.flatMap((page, pageIndex) =>
       page.elements.map((element, elIndex) => ({
         ...element,
         pageNumber: pageIndex + 1, // Add page number for context
@@ -46,7 +46,7 @@ export default function ElementList() {
         uniqueId: `p${pageIndex}-e${elIndex}`,
       }))
     );
-  }, [documentData]);
+  }, [fileData]);
 
   // 2. Handle Loading State
   if (loading) {

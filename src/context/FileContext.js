@@ -1,5 +1,4 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/CONTEXT/DOCUMENTCONTEXT.JS
-
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/CONTEXT/FILECONTEXT.JS
 "use client";
 
 import {
@@ -13,22 +12,24 @@ import {
 import { useAuth } from "./AuthContext";
 
 // 1. Create the context
-const DocumentContext = createContext(null);
+const FileContext = createContext(null);
 
 // 2. Create the Provider component
 // --- FIX 1: Pass `projectId` and `fileId` from page params ---
-export function DocumentProvider({ projectId, fileId, children }) {
+export function FileProvider({ projectId, fileId, children }) {
   const { firebaseUser } = useAuth(); // Renamed to firebaseUser for clarity
-  const [documentData, setDocumentData] = useState(null);
+  const [fileData, setFileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // Fetch the main document data
   useEffect(() => {
+    console.log(fileId);
     // --- FIX 2: Check for all required props AND the user ---
     if (!projectId || !fileId) {
       setLoading(false);
-      setError("No document ID provided.");
+      console.log("No file ID provided.");
+      setError("No file ID provided.");
       return;
     }
     if (!firebaseUser) {
@@ -58,7 +59,7 @@ export function DocumentProvider({ projectId, fileId, children }) {
           const errorData = await response.json();
           throw new Error(errorData.error || `Failed to fetch document`);
         }
-        setDocumentData(await response.json());
+        setFileData(await response.json());
       } catch (err) {
         setError(err.message);
       } finally {
@@ -98,11 +99,11 @@ export function DocumentProvider({ projectId, fileId, children }) {
         return;
       }
 
-      const oldDocumentData = documentData;
+      const oldFileData = fileData;
 
       try {
         // --- CORRECTED OPTIMISTIC UI UPDATE ---
-        setDocumentData((currentData) => {
+        setFileData((currentData) => {
           // 1. Go inside 'processedData'
           const updatedPages = currentData?.processedData?.pages?.map(
             (page) => {
@@ -143,33 +144,29 @@ export function DocumentProvider({ projectId, fileId, children }) {
         // --- ROLLBACK ON FAILURE ---
         // If the API call fails, revert to the old state
         alert(`Error: ${err.message}. Reverting changes.`);
-        setDocumentData(oldDocumentData); // <-- This triggers another re-render
+        setFileData(oldFileData); // <-- This triggers another re-render
       }
     },
-    [firebaseUser, projectId, fileId, documentData]
+    [firebaseUser, projectId, fileId, fileData]
   );
 
   const value = useMemo(
     () => ({
-      documentData,
+      fileData,
       loading,
       error,
       handleDeleteElement,
     }),
-    [documentData, loading, error, handleDeleteElement] // FIX 8: Add handler
+    [fileData, loading, error, handleDeleteElement] // FIX 8: Add handler
   );
 
-  return (
-    <DocumentContext.Provider value={value}>
-      {children}
-    </DocumentContext.Provider>
-  );
+  return <FileContext.Provider value={value}>{children}</FileContext.Provider>;
 }
 
-export function useDocument() {
-  const context = useContext(DocumentContext);
+export function useFile() {
+  const context = useContext(FileContext);
   if (!context) {
-    throw new Error("useDocument must be used within a DocumentProvider");
+    throw new Error("useDocument must be used within a FileProvider");
   }
   return context;
 }

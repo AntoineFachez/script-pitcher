@@ -8,12 +8,12 @@ import { doc, onSnapshot, collection } from "firebase/firestore";
 import { getFirebaseDb } from "@/lib/firebase/firebase-client";
 
 import { useApp } from "@/context/AppContext";
-import { useUi } from "@/context/UiContext";
+import { useData } from "@/context/DataContext";
 import { useInFocus } from "@/context/InFocusContext";
+import { useUi } from "@/context/UiContext";
 
 import CrudItem from "@/widgets/crudItem";
 import WidgetIndex from "@/widgets/projectProfile";
-import { useData } from "@/context/DataContext";
 
 export default function ProjectClient({ initialProject, initialFiles }) {
   const projectId = initialProject?.id;

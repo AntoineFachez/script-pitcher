@@ -17,13 +17,9 @@ import ProfileMenu from "@/components/menus/ProfileMenu";
 
 import CharacterSection from "@/widgets/characters";
 import EpisodesSection from "@/widgets/episodes";
-import FilesList from "@/widgets/files";
+import FilesList from "@/widgets/files/FilesList";
 import InvitationsList from "@/widgets/invitations";
 import UsersList from "@/widgets/users";
-
-import { useWidgetContext } from "./Context";
-import { profileAvatarStyles, profileHeaderStyles } from "@/theme/muiProps";
-import BasicDrawer from "@/components/drawer/Drawer";
 
 export default function Widget({
   initialProject,
@@ -119,14 +115,6 @@ export default function Widget({
         handleToggleDrawer={handleToggleDrawer}
         orientationDrawer={orientationDrawer}
       />{" "}
-      {/* <BasicDrawer
-        handleToggleDrawer={handleToggleDrawer}
-        orientationDrawer={orientationDrawer}
-        // menu={menu}
-        // goBack={goBack}
-        // list={list}
-        // element={element}
-      /> */}
     </>
   );
 }
