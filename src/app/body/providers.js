@@ -16,14 +16,16 @@ import { InFocusProvider } from "@/context/InFocusContext";
 import AuthenticatedLayout from "./Body";
 import { darkTheme } from "../../theme/theme";
 import { CrudProvider } from "@/context/CrudItemContext";
+import { useDeviceDetection } from "@/hooks/useDeviceDetection";
 
 export function Providers({ children, meData }) {
+  const { isMobile, isDesktop } = useDeviceDetection();
   return (
     <ThemeProvider>
       {/* <SessionProvider> */}
       <AuthProvider>
         <AppProvider>
-          <UiProvider>
+          <UiProvider isMobile={isMobile} isDesktop={isDesktop}>
             <UserProvider meData={meData}>
               <DataProvider>
                 <InFocusProvider>

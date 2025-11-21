@@ -103,14 +103,6 @@ export default function Widget({ togglePublishProject }) {
   const buildDescription = <>{"filePurpose: " + fileData.filePurpose}</>;
   return (
     <>
-      <ProfileHeader
-        containerRef={containerRef}
-        bannerImageUrl={"projectInFocus?.bannerUrl"}
-        avatarImageUrl={"projectInFocus?.avatarUrl || projectInFocus?.imageUrl"}
-        menu={menu}
-        titleText={fileData.fileName || "Untitled Document"}
-        descriptionText={buildDescription || "No description."}
-      />
       <Box
         ref={containerRef}
         className="pdfviewer"
@@ -119,15 +111,26 @@ export default function Widget({ togglePublishProject }) {
           width: "100%",
           // 🔑 FIX: Set height to 100% of the viewport or container.
           // Using '100vh' or 'calc' is safer than just '100%'.
-          height: "100vh", // Change to 100% of the viewport for testing, or use a calculated height
-          // height: "100%", // Change to 100% of the viewport for testing, or use a calculated height
+          // height: "100vh", // Change to 100% of the viewport for testing, or use a calculated height
+          height: "100%", // Change to 100% of the viewport for testing, or use a calculated height
           // display: "flex",
           // flexFlow: "column nowrap",
           overflowY: "scroll", // Use overflowY for vertical scroll
           overflowX: "hidden",
+          // overflow: "hidden",
           // gap: 2,
         }}
       >
+        <ProfileHeader
+          containerRef={containerRef}
+          bannerImageUrl={"projectInFocus?.bannerUrl"}
+          avatarImageUrl={
+            "projectInFocus?.avatarUrl || projectInFocus?.imageUrl"
+          }
+          menu={menu}
+          titleText={fileData.fileName || "Untitled Document"}
+          descriptionText={buildDescription || "No description."}
+        />
         <PdfViewer containerRef={containerRef} />
       </Box>{" "}
       <BasicDrawer

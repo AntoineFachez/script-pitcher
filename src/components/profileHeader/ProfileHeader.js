@@ -12,9 +12,9 @@ import {
 import { styled } from "@mui/material/styles";
 
 // Constants for the effect
-const MAX_SCROLL_DISTANCE = 200; // The distance (in pixels) over which the collapse happens
-const HEADER_HEIGHT = 200; // Initial banner height
-const COLLAPSE_AMOUNT = 250; // The total vertical space (in pixels) we want to shrink the header by
+const MAX_SCROLL_DISTANCE = 100; // The distance (in pixels) over which the collapse happens
+const HEADER_HEIGHT = 300; // Initial banner height
+const COLLAPSE_AMOUNT = 200; // The total vertical space (in pixels) we want to shrink the header by
 const ProfileHeader = ({
   containerRef,
   menu,
@@ -47,10 +47,10 @@ const ProfileHeader = ({
   const scrollRatio = clampedScroll / MAX_SCROLL_DISTANCE;
 
   // 3. Define Dynamic Styles based on scrollRatio
-  const newHeight = `${HEADER_HEIGHT + 200 - scrollRatio * COLLAPSE_AMOUNT}px`;
+  const newHeight = `${HEADER_HEIGHT + 100 - scrollRatio * COLLAPSE_AMOUNT}px`;
   // Shrink and move the title up
   const titleTransform = `
-    translateY(${scrollRatio * -60}px) 
+    translateY(${scrollRatio * -80}px) 
     scale(${1 - scrollRatio * 0.3})
   `;
 
@@ -105,36 +105,38 @@ const ProfileHeader = ({
           />
         </Box>
         {menu}
-        <Box sx={{ p: 0, pt: 0, pb: 0, overflow: "hidden" }}>
+        <Box
+          sx={{
+            // height: "fit-content",
+            height: "100%",
+            display: "flex",
+            flexFlow: "column nowrap",
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
+            // p: 0,
+            // pt: 0,
+            // pb: 0,
+            overflow: "hidden",
+          }}
+        >
           {/* Menu (Placeholder for your KebabMenu, etc.) */}
-          {/* <Box sx={{ position: "absolute", top: 8, right: 8 }}>
-            <Button
-              size="small"
-              variant="outlined"
-              sx={{ opacity: 1 - scrollRatio }}
-            >
-              Follow
-            </Button>
-          </Box> */}
-
           {/* Title Text */}
           <Typography
             variant="h4"
             sx={{
-              position: "sticky",
-              zIndex: 10,
+              // position: "fixed",
+              zIndex: 100,
               // transform: titleTransform,
               // transition: "transform 0.1s linear",
               // transformOrigin: "top left",
-              whiteSpace: "nowrap",
+              // whiteSpace: "nowrap",
               overflow: "hidden",
-              textOverflow: "ellipsis",
-              // pb: 1,
+              // textOverflow: "ellipsis",
+              p: "0 2rem",
             }}
           >
             {titleText}
           </Typography>
-
           {/* Description Text (Fades out) */}
           <Typography
             variant="subtitle1"
@@ -142,6 +144,9 @@ const ProfileHeader = ({
             sx={{
               opacity: descriptionOpacity,
               transition: "opacity 0.2s linear",
+              // mt: "3rem",
+              p: "0 2rem",
+              backgroundColor: "transparent",
             }}
           >
             {descriptionText}

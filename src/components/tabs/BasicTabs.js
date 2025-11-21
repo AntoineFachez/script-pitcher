@@ -59,9 +59,14 @@ export default function DynamicTabs({ tabsArray = [], containerRef }) {
         onChange={handleChange}
         aria-label="dynamic tabs example"
         // Optional: Make tabs scrollable if they don't fit
-        variant="scrollable"
-        scrollButtons="auto"
-        sx={{ position: "fixed", zIndex: 10 }}
+        // variant="scrollable"
+        // scrollButtons="auto"
+        sx={{
+          position: "sticky",
+          zIndex: 100,
+          top: 0,
+          backgroundColor: "background.nav",
+        }}
       >
         {/* 1. Map over the array to create the Tab headers */}
         {tabsArray.map((tab, index) => (

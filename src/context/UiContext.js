@@ -2,12 +2,20 @@
 
 "use client";
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
-
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 // 1. Create the context
 const UiContext = createContext(null);
 
 // 2. Create the Provider component
 export function UiProvider({ documentId, children }) {
+  const theme = useTheme();
+  // 'up' means: true if the screen width is greater than or equal to the breakpoint.
+  const isDesktop = useMediaQuery(theme.breakpoints.up("lg")); // Using MUI's 'lg' breakpoint (usually 1200px or 1024px depending on setup)
+
+  // 'down' means: true if the screen width is less than or equal to the breakpoint.
+  const isMobile = useMediaQuery(theme.breakpoints.down("md")); // Using MUI's 'md' breakpoint (usually 900px or 768px depending on setup)
+
   const [uiData, setUiData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

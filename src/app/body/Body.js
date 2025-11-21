@@ -20,6 +20,7 @@ export default function Body({ children }) {
   // ✅ PULLING OUT THE RE-INTRODUCED isUserLoading
   const { firebaseUser, isUserLoading } = useAuth();
   const {
+    isMobile,
     modalContent,
     setModalContent,
     openModal,
@@ -28,6 +29,8 @@ export default function Body({ children }) {
     handleToggleDrawer,
   } = useUi();
   const [isSigningUp, setIsSigningUp] = useState(false);
+  const NAV_HEIGHT = "64px"; // Typical MUI AppBar height on desktop
+  const BOTTOM_NAV_HEIGHT = "56px"; // Typical MUI BottomNavigation height
 
   const toggleAuthMode = () => {
     setIsSigningUp((prev) => !prev);
@@ -60,22 +63,31 @@ export default function Body({ children }) {
     return (
       <Box
         sx={{
-          ...containerStyles.sx,
-          // backgroundColor: "background.paper",
+          display: "flex",
+          flexDirection: "column", // Stack children vertically
+          height: "100vh", // Crucial: Use the full viewport height
+          overflow: "hidden", // Prevent the whole app from scrolling
         }}
       >
-        <NavBar />
+        {/* 1. Top Nav (Takes defined space) */}
+        <NavBar sx={{ height: NAV_HEIGHT }} />
+
+        {/* 2. Main Content (Takes all the remaining space) */}
         <Box
           component="main"
           sx={{
+            flexGrow: 1, // **Crucial**: This box expands to fill all available space
             width: "100%",
-            height: "100%",
-            overflow: "hidden",
+            // height: "100%",
+            overflowY: "auto", // **Crucial**: This is where the scrollbar appears
+            overflowX: "hidden",
           }}
         >
           {children}
         </Box>
-        <CustomBottomNav />
+
+        {/* 3. Bottom Nav (Takes defined space) */}
+        <CustomBottomNav sx={{ height: BOTTOM_NAV_HEIGHT }} />
       </Box>
     );
   }
