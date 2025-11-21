@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useInFocus } from "@/context/InFocusContext";
 import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
-import { IconButton, ImageListItem, Typography } from "@mui/material";
+import { Box, IconButton, ImageListItem, Typography } from "@mui/material";
 import { Favorite, Share, Edit } from "@mui/icons-material";
 
 import DataTable from "@/components/dataGridElements/DataTable";
@@ -21,6 +21,7 @@ import CrudItem from "../crudItem";
 import BasicModal from "@/components/modal/Modal";
 import Image from "next/image";
 import SectionMenu from "@/components/menus/SectionMenu";
+import { sectionHeaderStyles } from "@/theme/muiProps";
 
 // Define DataTable columns (not in widgetSpex.json)
 const columns = [
@@ -68,6 +69,7 @@ const columns = [
 
 export default function Widget({
   data, // Comes from parent page
+  containerRef,
   isLoading,
   // ... any other handlers passed from parent page
 }) {
@@ -181,16 +183,18 @@ export default function Widget({
 
   return (
     <>
-      {" "}
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
-        {widgetSpex?.title}
-      </Typography>
-      <SectionMenu
-        showDataGrid={showDataGrid}
-        setShowDataGrid={setShowDataGrid}
-        handleAddItem={handleAddCharacter}
-      />
+      <Box className="sectionHeader" sx={sectionHeaderStyles.sx}>
+        {/* <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
+          {widgetSpex?.title}
+        </Typography> */}
+        <SectionMenu
+          showDataGrid={showDataGrid}
+          setShowDataGrid={setShowDataGrid}
+          handleAddItem={handleAddCharacter}
+        />{" "}
+      </Box>
       <CardGrid
+        containerRef={containerRef}
         data={data}
         showDataGrid={showDataGrid}
         isLoading={isLoading}

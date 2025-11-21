@@ -70,7 +70,7 @@ export default function Body({ children }) {
           sx={{
             width: "100%",
             height: "100%",
-            overflow: "auto",
+            overflow: "hidden",
           }}
         >
           {children}

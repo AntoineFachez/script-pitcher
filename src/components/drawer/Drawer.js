@@ -14,7 +14,7 @@ export default function BasicDrawer({
   // list,
   element,
 }) {
-  console.log("handleToggleDrawer", orientationDrawer.bottom);
+  // console.log("handleToggleDrawer", orientationDrawer.bottom);
   const list = (anchor) => {
     // setOrientationDrawer({ ...orientationDrawer, [anchor]: true })
     return (

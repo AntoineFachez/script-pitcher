@@ -2,8 +2,8 @@
 
 "use client";
 
-import React from "react";
-import { Button, Typography } from "@mui/material";
+import React, { useRef } from "react";
+import { Box, Button, Typography } from "@mui/material";
 
 import { useApp } from "@/context/AppContext";
 import { useInFocus } from "@/context/InFocusContext";
@@ -37,17 +37,29 @@ export default function Widget({
   } = useUi();
   const { invitations, characters, episodes, loading } = useProject();
   const { projectInFocus } = useInFocus();
-  // const { togglePublishProject } = useWidgetContext();
+  const containerRef = useRef();
 
+  const tabStyles = {
+    position: "relative",
+    width: "100%",
+    // 🔑 FIX: Set height to 100% of the viewport or container.
+    // Using '100vh' or 'calc' is safer than just '100%'.
+    // height: "100vh", // Change to 100% of the viewport for testing, or use a calculated height
+    display: "flex",
+    flexFlow: "column nowrap",
+    overflowY: "scroll", // Use overflowY for vertical scroll
+    overflowX: "hidden",
+    gap: 2,
+  };
   const tabsArray = [
     {
       label: "Team",
       content:
         initialProject?.members?.length > 0 ? (
-          <>
+          <Box sx={tabStyles}>
             <UsersList data={initialProject?.members} />
             <InvitationsList data={invitations} />
-          </>
+          </Box>
         ) : (
           <Typography color="text.secondary">No Team Members.</Typography>
         ),
@@ -56,10 +68,9 @@ export default function Widget({
       label: "Characters",
       content:
         characters?.length > 0 ? (
-          <>
-            {" "}
+          <Box className="tab--item--container" sx={tabStyles}>
             <CharacterSection data={characters} />
-          </>
+          </Box>
         ) : (
           <Typography color="text.secondary">No Characters.</Typography>
         ),
@@ -68,9 +79,9 @@ export default function Widget({
       label: "Episodes",
       content:
         episodes?.length > 0 ? (
-          <>
+          <Box sx={tabStyles}>
             <EpisodesSection data={episodes} />{" "}
-          </>
+          </Box>
         ) : (
           <Typography color="text.secondary">No Episodes.</Typography>
         ),
@@ -79,17 +90,19 @@ export default function Widget({
       label: "Files",
       content:
         files?.length > 0 ? (
-          <FilesList data={files} />
+          <Box sx={tabStyles}>
+            <FilesList data={files} />
+          </Box>
         ) : (
           <Typography color="text.secondary">No Files.</Typography>
         ),
     },
   ];
-  const styles = { position: "absolute", leftMargin: "2rem" };
 
   return (
     <>
       <ProfileHeader
+        containerRef={containerRef}
         bannerImageUrl={projectInFocus?.bannerUrl}
         avatarImageUrl={projectInFocus?.avatarUrl || projectInFocus?.imageUrl}
         menu={
@@ -107,7 +120,25 @@ export default function Widget({
         titleText={projectInFocus?.title}
         descriptionText={projectInFocus?.logline}
       />
-      <BasicTabs tabsArray={tabsArray} />
+      <Box
+        ref={containerRef}
+        className="pdfviewer"
+        sx={{
+          position: "relative",
+          width: "100%",
+          // 🔑 FIX: Set height to 100% of the viewport or container.
+          // Using '100vh' or 'calc' is safer than just '100%'.
+          height: "100vh", // Change to 100% of the viewport for testing, or use a calculated height
+          // height: "100%", // Change to 100% of the viewport for testing, or use a calculated height
+          // display: "flex",
+          // flexFlow: "column nowrap",
+          overflowY: "scroll", // Use overflowY for vertical scroll
+          overflowX: "hidden",
+          // gap: 2,
+        }}
+      >
+        <BasicTabs tabsArray={tabsArray} containerRef={containerRef} />
+      </Box>
       <BasicModal
         content={modalContent}
         open={openModal}

@@ -4,7 +4,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import {
   Add,
   Edit,
@@ -29,6 +29,7 @@ import CardGrid from "@/components/cardGrid/CardGrid";
 import ShareButton from "@/components/share/ShareButton";
 import CrudItem from "../crudItem";
 import SectionMenu from "@/components/menus/SectionMenu";
+import { sectionHeaderStyles } from "@/theme/muiProps";
 
 // Receive handlers as props
 export default function Widget({
@@ -242,15 +243,16 @@ ${article.author}
 
   return (
     <>
-      {" "}
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
-        {widgetSpex?.title}
-      </Typography>{" "}
-      <SectionMenu
-        showDataGrid={showDataGrid}
-        setShowDataGrid={setShowDataGrid}
-        handleAddItem={handleAddFile}
-      />
+      <Box className="sectionHeader" sx={sectionHeaderStyles.sx}>
+        {/* <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
+          {widgetSpex?.title}
+        </Typography>{" "} */}
+        <SectionMenu
+          showDataGrid={showDataGrid}
+          setShowDataGrid={setShowDataGrid}
+          handleAddItem={handleAddFile}
+        />{" "}
+      </Box>
       <CardGrid
         data={data}
         showDataGrid={showDataGrid}

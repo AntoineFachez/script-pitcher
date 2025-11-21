@@ -1,8 +1,8 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/PROJECTS/[PROJECTID]/FILES/[FILEID]/DOCUMENTCLIENT.JS
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/FILEPROFILE/WIDGET.JS
 
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import {
   Box,
   Typography,
@@ -11,38 +11,27 @@ import {
   Alert,
   IconButton,
 } from "@mui/material";
+import { Edit } from "@mui/icons-material";
 
 import { useFile } from "@/context/FileContext";
 import { useUi } from "@/context/UiContext";
 
 import BasicDrawer from "@/components/drawer/Drawer";
 import PdfViewer from "@/components/pdfviewer/PdfViewer";
+import ProfileHeader from "@/components/profileHeader/ProfileHeader";
+import DownloadFileButton from "@/components/downloadButton/DownloadButton";
 
 import ElementList from "@/widgets/fileProfile/ElementsList";
-import { Edit } from "@mui/icons-material";
-import ProfileHeader from "@/components/profileHeader/ProfileHeader";
-import ProfileMenu from "@/components/menus/ProfileMenu";
-import { useApp } from "@/context/AppContext";
-import { useInFocus } from "@/context/InFocusContext";
-import DownloadFileButton from "@/components/downloadButton/DownloadButton";
 
 /**
  * This component consumes the DocumentContext and renders the UI.
  * It shows loading, error, and success states.
  */
 export default function Widget({ togglePublishProject }) {
-  // 3. Get all data and actions from the context hook
-  const { appContext, setAppContext } = useApp();
-  const { fileInFocus } = useInFocus();
-  const {
-    modalContent,
-    setModalContent,
-    openModal,
-    setOpenModal,
-    orientationDrawer,
-    handleToggleDrawer,
-  } = useUi();
-  const { fileData, loading, error, handleDeleteElement } = useFile();
+  const { orientationDrawer, handleToggleDrawer } = useUi();
+  const { projectId, fileData, loading, error, handleDeleteElement } =
+    useFile();
+  const containerRef = useRef();
   // 4. Handle the loading state
   if (loading) {
     return (
@@ -105,15 +94,17 @@ export default function Widget({ togglePublishProject }) {
         <DownloadFileButton
           storagePath={fileData.storagePath}
           fileName={fileData.fileName} // Assuming fileData holds the original name
+          projectId={projectId}
+          fileId={fileData.fileId}
         />
       </Box>
     </>
   );
-  console.log(fileData);
   const buildDescription = <>{"filePurpose: " + fileData.filePurpose}</>;
   return (
-    <Box>
+    <>
       <ProfileHeader
+        containerRef={containerRef}
         bannerImageUrl={"projectInFocus?.bannerUrl"}
         avatarImageUrl={"projectInFocus?.avatarUrl || projectInFocus?.imageUrl"}
         menu={menu}
@@ -121,23 +112,32 @@ export default function Widget({ togglePublishProject }) {
         descriptionText={buildDescription || "No description."}
       />
       <Box
+        ref={containerRef}
+        className="pdfviewer"
         sx={{
-          height: "100%",
-          display: "flex",
-          flexFlow: "row nowrap",
-          overflow: "hidden",
+          position: "relative",
+          width: "100%",
+          // 🔑 FIX: Set height to 100% of the viewport or container.
+          // Using '100vh' or 'calc' is safer than just '100%'.
+          height: "100vh", // Change to 100% of the viewport for testing, or use a calculated height
+          // height: "100%", // Change to 100% of the viewport for testing, or use a calculated height
+          // display: "flex",
+          // flexFlow: "column nowrap",
+          overflowY: "scroll", // Use overflowY for vertical scroll
+          overflowX: "hidden",
+          // gap: 2,
         }}
       >
-        <PdfViewer />
-        <BasicDrawer
-          handleToggleDrawer={handleToggleDrawer}
-          orientationDrawer={orientationDrawer}
-          // menu={menu}
-          // goBack={goBack}
-          // list={list}
-          element={drawerContent}
-        />
-      </Box>
-    </Box>
+        <PdfViewer containerRef={containerRef} />
+      </Box>{" "}
+      <BasicDrawer
+        handleToggleDrawer={handleToggleDrawer}
+        orientationDrawer={orientationDrawer}
+        // menu={menu}
+        // goBack={goBack}
+        // list={list}
+        element={drawerContent}
+      />
+    </>
   );
 }

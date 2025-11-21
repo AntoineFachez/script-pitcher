@@ -21,10 +21,10 @@ export function FileProvider({ projectId, fileId, children }) {
   const [fileData, setFileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  console.log(projectId);
 
   // Fetch the main document data
   useEffect(() => {
-    console.log(fileId);
     // --- FIX 2: Check for all required props AND the user ---
     if (!projectId || !fileId) {
       setLoading(false);
@@ -151,13 +151,8 @@ export function FileProvider({ projectId, fileId, children }) {
   );
 
   const value = useMemo(
-    () => ({
-      fileData,
-      loading,
-      error,
-      handleDeleteElement,
-    }),
-    [fileData, loading, error, handleDeleteElement] // FIX 8: Add handler
+    () => ({ projectId, fileData, loading, error, handleDeleteElement }),
+    [projectId, fileData, loading, error, handleDeleteElement] // FIX 8: Add handler
   );
 
   return <FileContext.Provider value={value}>{children}</FileContext.Provider>;

@@ -16,7 +16,7 @@ import DataTable from "@/components/dataGridElements/DataTable";
 import KebabMenu from "@/components/menus/KebabMenu";
 import CardGrid from "@/components/cardGrid/CardGrid"; // Import generic CardGrid
 import ShareButton from "@/components/share/ShareButton";
-import { subtitleStyles } from "@/theme/muiProps";
+import { sectionHeaderStyles, subtitleStyles } from "@/theme/muiProps";
 
 // Assuming columns are in widgetSpex.json or defined here
 import widgetData from "./widgetSpex.json";
@@ -208,15 +208,16 @@ export default function Widget({
 
   return (
     <>
-      {" "}
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
+      <Box className="sectionHeader" sx={sectionHeaderStyles.sx}>
+        {/* <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
         {widgetSpex?.title}
-      </Typography>
-      <SectionMenu
-        showDataGrid={showDataGrid}
-        setShowDataGrid={setShowDataGrid}
-        handleAddItem={handleAddUser}
-      />
+      </Typography> */}
+        <SectionMenu
+          showDataGrid={showDataGrid}
+          setShowDataGrid={setShowDataGrid}
+          handleAddItem={handleAddUser}
+        />
+      </Box>
       <CardGrid
         data={data}
         showDataGrid={showDataGrid}

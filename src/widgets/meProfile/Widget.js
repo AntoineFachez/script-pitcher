@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Avatar, Box, Divider, Typography } from "@mui/material";
 
 import { useApp } from "@/context/AppContext";
@@ -38,6 +38,7 @@ export default function MeContent({ initialProfile, initialInvitations }) {
 
   const { modalContent, setModalContent, openModal, setOpenModal } = useUi();
   const { userInFocus, setUserInFocus } = useInFocus();
+  const containerRef = useRef();
   // Use local state initialized by props to allow client-side updates (e.g., removing an invite)
 
   const [invitations, setInvitations] = useState(initialInvitations);
@@ -83,6 +84,7 @@ export default function MeContent({ initialProfile, initialInvitations }) {
   return (
     <>
       <ProfileHeader
+        containerRef={containerRef}
         bannerImageUrl={userProfile?.imageUrl}
         avatarImageUrl={userProfile?.avatarUrl || userProfile?.imageUrl}
         menu={

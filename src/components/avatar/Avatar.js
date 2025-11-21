@@ -1,10 +1,42 @@
 import React from "react";
-import { Avatar } from "@mui/material";
+import { Avatar, Box } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-export default function BasicAvatar({ url, styles }) {
+// --- Constants (Matching the previous profile header example) ---
+const MAX_SCROLL_DISTANCE = 100;
+
+// 1. STYLED COMPONENT (CSS and Dynamic Transforms)
+const AvatarBase = styled(Avatar, {
+  // Prevent scrollratio from being passed down to the Avatar DOM element
+  shouldForwardProp: (prop) => prop !== "scrollratio",
+})(({ theme, scrollratio }) => ({
+  width: 100,
+  height: 100,
+  borderRadius: "50%",
+  position: "absolute",
+  bottom: -50, // Position slightly below the banner
+  left: theme.spacing(3),
+  border: `4px solid ${theme.palette.background.paper}`,
+  overflow: "hidden",
+
+  // Dynamic styles for scaling and lifting based on scrollratio
+  transform: `
+        translateY(${scrollratio * -20}px) 
+        scale(${1 - scrollratio * 0.4}) 
+    `,
+  transition: "transform 0.1s linear",
+  transformOrigin: "bottom left",
+
+  // Ensure the default MUI Avatar styles are maintained or augmented
+}));
+
+// 2. FUNCTIONAL COMPONENT (Props Handling)
+export default function BasicAvatar({ url, sx, scrollratio = 0 }) {
+  // We combine the passed-in sx with the dynamic styles from AvatarBase
   return (
-    <>
-      <Avatar src={url} sx={styles?.sx} />
-    </>
+    <AvatarBase src={url} sx={sx} scrollratio={scrollratio}>
+      {/* Placeholder for text initials if the image fails */}
+      {url ? null : "AZ"}
+    </AvatarBase>
   );
 }

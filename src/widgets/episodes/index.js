@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useInFocus } from "@/context/InFocusContext";
 import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
-import { IconButton, ImageListItem, Typography } from "@mui/material";
+import { Box, IconButton, ImageListItem, Typography } from "@mui/material";
 import { Favorite, Share, Edit } from "@mui/icons-material";
 
 import DataTable from "@/components/dataGridElements/DataTable";
@@ -21,6 +21,7 @@ const { widgetSpex, schemeDefinition } = widgetData;
 import Image from "next/image";
 import CrudItem from "../crudItem";
 import SectionMenu from "@/components/menus/SectionMenu";
+import { sectionHeaderStyles } from "@/theme/muiProps";
 
 const columns = [
   {
@@ -174,15 +175,16 @@ export default function Widget({
   };
   return (
     <>
-      {" "}
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
-        {widgetSpex?.title}
-      </Typography>
-      <SectionMenu
-        showDataGrid={showDataGrid}
-        setShowDataGrid={setShowDataGrid}
-        handleAddItem={handleAddEpisode}
-      />
+      <Box className="sectionHeader" sx={sectionHeaderStyles.sx}>
+        {/* <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
+          {widgetSpex?.title}
+        </Typography> */}
+        <SectionMenu
+          showDataGrid={showDataGrid}
+          setShowDataGrid={setShowDataGrid}
+          handleAddItem={handleAddEpisode}
+        />{" "}
+      </Box>
       <CardGrid
         data={data}
         showDataGrid={showDataGrid}

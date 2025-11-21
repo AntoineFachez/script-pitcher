@@ -8,6 +8,7 @@ import { ProjectProvider, useProject } from "@/context/ProjectContext";
 
 import { WidgetContext } from "./Context";
 import Widget from "./Widget";
+import { Box } from "@mui/material";
 
 export default function ProjectIndex({
   layoutContext,

@@ -13,6 +13,7 @@ import DataTable from "../dataGridElements/DataTable";
 import { flexListItemStyles } from "@/theme/muiProps";
 
 export default function CardGrid({
+  containerRef,
   data,
   showDataGrid,
   isLoading,
@@ -54,6 +55,8 @@ export default function CardGrid({
         </Box>
       ) : (
         <Grid
+          className="grid--container"
+          ref={containerRef}
           container
           spacing={0}
           sx={{

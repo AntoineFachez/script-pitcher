@@ -139,6 +139,9 @@ export const flexListItemStyles = {
     backgroundColor: "background.nav",
   },
 };
+export const sectionHeaderStyles = {
+  sx: { position: "sticky", top: 0, pt: "2rem" },
+};
 export const cardActionStyles = {
   sx: {
     // width: "4ch",

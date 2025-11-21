@@ -9,14 +9,14 @@ import { useInFocus } from "@/context/InFocusContext";
 import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
 import { useAuth } from "@/context/AuthContext";
-import { IconButton, Chip, Typography } from "@mui/material";
+import { IconButton, Chip, Typography, Box } from "@mui/material";
 import { Favorite, Share, Person, PersonOff, Edit } from "@mui/icons-material";
 
 import DataTable from "@/components/dataGridElements/DataTable";
 import KebabMenu from "@/components/menus/KebabMenu";
 import CardGrid from "@/components/cardGrid/CardGrid"; // Import generic CardGrid
 import ShareButton from "@/components/share/ShareButton";
-import { subtitleStyles } from "@/theme/muiProps";
+import { sectionHeaderStyles, subtitleStyles } from "@/theme/muiProps";
 
 // Assuming columns are in widgetSpex.json or defined here
 import widgetData from "./widgetSpex.json";
@@ -206,15 +206,16 @@ export default function Widget({
 
   return (
     <>
-      {" "}
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
-        {widgetSpex?.title}
-      </Typography>
-      <SectionMenu
-        showDataGrid={showDataGrid}
-        setShowDataGrid={setShowDataGrid}
-        handleAddItem={handleAddUser}
-      />
+      <Box className="sectionHeader" sx={sectionHeaderStyles.sx}>
+        {/* <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
+          {widgetSpex?.title}
+        </Typography> */}
+        <SectionMenu
+          showDataGrid={showDataGrid}
+          setShowDataGrid={setShowDataGrid}
+          handleAddItem={handleAddUser}
+        />{" "}
+      </Box>
       <CardGrid
         data={data}
         showDataGrid={showDataGrid}

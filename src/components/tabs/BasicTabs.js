@@ -39,7 +39,7 @@ function a11yProps(index) {
  * Renders a dynamic tab component based on an array of tab data.
  * @param {Array<{label: string, content: React.ReactNode}>} tabsArray - Array of tab objects.
  */
-export default function DynamicTabs({ tabsArray = [] }) {
+export default function DynamicTabs({ tabsArray = [], containerRef }) {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -53,30 +53,35 @@ export default function DynamicTabs({ tabsArray = [] }) {
   }
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="dynamic tabs example"
-          // Optional: Make tabs scrollable if they don't fit
-          variant="scrollable"
-          scrollButtons="auto"
-        >
-          {/* 1. Map over the array to create the Tab headers */}
-          {tabsArray.map((tab, index) => (
-            <Tab key={index} label={tab.label} {...a11yProps(index)} />
-          ))}
-        </Tabs>
-      </Box>
+    <>
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        aria-label="dynamic tabs example"
+        // Optional: Make tabs scrollable if they don't fit
+        variant="scrollable"
+        scrollButtons="auto"
+        sx={{ position: "fixed", zIndex: 10 }}
+      >
+        {/* 1. Map over the array to create the Tab headers */}
+        {tabsArray.map((tab, index) => (
+          <Tab key={index} label={tab.label} {...a11yProps(index)} />
+        ))}
+      </Tabs>
 
       {/* 2. Map over the array to create the CustomTabPanel content */}
       {tabsArray.map((tab, index) => (
-        <CustomTabPanel key={index} value={value} index={index}>
+        <CustomTabPanel
+          className="tab--item"
+          key={index}
+          value={value}
+          index={index}
+          // sx={{ height: "auto" }}
+        >
           {tab.content}
         </CustomTabPanel>
       ))}
-    </Box>
+    </>
   );
 }
 

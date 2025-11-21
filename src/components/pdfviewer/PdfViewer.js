@@ -1,3 +1,5 @@
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/PDFVIEWER/PDFVIEWER.JS
+
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
@@ -14,9 +16,9 @@ const Loader = () => (
 );
 
 // The main viewer component
-export default function PdfViewer() {
+export default function PdfViewer({ containerRef }) {
   const { fileData, loading, error } = useFile();
-  const containerRef = useRef(null);
+
   const [scale, setScale] = useState(0.1);
 
   // Memoize the style map for efficiency
@@ -155,23 +157,7 @@ export default function PdfViewer() {
 
   return (
     // This outer Box is the responsive container we measure
-    <Box
-      ref={containerRef}
-      className="pdf"
-      sx={{
-        position: "relative",
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexFlow: "column nowrap",
-        // justifyContent: "center",
-        // alignItems: "center",
-
-        overflow: "scroll",
-        // backgroundColor: "pink",
-        gap: 2,
-      }}
-    >
+    <>
       {groupedPages.map((page, pageIndex) => {
         const aspectRatio = `${page.dimensions.width} / ${page.dimensions.height}`;
 
@@ -220,6 +206,6 @@ export default function PdfViewer() {
         );
       })}
       {/* {JSON.stringify(fileData?.processedData)} */}
-    </Box>
+    </>
   );
 }
