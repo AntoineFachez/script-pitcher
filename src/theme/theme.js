@@ -39,6 +39,12 @@ export const darkTheme = createTheme({
       alpha: "#0e1929cc",
       shadow: "#00000033",
     },
+    card: {
+      background: "#141414",
+      actions: "#151515",
+      hover: "#1f1f1f",
+    },
+
     visited: {
       item: "#25282ccc",
       link: "",
@@ -95,6 +101,11 @@ export const brightTheme = createTheme({
       paper: "#e5e3e3db",
       gridItem: "#c4c4cead",
       shadow: "#00000033",
+    },
+    card: {
+      background: "#e5e5e7",
+      actions: "#c4c4ce",
+      hover: "#c4c4ce",
     },
     text: {
       primary: "#1f2937",

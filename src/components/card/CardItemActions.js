@@ -34,10 +34,7 @@ export default function CardItemActions({ cardProps }) {
   const { expanded, handleExpandClick, actions } = cardProps;
 
   return (
-    <CardActions
-      disableSpacing
-      sx={{ width: "100%", backgroundColor: "background.nav" }}
-    >
+    <CardActions disableSpacing>
       {actions}
 
       <Expand

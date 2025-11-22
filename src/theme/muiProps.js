@@ -155,7 +155,7 @@ export const flexListStyles = {
     width: "100%",
     height: "100%",
     display: "flex",
-    flexGrow: 3,
+    flexGrow: 1,
     flexShrink: 3,
     flexFlow: "row wrap",
     justifyContent: "space-around",
@@ -169,19 +169,21 @@ export const flexListStyles = {
     // borderRadius: "0 0 4px 4px",
   },
 };
-export const flexListItemStyles = {
-  sx: {
-    width: "100%",
-    maxWidth: 345,
-    height: "100%",
-    maxHeight: 400,
-    display: "flex",
-    flexFlow: "column nowrap",
-    p: 0,
-    m: 0,
-    backgroundColor: "background.nav",
-  },
-};
+// export const flexListItemStyles = {
+//   sx: {
+//     width: "100%",
+//     maxWidth: 345,
+//     height: "100%",
+//     // maxHeight: 360,
+//     display: "flex",
+//     flexFlow: "column nowrap",
+//     // flexShrink: 4,
+//     // flexGrow: 4,
+//     p: 0,
+//     m: 0,
+//     backgroundColor: "background.nav",
+//   },
+// };
 export const sectionHeaderStyles = {
   sx: { position: "sticky", top: 0, pt: "2rem" },
 };
@@ -291,7 +293,7 @@ export const sharedComponents = {
         justifyContent: "center",
         alignItems: "center",
         gap: "1rem",
-        padding: "2rem",
+        // padding: "2rem",
         // backgroundColor: theme.palette.primary.dark,
       }),
     },
@@ -301,15 +303,23 @@ export const sharedComponents = {
     styleOverrides: {
       root: ({ theme }) => ({
         width: "100%",
+        maxWidth: "50%",
+        height: "100%",
+        maxHeight: 350,
         display: "flex",
-        flex: "6 2 300px",
-        flexFlow: "row wrap",
-        // flexShrink: 4,
-        // flexGrow: 4,
-        p: 0,
+        flex: "8 6 200px",
+        flexFlow: "column nowrap",
+        padding: 0,
         m: 0,
-        backgroundColor: theme.palette.background.gridItem,
-        "&:hover": { backgroundColor: theme.palette.background.default },
+        backgroundColor: theme.palette.card.background,
+        "&:hover": { backgroundColor: theme.palette.card.hover },
+      }),
+    },
+  },
+  MuiCardActions: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        backgroundColor: "inherit",
       }),
     },
   },
@@ -385,13 +395,23 @@ export const sharedComponents = {
         // marginTop: "2rem",
         marginBottom: "0.5rem",
       },
-      body1: { fontWeight: "100", lineHeight: 1.6, padding: "8px" },
-      subtitle1: { fontWeight: "100", lineHeight: 1.6, padding: "8px" },
+      subtitle1: {
+        fontSize: 16,
+        fontWeight: "100",
+        lineHeight: 1.6,
+        padding: "8px",
+      },
       subtitle2: {
-        fontSize: "0.6rem",
+        fontSize: 14,
         fontWeight: "100",
         lineHeight: 0,
         padding: "0",
+      },
+      body1: {
+        fontSize: 12,
+        fontWeight: "100",
+        lineHeight: 1.6,
+        padding: "8px",
       },
     },
   },

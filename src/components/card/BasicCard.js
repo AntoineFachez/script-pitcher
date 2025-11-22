@@ -28,47 +28,39 @@ export default function BasicCard({
   };
 
   return (
-    <Grid
-      item
-      xs={12}
-      md={6}
-      // key={item[schemeDefinition.id] || index}
-      sx={flexListItemStyles.sx}
+    <Card
+      sx={{
+        // ...flexListItemStyles.sx,
+        position: "relative",
+        border:
+          item === itemInFocus ? `white 1px solid` : `transparent 1px solid`,
+      }}
     >
-      {" "}
-      <Card
-        sx={{
-          ...flexListItemStyles.sx,
-          border:
-            item === itemInFocus ? `white 1px solid` : `transparent 1px solid`,
-        }}
-      >
-        {/* <Link
+      {/* <Link
             key={item[schemeDefinition?.id]}
             href={`/${collection}/${item[schemeDefinition?.id]}`} // Use the correct path
             passHref
             onClick={() => cardProps.handleClickTitle(item)}
           > */}
-        {toggleDetails && <CardItemHeader cardProps={{ ...cardProps, item }} />}
-        {/* </Link> */}
+      {toggleDetails && <CardItemHeader cardProps={{ ...cardProps, item }} />}
+      {/* </Link> */}
 
-        {cardProps.showCardMedia && (
-          <CardItemMedia cardProps={{ ...cardProps, item }} />
-        )}
-        <Collapse
-          in={expanded}
-          timeout="auto"
-          unmountOnExit
-          sx={{ width: "100%", p: 0, m: 0 }}
-        >
-          {customItem}
-        </Collapse>
-        {toggleDetails && (
-          <CardItemActions
-            cardProps={{ ...cardProps, expanded, handleExpandClick }}
-          />
-        )}
-      </Card>{" "}
-    </Grid>
+      {cardProps.showCardMedia && (
+        <CardItemMedia cardProps={{ ...cardProps, item }} />
+      )}
+      <Collapse
+        in={expanded}
+        timeout="auto"
+        unmountOnExit
+        sx={{ width: "100%", p: 0, m: 0 }}
+      >
+        {customItem}
+      </Collapse>
+      {toggleDetails && (
+        <CardItemActions
+          cardProps={{ ...cardProps, expanded, handleExpandClick }}
+        />
+      )}
+    </Card>
   );
 }
