@@ -29,7 +29,7 @@ export default function Body({ children }) {
     handleToggleDrawer,
   } = useUi();
   const [isSigningUp, setIsSigningUp] = useState(false);
-  const NAV_HEIGHT = "64px"; // Typical MUI AppBar height on desktop
+  const NAV_HEIGHT = "48px"; // Typical MUI AppBar height on desktop
   const BOTTOM_NAV_HEIGHT = "56px"; // Typical MUI BottomNavigation height
 
   const toggleAuthMode = () => {
@@ -67,10 +67,11 @@ export default function Body({ children }) {
           flexDirection: "column", // Stack children vertically
           height: "100vh", // Crucial: Use the full viewport height
           overflow: "hidden", // Prevent the whole app from scrolling
+          pt: NAV_HEIGHT,
         }}
       >
         {/* 1. Top Nav (Takes defined space) */}
-        <NavBar sx={{ height: NAV_HEIGHT }} />
+        <NavBar />
 
         {/* 2. Main Content (Takes all the remaining space) */}
         <Box

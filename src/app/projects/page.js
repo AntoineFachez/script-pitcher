@@ -11,7 +11,7 @@ import { getProjectsAndMembers } from "@/lib/data/projectFetchers";
 import ProjectsClientPage from "./ProjectsClientPage";
 
 // Styles
-import { pageStyles, titleStyle } from "@/theme/muiProps";
+import { pageStyles, pageTitleStyles } from "@/theme/muiProps";
 
 /**
  * This is the main SERVER COMPONENT for the /projects route.
@@ -31,15 +31,7 @@ export default async function ProjectsPage() {
 
   // 3. Render the static parts and pass the data to the client
   return (
-    <Box sx={{ ...pageStyles.sx }}>
-      <Typography variant={titleStyle.variant} sx={titleStyle.sx}>
-        Projects
-      </Typography>
-
-      {/* Render the Client Component and pass the server-fetched
-        data as props. The client will handle all state and interactivity.
-      */}
-
+    <Box className="page" sx={pageStyles.sx}>
       <ProjectsClientPage serverProjects={projects} serverUsers={users} />
     </Box>
   );

@@ -3,6 +3,10 @@
 import NavBarButtonMe from "@/widgets/meProfile";
 import NavBarButtonProjects from "@/widgets/projectProfile";
 
+import { styled } from "@mui/material/styles";
+import Fab from "@mui/material/Fab";
+import { Add } from "@mui/icons-material";
+
 export const navActions = (
   toggleColorMode,
   handleLogout,
@@ -64,6 +68,14 @@ export const bottomNavActions = (
   handleOpenAddItem,
   handleSetNewAppContext
 ) => {
+  const StyledFab = styled(Fab)({
+    position: "absolute",
+    zIndex: 1,
+    top: -30,
+    left: 0,
+    right: 0,
+    margin: "0 auto",
+  });
   return [
     {
       customNavBarButton: (
@@ -87,14 +99,25 @@ export const bottomNavActions = (
       label: "Show Details",
       asNavigationAction: true,
     },
+    // {
+    //   action: () => {
+    //     handleOpenAddItem();
+    //   },
+    //   iconName: "Add",
+    //   label: `Add ${appContext}`,
+    //   asNavigationAction: true,
+    //   size: "large",
+    // },
     {
-      action: () => {
-        handleOpenAddItem();
-      },
-      iconName: "Add",
-      label: `Add ${appContext}`,
-      asNavigationAction: true,
-      size: "large",
+      customNavBarButton: (
+        <StyledFab
+          color="secondary"
+          aria-label="add"
+          onClick={() => handleOpenAddItem("create")}
+        >
+          <Add />
+        </StyledFab>
+      ),
     },
     // {
     //   action: null,

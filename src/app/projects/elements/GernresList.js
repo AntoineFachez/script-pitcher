@@ -3,6 +3,7 @@
 "use client";
 
 import { getButton } from "@/lib/maps/iconMap";
+import { pageMenuStyles } from "@/theme/muiProps";
 import { Box, Button } from "@mui/material";
 import React from "react";
 
@@ -13,7 +14,7 @@ export default function GernresList({
   handleGenreClick,
 }) {
   return (
-    <Box sx={{ marginBottom: 3, display: "flex", gap: 1, flexWrap: "wrap" }}>
+    <Box sx={pageMenuStyles.sx}>
       {uniqueGenres?.map((genre, i) => {
         return (
           <Box key={i}>

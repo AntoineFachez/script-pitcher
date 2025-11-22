@@ -18,13 +18,10 @@ export default function ProfileHeaderForm({
 }) {
   const avatarStyles = {
     position: "relative",
-    // zIndex: 1,
-    top: 0,
-    // right: "50%",
-    left: -16,
-    transform: "translate(-50%, -50%)",
+    width: "4rem",
+    height: "4rem",
+    bottom: "36px",
   };
-  console.log("crudProject?.imageUrl", crudProject?.bannerUrl);
 
   return (
     <Box
@@ -32,7 +29,6 @@ export default function ProfileHeaderForm({
       sx={{
         position: "relative",
         width: "100%",
-        height: "100%",
       }}
     >
       <Box
@@ -41,7 +37,7 @@ export default function ProfileHeaderForm({
           position: "relative",
           width: "100%",
           height: "100%",
-          minHeight: "200px",
+          // minHeight: "200px",
           border: "solid #ccc 1px",
         }}
       >
@@ -59,7 +55,6 @@ export default function ProfileHeaderForm({
         >
           <CameraAlt />
         </IconButton>
-        {/* <Banner imageUrl={crudProject?.bannerUrl} scrollratio={1} /> */}
 
         <Image
           fill
@@ -75,10 +70,6 @@ export default function ProfileHeaderForm({
         sx={{
           width: "100%",
           height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          transform: "translate(-10%, 0)",
         }}
       >
         <IconButton
@@ -89,7 +80,7 @@ export default function ProfileHeaderForm({
           sx={{
             position: "absolute",
             zIndex: 10,
-            transform: "translate(-50%, -50%)",
+            transform: "translate(4rem, 0)",
           }}
         >
           <CameraAlt />

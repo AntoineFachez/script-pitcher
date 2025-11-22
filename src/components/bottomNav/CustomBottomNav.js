@@ -3,6 +3,8 @@
 "use client";
 import * as React from "react";
 import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
+import Fab from "@mui/material/Fab";
 import BottomNavigation from "@mui/material/BottomNavigation";
 
 import { useUi } from "@/context/UiContext";
@@ -14,6 +16,8 @@ import AddNewItem from "@/widgets/crudItem";
 import { bottomNavcenterButtonStyles } from "@/theme/muiProps";
 import { useApp } from "@/context/AppContext";
 import { handleSetNewAppContext } from "@/lib/actions/appActions";
+import { IconButton, Menu, Toolbar } from "@mui/material";
+import { Add, More, Search } from "@mui/icons-material";
 
 export default function CustomBottomNav() {
   const { setToggleDetails, showDataGrid, setShowDataGrid, handleOpenAddItem } =
@@ -32,6 +36,14 @@ export default function CustomBottomNav() {
     handleSetNewAppContext
   );
 
+  const StyledFab = styled(Fab)({
+    position: "absolute",
+    zIndex: 1,
+    top: -30,
+    left: 0,
+    right: 0,
+    margin: "0 auto",
+  });
   return (
     <BottomNavigation
       showLabels
@@ -49,24 +61,26 @@ export default function CustomBottomNav() {
         backgroundColor: "background.nav",
       }}
     >
-      {optionsToRender.map((option, i) =>
-        option.customNavBarButton
-          ? option.customNavBarButton
-          : getButton(
-              i, // i,
-              option.iconName, // iconName = "",
-              option.action, // onClick,
-              option.disabled, // disabled = false,
-              option.size === "large" ? bottomNavcenterButtonStyles?.sx : {}, // sx = iconButtonStyles.sx,
-              option.variant, // variant = "outlined",
-              option.href, // href = null,
-              option.buttonText, // label = "",
-              false, // toolTip,
-              true, // asNavigationAction = false,
-              false, // asTextButton = false,
-              false // startIcon = null
-            )
-      )}
+      <Toolbar>
+        {optionsToRender.map((option, i) =>
+          option.customNavBarButton
+            ? option.customNavBarButton
+            : getButton(
+                i, // i,
+                option.iconName, // iconName = "",
+                option.action, // onClick,
+                option.disabled, // disabled = false,
+                option.size === "large" ? bottomNavcenterButtonStyles?.sx : {}, // sx = iconButtonStyles.sx,
+                option.variant, // variant = "outlined",
+                option.href, // href = null,
+                option.buttonText, // label = "",
+                false, // toolTip,
+                true, // asNavigationAction = false,
+                false, // asTextButton = false,
+                false // startIcon = null
+              )
+        )}
+      </Toolbar>
     </BottomNavigation>
   );
 }

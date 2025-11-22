@@ -19,7 +19,7 @@ import EpisodeForm from "./EpisodesForm";
  * @param {string} crud - 'create', 'update', or 'add'
  */
 export default function CrudItem({ context, crud, itemInFocus, type }) {
-  console.log("CrudItem", context, crud);
+  console.log("CrudItem", context, crud, itemInFocus);
 
   const { projectInFocus } = useInFocus(); // This wrapper only needs to know about projects
   const { setCrudProject } = useCrud();

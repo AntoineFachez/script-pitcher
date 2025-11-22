@@ -3,7 +3,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState, useOptimistic } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 // Global Contexts
 import { useApp } from "@/context/AppContext";
@@ -22,6 +22,11 @@ import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 // Local elements
 import Menu from "./elements/Menu";
 import GernresList from "./elements/GernresList";
+import {
+  pageHeaderStyles,
+  pageMainStyles,
+  pageTitleStyles,
+} from "@/theme/muiProps";
 // ⭐️ DELETED: useUser import
 
 // Styles
@@ -114,36 +119,23 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
     return () => {};
   }, [setAppContext]);
 
-  // 6. Set modal content
-  // useEffect(() => {
-  //   setModalContent(<CrudItem context={appContext} crud="create" />);
-  // }, [appContext, setModalContent]);
-
   return (
     <>
-      {/* All client-side UI and interactivity lives here */}
-      {/* <Menu menuActions={menuActions} /> */}
-      {toggleDetails && (
-        <GernresList
-          uniqueGenres={uniqueGenres}
-          genreInFocus={genreInFocus}
-          clearFilter={clearFilter}
-          handleGenreClick={handleGenreClick}
-        />
-      )}
-      <BasicModal
-        content={modalContent}
-        open={openModal}
-        setOpen={setOpenModal}
-      />
-      <Box
-        sx={{
-          height: "100%",
-          display: "flex",
-          flexFlow: "column nowrap",
-          justifyContent: "center",
-        }}
-      >
+      <Box className="pageHeader" sx={pageHeaderStyles.sx}>
+        <Typography variant={pageTitleStyles.variant} sx={pageTitleStyles.sx}>
+          {appContext}
+        </Typography>{" "}
+        {toggleDetails && (
+          <GernresList
+            uniqueGenres={uniqueGenres}
+            genreInFocus={genreInFocus}
+            clearFilter={clearFilter}
+            handleGenreClick={handleGenreClick}
+          />
+        )}
+      </Box>
+      <Box className="pageMain" sx={{ ...pageMainStyles.sx }}>
+        {" "}
         <ProjectsWidget
           data={displayedData}
           filteredData={filteredData}
@@ -153,6 +145,11 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
           onSetGenreFocus={handleGenreClick}
         />
       </Box>
+      <BasicModal
+        content={modalContent}
+        open={openModal}
+        setOpen={setOpenModal}
+      />{" "}
     </>
   );
 }

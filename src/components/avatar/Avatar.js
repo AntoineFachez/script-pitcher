@@ -22,8 +22,8 @@ const AvatarBase = styled(Avatar, {
 
   // Dynamic styles for scaling and lifting based on scrollratio
   transform: `
-        translateY(${scrollratio * -20}px) 
-        scale(${1 - scrollratio * 0.4}) 
+        translateY(${scrollratio * -20}px)
+        scale(${1 - scrollratio * 0.4})
     `,
   transition: "transform 0.1s linear",
   transformOrigin: "bottom left",

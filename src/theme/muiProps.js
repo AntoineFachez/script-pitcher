@@ -5,15 +5,54 @@ const baseValues = { borderRadius: "0.5rem" };
 export const pageStyles = {
   sx: {
     position: "relative",
-    width: "100%",
+    // width: "100%",
     height: "100%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    p: "0.5rem",
+    // p: "0.5rem",
     backgroundColor: "background.gridItem",
-    overflow: "auto",
+    overflow: "hidden",
+  },
+};
+export const pageHeaderStyles = {
+  component: "",
+  sx: { position: "sticky", top: 0, width: "100%" },
+};
+export const pageTitleStyles = {
+  component: "",
+  variant: "h2",
+  sx: {
+    width: "100%",
+    // height: "5rem",
+    // borderRadius: "1rem",
+    // m: 1,
+    // p: 1,
+    textAlign: "center",
+    backgroundColor: "primary.dark",
+  },
+};
+export const pageMenuStyles = {
+  component: "",
+  sx: {
+    marginBottom: 0,
+    display: "flex",
+    flexFlow: "row wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 1,
+  },
+};
+export const pageMainStyles = {
+  component: "",
+  sx: {
+    // display: "flex",
+    width: "100%",
+    height: "100%",
+    // flexFlow: "column nowrap",
+    // justifyContent: "center",
+    overflow: "scroll",
   },
 };
 export const profileAvatarStyles = {
@@ -70,8 +109,11 @@ export const modalStyles = {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "50ch",
+    // width: "50ch",
+    // width: "100%",
     // height: "100%",
+    // height: "100vh",
+    maxHeight: "100vh",
     bgcolor: "background.paper",
     border: "1px solid #ffffff20",
     borderRadius: `${baseValues.borderRadius}`,
@@ -189,6 +231,43 @@ export const bottomNavcenterButtonStyles = {
 };
 export const backButtonStyles = { sx: { position: "absolute", zIndex: 10 } };
 export const sharedComponents = {
+  MuiAppBar: {
+    defaultProps: {
+      // size: "small",
+    },
+    styleOverrides: {
+      root: ({ theme }) => ({
+        height: "fit-content",
+        padding: 0,
+        border: "none",
+        borderRadius: 0,
+      }),
+    },
+  },
+  MuiNav: {
+    defaultProps: {
+      // size: "small",
+    },
+    styleOverrides: {
+      root: ({ theme }) => ({
+        height: "fit-content",
+        padding: 0,
+      }),
+    },
+  },
+  MuiToolbar: {
+    defaultProps: {
+      // size: "small",
+    },
+    styleOverrides: {
+      root: ({ theme }) => ({
+        height: "fit-content",
+        display: "flex",
+        justifyContent: "space-between",
+        padding: 0,
+      }),
+    },
+  },
   MuiTextField: {
     defaultProps: {
       size: "small",
@@ -273,13 +352,24 @@ export const sharedComponents = {
         height: "100%",
         display: "flex",
         justifyContent: "center",
-        fontSize: "5rem",
+        fontSize: 72,
         marginBottom: "1rem",
         textAlign: "center",
 
         color: theme.palette.text.primary,
       }),
 
+      h2: ({ theme }) => ({
+        fontSize: 48,
+        fontWeight: 200,
+        marginBottom: 8,
+        textAlign: "center",
+        // Example: Use a different color for light vs. dark mode
+        color:
+          theme.palette.mode === "dark"
+            ? theme.palette.primary.light
+            : theme.palette.primary.dark,
+      }),
       h4: ({ theme }) => ({
         fontWeight: "bold",
         marginBottom: "1rem",
@@ -474,11 +564,19 @@ export const sharedComponents = {
       }),
     },
   },
+
+  MuiButton: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        fontSize: 12,
+      }),
+    },
+  },
   MuiIconButton: {
     styleOverrides: {
       root: ({ theme }) => ({
-        width: "2.2rem",
-        height: "2.2rem",
+        width: 36,
+        height: 36,
         "& .MuiChip-label": {
           display: "block",
           whiteSpace: "normal",
@@ -488,6 +586,22 @@ export const sharedComponents = {
         "&:hover": {
           backgroundColor: theme.palette.button.hover,
           color: theme.palette.secondary.main,
+        },
+        "& >*": {},
+      }),
+    },
+  },
+  MuiSvgIcon: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        width: 24,
+        height: 24,
+        "&:hover": {
+          backgroundColor: "transparent",
+          color: theme.palette.secondary.main,
+        },
+        "&:focus": {
+          color: theme.palette.button.active,
         },
       }),
     },
