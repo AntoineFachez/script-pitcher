@@ -183,6 +183,7 @@ export const bottomNavcenterButtonStyles = {
   // scale: 1.5,
   "&:hover": { backgroundColor: "background.nav" },
 };
+export const backButtonStyles = { sx: { position: "absolute", zIndex: 10 } };
 export const sharedComponents = {
   MuiTextField: {
     defaultProps: {

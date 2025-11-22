@@ -9,7 +9,7 @@ import { useInFocus } from "@/context/InFocusContext";
 import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
 import { useAuth } from "@/context/AuthContext";
-import { IconButton, Chip, Typography } from "@mui/material";
+import { IconButton, Chip, Typography, Box } from "@mui/material";
 import { Favorite, Share, Person, PersonOff, Edit } from "@mui/icons-material";
 
 import DataTable from "@/components/dataGridElements/DataTable";

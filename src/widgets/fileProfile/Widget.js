@@ -22,6 +22,8 @@ import ProfileHeader from "@/components/profileHeader/ProfileHeader";
 import DownloadFileButton from "@/components/downloadButton/DownloadButton";
 
 import ElementList from "@/widgets/fileProfile/ElementsList";
+import BackButton from "@/components/backButton/BackButton";
+import { backButtonStyles } from "@/theme/muiProps";
 
 /**
  * This component consumes the DocumentContext and renders the UI.
@@ -101,8 +103,10 @@ export default function Widget({ togglePublishProject }) {
     </>
   );
   const buildDescription = <>{"filePurpose: " + fileData.filePurpose}</>;
+
   return (
     <>
+      <BackButton sx={backButtonStyles} />
       <Box
         ref={containerRef}
         className="pdfviewer"

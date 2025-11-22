@@ -19,6 +19,7 @@ import { CrudProvider } from "@/context/CrudItemContext";
 import { useDeviceDetection } from "@/hooks/useDeviceDetection";
 
 export function Providers({ children, meData }) {
+  //TODO: finish device dependancies
   const { isMobile, isDesktop } = useDeviceDetection();
   return (
     <ThemeProvider>
