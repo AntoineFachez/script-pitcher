@@ -4,11 +4,14 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import { useApp } from "./AppContext";
+import CrudItem from "@/widgets/crudItem";
 // 1. Create the context
 const UiContext = createContext(null);
 
 // 2. Create the Provider component
 export function UiProvider({ documentId, children }) {
+  const { appContext } = useApp();
   const theme = useTheme();
   // 'up' means: true if the screen width is greater than or equal to the breakpoint.
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg")); // Using MUI's 'lg' breakpoint (usually 1200px or 1024px depending on setup)
@@ -36,11 +39,15 @@ export function UiProvider({ documentId, children }) {
   const [orientationDrawer, setOrientationDrawer] = useState({
     top: false,
     left: false,
-    bottom: true,
+    bottom: false,
     right: false,
   });
 
-  const handleOpenAddItem = () => {
+  const handleOpenAddItem = (crud = "create", itemInFocus) => {
+    console.log("handleOpenAddItem", appContext, crud, itemInFocus);
+    setModalContent(
+      <CrudItem context={appContext} crud={crud} itemInFocus={itemInFocus} />
+    );
     setOpenModal(true);
   };
   const handleToggleDrawer = (anchor, open) => (event) => {

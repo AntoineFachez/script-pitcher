@@ -71,6 +71,7 @@ export const modalStyles = {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "50ch",
+    // height: "100%",
     bgcolor: "background.paper",
     border: "1px solid #ffffff20",
     borderRadius: `${baseValues.borderRadius}`,
@@ -172,16 +173,19 @@ export const subtitleItemStyles = {
   },
 };
 export const bottomNavcenterButtonStyles = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -80%)",
-  width: "4rem",
-  height: "4rem",
-  "& >*": { fontSize: "2.5rem" },
-  backgroundColor: "background.nav",
-  // scale: 1.5,
-  "&:hover": { backgroundColor: "background.nav" },
+  sx: {
+    position: "absolute",
+    zIndex: 10,
+    top: "50%",
+    transform: "translate(0%, -48px)",
+    // width: "3rem",
+    height: "5rem",
+    "& >*": { fontSize: "2.5rem" },
+    backgroundColor: "background.nav",
+    borderRadius: "50%",
+    scale: 1.5,
+    "&:hover": { backgroundColor: "background.nav" },
+  },
 };
 export const backButtonStyles = { sx: { position: "absolute", zIndex: 10 } };
 export const sharedComponents = {
@@ -464,7 +468,10 @@ export const sharedComponents = {
 
   MuiAvatar: {
     styleOverrides: {
-      root: ({ theme }) => ({ width: 72, height: 72 }),
+      root: ({ theme }) => ({
+        width: 72,
+        height: 72,
+      }),
     },
   },
   MuiIconButton: {

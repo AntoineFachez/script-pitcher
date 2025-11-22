@@ -6,15 +6,10 @@ import CrudItem from "@/widgets/crudItem";
 import { Edit, Public, PublicOff } from "@mui/icons-material";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import BasicDrawer from "../drawer/Drawer";
+import { useUi } from "@/context/UiContext";
 
-export default function ProfileMenu({
-  appContext,
-  setAppContext,
-  setOpenModal,
-  setModalContent,
-  itemInFocus,
-  togglePublishProject,
-}) {
+export default function ProfileMenu({ itemInFocus, togglePublishProject }) {
+  const { handleOpenAddItem } = useUi();
   return (
     <>
       <Box
@@ -29,21 +24,7 @@ export default function ProfileMenu({
         <Typography variant="subtitle1" color="text.secondary">
           {itemInFocus?.status}
         </Typography>
-        <IconButton
-          onClick={() => {
-            setOpenModal(true);
-            setAppContext(appContext);
-            return setModalContent(
-              <>
-                <CrudItem
-                  context={appContext}
-                  crud="update"
-                  profile={itemInFocus}
-                />
-              </>
-            );
-          }}
-        >
+        <IconButton onClick={() => handleOpenAddItem("update", itemInFocus)}>
           <Edit />
         </IconButton>
         <Typography variant="subtitle1" color="text.secondary">

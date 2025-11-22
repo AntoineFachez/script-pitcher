@@ -115,9 +115,9 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
   }, [setAppContext]);
 
   // 6. Set modal content
-  useEffect(() => {
-    setModalContent(<CrudItem context={appContext} crud="create" />);
-  }, [appContext, setModalContent]);
+  // useEffect(() => {
+  //   setModalContent(<CrudItem context={appContext} crud="create" />);
+  // }, [appContext, setModalContent]);
 
   return (
     <>

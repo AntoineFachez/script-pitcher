@@ -21,7 +21,13 @@ export function FileProvider({ projectId, fileId, children }) {
   const [fileData, setFileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  console.log(projectId);
+  // console.log(
+  //   "fileData",
+  //   JSON.stringify(fileData?.processedData?.pages[20]?.elements[12]) +
+  //     JSON.stringify(fileData?.processedData?.pages[20]?.elements[13]) +
+  //     JSON.stringify(fileData?.processedData?.pages[20]?.elements[14])
+  // );
+  // console.log("fileData", JSON.stringify(fileData.processedData));
 
   // Fetch the main document data
   useEffect(() => {
@@ -147,6 +153,7 @@ export function FileProvider({ projectId, fileId, children }) {
         setFileData(oldFileData); // <-- This triggers another re-render
       }
     },
+
     [firebaseUser, projectId, fileId, fileData]
   );
 

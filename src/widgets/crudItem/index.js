@@ -18,7 +18,9 @@ import EpisodeForm from "./EpisodesForm";
  * @param {string} context - 'newProject', 'newFile', or 'newUser'
  * @param {string} crud - 'create', 'update', or 'add'
  */
-export default function CrudItem({ context, crud, type }) {
+export default function CrudItem({ context, crud, itemInFocus, type }) {
+  console.log("CrudItem", context, crud);
+
   const { projectInFocus } = useInFocus(); // This wrapper only needs to know about projects
   const { setCrudProject } = useCrud();
 
@@ -38,7 +40,7 @@ export default function CrudItem({ context, crud, type }) {
   // }
   if (context === "projects") {
     // 'create' or 'update' a project
-    return <ProjectForm crud={crud} />;
+    return <ProjectForm crud={crud} projectInFocus={itemInFocus} />;
   }
 
   if (context === "newFile" && crud === "add") {

@@ -45,7 +45,7 @@ export default function MeContent({ initialProfile, initialInvitations }) {
 
   useEffect(() => {
     // Set the default modal content for the page's context
-    setModalContent(<CrudItem context={appContext} crud="update" />);
+    // setModalContent(<CrudItem context={appContext} crud="update" />);
 
     // NOTE: If you need real-time updates (e.g., a new invite arrives while on this page),
     // you would add a client-side listener here, but it would start with the initial data.
@@ -89,10 +89,6 @@ export default function MeContent({ initialProfile, initialInvitations }) {
         avatarImageUrl={userProfile?.avatarUrl || userProfile?.imageUrl}
         menu={
           <ProfileMenu
-            appContext={appContext}
-            setAppContext={setAppContext}
-            setOpenModal={setOpenModal}
-            setModalContent={setModalContent}
             itemInFocus={userInFocus}
             // togglePublishProject={togglePublishProject}
           />

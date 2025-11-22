@@ -55,7 +55,7 @@ const AllProjectImages = ({ setFormData, imageType }) => {
         // --- Step 1: Query Firestore for all file doc IDs ---
 
         // Path to the 'files' subcollection
-        const filesSubcollectionPath = `projects/${projectInFocus.id}/files`;
+        const filesSubcollectionPath = `projects/${projectInFocus?.id}/files`;
         const filesSubcollectionRef = collection(db, filesSubcollectionPath);
 
         // Get all documents in that subcollection
@@ -100,7 +100,13 @@ const AllProjectImages = ({ setFormData, imageType }) => {
     };
 
     fetchAllImages();
-  }, [projectInFocus.id, firebaseUser, db, specificStorage, imageUrls.length]);
+  }, [
+    projectInFocus?.id,
+    firebaseUser,
+    db,
+    specificStorage,
+    imageUrls?.length,
+  ]);
 
   if (loading) {
     return (

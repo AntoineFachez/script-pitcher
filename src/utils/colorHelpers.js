@@ -1,6 +1,14 @@
-export function stringAvatar(name) {
-  // Handle cases where name might be null, undefined, or empty string
-  if (!name || typeof name !== "string" || name.trim() === "") {
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/UTILS/COLORHELPERS.JS
+
+/**
+ * Generates an acronym from a multi-word phrase.
+ * E.g., "Federal Emergency Management Agency" => "FEMA"
+ *
+ * NOTE: This assumes stringToColor and getContrastColor functions are defined elsewhere.
+ */
+export function stringAvatar(phrase) {
+  // Handle cases where phrase might be null, undefined, or empty string
+  if (!phrase || typeof phrase !== "string" || phrase.trim() === "") {
     return {
       sx: {
         bgcolor: "#bdbdbd", // Default grey background
@@ -12,25 +20,37 @@ export function stringAvatar(name) {
     };
   }
 
-  const nameParts = name.trim().split(" ");
-  const firstNameInitial = nameParts[0][0] || "";
-  // Handle single-word names gracefully for initials
-  const lastNameInitial = nameParts.length > 1 ? nameParts[1][0] || "" : "";
-  const initials = `${firstNameInitial}${lastNameInitial}`.toUpperCase();
+  // 1. Split the phrase into words
+  const words = phrase.trim().split(/\s+/); // Splits by one or more spaces
 
-  const bgColor = stringToColor(name); // Generate background color
-  const textColor = getContrastColor(bgColor); // Generate contrasting text color
+  // 2. Collect the first letter of each word
+  const acronym = words
+    .map((word) => {
+      // Return the first character if the word is not empty
+      return word.length > 0 ? word[0] : "";
+    })
+    .join("") // Join the array of letters into a single string
+    .toUpperCase(); // Ensure the result is uppercase
+
+  // If the acronym is empty (e.g., phrase was "   "), fallback to '?'
+  const childrenAcronym = acronym || "?";
+
+  // --- Styling (assumes stringToColor and getContrastColor are available) ---
+  // Generate background color based on the full phrase
+  const bgColor = stringToColor(phrase);
+  // Generate contrasting text color
+  const textColor = getContrastColor(bgColor);
 
   return {
-    // All style properties should go inside the 'sx' object
     sx: {
       bgcolor: bgColor,
-      color: textColor, // <-- Move color inside sx
-      fontWeight: 400, // <-- Move fontWeight inside sx
+      color: textColor,
+      fontWeight: 400,
       fontSize: "2rem",
+      // Set letter spacing if needed for better visualization of longer acronyms
+      letterSpacing: acronym.length > 4 ? "0.05em" : undefined,
     },
-    // Children remains a top-level prop
-    children: initials || "?", // Use initials, fallback to '?' if empty
+    children: childrenAcronym,
   };
 }
 

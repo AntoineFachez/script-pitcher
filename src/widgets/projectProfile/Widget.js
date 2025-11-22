@@ -126,14 +126,8 @@ export default function Widget({
           avatarImageUrl={projectInFocus?.avatarUrl || projectInFocus?.imageUrl}
           menu={
             <ProfileMenu
-              appContext={"projects"}
-              setAppContext={setAppContext}
-              setOpenModal={setOpenModal}
-              setModalContent={setModalContent}
               itemInFocus={projectInFocus}
               togglePublishProject={togglePublishProject}
-              handleToggleDrawer={handleToggleDrawer}
-              orientationDrawer={orientationDrawer}
             />
           }
           titleText={projectInFocus?.title}

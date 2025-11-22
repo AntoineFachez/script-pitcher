@@ -56,13 +56,25 @@ export const navActions = (
   ];
 };
 export const bottomNavActions = (
+  appContext,
+  setAppContext,
   setToggleDetails,
   showDataGrid,
   setShowDataGrid,
   handleOpenAddItem,
-  appContext
+  handleSetNewAppContext
 ) => {
   return [
+    {
+      customNavBarButton: (
+        <NavBarButtonProjects
+          key="projects"
+          handleSetNewAppContext={handleSetNewAppContext}
+          layoutContext="navBar"
+        />
+      ),
+    },
+
     {
       action: () => setShowDataGrid((prev) => !prev),
       iconName: showDataGrid ? "CreditCard" : "TableChart",
@@ -76,12 +88,33 @@ export const bottomNavActions = (
       asNavigationAction: true,
     },
     {
-      action: (state) => handleOpenAddItem(state),
+      action: () => {
+        handleOpenAddItem();
+      },
       iconName: "Add",
       label: `Add ${appContext}`,
       asNavigationAction: true,
       size: "large",
     },
-    { iconName: "Favorite", label: "Favorites", asNavigationAction: true },
+    // {
+    //   action: null,
+    //   iconName: "Add",
+    //   label: null,
+    //   asNavigationAction: true,
+    // },
+    // {
+    //   iconName: "FavoriteBorder",
+    //   label: "Favorites",
+    //   asNavigationAction: true,
+    // },
+    {
+      customNavBarButton: (
+        <NavBarButtonMe
+          key="me"
+          handleSetNewAppContext={handleSetNewAppContext}
+          layoutContext="navBar"
+        />
+      ),
+    },
   ];
 };

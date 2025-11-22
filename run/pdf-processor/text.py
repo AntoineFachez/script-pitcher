@@ -1,5 +1,5 @@
 import fitz  # PyMuPDF
-import collections # <-- ADD THIS IMPORT
+import collections
 
 def process_text(page, stylesheet, style_counter, z_counter):
     """
@@ -12,7 +12,7 @@ def process_text(page, stylesheet, style_counter, z_counter):
     for block in blocks:
         if block['type'] == 0:  # Text block
             
-            # --- START: ROBUST PARAGRAPH DETECTION --- #
+            # --- START: ROBUST PARAGRAPH DETECTION (Per Block) --- #
             is_paragraph = False
             num_lines = len(block['lines'])
             
@@ -28,16 +28,13 @@ def process_text(page, stylesheet, style_counter, z_counter):
                 # Get the most common font size
                 dominant_font_size = font_sizes.most_common(1)[0][0]
 
-            # --- NEW HEURISTIC ---
-            # A "paragraph" has text (num_lines > 0) AND
-            # its dominant font size is in the "body text" range (e.g., < 20pt).
-            # This catches 1 and 2-line paragraphs but rejects large headlines.
+            # Heuristic: A "paragraph" is defined by size and presence of text.
             if num_lines > 0 and dominant_font_size < 20:
                 is_paragraph = True
             # --- END: ROBUST PARAGRAPH DETECTION --- #
             
             
-            # --- Existing Alignment Logic (no changes) ---
+            # --- Alignment Logic (Per Block) ---
             alignment = "left"
             block_bbox = fitz.Rect(block['bbox'])
             tolerance = 2.0
@@ -61,20 +58,36 @@ def process_text(page, stylesheet, style_counter, z_counter):
                 elif gap_right < tolerance and gap_left > tolerance:
                     alignment = "right"
             
+            # --- Span Processing (Per Span) ---
             for line in block["lines"]:
                 for span in line["spans"]:
                     style_key = f"{span['font']}_{span['size']}_{span['color']}"
+                    
+                    # 1. Look up/create style
                     if style_key not in stylesheet:
-                        stylesheet[style_key] = { "id": f"style-{style_counter}", "fontFamily": span['font'], "fontSize": round(span['size']), "color": f"#{span['color']:06x}" }
+                        new_style_id = f"style-{style_counter}"
+                        stylesheet[style_key] = { 
+                            "id": new_style_id, 
+                            "fontFamily": span['font'], 
+                            "fontSize": round(span['size']), 
+                            "color": f"#{span['color']:06x}" 
+                        }
                         style_counter += 1
                     
+                    # 2. CRITICAL FIX: Assign style ID to local variable
+                    # This guarantees 'style_id_str' is defined for the current span's scope.
+                    style_id_str = stylesheet[style_key]["id"] 
+                    
                     text_elements.append({
-                        "type": "text", "content": span['text'], "styleId": stylesheet[style_key]["id"],
+                        "type": "text", 
+                        "content": span['text'], 
+                        "styleId": style_id_str, # Use the defined local variable
                         "position": {'x0': span['bbox'][0], 'y0': span['bbox'][1], 'x1': span['bbox'][2], 'y1': span['bbox'][3]},
                         "textAlign": alignment,
                         "zIndex": z_counter,
-                        "isParagraph": is_paragraph  # This value is now more accurate
+                        "isParagraph": is_paragraph
                     })
             z_counter += 1
             
+    # Assuming any line 111 logic that uses style_id_str was intended to be inside the span loop.
     return text_elements, stylesheet, style_counter, z_counter

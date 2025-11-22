@@ -10,17 +10,13 @@ import { useApp } from "@/context/AppContext";
 import { getButton } from "@/lib/maps/iconMap";
 import { useThemeContext } from "@/context/ThemeContext";
 import { useAuth } from "@/context/AuthContext";
+import { handleSetNewAppContext } from "@/lib/actions/appActions";
 
 export default function NavBar({}) {
   const { appContext, setAppContext, loading } = useApp();
   const { handleLogout } = useAuth();
   const { toggleColorMode } = useThemeContext();
 
-  const handleSetNewAppContext = (context) => {
-    console.log(context);
-
-    setAppContext(context);
-  };
   const optionsToRender = navActions(
     toggleColorMode,
     handleLogout,

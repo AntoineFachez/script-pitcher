@@ -1,6 +1,7 @@
 import React from "react";
 import { Avatar, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { stringAvatar } from "@/utils/colorHelpers";
 
 // --- Constants (Matching the previous profile header example) ---
 const MAX_SCROLL_DISTANCE = 100;
@@ -31,12 +32,17 @@ const AvatarBase = styled(Avatar, {
 }));
 
 // 2. FUNCTIONAL COMPONENT (Props Handling)
-export default function BasicAvatar({ url, sx, scrollratio = 0 }) {
+export default function BasicAvatar({
+  url,
+  sx,
+  scrollratio = 0,
+  itemName = "",
+}) {
   // We combine the passed-in sx with the dynamic styles from AvatarBase
   return (
-    <AvatarBase src={url} sx={sx} scrollratio={scrollratio}>
+    <AvatarBase src={url} sx={{ ...sx }} scrollratio={scrollratio}>
       {/* Placeholder for text initials if the image fails */}
-      {url ? null : "AZ"}
+      {url ? null : stringAvatar(itemName).children}
     </AvatarBase>
   );
 }
