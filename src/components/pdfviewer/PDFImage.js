@@ -1,10 +1,24 @@
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/PDFVIEWER/PDFIMAGE.JS
+
+import React, { useRef, useState } from "react";
 import { Box, Slider } from "@mui/material";
 import Image from "next/image";
-import React, { useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion"; // <--- Import
 import PDFEditor from "./PDFEditor";
 
 export default function PDFImage({ pageIndex, element, scale, style }) {
   const [customZIndex, setCustomZIndex] = useState(0);
+  const ref = useRef(null);
+
+  // Track scroll progress of this specific image container
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  // Create a subtle parallax effect (move y from -20px to 20px)
+  const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+
   const full_pos = element.position; // The full, un-cropped size
   const visible_pos = element.crop;
   // --- FINAL CROPPING LOGIC ---
@@ -50,13 +64,17 @@ export default function PDFImage({ pageIndex, element, scale, style }) {
   }
 
   return (
-    <Box sx={container_style} className="pdf-page__image">
+    <Box ref={ref} sx={container_style} className="pdf-page__image">
       {/* <PDFEditor
         customZIndex={customZIndex}
         setCustomZIndex={setCustomZIndex}
       /> */}
 
-      <Box sx={image_wrapper_style}>
+      <Box
+        sx={image_wrapper_style}
+        component={motion.div}
+        style={{ ...image_wrapper_style, y }} // Apply Framer Motion 'y' here
+      >
         <Image
           src={element.src}
           alt={`Image on page ${pageIndex + 1}`}

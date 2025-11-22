@@ -5,6 +5,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
 import { Box, Chip, Divider } from "@mui/material";
+import { motion } from "framer-motion"; // <--- Import
 import { useFile } from "@/context/FileContext";
 import PDFPage from "./PDFPage";
 
@@ -165,10 +166,16 @@ export default function PdfViewer({ containerRef }) {
           <Box
             key={pageIndex}
             className="pdf-page"
+            component={motion.div} // <--- Animate the Page Container
+            initial={{ opacity: 0.2 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, amount: 0.1 }} // Trigger when 10% of page is visible
+            transition={{ duration: 0.5 }}
             sx={{
               width: "100%",
               aspectRatio: aspectRatio,
               position: "relative",
+              marginBottom: 4, // Add some spacing between pages for better scroll feel
               // ... your other page styles
             }}
           >

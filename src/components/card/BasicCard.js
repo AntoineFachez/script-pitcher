@@ -36,14 +36,14 @@ export default function BasicCard({
           item === itemInFocus ? `white 1px solid` : `transparent 1px solid`,
       }}
     >
-      {/* <Link
-            key={item[schemeDefinition?.id]}
-            href={`/${collection}/${item[schemeDefinition?.id]}`} // Use the correct path
-            passHref
-            onClick={() => cardProps.handleClickTitle(item)}
-          > */}
-      {toggleDetails && <CardItemHeader cardProps={{ ...cardProps, item }} />}
-      {/* </Link> */}
+      <Link
+        key={item[schemeDefinition?.id]}
+        href={`/${collection}/${item[schemeDefinition?.id]}`} // Use the correct path
+        passHref
+        onClick={() => cardProps.handleClickTitle(item)}
+      >
+        {toggleDetails && <CardItemHeader cardProps={{ ...cardProps, item }} />}
+      </Link>
 
       {cardProps.showCardMedia && (
         <CardItemMedia cardProps={{ ...cardProps, item }} />

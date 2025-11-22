@@ -307,7 +307,7 @@ export const sharedComponents = {
         height: "100%",
         maxHeight: 350,
         display: "flex",
-        flex: "8 6 200px",
+        flex: "8 6 220px",
         flexFlow: "column nowrap",
         padding: 0,
         m: 0,

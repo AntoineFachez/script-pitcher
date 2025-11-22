@@ -1,12 +1,38 @@
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/PDFVIEWER/PDFPAGE.JS
+
+import React from "react";
 import { Box } from "@mui/material";
 import Image from "next/image";
-import React from "react";
+import { motion } from "framer-motion"; // <--- IMPORT THIS
+
 import PDFImage from "./PDFImage";
 import PDFText from "./PDFText";
 import PDFEditor from "./PDFEditor";
 
+const fadeInUp = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
+
 export default function PDFPage({ element, scale, styleMap, pageIndex }) {
   const pos = element.position;
+
+  const AnimationWrapper = ({ children, style }) => (
+    <Box
+      component={motion.div} // <--- Magic happens here
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-50px" }} // Triggers 50px before element hits bottom
+      variants={fadeInUp}
+      sx={style}
+    >
+      {children}
+    </Box>
+  );
 
   // Use a switch to handle different element types
   switch (element.type) {
@@ -49,19 +75,19 @@ export default function PDFPage({ element, scale, styleMap, pageIndex }) {
 
       // 1. Create the outer paragraph container
       // This is absolutely positioned on the page
-      // width: `${(paraPos.x1 - paraPos.x0) * scale}px`,
       const paraContainerStyles = {
         position: "absolute",
         left: `${paraPos.x0 * scale}px`,
         top: `${paraPos.y0 * scale}px`,
-        width: "100%",
+        width: `${(paraPos.x1 - paraPos.x0) * scale}px`,
+        // width: "100%",
         height: `${(paraPos.y1 - paraPos.y0) * scale}px`,
         zIndex: element.zIndex,
-        // backgroundColor: "black",
+        backgroundColor: "transparent",
       };
 
       return (
-        <Box sx={paraContainerStyles}>
+        <AnimationWrapper style={paraContainerStyles}>
           {/* 2. Map over the child spans inside the paragraph */}
           {element.elements.map((span) => {
             const spanPos = span.position;
@@ -88,9 +114,10 @@ export default function PDFPage({ element, scale, styleMap, pageIndex }) {
               </>
             );
           })}
-        </Box>
+        </AnimationWrapper>
       );
     }
+
     case "line": {
       const elementStyles = {
         position: "absolute",
@@ -139,7 +166,7 @@ export default function PDFPage({ element, scale, styleMap, pageIndex }) {
         // Handle rotation and flipping
         transformOrigin: "center center",
         transform: [
-          element.rotation ? `rotate(${element.rotation}deg)` : null,
+          // element.rotation ? `rotate(${element.rotation}deg)` : null,
           element.isFlippedVertical ? "scaleX(-1)" : null, // Flips across Y-axis
           element.isFlippedHorizontal ? "scaleY(-1)" : null, // Flips across X-axis
         ]

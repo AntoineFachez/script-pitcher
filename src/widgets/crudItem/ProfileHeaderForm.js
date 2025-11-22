@@ -12,7 +12,7 @@ import Banner from "@/components/profileBanner/Banner";
 import Image from "next/image";
 
 export default function ProfileHeaderForm({
-  crudProject,
+  formData,
   setSelectedImageUrlContext,
   handleToggleDrawer,
 }) {
@@ -58,8 +58,8 @@ export default function ProfileHeaderForm({
 
         <Image
           fill
-          src={crudProject?.bannerUrl}
-          alt={crudProject?.bannerUrl}
+          src={formData?.bannerUrl}
+          alt={formData?.bannerUrl}
           style={{
             objectFit: "cover",
           }}
@@ -86,8 +86,8 @@ export default function ProfileHeaderForm({
           <CameraAlt />
         </IconButton>
         <BasicAvatar
-          itemName={crudProject?.title}
-          url={crudProject?.avatarUrl}
+          itemName={formData?.title}
+          url={formData?.avatarUrl}
           sx={avatarStyles}
         />
       </Box>

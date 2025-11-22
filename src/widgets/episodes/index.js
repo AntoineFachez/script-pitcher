@@ -40,18 +40,20 @@ const columns = [
             // position: 'relative' is not needed here
           }}
         >
-          <Image
-            width={500}
-            height={500}
-            src={avatarUrl}
-            alt={avatarUrl}
-            // 3. Add responsive styles
-            style={{
-              width: "100%", // This makes it fit the column
-              height: "auto", // This makes it scale with the correct aspect ratio
-              objectFit: "cover",
-            }}
-          />
+          {avatarUrl && (
+            <Image
+              width={500}
+              height={500}
+              src={avatarUrl}
+              alt={avatarUrl}
+              // 3. Add responsive styles
+              style={{
+                width: "100%", // This makes it fit the column
+                height: "auto", // This makes it scale with the correct aspect ratio
+                objectFit: "cover",
+              }}
+            />
+          )}
         </ImageListItem>
       );
     },
@@ -84,7 +86,7 @@ export default function Widget({
   const [showDataGrid, setShowDataGrid] = useState(true);
 
   const handleAddEpisode = () => {
-    setModalContent(<CrudItem context="episodes" crud="add" />);
+    setModalContent(<CrudItem context="episodes" crud="create" />);
     setOpenModal(true);
   };
 
@@ -191,7 +193,7 @@ export default function Widget({
         isLoading={isLoading}
         columns={columns}
         rowActions={rowActions}
-        collectionName="users"
+        collectionName="episodes"
         widgetSpex={widgetSpex}
         schemeDefinition={schemeDefinition}
         getCardProps={getCardProps}

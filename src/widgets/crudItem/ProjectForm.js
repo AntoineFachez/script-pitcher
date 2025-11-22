@@ -1,53 +1,41 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/CRUDITEM/PROJECTFORM.JS
-
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Box,
   TextField,
-  Paper,
   Typography,
   Alert,
-  Button,
-  LinearProgress,
   Autocomplete,
   Chip,
-  IconButton,
+  LinearProgress,
 } from "@mui/material";
-import { Save } from "@mui/icons-material";
 
+// Shared Architecture
+import BaseCrudForm from "./BaseCrudForm";
+
+// Contexts & Components
 import { useAuth } from "@/context/AuthContext";
 import { useCrud } from "@/context/CrudItemContext";
-import { useInFocus } from "@/context/InFocusContext";
 import { useUi } from "@/context/UiContext";
-
-import AllProjectImages from "@/components/imageGallery/ImageGallery";
-import BasicDrawer from "@/components/drawer/Drawer";
 import BasicSelect from "@/components/select/BasicSelect";
-
 import FileUploader from "./FileUploader";
-import ProfileHeaderForm from "./ProfileHeaderForm";
 
 export default function CrudProjectForm({ crud, projectInFocus }) {
   const router = useRouter();
   const { firebaseUser } = useAuth();
-  // const { projectInFocus } = useInFocus();
   const { crudProject, setCrudProject, clearCrudProjectDraft } = useCrud();
-  const { orientationDrawer, handleToggleDrawer } = useUi();
-  // --- 3. USE LOCAL STATE FOR TAGS ---
-  // This is much cleaner than storing the string in the context
+  const { setOpenModal } = useUi();
+
+  // Local state for tags (Genres, Formats)
   const [genres, setGenres] = useState([]);
   const [formats, setFormats] = useState([]);
-  // --- END ---
 
   // Local state for file/form
   const [file, setFile] = useState(null);
   const [filePurpose, setFilePurpose] = useState("");
 
-  // Local state for images
-  const [selectedImageUrlContext, setSelectedImageUrlContext] = useState([]);
-
+  // Status/Upload state (unique to this form's submission process)
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [success, setSuccess] = useState("");
@@ -65,27 +53,22 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // --- 4. VALIDATION IS SIMPLER ---
     if (!firebaseUser) {
       setError("You must be logged in.");
       return;
     }
-    // Check local state arrays
     if (!crudProject?.title || genres.length === 0 || formats.length === 0) {
       setError("Project Title, Genre, and Format are required.");
       return;
     }
-    // --- END ---
 
     setIsUploading(true);
     setError("");
     setSuccess("");
 
-    // --- 5. TRANSFORMATION IS SIMPLER ---
-    // From ["Drama", "Comedy"] to [{genre: "Drama"}, {genre: "Comedy"}]
+    // Transform local tag arrays back into the required object structure
     const genresArray = genres.map((g) => ({ genre: g }));
     const formatsArray = formats.map((f) => ({ format: f }));
-    // --- END ---
 
     const projectData = {
       title: crudProject?.title,
@@ -100,7 +83,6 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
 
     try {
       if (crud === "create") {
-        // --- (This logic remains the same) ---
         if (!file || !filePurpose) {
           throw new Error("A PDF file and a file purpose are required.");
         }
@@ -114,6 +96,7 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
           fileSize: file.size,
         };
 
+        // 1. Initiate Upload API call to get Signed URL
         const response = await fetch("/api/uploads/initiate", {
           method: "POST",
           headers: {
@@ -128,18 +111,21 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
         }
         const { signedUrl, projectId } = await response.json();
 
-        // (XHR logic remains the same)
+        // 2. Perform File Upload using XHR (needed for progress tracking)
         const xhr = new XMLHttpRequest();
         xhr.open("PUT", signedUrl, true);
         xhr.setRequestHeader("Content-Type", file.type);
+
         xhr.upload.onprogress = (event) => {
           if (event.lengthComputable) {
             setUploadProgress((event.loaded / event.total) * 100);
           }
         };
+
         xhr.onload = () => {
           if (xhr.status >= 200 && xhr.status < 300) {
             setSuccess(`Successfully created project "${crudProject?.title}".`);
+            setOpenModal(false);
             clearCrudProjectDraft();
             setFile(null);
             setFilePurpose("");
@@ -153,16 +139,15 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
         };
         xhr.onerror = () => setError("Upload failed. Network error.");
         xhr.send(file);
+
+        // Note: XHR is asynchronous. isUploading is set to false in the xhr callbacks.
       } else if (crud === "update") {
-        // --- (This logic remains the same) ---
+        // Simple JSON PUT update
         const projectId = projectInFocus?.id;
         if (!projectId) {
           throw new Error("No project is in focus. Cannot update.");
         }
-        if (file) {
-          console.warn("File upload during 'update' is not handled.");
-        }
-        // console.log("projectId", projectId);
+
         const response = await fetch(`/api/projects/${projectId}`, {
           method: "PUT",
           headers: {
@@ -171,63 +156,57 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
           },
           body: JSON.stringify({ projectData }),
         });
+
         if (!response.ok) {
           const err = await response.json();
           throw new Error(err.error || "Failed to update project.");
         }
+
         setSuccess("Successfully updated project!");
+        setOpenModal(false);
+        setIsUploading(false); // Manually set false here since XHR isn't running
       }
     } catch (err) {
       setError(err.message);
-    } finally {
-      if (crud === "update") setIsUploading(false); // Only set for update
+      setIsUploading(false); // Ensure loading stops on catch block
     }
   };
 
-  // --- 6. useEffect IS NOW CLEANER ---
+  // Helper to convert [{genre: "Drama"}] to ["Drama"] for Autocomplete
+  const getTagArray = (array, key) => {
+    if (Array.isArray(array)) {
+      return array.map((item) => item[key]);
+    }
+    return [];
+  };
+
+  // Effect to populate state on 'update' or clear on 'create'
   useEffect(() => {
-    // Helper to convert [{genre: "Drama"}] to ["Drama"]
-    const getTagArray = (array, key) => {
-      if (Array.isArray(array)) {
-        return array.map((item) => item[key]);
-      }
-      return [];
-    };
-
     if (crud === "update" && projectInFocus) {
-      console.log(
-        "crud && projectInFocus",
-        crud === "update" && projectInFocus
-      );
-
-      // Pre-fill the global context (for title, logline, etc.)
       setCrudProject(projectInFocus);
-
-      // Pre-fill the local state for the Autocomplete components
       setGenres(getTagArray(projectInFocus.genres, "genre"));
       setFormats(getTagArray(projectInFocus.formats, "format"));
     } else if (crud === "create") {
-      // Clear all state
       clearCrudProjectDraft();
       setGenres([]);
       setFormats([]);
     }
 
+    // Cleanup function
     return () => {
+      // It's usually better to keep the state in context clear
       clearCrudProjectDraft();
       setGenres([]);
       setFormats([]);
     };
   }, [crud, projectInFocus, setCrudProject, clearCrudProjectDraft]);
-  // --- END ---
 
-  // (This useEffect for projectId generation can stay the same)
+  // Effect to generate Project ID on 'create'
   useEffect(() => {
     if (crud === "create") {
       const formattedTitle =
         crudProject?.title?.trim().replace(/ /g, "-") || "";
       const formattedPurpose = filePurpose?.trim().replace(/ /g, "-") || "";
-      // Use the local 'formats' array now
       const firstFormat = (formats[0] || "").trim().replace(/ /g, "-");
 
       const crudProjectId = `${firstFormat}_${formattedTitle}_${formattedPurpose}`;
@@ -242,11 +221,12 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
   }, [
     crud,
     crudProject?.title,
-    formats, // Use local state
+    formats, // Dependency on local state
     filePurpose,
     crudProject?.projectId,
     setCrudProject,
   ]);
+
   const selectOptions = [
     { status: "concept phase" },
     { status: "under option" },
@@ -257,202 +237,125 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
     { status: "rejected/ cancelled" },
     { status: "deleted" },
   ];
-  const drawerContent = (
-    <Box
-      sx={{
-        width: "100%",
-        height: "100%",
-        maxHeight: "50vh",
-        overflowY: "scroll",
-      }}
-    >
-      <AllProjectImages
-        setFormData={setCrudProject}
-        imageType={selectedImageUrlContext}
-      />
-    </Box>
-  );
+
   return (
-    <Paper
-      className="crudItem"
-      component="form"
+    <BaseCrudForm
+      title={
+        crud === "create"
+          ? "Create New Project"
+          : crud === "update"
+          ? "Edit Project"
+          : "Project Details"
+      }
+      formData={crudProject}
+      setFormData={setCrudProject} // Allows the Base component's Drawer to update images
       onSubmit={handleSubmit}
-      sx={{
-        display: "flex",
-        flexFlow: "column nowrap",
-        width: "100%",
-        height: "100%",
-        mx: "auto",
-        p: 2,
-      }}
+      loading={isUploading}
+      error={error}
+      success={success}
+      submitButtonText={crud === "create" ? "Create Project" : "Save Changes"}
     >
-      {/** --- Title --- */}
-      <Box
-        className="crudItem-title"
-        sx={{ width: "100%", display: "flex", flexFlow: "row wrap" }}
-      >
-        <Typography variant="h5" gutterBottom sx={{ fontWeight: 100 }}>
-          {crud === "create"
-            ? "Create New Project:"
-            : crud === "update"
-            ? "Edit Project"
-            : "Project Details"}
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          // Use 'column' for small screens (xs, sm)
-          // Use 'row' for medium screens (md) and above
-          // flexDirection: { xs: "row", md: "column" },
-          // Use flex-wrap if the row layout might need to wrap elements
-          flexWrap: "wrap",
-        }}
-      >
-        {" "}
-        {/** --- ProfileHeader --- */}
-        <ProfileHeaderForm
-          crudProject={crudProject}
-          setSelectedImageUrlContext={setSelectedImageUrlContext}
-          handleToggleDrawer={handleToggleDrawer}
-        />
-        {/** --- Inputs --- */}
-        <Box
-          sx={{
-            display: "flex",
-            flexFlow: "column nowrap",
-            width: "100%",
-            height: "100%",
-            // maxHeight: "50vh",
-            overflowY: "scroll",
-            pt: "3rem",
-          }}
-        >
-          <Box
-            clasName="fields-container"
-            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-          >
-            <TextField
-              label="Project Title"
-              name="title"
-              value={crudProject?.title || ""}
-              onChange={handleChange}
-              required={crud === "create" ? true : false}
-            />
-            <BasicSelect
-              selectOptions={selectOptions}
-              crudProject={crudProject}
-              setCrudProject={setCrudProject}
-            />
-            <Autocomplete
-              multiple
-              freeSolo // Allows user to add new, custom values
-              options={[]} // You can add pre-defined options here if you want
-              value={genres}
-              onChange={(event, newValue) => {
-                setGenres(newValue); // Update the local string array
-              }}
-              renderTags={(value, getTagProps) =>
-                value.map((option, index) => (
-                  <Chip
-                    key={index}
-                    variant="outlined"
-                    label={option}
-                    {...getTagProps({ index })}
-                  />
-                ))
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  label="Genres"
-                  placeholder="Type and press Enter"
-                />
-              )}
-            />
-            <Autocomplete
-              multiple
-              freeSolo
-              options={[]}
-              value={formats}
-              onChange={(event, newValue) => {
-                setFormats(newValue);
-              }}
-              renderTags={(value, getTagProps) =>
-                value.map((option, index) => (
-                  <Chip
-                    key={index}
-                    variant="outlined"
-                    label={option}
-                    {...getTagProps({ index })}
-                  />
-                ))
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  label="Formats"
-                  placeholder="Type and press Enter"
-                />
-              )}
-            />
-            <TextField
-              label="Logline"
-              name="logline"
-              value={crudProject?.logline || ""}
-              onChange={handleChange}
-              multiline
-              rows={3}
-            />
-            {crud === "create" && (
-              <FileUploader
-                onFileChange={setFile}
-                onPurposeChange={setFilePurpose}
-                initialPurpose={filePurpose}
-              />
-            )}
-            {crud === "update" && (
-              <Typography
-                variant="caption"
-                sx={{ textAlign: "center", color: "text.secondary" }}
-              >
-                File uploads are handled in the `Files` tab after creation.
-              </Typography>
-            )}
-            {/* ... (rest of the form: errors, button, etc.) ... */}
-            {isUploading && (
-              <Box sx={{ width: "100%", mt: 1 }}>
-                <LinearProgress variant="determinate" value={uploadProgress} />
-              </Box>
-            )}
-            {error && <Alert severity="error">{error}</Alert>}
-            {success && <Alert severity="success">{success}</Alert>}
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={isUploading}
-              sx={{ mt: 2 }}
-              startIcon={<Save />}
-            >
-              {isUploading
-                ? "Uploading..."
-                : crud === "create"
-                ? "Create Project"
-                : "Save Changes"}
-            </Button>
-          </Box>
-        </Box>
-      </Box>{" "}
-      <BasicDrawer
-        handleToggleDrawer={handleToggleDrawer}
-        orientationDrawer={orientationDrawer}
-        element={drawerContent}
+      {/* --- CONTENT SPECIFIC TO PROJECTS --- */}
+      <TextField
+        label="Project Title"
+        name="title"
+        value={crudProject?.title || ""}
+        onChange={handleChange}
+        required={crud === "create"}
       />
-    </Paper>
+
+      {/* BasicSelect uses props directly instead of context, so we pass them */}
+      <BasicSelect
+        selectOptions={selectOptions}
+        crudProject={crudProject}
+        setCrudProject={setCrudProject}
+      />
+
+      <Autocomplete
+        multiple
+        freeSolo
+        options={[]}
+        value={genres}
+        onChange={(event, newValue) => setGenres(newValue)}
+        renderTags={(value, getTagProps) =>
+          value.map((option, index) => (
+            <Chip
+              key={index}
+              variant="outlined"
+              label={option}
+              {...getTagProps({ index })}
+            />
+          ))
+        }
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="outlined"
+            label="Genres"
+            placeholder="Type and press Enter"
+          />
+        )}
+      />
+      <Autocomplete
+        multiple
+        freeSolo
+        options={[]}
+        value={formats}
+        onChange={(event, newValue) => setFormats(newValue)}
+        renderTags={(value, getTagProps) =>
+          value.map((option, index) => (
+            <Chip
+              key={index}
+              variant="outlined"
+              label={option}
+              {...getTagProps({ index })}
+            />
+          ))
+        }
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="outlined"
+            label="Formats"
+            placeholder="Type and press Enter"
+          />
+        )}
+      />
+      <TextField
+        label="Logline"
+        name="logline"
+        value={crudProject?.logline || ""}
+        onChange={handleChange}
+        multiline
+        rows={3}
+      />
+
+      {crud === "create" && (
+        <Box sx={{ mt: 1 }}>
+          <FileUploader
+            onFileChange={setFile}
+            onPurposeChange={setFilePurpose}
+            initialPurpose={filePurpose}
+          />
+          {isUploading && uploadProgress > 0 && (
+            <Box sx={{ width: "100%", mt: 1 }}>
+              <Typography variant="caption" color="text.secondary">
+                Upload Progress: {uploadProgress.toFixed(1)}%
+              </Typography>
+              <LinearProgress variant="determinate" value={uploadProgress} />
+            </Box>
+          )}
+        </Box>
+      )}
+
+      {crud === "update" && (
+        <Typography
+          variant="caption"
+          sx={{ textAlign: "center", color: "text.secondary", mt: 2 }}
+        >
+          File uploads are handled in the `Files` tab after creation.
+        </Typography>
+      )}
+    </BaseCrudForm>
   );
 }
