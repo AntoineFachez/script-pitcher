@@ -13,19 +13,23 @@ import AddNewItem from "@/widgets/crudItem";
 
 import { bottomNavcenterButtonStyles } from "@/theme/muiProps";
 import { useApp } from "@/context/AppContext";
+import { handleSetNewAppContext } from "@/lib/actions/appActions";
 
 export default function CustomBottomNav() {
   const { setToggleDetails, showDataGrid, setShowDataGrid, handleOpenAddItem } =
     useUi();
   const { projectInFocus, setProjectInFocus } = useInFocus();
-  const { appContext } = useApp();
+  const { appContext, setAppContext } = useApp();
   const [value, setValue] = React.useState(0);
 
   const optionsToRender = bottomNavActions(
+    appContext,
+    setAppContext,
     setToggleDetails,
     showDataGrid,
     setShowDataGrid,
-    handleOpenAddItem
+    handleOpenAddItem,
+    handleSetNewAppContext
   );
 
   return (
@@ -45,21 +49,23 @@ export default function CustomBottomNav() {
         backgroundColor: "background.nav",
       }}
     >
-      {optionsToRender.map((action, i) =>
-        getButton(
-          i, // i,
-          action.iconName, // iconName = "",
-          action.action, // onClick,
-          action.disabled, // disabled = false,
-          action.size === "large" ? bottomNavcenterButtonStyles : {}, // sx = iconButtonStyles.sx,
-          action.variant, // variant = "outlined",
-          action.href, // href = null,
-          action.buttonText, // label = "",
-          false, // toolTip,
-          true, // asNavigationAction = false,
-          false, // asTextButton = false,
-          false // startIcon = null
-        )
+      {optionsToRender.map((option, i) =>
+        option.customNavBarButton
+          ? option.customNavBarButton
+          : getButton(
+              i, // i,
+              option.iconName, // iconName = "",
+              option.action, // onClick,
+              option.disabled, // disabled = false,
+              option.size === "large" ? bottomNavcenterButtonStyles?.sx : {}, // sx = iconButtonStyles.sx,
+              option.variant, // variant = "outlined",
+              option.href, // href = null,
+              option.buttonText, // label = "",
+              false, // toolTip,
+              true, // asNavigationAction = false,
+              false, // asTextButton = false,
+              false // startIcon = null
+            )
       )}
     </BottomNavigation>
   );
