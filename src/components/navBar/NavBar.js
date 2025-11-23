@@ -13,6 +13,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useThemeContext } from "@/context/ThemeContext";
 import { useUi } from "@/context/UiContext";
 
+import AppHeader from "../appHeader/AppHeader";
+
 export default function NavBar({}) {
   const { appContext, setAppContext, loading } = useApp();
   const { handleLogout } = useAuth();
@@ -20,9 +22,7 @@ export default function NavBar({}) {
   const { toggleColorMode } = useThemeContext();
 
   const optionsToRender = topNavActions(
-    toggleColorMode,
-    handleLogout,
-    handleSetNewAppContext,
+    appContext,
     handleToggleDrawer,
     orientationDrawer
   );
