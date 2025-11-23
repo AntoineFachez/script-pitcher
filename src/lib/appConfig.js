@@ -2,85 +2,22 @@
 
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Add } from "@mui/icons-material";
+import { Add, ViewSidebar, ViewSidebarOutlined } from "@mui/icons-material";
 import Fab from "@mui/material/Fab";
 
+import NavBarButtonHome from "@/widgets/home";
 import NavBarButtonDashboard from "@/widgets/dashboard";
 import NavBarButtonMe from "@/widgets/meProfile";
 import NavBarButtonProjects from "@/widgets/projectProfile";
+import NavBarButtonSettings from "@/widgets/settings";
 
 import QuickMenu from "@/components/menus/QuickMenu";
 import BasicDrawer from "@/components/drawer/Drawer";
 import SideNavBar from "@/components/sideNavBar/SideNavBar";
+import AppHeader from "@/components/appHeader/AppHeader";
 
-export const sidePanelActions = (
-  toggleColorMode,
-  handleLogout,
-  handleSetNewAppContext,
-  handleToggleDrawer,
-  orientationDrawer
-) => {
-  console.log(handleLogout);
-  return [
-    // {
-    //   customNavBarButton: (
-    //     <BasicDrawer
-    //       handleToggleDrawer={handleToggleDrawer}
-    //       orientationDrawer={orientationDrawer}
-    //       anchor="left"
-    //     />
-    //   ),
-    // },
-    // {
-    //   action: () => handleSetNewAppContext("home", setAppContext),
-    //   iconName: "Home",
-    //   href: "/",
-    //   prop: "home",
-    // },
-    // {
-    //   action: (context) => handleSetNewAppContext(context),
-    //   icon: "Dashboard",
-    //   href: "/dashboard",
-    //   prop: "dashboard",
-    // },
-    // {
-    //   action: (context) => handleSetNewAppContext(context),
-    //   icon: "Group",
-    //   href: "/users",
-    //   prop: "users",
-    // },
-    // {
-    //   action: (context) => handleSetNewAppContext(context),
-    //   icon: "Article",
-    //   href: "/projects",
-    //   prop: "projects",
-    // },
-    // {
-    //   customNavBarButton: (
-    //     <NavBarButtonProjects
-    //       key="projects"
-    //       handleSetNewAppContext={handleSetNewAppContext}
-    //       layoutContext="navBar"
-    //     />
-    //   ),
-    // },
-    // {
-    //   customNavBarButton: (
-    //     <NavBarButtonMe
-    //       key="me"
-    //       handleSetNewAppContext={handleSetNewAppContext}
-    //       layoutContext="navBar"
-    //     />
-    //   ),
-    // },
-    // { action: toggleColorMode, iconName: "LightMode" },
-    { action: handleLogout, iconName: "Logout", asNavigationAction: true },
-  ];
-};
 export const topNavActions = (
-  toggleColorMode,
-  handleLogout,
-  handleSetNewAppContext,
+  appContext,
   handleToggleDrawer,
   orientationDrawer
 ) => {
@@ -91,65 +28,34 @@ export const topNavActions = (
           handleToggleDrawer={handleToggleDrawer}
           orientationDrawer={orientationDrawer}
           anchor="left"
+          iconToOpen={<ViewSidebarOutlined />}
           element={<SideNavBar />}
         />
       ),
     },
-    // {
-    //   action: () => handleSetNewAppContext("home", setAppContext),
-    //   iconName: "Home",
-    //   href: "/",
-    //   prop: "home",
-    // },
-    // {
-    //   action: (context) => handleSetNewAppContext(context),
-    //   icon: "Dashboard",
-    //   href: "/dashboard",
-    //   prop: "dashboard",
-    // },
-    // {
-    //   action: (context) => handleSetNewAppContext(context),
-    //   icon: "Group",
-    //   href: "/users",
-    //   prop: "users",
-    // },
-    // {
-    //   action: (context) => handleSetNewAppContext(context),
-    //   icon: "Article",
-    //   href: "/projects",
-    //   prop: "projects",
-    // },
-    // {
-    //   customNavBarButton: (
-    //     <NavBarButtonProjects
-    //       key="projects"
-    //       handleSetNewAppContext={handleSetNewAppContext}
-    //       layoutContext="navBar"
-    //     />
-    //   ),
-    // },
-    // {
-    //   customNavBarButton: (
-    //     <NavBarButtonMe
-    //       key="me"
-    //       handleSetNewAppContext={handleSetNewAppContext}
-    //       layoutContext="navBar"
-    //     />
-    //   ),
-    // },
-    // { action: toggleColorMode, iconName: "LightMode" },
-    // { action: handleLogout, iconName: "Logout" },
+    {
+      customNavBarButton: <AppHeader title={appContext} />,
+    },
+
+    {
+      customNavBarButton: (
+        <NavBarButtonSettings key="settings" layoutContext="navBar" />
+      ),
+    },
   ];
 };
-export const bottomNavActions = (
-  appContext,
-  setAppContext,
-  setToggleDetails,
-  showDataGrid,
-  setShowDataGrid,
-  handleOpenAddItem,
-  handleSetNewAppContext
-) => {
+export const sidePanelActions = (handleLogout) => {
+  return [
+    {
+      customNavBarButton: (
+        <NavBarButtonHome key="home" layoutContext="navBar" />
+      ),
+    },
+
+    { action: handleLogout, iconName: "Logout", asNavigationAction: true },
+  ];
+};
+export const bottomNavActions = (handleOpenAddItem) => {
   const StyledFab = styled(Fab)({
     position: "absolute",
     zIndex: 1,
@@ -161,28 +67,13 @@ export const bottomNavActions = (
   return [
     {
       customNavBarButton: (
-        <NavBarButtonDashboard
-          key="dashboard"
-          handleSetNewAppContext={handleSetNewAppContext}
-          layoutContext="navBar"
-        />
+        <NavBarButtonDashboard key="dashboard" layoutContext="navBar" />
       ),
     },
-    // {
-    //   iconName: "Home",
-    //   action: () => handleSetNewAppContext("home", setAppContext),
-    //   href: "/",
-    //   prop: "home",
-    //   // asNavigationAction: true,
-    //   label: "Home",
-    // },
+
     {
       customNavBarButton: (
-        <NavBarButtonProjects
-          key="projects"
-          handleSetNewAppContext={handleSetNewAppContext}
-          layoutContext="navBar"
-        />
+        <NavBarButtonProjects key="projects" layoutContext="navBar" />
       ),
     },
     {
@@ -191,27 +82,7 @@ export const bottomNavActions = (
     {
       customNavBarButton: <QuickMenu />,
     },
-    // {
-    //   action: () => setShowDataGrid((prev) => !prev),
-    //   iconName: showDataGrid ? "CreditCard" : "TableChart",
-    //   label: "Show Table",
-    //   asNavigationAction: true,
-    // },
-    // {
-    //   action: () => setToggleDetails((prev) => !prev),
-    //   iconName: "Expand",
-    //   label: "Show Details",
-    //   asNavigationAction: true,
-    // },
-    // {
-    //   action: () => {
-    //     handleOpenAddItem();
-    //   },
-    //   iconName: "Add",
-    //   label: `Add ${appContext}`,
-    //   asNavigationAction: true,
-    //   size: "large",
-    // },
+
     {
       customNavBarButton: (
         <StyledFab
@@ -229,19 +100,9 @@ export const bottomNavActions = (
     //   label: null,
     //   asNavigationAction: true,
     // },
-    // {
-    //   iconName: "FavoriteBorder",
-    //   label: "Favorites",
-    //   asNavigationAction: true,
-    // },
+
     {
-      customNavBarButton: (
-        <NavBarButtonMe
-          key="me"
-          handleSetNewAppContext={handleSetNewAppContext}
-          layoutContext="navBar"
-        />
-      ),
+      customNavBarButton: <NavBarButtonMe key="me" layoutContext="navBar" />,
     },
   ];
 };
