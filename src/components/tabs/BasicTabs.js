@@ -1,4 +1,4 @@
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, List, Tab, Tabs, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import { useState } from "react";
 
@@ -55,6 +55,7 @@ export default function DynamicTabs({ tabsArray = [], containerRef }) {
   return (
     <>
       <Tabs
+        className="tab--selector"
         value={value}
         onChange={handleChange}
         aria-label="dynamic tabs example"
@@ -73,7 +74,6 @@ export default function DynamicTabs({ tabsArray = [], containerRef }) {
           <Tab key={index} label={tab.label} {...a11yProps(index)} />
         ))}
       </Tabs>
-
       {/* 2. Map over the array to create the CustomTabPanel content */}
       {tabsArray.map((tab, index) => (
         <CustomTabPanel
@@ -81,7 +81,12 @@ export default function DynamicTabs({ tabsArray = [], containerRef }) {
           key={index}
           value={value}
           index={index}
-          // sx={{ height: "auto" }}
+          sx={
+            {
+              // height: "100%",
+              // "& >*": { height: "100%" },
+            }
+          }
         >
           {tab.content}
         </CustomTabPanel>

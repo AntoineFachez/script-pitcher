@@ -8,9 +8,7 @@ import Collapse from "@mui/material/Collapse";
 import CardItemHeader from "./CardItemHeader";
 import CardItemActions from "./CardItemActions";
 import CardItemMedia from "./CardItemMedia";
-
-import { flexListItemStyles } from "@/theme/muiProps";
-import { Grid } from "@mui/material";
+import { cardStyles } from "@/theme/muiProps";
 
 export default function BasicCard({
   cardProps,
@@ -30,8 +28,7 @@ export default function BasicCard({
   return (
     <Card
       sx={{
-        // ...flexListItemStyles.sx,
-        position: "relative",
+        ...cardStyles.sx,
         border:
           item === itemInFocus ? `white 1px solid` : `transparent 1px solid`,
       }}

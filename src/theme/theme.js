@@ -5,6 +5,17 @@
 import { createTheme } from "@mui/material/styles";
 import { sharedComponents } from "./muiProps";
 
+export const deviceLayout = {
+  pageContentWidth: {
+    mobile: "95%",
+    desktop: "70%",
+  },
+  cardFlex: {
+    mobile: "8 6 220px",
+    desktop: "8 6 220px",
+  },
+};
+
 // --- Dark Theme ---
 export const darkTheme = createTheme({
   palette: {
@@ -73,10 +84,12 @@ export const darkTheme = createTheme({
       fontWeight: 600,
     },
   },
+
   components: {
     ...sharedComponents,
   },
   transitions: { duration: { shortest: 200 } },
+  deviceLayout,
 });
 
 // --- Bright Theme ---
@@ -130,4 +143,5 @@ export const brightTheme = createTheme({
     ...sharedComponents,
   },
   transitions: { duration: { shortest: 200 } },
+  deviceLayout,
 });

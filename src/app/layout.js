@@ -25,6 +25,7 @@ export default async function RootLayout({ children }) {
       // In case of error, count remains 0.
     }
   }
+
   return (
     <html lang="en">
       <body style={{ width: "100vw", height: "100vh" }}>

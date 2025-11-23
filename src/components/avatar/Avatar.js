@@ -11,11 +11,11 @@ const AvatarBase = styled(Avatar, {
   // Prevent scrollratio from being passed down to the Avatar DOM element
   shouldForwardProp: (prop) => prop !== "scrollratio",
 })(({ theme, scrollratio }) => ({
-  width: 100,
-  height: 100,
+  width: 64,
+  height: 64,
   borderRadius: "50%",
   position: "absolute",
-  bottom: -50, // Position slightly below the banner
+  bottom: -30, // Position slightly below the banner
   left: theme.spacing(3),
   border: `4px solid ${theme.palette.background.paper}`,
   overflow: "hidden",

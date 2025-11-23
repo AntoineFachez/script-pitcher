@@ -23,8 +23,18 @@ export default function NavBar({}) {
     handleSetNewAppContext
   );
   return (
-    <AppBar position="fixed" sx={{}}>
-      <Container maxWidth="xl">
+    <AppBar
+      position="fixed"
+      sx={{
+        height: 48,
+        display: "flex",
+        flexFlow: "row nowrap",
+        justifyContent: "space-between",
+        alignItems: "center",
+        p: "0 24px",
+      }}
+    >
+      {/* <Container maxWidth="xl">
         <Toolbar
           disableGutters
           sx={
@@ -38,33 +48,33 @@ export default function NavBar({}) {
               // m: 0,
             }
           }
-        >
-          {optionsToRender?.map((option, i) => {
-            const onClickHandler = (e) => {
-              e.stopPropagation();
+        > */}
+      {optionsToRender?.map((option, i) => {
+        const onClickHandler = (e) => {
+          e.stopPropagation();
 
-              option.action(option.prop);
-            };
+          option.action(option.prop);
+        };
 
-            return option.customNavBarButton
-              ? option.customNavBarButton
-              : getButton(
-                  i,
-                  option.icon,
-                  onClickHandler,
-                  false,
-                  appContext === option.prop
-                    ? {
-                        color: "button.active",
-                        backgroundColor: "button.activeBackground",
-                      }
-                    : { color: "button.inactive" },
-                  "contained",
-                  option.href
-                );
-          })}
-        </Toolbar>
-      </Container>
+        return option.customNavBarButton
+          ? option.customNavBarButton
+          : getButton(
+              i,
+              option.icon,
+              onClickHandler,
+              false,
+              appContext === option.prop
+                ? {
+                    color: "button.active",
+                    backgroundColor: "button.activeBackground",
+                  }
+                : { color: "button.inactive" },
+              "contained",
+              option.href
+            );
+      })}
+      {/* </Toolbar>
+      </Container> */}
     </AppBar>
   );
 }

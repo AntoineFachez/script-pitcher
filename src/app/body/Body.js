@@ -20,6 +20,8 @@ export default function Body({ children }) {
   // ✅ PULLING OUT THE RE-INTRODUCED isUserLoading
   const { firebaseUser, isUserLoading } = useAuth();
   const {
+    currentWindowSize,
+    isDesktop,
     isMobile,
     modalContent,
     setModalContent,
@@ -29,8 +31,8 @@ export default function Body({ children }) {
     handleToggleDrawer,
   } = useUi();
   const [isSigningUp, setIsSigningUp] = useState(false);
-  const NAV_HEIGHT = "48px"; // Typical MUI AppBar height on desktop
-  const BOTTOM_NAV_HEIGHT = "56px"; // Typical MUI BottomNavigation height
+  const NAV_HEIGHT = isMobile ? 0 : "48px"; // Typical MUI AppBar height on desktop
+  const BOTTOM_NAV_HEIGHT = isDesktop ? 0 : "56px"; // Typical MUI BottomNavigation height
 
   const toggleAuthMode = () => {
     setIsSigningUp((prev) => !prev);
@@ -71,7 +73,7 @@ export default function Body({ children }) {
         }}
       >
         {/* 1. Top Nav (Takes defined space) */}
-        <NavBar />
+        {!isMobile && <NavBar />}
 
         {/* 2. Main Content (Takes all the remaining space) */}
         <Box
@@ -88,7 +90,9 @@ export default function Body({ children }) {
         </Box>
 
         {/* 3. Bottom Nav (Takes defined space) */}
-        <CustomBottomNav sx={{ height: BOTTOM_NAV_HEIGHT }} />
+        {!isDesktop || currentWindowSize === "md" ? (
+          <CustomBottomNav sx={{ height: BOTTOM_NAV_HEIGHT }} />
+        ) : null}
       </Box>
     );
   }

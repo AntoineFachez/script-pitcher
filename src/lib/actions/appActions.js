@@ -1,5 +1,3 @@
-export const handleSetNewAppContext = (context) => {
-  console.log("handleSetNewAppContext", context);
-
+export const handleSetNewAppContext = (context, setAppContext) => {
   setAppContext(context);
 };

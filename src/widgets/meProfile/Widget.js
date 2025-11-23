@@ -83,20 +83,39 @@ export default function MeContent({ initialProfile, initialInvitations }) {
 
   return (
     <>
-      <ProfileHeader
-        containerRef={containerRef}
-        bannerImageUrl={userProfile?.imageUrl}
-        avatarImageUrl={userProfile?.avatarUrl || userProfile?.imageUrl}
-        menu={
-          <ProfileMenu
-            itemInFocus={userInFocus}
-            // togglePublishProject={togglePublishProject}
-          />
-        }
-        titleText={userProfile?.displayName}
-        descriptionText={`Welcome back ${userProfile?.displayName}`}
-      />
-      <BasicTabs tabsArray={tabsArray} />
+      <Box
+        ref={containerRef}
+        className="projectProfile"
+        sx={{
+          position: "relative",
+          width: "100%",
+          // 🔑 FIX: Set height to 100% of the viewport or container.
+          // Using '100vh' or 'calc' is safer than just '100%'.
+          // height: "100vh", // Change to 100% of the viewport for testing, or use a calculated height
+          height: "100%", // Change to 100% of the viewport for testing, or use a calculated height
+          // display: "flex",
+          // flexFlow: "column nowrap",
+          overflowY: "scroll", // Use overflowY for vertical scroll
+          overflowX: "hidden",
+          // overflow: "hidden",
+          // gap: 2,
+        }}
+      >
+        <ProfileHeader
+          containerRef={containerRef}
+          bannerImageUrl={userProfile?.imageUrl}
+          avatarImageUrl={userProfile?.avatarUrl || userProfile?.imageUrl}
+          menu={
+            <ProfileMenu
+              itemInFocus={userInFocus}
+              // togglePublishProject={togglePublishProject}
+            />
+          }
+          titleText={userProfile?.displayName}
+          descriptionText={`Welcome back ${userProfile?.displayName}`}
+        />
+        <BasicTabs tabsArray={tabsArray} />
+      </Box>
       <BasicModal
         content={modalContent}
         open={openModal}

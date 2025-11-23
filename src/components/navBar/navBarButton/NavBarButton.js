@@ -21,7 +21,7 @@ export default function NavBarButton({
 
   return (
     <IconButton
-      onClick={() => handleSetNewAppContext(prop)}
+      onClick={() => handleSetNewAppContext(prop, setAppContext)}
       component={Link}
       href={href}
       sx={

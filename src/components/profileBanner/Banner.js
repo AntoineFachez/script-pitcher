@@ -15,7 +15,7 @@ const BannerBase = styled(Box, {
   // 1. Set the fixed dimensions of the banner
   width: "100%",
   height: "100%",
-  // height: newHeight || 120,
+  // height: newHeight || 100,
   // height: newHeight || "100%",
 
   // 2. Add the background image (use background-image for best results)
@@ -31,8 +31,8 @@ const BannerBase = styled(Box, {
   transition: "transform 0.1s linear",
 
   // Optional: Add a rounded top edge for a modern look
-  borderTopLeftRadius: 8,
-  borderTopRightRadius: 8,
+  // borderTopLeftRadius: 8,
+  // borderTopRightRadius: 8,
 }));
 
 // 2. FUNCTIONAL COMPONENT (LOGIC + RENDERING)

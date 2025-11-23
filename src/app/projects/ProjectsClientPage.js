@@ -20,17 +20,12 @@ import ProjectsWidget from "@/widgets/projects/ProjectsList";
 import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 
 // Local elements
-import Menu from "./elements/Menu";
 import GernresList from "./elements/GernresList";
 import {
   pageHeaderStyles,
   pageMainStyles,
   pageTitleStyles,
 } from "@/theme/muiProps";
-// ⭐️ DELETED: useUser import
-
-// Styles
-// import { pageStyles, titleStyle } from "@/theme/muiProps";
 
 // We receive the server-fetched data as props
 export default function ProjectsClientPage({ serverProjects, serverUsers }) {
@@ -44,11 +39,9 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
     showPublishedProjects,
     setShowPublishedProjects,
   } = useUi();
-  // ⭐️ DELETED: const { myProjects } = useUser();
+
   const { setProjectInFocus, genreInFocus, setGenreInFocus } = useInFocus();
 
-  // 1. --- START FIX ---
-  // Use 'serverProjects' (from props) as the initial state for 'useOptimistic'
   const [optimisticProjects, setOptimisticProjects] = useOptimistic(
     serverProjects || [], // 👈 USE THE PROP HERE
     (currentProjects, { projectId, newPublishedState }) => {
@@ -58,7 +51,6 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
       );
     }
   );
-  // --- END FIX ---
 
   // 2. Use 'serverUsers' (from props) for the initial user state
   const [users, setUsers] = useState(serverUsers || []);

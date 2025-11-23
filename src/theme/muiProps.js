@@ -11,7 +11,7 @@ export const pageStyles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    // p: "0.5rem",
+
     backgroundColor: "background.gridItem",
     overflow: "hidden",
   },
@@ -31,6 +31,10 @@ export const pageTitleStyles = {
     // p: 1,
     textAlign: "center",
     backgroundColor: "primary.dark",
+    display: {
+      xs: "none", // Element is completely hidden (no space) on small screens
+      md: "block", // Element is visible and takes up space from 'md' up
+    },
   },
 };
 export const pageMenuStyles = {
@@ -52,6 +56,12 @@ export const pageMainStyles = {
     height: "100%",
     // flexFlow: "column nowrap",
     // justifyContent: "center",
+    padding: {
+      xs: 0, // Padding is 1rem on small screens (mobile)
+      sm: "2rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
+      md: "3rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
+      lg: "4rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
+    },
     overflow: "scroll",
   },
 };
@@ -113,6 +123,11 @@ export const modalStyles = {
     // width: "100%",
     // height: "100%",
     // height: "100vh",
+    maxWidth: {
+      xs: "90%", // 90% width on extra small screens
+      sm: "600px", // 600px max width on small screens and up
+      md: "50ch", // 50 character width on medium screens and up
+    },
     maxHeight: "100vh",
     bgcolor: "background.paper",
     border: "1px solid #ffffff20",
@@ -167,6 +182,18 @@ export const flexListStyles = {
     // scrollSnapType: "both mandatory",
     // scrollPadding: "0.5rem",
     // borderRadius: "0 0 4px 4px",
+  },
+};
+export const cardStyles = {
+  sx: {
+    position: "relative",
+
+    // flex: "8 6 220px",
+    flex: {
+      xs: "8 6 220px",
+      md: "4 2 120px",
+      lg: "1 1 100%", // Overrides with "8 6 220px" from 'lg' screen up
+    },
   },
 };
 // export const flexListItemStyles = {
@@ -239,10 +266,11 @@ export const sharedComponents = {
     },
     styleOverrides: {
       root: ({ theme }) => ({
-        height: "fit-content",
-        padding: 0,
+        // height: "fit-content",
         border: "none",
         borderRadius: 0,
+        padding: 0,
+        margin: 0,
       }),
     },
   },
@@ -252,8 +280,9 @@ export const sharedComponents = {
     },
     styleOverrides: {
       root: ({ theme }) => ({
-        height: "fit-content",
+        // height: "fit-content",
         padding: 0,
+        margin: 0,
       }),
     },
   },
@@ -263,10 +292,11 @@ export const sharedComponents = {
     },
     styleOverrides: {
       root: ({ theme }) => ({
-        height: "fit-content",
+        // height: "fit-content",
         display: "flex",
         justifyContent: "space-between",
         padding: 0,
+        margin: 0,
       }),
     },
   },
@@ -303,15 +333,25 @@ export const sharedComponents = {
     styleOverrides: {
       root: ({ theme }) => ({
         width: "100%",
-        maxWidth: "50%",
+        // maxWidth: "50%",
+        maxWidth: {
+          xs: "95%", // Mobile
+          lg: "400px", // Example: Desktop limit
+        },
         height: "100%",
         maxHeight: 350,
         display: "flex",
-        flex: "8 6 220px",
+        // flex: "8 6 220px",
+
         flexFlow: "column nowrap",
         padding: 0,
         m: 0,
         backgroundColor: theme.palette.card.background,
+
+        backgroundColor: {
+          xs: theme.palette.secondary.main,
+          lg: theme.palette.action.main,
+        },
         "&:hover": { backgroundColor: theme.palette.card.hover },
       }),
     },
@@ -319,7 +359,17 @@ export const sharedComponents = {
   MuiCardActions: {
     styleOverrides: {
       root: ({ theme }) => ({
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
         backgroundColor: "inherit",
+      }),
+    },
+  },
+  MuiButtonBase: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        "& >*": { fontSize: 16 },
       }),
     },
   },
@@ -381,14 +431,15 @@ export const sharedComponents = {
             : theme.palette.primary.dark,
       }),
       h4: ({ theme }) => ({
-        fontWeight: "bold",
+        fontSize: 24,
+        fontWeight: "200",
         marginBottom: "1rem",
         textAlign: "center",
         // Example: Use a different color for light vs. dark mode
         color:
           theme.palette.mode === "dark"
-            ? theme.palette.primary.light
-            : theme.palette.primary.dark,
+            ? theme.palette.text.primary
+            : theme.palette.text.dark,
       }),
       h5: {
         fontWeight: "bold",
@@ -579,8 +630,8 @@ export const sharedComponents = {
   MuiAvatar: {
     styleOverrides: {
       root: ({ theme }) => ({
-        width: 72,
-        height: 72,
+        width: 56,
+        height: 56,
       }),
     },
   },

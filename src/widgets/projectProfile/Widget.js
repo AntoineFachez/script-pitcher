@@ -44,19 +44,21 @@ export default function Widget({
     width: "100%",
     // 🔑 FIX: Set height to 100% of the viewport or container.
     // Using '100vh' or 'calc' is safer than just '100%'.
+    height: "100%", // Change to 100% of the viewport for testing, or use a calculated height
     // height: "100vh", // Change to 100% of the viewport for testing, or use a calculated height
     display: "flex",
     flexFlow: "column nowrap",
     overflowY: "scroll", // Use overflowY for vertical scroll
     overflowX: "hidden",
     gap: 2,
+    // backgroundColor: "white",
   };
   const tabsArray = [
     {
       label: "Team",
       content:
         initialProject?.members?.length > 0 ? (
-          <Box sx={tabStyles}>
+          <Box className="tab--item--container" sx={tabStyles}>
             <UsersList data={initialProject?.members} />
             <InvitationsList data={invitations} />
           </Box>
@@ -79,7 +81,7 @@ export default function Widget({
       label: "Episodes",
       content:
         episodes?.length > 0 ? (
-          <Box sx={tabStyles}>
+          <Box className="tab--item--container" sx={tabStyles}>
             <EpisodesSection data={episodes} />{" "}
           </Box>
         ) : (
@@ -90,7 +92,7 @@ export default function Widget({
       label: "Files",
       content:
         files?.length > 0 ? (
-          <Box sx={tabStyles}>
+          <Box className="tab--item--container" sx={tabStyles}>
             <FilesList data={files} />
           </Box>
         ) : (
@@ -103,7 +105,7 @@ export default function Widget({
     <>
       <Box
         ref={containerRef}
-        className="pdfviewer"
+        className="projectProfile"
         sx={{
           position: "relative",
           width: "100%",

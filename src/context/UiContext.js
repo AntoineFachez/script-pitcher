@@ -2,8 +2,8 @@
 
 "use client";
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
-// import useMediaQuery from "@mui/material/useMediaQuery";
-// import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 import { useApp } from "./AppContext";
 import CrudItem from "@/widgets/crudItem";
 // 1. Create the context
@@ -12,14 +12,16 @@ const UiContext = createContext(null);
 // 2. Create the Provider component
 export function UiProvider({ documentId, children }) {
   const { appContext } = useApp();
-
-  //TODO: finish device dependancies
-  // const theme = useTheme();
-  // // 'up' means: true if the screen width is greater than or equal to the breakpoint.
-  // const isDesktop = useMediaQuery(theme.breakpoints.up("lg")); // Using MUI's 'lg' breakpoint (usually 1200px or 1024px depending on setup)
-
-  // // 'down' means: true if the screen width is less than or equal to the breakpoint.
-  // const isMobile = useMediaQuery(theme.breakpoints.down("md")); // Using MUI's 'md' breakpoint (usually 900px or 768px depending on setup)
+  const theme = useTheme();
+  // 1. Define only the 'up' checks (>= breakpoints).
+  // These are the only media queries you need to run.
+  const isSmUp = useMediaQuery(theme.breakpoints.up("sm"));
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const isLgUp = useMediaQuery(theme.breakpoints.up("lg"));
+  const isXlUp = useMediaQuery(theme.breakpoints.up("xl"));
+  const [currentWindowSize, setCurrentWindowSize] = useState("md");
+  const [isDesktop, setIsDesktop] = useState(isLgUp);
+  const [isMobile, setIsMobile] = useState(!isMdUp);
 
   const [uiData, setUiData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -61,9 +63,38 @@ export function UiProvider({ documentId, children }) {
     }
     setOrientationDrawer({ ...orientationDrawer, [anchor]: open });
   };
+
+  useEffect(() => {
+    let size = "xs";
+
+    // Check from largest to smallest to find the *active* breakpoint
+    if (isXlUp) {
+      size = "xl";
+    } else if (isLgUp) {
+      size = "lg";
+    } else if (isMdUp) {
+      size = "md";
+    } else if (isSmUp) {
+      size = "sm";
+    }
+
+    // A. Update the size string
+    setCurrentWindowSize(size);
+
+    // B. Update the booleans (using standard conventions)
+    // Assuming Desktop is >= Lg and Mobile is < Md
+    setIsDesktop(size === "lg" || size === "xl");
+    setIsMobile(size === "xs" || size === "sm");
+
+    console.log(`Viewport Change: ${size.toUpperCase()}`);
+  }, [isSmUp, isMdUp, isLgUp, isXlUp]);
+
   const value = useMemo(
     () => ({
       uiData,
+      currentWindowSize,
+      isDesktop,
+      isMobile,
       showDataGrid,
       setShowDataGrid,
       showNewProject,
@@ -91,6 +122,9 @@ export function UiProvider({ documentId, children }) {
     }),
     [
       uiData,
+      currentWindowSize,
+      isDesktop,
+      isMobile,
       showDataGrid,
       setShowDataGrid,
       showNewProject,

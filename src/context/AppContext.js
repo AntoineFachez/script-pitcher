@@ -8,7 +8,7 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const activityTimeoutRef = useRef(null);
-  const [appContext, setAppContext] = useState(false);
+  const [appContext, setAppContext] = useState(null);
 
   const [isUserActive, setIsUserActive] = useState(false);
   const [loading, setLoading] = useState(false);
