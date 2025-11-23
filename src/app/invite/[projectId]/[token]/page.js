@@ -57,6 +57,75 @@ export default function InvitePage({ params }) {
 
       setStatus("success");
 
+      {
+        /**
+         //TODO: If success check userToUser_lookup if invitee and invitor are linked. 
+         //! move that logic to the API route:        
+         // If not add doc: 
+          const data = await res.json(); 
+
+          // 1. Construct a deterministic ID to prevent duplicates
+          const myUid = user.uid;
+          const otherUid = data.inviterId; // Returned from API
+          const docId = [myUid, otherUid].sort().join("_"); 
+
+          // 2. Reference the DB (assuming Firestore logic)
+          const lookupRef = doc(db, "userToUser_lookup", docId);
+          const docSnap = await getDoc(lookupRef);
+
+          if (!docSnap.exists()) {
+            // 3. Create the link
+            await setDoc(lookupRef, {
+              participants: [myUid, otherUid],
+              origin: {
+                source: "project_invite",
+                projectId: projectId, // from params
+                initiatedBy: otherUid,
+              },
+              createdAt: new Date(),
+              status: "active"
+            });
+          } else {
+            // Optional: Update interaction count or "last seen"
+            await updateDoc(lookupRef, {
+               interactionCount: increment(1),
+               lastInteractionAt: new Date()
+            });
+          }
+
+        {
+            // --- PARTICIPANTS ---
+            "participants": ["user_uid_A", "user_uid_B"], // Array for simple "array-contains" queries
+            "users": {
+              "user_uid_A": {
+                "displayName": "Alice", // Optional: Denormalized for fast UI rendering
+                "role": "inviter"      // Context of how the link started
+              },
+              "user_uid_B": {
+                "displayName": "Bob",
+                "role": "invitee"
+              }
+            },
+
+            // --- RELATIONSHIP CONTEXT (From your script) ---
+            "origin": {
+              "source": "project_invite",   // How did they meet?
+              "projectId": "proj_xyz123",   // The projectId from your params
+              "initiatedBy": "user_uid_A",  // Who sent the invite
+              "acceptedAt": "2023-10-27T10:00:00Z" // When the invite was accepted
+            },
+
+            // --- STATUS ---
+            "status": "active", // active, blocked, muted
+            "interactionCount": 1, // Increment this if they work on future projects together
+
+            // --- METADATA ---
+            "createdAt": "2023-10-27T10:00:00Z",
+            "lastInteractionAt": "2023-10-27T10:00:00Z"
+          }
+         */
+      }
+
       // Redirect to the projects dashboard after short delay
       setTimeout(() => {
         router.push("/projects");

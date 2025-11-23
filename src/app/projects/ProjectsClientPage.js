@@ -114,9 +114,6 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
   return (
     <>
       <Box className="pageHeader" sx={pageHeaderStyles.sx}>
-        <Typography variant={pageTitleStyles.variant} sx={pageTitleStyles.sx}>
-          {appContext}
-        </Typography>{" "}
         {toggleDetails && (
           <GernresList
             uniqueGenres={uniqueGenres}

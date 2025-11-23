@@ -181,7 +181,7 @@ export async function getCurrentUser() {
 
 //   // Use the standard Next.js cookie read method for robustness
 //   const reqCookies = Object.fromEntries(
-//     cookies()
+//     cookies()j
 //       .getAll()
 //       .map((c) => [c.name, c.value])
 //   );

@@ -26,15 +26,19 @@ export const pageTitleStyles = {
   sx: {
     width: "100%",
     // height: "5rem",
+    // display: {
+    //   xs: "none", // Element is completely hidden (no space) on small screens
+    //   md: "block", // Element is visible and takes up space from 'md' up
+    // },
     // borderRadius: "1rem",
     // m: 1,
     // p: 1,
     textAlign: "center",
-    backgroundColor: "primary.dark",
-    display: {
-      xs: "none", // Element is completely hidden (no space) on small screens
-      md: "block", // Element is visible and takes up space from 'md' up
-    },
+    // backgroundColor: "primary.dark",
+    // display: {
+    //   xs: "none", // Element is completely hidden (no space) on small screens
+    //   md: "block", // Element is visible and takes up space from 'md' up
+    // },
   },
 };
 export const pageMenuStyles = {
