@@ -14,6 +14,7 @@ export default function BasicDrawer({
   // list,
   element,
   anchor,
+  iconToOpen,
 }) {
   // console.log("handleToggleDrawer", orientationDrawer.bottom);
   const list = (anchor) => {
@@ -40,7 +41,7 @@ export default function BasicDrawer({
         onClick={(e) => handleToggleDrawer(anchor, true)(e)}
         sx={{ transform: "rotate(180deg)" }}
       >
-        <ViewSidebar />
+        {iconToOpen}
       </IconButton>
       <Drawer
         anchor={anchor}
@@ -49,7 +50,7 @@ export default function BasicDrawer({
         sx={{
           "& .MuiDrawer-paper": {
             width: anchor === "left" ? "fit-content" : null,
-            marginTop: "3rem",
+            // marginTop: "3rem",
             // height: "80vh",
             // bottom: 0,
             display: "flex",

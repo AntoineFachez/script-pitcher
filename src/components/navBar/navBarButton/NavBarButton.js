@@ -1,20 +1,16 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/NAVBAR/NAVBARBUTTON/NAVBARBUTTON.JS
-"use client"; // Retain the 'use client' directive
+
+"use client";
 
 import React from "react";
-import { AccountCircle } from "@mui/icons-material";
-import { Badge, IconButton } from "@mui/material";
 import Link from "next/link";
+import { Badge, IconButton } from "@mui/material";
+
 import { useApp } from "@/context/AppContext";
 import { iconMap } from "@/lib/maps/iconMap";
+import { handleSetNewAppContext } from "@/lib/actions/appActions";
 
-export default function NavBarButton({
-  iconName,
-  prop,
-  href,
-  badgeCount,
-  handleSetNewAppContext,
-}) {
+export default function NavBarButton({ iconName, prop, href, badgeCount }) {
   const { appContext, setAppContext, loading } = useApp();
 
   const IconComponent = iconName ? iconMap[iconName] : null;
@@ -33,7 +29,6 @@ export default function NavBarButton({
           : { color: "button.inactive" }
       }
     >
-      {/* Use the clean 'badgeCount' prop */}
       <Badge badgeContent={badgeCount} color="secondary">
         <IconComponent />
       </Badge>

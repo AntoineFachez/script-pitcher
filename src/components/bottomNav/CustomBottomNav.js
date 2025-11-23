@@ -26,15 +26,7 @@ export default function CustomBottomNav() {
   const { appContext, setAppContext } = useApp();
   const [value, setValue] = React.useState(0);
 
-  const optionsToRender = bottomNavActions(
-    appContext,
-    setAppContext,
-    setToggleDetails,
-    showDataGrid,
-    setShowDataGrid,
-    handleOpenAddItem,
-    handleSetNewAppContext
-  );
+  const optionsToRender = bottomNavActions(handleOpenAddItem);
 
   const StyledFab = styled(Fab)({
     position: "absolute",

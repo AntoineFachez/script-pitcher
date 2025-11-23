@@ -6,19 +6,12 @@ import React from "react";
 
 export default function SideNavBar() {
   const { handleLogout } = useAuth();
-  console.log(handleLogout);
-  const optionsToRender = sidePanelActions(
-    "toggleColorMode",
-    handleLogout,
-    "handleSetNewAppContext",
-    "handleToggleDrawer",
-    "orientationDrawer"
-  );
+
+  const optionsToRender = sidePanelActions(handleLogout);
   return (
     <>
-      <Toolbar>
+      <Toolbar sx={{ flexFlow: "column nowrap" }}>
         {optionsToRender?.map((option, i) => {
-          console.log(option);
           const onClickHandler = (e) => {
             e.stopPropagation();
 
