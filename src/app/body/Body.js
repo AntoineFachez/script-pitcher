@@ -73,7 +73,7 @@ export default function Body({ children }) {
         }}
       >
         {/* 1. Top Nav (Takes defined space) */}
-        {!isMobile && <NavBar />}
+        <NavBar />
 
         {/* 2. Main Content (Takes all the remaining space) */}
         <Box

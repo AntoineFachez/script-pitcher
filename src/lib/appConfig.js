@@ -1,24 +1,42 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/APPCONFIG.JS
 
+import { Box } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { Add } from "@mui/icons-material";
+import Fab from "@mui/material/Fab";
+
+import NavBarButtonDashboard from "@/widgets/dashboard";
 import NavBarButtonMe from "@/widgets/meProfile";
 import NavBarButtonProjects from "@/widgets/projectProfile";
 
-import { styled } from "@mui/material/styles";
-import Fab from "@mui/material/Fab";
-import { Add } from "@mui/icons-material";
+import QuickMenu from "@/components/menus/QuickMenu";
+import BasicDrawer from "@/components/drawer/Drawer";
+import SideNavBar from "@/components/sideNavBar/SideNavBar";
 
-export const navActions = (
+export const sidePanelActions = (
   toggleColorMode,
   handleLogout,
-  handleSetNewAppContext
+  handleSetNewAppContext,
+  handleToggleDrawer,
+  orientationDrawer
 ) => {
+  console.log(handleLogout);
   return [
-    {
-      action: (context) => handleSetNewAppContext(context),
-      icon: "Home",
-      href: "/",
-      prop: "home",
-    },
+    // {
+    //   customNavBarButton: (
+    //     <BasicDrawer
+    //       handleToggleDrawer={handleToggleDrawer}
+    //       orientationDrawer={orientationDrawer}
+    //       anchor="left"
+    //     />
+    //   ),
+    // },
+    // {
+    //   action: () => handleSetNewAppContext("home", setAppContext),
+    //   iconName: "Home",
+    //   href: "/",
+    //   prop: "home",
+    // },
     // {
     //   action: (context) => handleSetNewAppContext(context),
     //   icon: "Dashboard",
@@ -37,26 +55,90 @@ export const navActions = (
     //   href: "/projects",
     //   prop: "projects",
     // },
+    // {
+    //   customNavBarButton: (
+    //     <NavBarButtonProjects
+    //       key="projects"
+    //       handleSetNewAppContext={handleSetNewAppContext}
+    //       layoutContext="navBar"
+    //     />
+    //   ),
+    // },
+    // {
+    //   customNavBarButton: (
+    //     <NavBarButtonMe
+    //       key="me"
+    //       handleSetNewAppContext={handleSetNewAppContext}
+    //       layoutContext="navBar"
+    //     />
+    //   ),
+    // },
+    // { action: toggleColorMode, iconName: "LightMode" },
+    { action: handleLogout, iconName: "Logout", asNavigationAction: true },
+  ];
+};
+export const topNavActions = (
+  toggleColorMode,
+  handleLogout,
+  handleSetNewAppContext,
+  handleToggleDrawer,
+  orientationDrawer
+) => {
+  return [
     {
       customNavBarButton: (
-        <NavBarButtonProjects
-          key="projects"
-          handleSetNewAppContext={handleSetNewAppContext}
-          layoutContext="navBar"
+        <BasicDrawer
+          handleToggleDrawer={handleToggleDrawer}
+          orientationDrawer={orientationDrawer}
+          anchor="left"
+          element={<SideNavBar />}
         />
       ),
     },
-    {
-      customNavBarButton: (
-        <NavBarButtonMe
-          key="me"
-          handleSetNewAppContext={handleSetNewAppContext}
-          layoutContext="navBar"
-        />
-      ),
-    },
-    { action: toggleColorMode, icon: "LightMode" },
-    { action: handleLogout, icon: "Logout" },
+    // {
+    //   action: () => handleSetNewAppContext("home", setAppContext),
+    //   iconName: "Home",
+    //   href: "/",
+    //   prop: "home",
+    // },
+    // {
+    //   action: (context) => handleSetNewAppContext(context),
+    //   icon: "Dashboard",
+    //   href: "/dashboard",
+    //   prop: "dashboard",
+    // },
+    // {
+    //   action: (context) => handleSetNewAppContext(context),
+    //   icon: "Group",
+    //   href: "/users",
+    //   prop: "users",
+    // },
+    // {
+    //   action: (context) => handleSetNewAppContext(context),
+    //   icon: "Article",
+    //   href: "/projects",
+    //   prop: "projects",
+    // },
+    // {
+    //   customNavBarButton: (
+    //     <NavBarButtonProjects
+    //       key="projects"
+    //       handleSetNewAppContext={handleSetNewAppContext}
+    //       layoutContext="navBar"
+    //     />
+    //   ),
+    // },
+    // {
+    //   customNavBarButton: (
+    //     <NavBarButtonMe
+    //       key="me"
+    //       handleSetNewAppContext={handleSetNewAppContext}
+    //       layoutContext="navBar"
+    //     />
+    //   ),
+    // },
+    // { action: toggleColorMode, iconName: "LightMode" },
+    // { action: handleLogout, iconName: "Logout" },
   ];
 };
 export const bottomNavActions = (
@@ -79,6 +161,23 @@ export const bottomNavActions = (
   return [
     {
       customNavBarButton: (
+        <NavBarButtonDashboard
+          key="dashboard"
+          handleSetNewAppContext={handleSetNewAppContext}
+          layoutContext="navBar"
+        />
+      ),
+    },
+    // {
+    //   iconName: "Home",
+    //   action: () => handleSetNewAppContext("home", setAppContext),
+    //   href: "/",
+    //   prop: "home",
+    //   // asNavigationAction: true,
+    //   label: "Home",
+    // },
+    {
+      customNavBarButton: (
         <NavBarButtonProjects
           key="projects"
           handleSetNewAppContext={handleSetNewAppContext}
@@ -86,19 +185,24 @@ export const bottomNavActions = (
         />
       ),
     },
-
     {
-      action: () => setShowDataGrid((prev) => !prev),
-      iconName: showDataGrid ? "CreditCard" : "TableChart",
-      label: "Show Table",
-      asNavigationAction: true,
+      customNavBarButton: <Box sx={{ width: "3rem" }} />,
     },
     {
-      action: () => setToggleDetails((prev) => !prev),
-      iconName: "Expand",
-      label: "Show Details",
-      asNavigationAction: true,
+      customNavBarButton: <QuickMenu />,
     },
+    // {
+    //   action: () => setShowDataGrid((prev) => !prev),
+    //   iconName: showDataGrid ? "CreditCard" : "TableChart",
+    //   label: "Show Table",
+    //   asNavigationAction: true,
+    // },
+    // {
+    //   action: () => setToggleDetails((prev) => !prev),
+    //   iconName: "Expand",
+    //   label: "Show Details",
+    //   asNavigationAction: true,
+    // },
     // {
     //   action: () => {
     //     handleOpenAddItem();

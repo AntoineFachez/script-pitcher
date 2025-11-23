@@ -144,6 +144,7 @@ export default function Widget({ togglePublishProject }) {
         // goBack={goBack}
         // list={list}
         element={drawerContent}
+        anchor="bottom"
       />
     </>
   );

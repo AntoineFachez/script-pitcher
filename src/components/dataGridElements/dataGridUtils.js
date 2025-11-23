@@ -1,7 +1,6 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/DATAGRIDELEMENTS/DATAGRIDUTILS.JS
 
 import { useMemo } from "react";
-import RelativeTimeCell from "./RelativeTimeCell";
 import {
   Accordion,
   AccordionDetails,
@@ -11,8 +10,9 @@ import {
 } from "@mui/material";
 import { ExpandMore, Public, PublicOff } from "@mui/icons-material";
 import Image from "next/image";
+
 import { getButton } from "@/lib/maps/iconMap";
-import { stringAvatar } from "@/utils/colorHelpers";
+import RelativeTimeCell from "../timeCells/RelativeTimeCell";
 
 export const useDataGridRowsAndColumns = (data, columns, rowActions) => {
   // 1. Transform the data object into an array of rows
@@ -40,7 +40,7 @@ export const useDataGridRowsAndColumns = (data, columns, rowActions) => {
           minWidth: 150,
           renderCell: (params) => {
             if (!params.value) return;
-            <RelativeTimeCell firestoreTimestamp={params.value} />;
+            <RelativeTimeCell value={params.value} />;
           },
         };
       } else if (col.field === "imageUrl") {
@@ -188,9 +188,10 @@ export const useDataGridRowsAndColumns = (data, columns, rowActions) => {
   const columnsWithActions = useMemo(() => {
     const actionsColumn = {
       field: "actions",
-      headerName: rowActions?.header || "Actions",
+      headerName: rowActions?.header || "",
       sortable: false,
-      width: 100,
+      width: 20,
+      align: "center",
       renderCell: (params) => {
         return rowActions?.menu(params.row);
       },

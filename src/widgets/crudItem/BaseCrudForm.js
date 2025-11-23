@@ -108,6 +108,7 @@ export default function BaseCrudForm({
         handleToggleDrawer={handleToggleDrawer}
         orientationDrawer={orientationDrawer}
         element={drawerContent}
+        anchor="bottom"
       />
     </Paper>
   );

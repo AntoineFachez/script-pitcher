@@ -36,14 +36,7 @@ export default function CardGrid({
     <>
       {" "}
       {showDataGrid ? (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            // height: "100%",
-            // minHeight: "20rem",
-          }}
-        >
+        <Box sx={{ height: "100%" }}>
           <DataTable
             loading={isLoading}
             data={data}

@@ -187,13 +187,18 @@ export const flexListStyles = {
 export const cardStyles = {
   sx: {
     position: "relative",
-
-    // flex: "8 6 220px",
-    flex: {
-      xs: "8 6 220px",
-      md: "4 2 120px",
-      lg: "1 1 100%", // Overrides with "8 6 220px" from 'lg' screen up
+    maxWidth: {
+      xs: "95%", // Mobile
+      lg: "400px", // Example: Desktop limit
     },
+    height: "100%",
+
+    flex: "8 6 220px",
+    // flex: {
+    //   xs: "8 6 220px",
+    //   md: "4 2 120px",
+    //   lg: "1 1 100%", // Overrides with "8 6 220px" from 'lg' screen up
+    // },
   },
 };
 // export const flexListItemStyles = {
@@ -259,6 +264,9 @@ export const bottomNavcenterButtonStyles = {
   },
 };
 export const backButtonStyles = { sx: { position: "absolute", zIndex: 10 } };
+export const dataGridImageCellStyles = {
+  sx: { width: 20, align: "left", objectFit: "contain" },
+};
 export const sharedComponents = {
   MuiAppBar: {
     defaultProps: {
@@ -286,12 +294,31 @@ export const sharedComponents = {
       }),
     },
   },
+  MuiBottomNavigation: {
+    defaultProps: {
+      // size: "small",
+    },
+    styleOverrides: {
+      root: ({ theme }) => ({
+        position: "relative",
+        width: "100%",
+        // height: footerHeight,
+        display: "flex",
+        justifyContent: "space-around",
+        alignItems: "center",
+        backgroundColor: "background.nav",
+        padding: 0,
+        margin: 0,
+      }),
+    },
+  },
   MuiToolbar: {
     defaultProps: {
       // size: "small",
     },
     styleOverrides: {
       root: ({ theme }) => ({
+        width: "100%",
         // height: "fit-content",
         display: "flex",
         justifyContent: "space-between",
@@ -333,11 +360,8 @@ export const sharedComponents = {
     styleOverrides: {
       root: ({ theme }) => ({
         width: "100%",
-        // maxWidth: "50%",
-        maxWidth: {
-          xs: "95%", // Mobile
-          lg: "400px", // Example: Desktop limit
-        },
+        maxWidth: "50%",
+
         height: "100%",
         maxHeight: 350,
         display: "flex",
@@ -345,13 +369,13 @@ export const sharedComponents = {
 
         flexFlow: "column nowrap",
         padding: 0,
-        m: 0,
+        // m: 0,
         backgroundColor: theme.palette.card.background,
 
-        backgroundColor: {
-          xs: theme.palette.secondary.main,
-          lg: theme.palette.action.main,
-        },
+        // backgroundColor: {
+        //   xs: theme.palette.secondary.main,
+        //   lg: theme.palette.action.main,
+        // },
         "&:hover": { backgroundColor: theme.palette.card.hover },
       }),
     },
@@ -719,6 +743,9 @@ export const sharedComponents = {
         },
       }),
       root: ({ theme }) => ({
+        backgroundColor: theme.palette.background.paper,
+        width: "100%",
+        height: "100%",
         "& .highlighted-row": {
           backgroundColor: theme.palette.secondary.dark,
           "&:hover": {
@@ -732,7 +759,6 @@ export const sharedComponents = {
             backgroundColor: theme.palette.action.light,
           },
         },
-        backgroundColor: "transparent",
         "& .MuiDataGrid-toolbar": {
           display: "flex",
           justifyContent: "space-between",

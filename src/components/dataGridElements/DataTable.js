@@ -13,6 +13,7 @@ import { useDataGridRowsAndColumns } from "./dataGridUtils";
 
 import GridCustomToolbar from "./GridCustomToolbar";
 import CustomFooter from "./CustomFooter";
+import { useUi } from "@/context/UiContext";
 
 const initialState = {
   pagination: {
@@ -32,6 +33,7 @@ export default function DataTable({
   handleRowClick,
   handleCellClick,
 }) {
+  const { isMobile } = useUi();
   const { rows, columnsWithActions } = useDataGridRowsAndColumns(
     data,
     columns,
@@ -43,7 +45,7 @@ export default function DataTable({
     isExpandedTable ? "comfortable" : "compact"
   );
   const [paginationModel, setPaginationModel] = useState({
-    pageSize: 5,
+    pageSize: 10,
     page: 0,
   });
   const [savedState, setSavedState] = useState({
@@ -81,11 +83,6 @@ export default function DataTable({
 
   return (
     <DataGrid
-      sx={{
-        width: "100%",
-        height: "100%",
-        backgroundColor: "background.primary",
-      }}
       columnBuffer={1}
       columnThreshold={1}
       key={savedState.count}
@@ -96,7 +93,7 @@ export default function DataTable({
       onRowClick={handleRowClick}
       // onCellClick={handleCellClick}
       // isCellEditable={() => "collection"}
-      checkboxSelection
+      checkboxSelection={!isMobile}
       disableRowSelectionOnClick={true}
       initialState={{
         ...data?.initialState,
@@ -114,7 +111,7 @@ export default function DataTable({
       paginationModel={paginationModel}
       onPaginationModelChange={setPaginationModel}
       // pageSizeOptions={[5, 10, 25, 50, 100]}
-      // autoPageSize={false}
+      autoPageSize={true}
       showToolbar
       slots={{
         toolbar: GridCustomToolbar,

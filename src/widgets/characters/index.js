@@ -4,59 +4,43 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useInFocus } from "@/context/InFocusContext";
-import { useApp } from "@/context/AppContext";
-import { useUi } from "@/context/UiContext";
 import { Box, IconButton, ImageListItem, Typography } from "@mui/material";
 import { Favorite, Share, Edit } from "@mui/icons-material";
 
-import DataTable from "@/components/dataGridElements/DataTable";
+import { useInFocus } from "@/context/InFocusContext";
+import { useApp } from "@/context/AppContext";
+import { useUi } from "@/context/UiContext";
+
 import KebabMenu from "@/components/menus/KebabMenu";
 import CardGrid from "@/components/cardGrid/CardGrid";
 import ShareButton from "@/components/share/ShareButton";
-import widgetData from "./widgetSpex.json";
-const { widgetSpex, schemeDefinition } = widgetData;
-import CrudItem from "../crudItem";
 import BasicModal from "@/components/modal/Modal";
-import Image from "next/image";
 import SectionMenu from "@/components/menus/SectionMenu";
-import { sectionHeaderStyles } from "@/theme/muiProps";
 
+import widgetData from "./widgetSpex.json";
+import CrudItem from "../crudItem";
+
+import ImageCell from "@/components/dataGridElements/ImageCell";
+import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
+
+const { widgetSpex, schemeDefinition } = widgetData;
 // Define DataTable columns (not in widgetSpex.json)
 const columns = [
   {
     field: "avatarUrl",
-    headerName: "Image",
-    align: "center",
-    width: 100,
+    headerName: "",
+    align: dataGridImageCellStyles.sx.align,
+    width: dataGridImageCellStyles.sx.width,
     // 4. Add a renderCell to make the icon clickable
     renderCell: (params) => {
       const { avatarUrl } = params.row;
       return (
-        <ImageListItem
-          key={avatarUrl}
-          sx={{
-            display: "block",
-            // position: 'relative' is not needed here
-          }}
-        >
-          {" "}
-          {avatarUrl && (
-            <Image
-              width={500}
-              height={500}
-              src={avatarUrl}
-              alt={avatarUrl}
-              // 3. Add responsive styles
-              style={{
-                width: "100%", // This makes it fit the column
-                height: "auto", // This makes it scale with the correct aspect ratio
-                objectFit: "cover",
-              }}
-            />
-          )}
-        </ImageListItem>
+        <ImageCell
+          avatarUrl={avatarUrl}
+          dataGridImageCellStyles={dataGridImageCellStyles}
+        />
       );
     },
   },
@@ -169,7 +153,7 @@ export default function Widget({
 
   // --- RowActions for DataTable ---
   const rowActions = {
-    header: "Actions",
+    header: "",
     menu: (param) => {
       const character = param.row;
       const actions = [

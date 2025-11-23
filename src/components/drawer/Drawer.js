@@ -4,7 +4,7 @@ import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import { IconButton } from "@mui/material";
-import { ArrowBack, ViewSidebar } from "@mui/icons-material";
+import { ArrowBack, Close, ViewSidebar } from "@mui/icons-material";
 
 export default function BasicDrawer({
   handleToggleDrawer,
@@ -13,6 +13,7 @@ export default function BasicDrawer({
   goBack,
   // list,
   element,
+  anchor,
 }) {
   // console.log("handleToggleDrawer", orientationDrawer.bottom);
   const list = (anchor) => {
@@ -34,51 +35,49 @@ export default function BasicDrawer({
 
   return (
     <>
-      {["bottom"].map((anchor, i) => {
-        return (
-          <>
-            <Drawer
-              anchor={anchor}
-              open={orientationDrawer[anchor]}
-              onClose={handleToggleDrawer(anchor, false)}
-              sx={{
-                "& .MuiDrawer-paper": {
-                  width: anchor === "left" ? "fit-content" : null,
-                  marginTop: "3rem",
-                  // height: "80vh",
-                  // bottom: 0,
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  overflowY: "hidden",
-                },
-              }}
-              slotProps={{
-                paper: {
-                  sx: {
-                    zIndex: 1500, // Choose a value higher than the Modal (default 1300)
-                  },
-                },
-              }}
-            >
-              <Box>
-                <IconButton
-                  onClick={handleToggleDrawer(
-                    anchor,
-                    !orientationDrawer[anchor]
-                  )}
-                >
-                  <MenuIcon />
-                </IconButton>
-                <IconButton onClick={() => goBack("")}>
-                  <ArrowBack />
-                </IconButton>
-                {menu}
-              </Box>
-              {list(anchor)}
-            </Drawer>
-          </>
-        );
-      })}
+      {" "}
+      <IconButton
+        onClick={(e) => handleToggleDrawer(anchor, true)(e)}
+        sx={{ transform: "rotate(180deg)" }}
+      >
+        <ViewSidebar />
+      </IconButton>
+      <Drawer
+        anchor={anchor}
+        open={orientationDrawer[anchor]}
+        onClose={handleToggleDrawer(anchor, false)}
+        sx={{
+          "& .MuiDrawer-paper": {
+            width: anchor === "left" ? "fit-content" : null,
+            marginTop: "3rem",
+            // height: "80vh",
+            // bottom: 0,
+            display: "flex",
+            justifyContent: "flex-start",
+            overflowY: "hidden",
+          },
+        }}
+        slotProps={{
+          paper: {
+            sx: {
+              zIndex: 1500, // Choose a value higher than the Modal (default 1300)
+            },
+          },
+        }}
+      >
+        <Box>
+          <IconButton onClick={() => goBack("")}>
+            <ArrowBack />
+          </IconButton>
+          <IconButton
+            onClick={handleToggleDrawer(anchor, !orientationDrawer[anchor])}
+          >
+            <Close />
+          </IconButton>
+          {menu}
+        </Box>
+        {list(anchor)}
+      </Drawer>
     </>
   );
 }

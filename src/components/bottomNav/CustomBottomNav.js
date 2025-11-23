@@ -52,35 +52,39 @@ export default function CustomBottomNav() {
         setValue(newValue);
       }}
       sx={{
-        position: "relative",
-        width: "100%",
-        // height: footerHeight,
+        // position: "relative",
         display: "flex",
         justifyContent: "space-around",
-        alignItems: "center",
-        backgroundColor: "background.nav",
+        // p: "0 32",
       }}
     >
-      <Toolbar>
-        {optionsToRender.map((option, i) =>
+      {optionsToRender.map((option, i) => {
+        const onClickHandler = (e) => {
+          e.stopPropagation();
+
+          option.action(option.prop);
+        };
+        return option.customNavBarButton ? (
           option.customNavBarButton
-            ? option.customNavBarButton
-            : getButton(
-                i, // i,
-                option.iconName, // iconName = "",
-                option.action, // onClick,
-                option.disabled, // disabled = false,
-                option.size === "large" ? bottomNavcenterButtonStyles?.sx : {}, // sx = iconButtonStyles.sx,
-                option.variant, // variant = "outlined",
-                option.href, // href = null,
-                option.buttonText, // label = "",
-                false, // toolTip,
-                true, // asNavigationAction = false,
-                false, // asTextButton = false,
-                false // startIcon = null
-              )
-        )}
-      </Toolbar>
+        ) : (
+          <BottomNavigationAction>
+            {getButton(
+              i, // i,
+              option.iconName, // iconName = "",
+              onClickHandler, // onClick,
+              option.disabled, // disabled = false,
+              option.size === "large" ? bottomNavcenterButtonStyles?.sx : {}, // sx = iconButtonStyles.sx,
+              option.variant, // variant = "outlined",
+              option.href, // href = null,
+              option.buttonText, // label = "",
+              false, // toolTip,
+              true, // asNavigationAction = false,
+              false, // asTextButton = false,
+              false // startIcon = null
+            )}
+          </BottomNavigationAction>
+        );
+      })}
     </BottomNavigation>
   );
 }

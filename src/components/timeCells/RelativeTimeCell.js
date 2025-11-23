@@ -11,29 +11,14 @@ import { convertTimestampToDate } from "@/utils/convertTimestampToDate";
  * @param {object} props - The DataGrid cell props.
  * @param {any} props.value - The future date/timestamp (e.g., 'processedAt').
  */
-const ProcessingTimeCell = ({ value }) => {
+const RelativeTimeCell = ({ value }) => {
   // 1. Convert the Firestore timestamp to a usable JS Date object
   const readyDate = convertTimestampToDate(value);
 
   // 2. Calculate the relative time remaining
   const relativeTime = useRelativeTime(readyDate);
 
-  // 3. Determine if the ready date has passed
-  const isReady = readyDate && readyDate < new Date();
-
-  // If the target time has passed, the item is "Ready"
-  if (isReady) {
-    return (
-      <Typography variant="body1" color="success.main">
-        Ready
-      </Typography>
-    );
-  }
-
-  // If the item is not ready, display the time remaining
-  // Note: relativeTime (from useRelativeTime) measures distance *from* targetDate *to* now.
-  // We want to emphasize "remaining". A common pattern is to just show the short duration.
   return relativeTime;
 };
 
-export default ProcessingTimeCell;
+export default RelativeTimeCell;

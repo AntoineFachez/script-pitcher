@@ -29,7 +29,8 @@ import CardGrid from "@/components/cardGrid/CardGrid";
 import ShareButton from "@/components/share/ShareButton";
 import CrudItem from "../crudItem";
 import SectionMenu from "@/components/menus/SectionMenu";
-import { sectionHeaderStyles } from "@/theme/muiProps";
+import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
+import ImageCell from "@/components/dataGridElements/ImageCell";
 
 // Receive handlers as props
 export default function Widget({
@@ -145,7 +146,22 @@ ${article.author}
     };
   };
   const columns = [
-    { field: "imageUrl", headerName: "Image", align: "right", width: 60 },
+    {
+      field: "avatarUrl",
+      headerName: "",
+      align: dataGridImageCellStyles.sx.align,
+      width: dataGridImageCellStyles.sx.width,
+      // 4. Add a renderCell to make the icon clickable
+      renderCell: (params) => {
+        const { avatarUrl } = params.row;
+        return (
+          <ImageCell
+            avatarUrl={avatarUrl}
+            dataGridImageCellStyles={dataGridImageCellStyles}
+          />
+        );
+      },
+    },
     { field: "fileName", headerName: "Title", width: 300 },
     {
       field: "filePurpose",
@@ -171,7 +187,7 @@ ${article.author}
     },
     {
       field: "published",
-      headerName: "PublishedWithAction",
+      headerName: "Published",
       align: "center",
       width: 100,
       // 4. Add a renderCell to make the icon clickable

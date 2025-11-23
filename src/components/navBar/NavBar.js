@@ -4,23 +4,27 @@
 import React from "react";
 import { AppBar, Box, Container, Toolbar } from "@mui/material";
 
-import { navActions } from "@/lib/appConfig";
-import { useApp } from "@/context/AppContext";
-
 import { getButton } from "@/lib/maps/iconMap";
-import { useThemeContext } from "@/context/ThemeContext";
-import { useAuth } from "@/context/AuthContext";
 import { handleSetNewAppContext } from "@/lib/actions/appActions";
+import { topNavActions } from "@/lib/appConfig";
+
+import { useApp } from "@/context/AppContext";
+import { useAuth } from "@/context/AuthContext";
+import { useThemeContext } from "@/context/ThemeContext";
+import { useUi } from "@/context/UiContext";
 
 export default function NavBar({}) {
   const { appContext, setAppContext, loading } = useApp();
   const { handleLogout } = useAuth();
+  const { handleToggleDrawer, orientationDrawer } = useUi();
   const { toggleColorMode } = useThemeContext();
 
-  const optionsToRender = navActions(
+  const optionsToRender = topNavActions(
     toggleColorMode,
     handleLogout,
-    handleSetNewAppContext
+    handleSetNewAppContext,
+    handleToggleDrawer,
+    orientationDrawer
   );
   return (
     <AppBar
@@ -34,21 +38,6 @@ export default function NavBar({}) {
         p: "0 24px",
       }}
     >
-      {/* <Container maxWidth="xl">
-        <Toolbar
-          disableGutters
-          sx={
-            {
-              // width: "100%",
-              // display: "flex",
-              // justifyContent: "space-between",
-              // alignItems: "center",
-              // backgroundColor: "background.nav",
-              // p: 0,
-              // m: 0,
-            }
-          }
-        > */}
       {optionsToRender?.map((option, i) => {
         const onClickHandler = (e) => {
           e.stopPropagation();
@@ -60,7 +49,7 @@ export default function NavBar({}) {
           ? option.customNavBarButton
           : getButton(
               i,
-              option.icon,
+              option.iconName,
               onClickHandler,
               false,
               appContext === option.prop
@@ -73,8 +62,6 @@ export default function NavBar({}) {
               option.href
             );
       })}
-      {/* </Toolbar>
-      </Container> */}
     </AppBar>
   );
 }

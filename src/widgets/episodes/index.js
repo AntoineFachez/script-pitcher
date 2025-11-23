@@ -17,44 +17,27 @@ import CardGrid from "@/components/cardGrid/CardGrid";
 import ShareButton from "@/components/share/ShareButton";
 
 import widgetData from "./widgetSpex.json";
-const { widgetSpex, schemeDefinition } = widgetData;
-import Image from "next/image";
+
 import CrudItem from "../crudItem";
 import SectionMenu from "@/components/menus/SectionMenu";
-import { sectionHeaderStyles } from "@/theme/muiProps";
+import ImageCell from "@/components/dataGridElements/ImageCell";
+import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
+const { widgetSpex, schemeDefinition } = widgetData;
 
 const columns = [
   {
     field: "avatarUrl",
-    headerName: "Image",
-    align: "center",
-    width: 100,
+    headerName: "",
+    align: dataGridImageCellStyles.sx.align,
+    width: dataGridImageCellStyles.sx.width,
     // 4. Add a renderCell to make the icon clickable
     renderCell: (params) => {
       const { avatarUrl } = params.row;
       return (
-        <ImageListItem
-          key={avatarUrl}
-          sx={{
-            display: "block",
-            // position: 'relative' is not needed here
-          }}
-        >
-          {avatarUrl && (
-            <Image
-              width={500}
-              height={500}
-              src={avatarUrl}
-              alt={avatarUrl}
-              // 3. Add responsive styles
-              style={{
-                width: "100%", // This makes it fit the column
-                height: "auto", // This makes it scale with the correct aspect ratio
-                objectFit: "cover",
-              }}
-            />
-          )}
-        </ImageListItem>
+        <ImageCell
+          avatarUrl={avatarUrl}
+          dataGridImageCellStyles={dataGridImageCellStyles}
+        />
       );
     },
   },
@@ -161,7 +144,7 @@ export default function Widget({
 
   // --- RowActions for DataTable ---
   const rowActions = {
-    header: "Actions",
+    header: "",
     menu: (param) => {
       const episode = param.row;
       const actions = [

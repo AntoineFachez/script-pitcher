@@ -22,6 +22,8 @@ import widgetData from "./widgetSpex.json"; // Assuming columns are not in this 
 const { widgetSpex, schemeDefinition } = widgetData;
 import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 import Image from "next/image";
+import { dataGridImageCellStyles } from "@/theme/muiProps";
+import ImageCell from "@/components/dataGridElements/ImageCell";
 
 // Receive handlers as props
 export default function Widget({
@@ -34,7 +36,7 @@ export default function Widget({
   const router = useRouter();
   const { setProjectInFocus, genreInFocus } = useInFocus();
   const { setAppContext } = useApp();
-  const { showDataGrid, showCardMedia } = useUi();
+  const { isDesktop, showDataGrid, showCardMedia } = useUi();
   // const { handleTogglePublishProject } = useData(); // Context handler
 
   const handleRowClick = (params, event) => {
@@ -121,37 +123,21 @@ export default function Widget({
       actions: footerActions,
     };
   };
+  const avatarWidth = isDesktop ? 80 : 20;
   const columns = [
     {
       field: "avatarUrl",
       headerName: "",
-      align: "center",
-      width: 60,
+      align: dataGridImageCellStyles.sx.align,
+      width: dataGridImageCellStyles.sx.width,
       // 4. Add a renderCell to make the icon clickable
       renderCell: (params) => {
         const { avatarUrl } = params.row;
         return (
-          <ImageListItem
-            key={avatarUrl}
-            sx={{
-              display: "block",
-              // position: 'relative' is not needed here
-            }}
-          >
-            <Image
-              // fill
-              width={500}
-              height={500}
-              src={avatarUrl}
-              alt={avatarUrl}
-              // 3. Add responsive styles
-              style={{
-                width: "100%", // This makes it fit the column
-                height: "auto", // This makes it scale with the correct aspect ratio
-                objectFit: "cover",
-              }}
-            />
-          </ImageListItem>
+          <ImageCell
+            avatarUrl={avatarUrl}
+            dataGridImageCellStyles={dataGridImageCellStyles}
+          />
         );
       },
     },
@@ -164,9 +150,9 @@ export default function Widget({
     // },
     {
       field: "published",
-      headerName: "PublishedWithAction",
+      headerName: "Published",
       align: "center",
-      width: 100,
+      width: 60,
       // 4. Add a renderCell to make the icon clickable
       renderCell: (params) => {
         const { id, published } = params.row;
@@ -195,12 +181,12 @@ export default function Widget({
       align: "center",
       width: 100,
     },
-    {
-      field: "topReadDocIds",
-      headerName: "topReadDocIds",
-      align: "right",
-      width: 80,
-    },
+    // {
+    //   field: "topReadDocIds",
+    //   headerName: "topReadDocIds",
+    //   align: "right",
+    //   width: 80,
+    // },
   ];
 
   const rowActions = {

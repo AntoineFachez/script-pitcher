@@ -1,72 +1,92 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/USERS/INDEX.JS
-// REFACTORED
 
 "use client";
-
 import React, { useState } from "react";
+import { IconButton, Chip, Typography, Box } from "@mui/material";
+import { Favorite, Share, Person, PersonOff, Edit } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+
 import { useInFocus } from "@/context/InFocusContext";
 import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
 import { useAuth } from "@/context/AuthContext";
-import { IconButton, Chip, Typography, Box } from "@mui/material";
-import { Favorite, Share, Person, PersonOff, Edit } from "@mui/icons-material";
 
-import DataTable from "@/components/dataGridElements/DataTable";
 import KebabMenu from "@/components/menus/KebabMenu";
-import CardGrid from "@/components/cardGrid/CardGrid"; // Import generic CardGrid
+import CardGrid from "@/components/cardGrid/CardGrid";
 import ShareButton from "@/components/share/ShareButton";
-import { sectionHeaderStyles, subtitleStyles } from "@/theme/muiProps";
-
-// Assuming columns are in widgetSpex.json or defined here
-import widgetData from "./widgetSpex.json";
 import SectionMenu from "@/components/menus/SectionMenu";
+
+import widgetData from "./widgetSpex.json";
 import CrudItem from "../crudItem";
+
+import {
+  dataGridImageCellStyles,
+  sectionHeaderStyles,
+  subtitleStyles,
+} from "@/theme/muiProps";
+import ImageCell from "@/components/dataGridElements/ImageCell";
+import ExpirationTimeCell from "@/components/timeCells/ExpirationTimeCell";
+import RelativeTimeCell from "@/components/timeCells/RelativeTimeCell";
 
 const { widgetSpex, schemeDefinition } = widgetData;
 
 const columns = [
   {
-    field: "imageUrl",
-    headerName: "Image",
-    align: "right",
-    width: 60,
+    field: "avatarUrl",
+    headerName: "",
+    align: dataGridImageCellStyles.sx.align,
+    width: dataGridImageCellStyles.sx.width,
+    // 4. Add a renderCell to make the icon clickable
+    renderCell: (params) => {
+      const { avatarUrl } = params.row;
+      return (
+        <ImageCell
+          avatarUrl={avatarUrl}
+          dataGridImageCellStyles={dataGridImageCellStyles}
+        />
+      );
+    },
   },
-  { field: "displayName", headerName: "user", width: 130 },
+  { field: "displayName", headerName: "user", align: "center", width: 100 },
   {
     field: "company",
     headerName: "Company",
-    align: "right",
+    align: "center",
     width: 100,
   },
   {
     field: "userActive",
     headerName: "Active",
-    align: "right",
+    align: "center",
     width: 60,
   },
 
   {
-    field: "avatarUrl",
-    headerName: "Image",
+    field: "role",
+    headerName: "Role",
     align: "center",
-    width: 80,
+    width: 60,
     // 4. Add a renderCell to make the icon clickable
     renderCell: (params) => {
-      const { avatarUrl } = params.row;
-      return <>{params.row.role.role}</>;
+      const { role } = params.row;
+      return <>{role.role}</>;
     },
   },
   {
     field: "joinedAt",
-    headerName: "Last Login", // Change header name for clarity
+    headerName: "joined Team", // Change header name for clarity
     align: "center",
     // Increased width slightly to accommodate longer strings like "1y" or "10mo"
-    width: 60,
+    width: 80,
 
-    // renderCell: (params) => {
-    //   return <ExpirationTimeCell value={params.value} />;
-    // },
+    renderCell: (params) => {
+      const { role } = params.row;
+      return (
+        <>
+          <RelativeTimeCell value={role.joinedAt} /> ago
+        </>
+      );
+    },
   },
   {
     field: "topReadDocIds",

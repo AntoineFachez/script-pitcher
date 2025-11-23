@@ -27,7 +27,7 @@ export function UiProvider({ documentId, children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [showDataGrid, setShowDataGrid] = useState(false);
+  const [showDataGrid, setShowDataGrid] = useState(true);
   const [showNewProject, setShowNewProject] = useState(false);
   const [showNewFile, setShowNewFile] = useState(false);
 
