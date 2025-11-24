@@ -15,7 +15,7 @@ import { useUi } from "@/context/UiContext";
 
 import AppHeader from "../appHeader/AppHeader";
 
-export default function NavBar({}) {
+export default function NavBar({ spaceProps }) {
   const { appContext, setAppContext, loading } = useApp();
   const { handleLogout } = useAuth();
   const {
@@ -37,7 +37,7 @@ export default function NavBar({}) {
     <AppBar
       position="fixed"
       sx={{
-        height: 48,
+        height: spaceProps.height,
         display: "flex",
         flexFlow: "row nowrap",
         justifyContent: "space-between",

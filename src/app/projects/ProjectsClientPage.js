@@ -40,7 +40,7 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
     showPublishedProjects,
     setShowPublishedProjects,
   } = useUi();
-  const { setUsers, rolesInProjects } = useData();
+  const { setProjects, setUsers, rolesInProjects } = useData();
   const { setProjectInFocus, genreInFocus, setGenreInFocus } = useInFocus();
 
   const [optimisticProjects, setOptimisticProjects] = useOptimistic(
@@ -104,11 +104,15 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
     },
   ];
 
-  // 5. Set app context
   useEffect(() => {
     setUsers(serverUsers);
     return () => {};
-  }, [setUsers]);
+  }, [setUsers, serverUsers]);
+  useEffect(() => {
+    setProjects(serverProjects);
+    return () => {};
+  }, [setProjects, serverProjects]);
+  // 5. Set app context
   useEffect(() => {
     setAppContext("projects");
 

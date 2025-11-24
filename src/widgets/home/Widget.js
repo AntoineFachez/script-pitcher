@@ -6,7 +6,12 @@ import { useRouter } from "next/navigation";
 import { useApp } from "@/context/AppContext";
 import { useData } from "@/context/DataContext";
 
-import { titleStyle, widgetContainerStyles } from "@/theme/muiProps";
+import {
+  containerStyles,
+  tileButtonStyles,
+  titleStyle,
+  widgetContainerStyles,
+} from "@/theme/muiProps";
 import { Box, Button } from "@mui/material";
 import { Add, BackupTable, Group } from "@mui/icons-material";
 
@@ -23,26 +28,9 @@ export default function HomeContent() {
     setAppContext("home");
     return () => {};
   }, []);
-  const containerStyles = {
-    sx: {
-      width: "100%",
-      height: "100%",
-      display: "flex",
-      flexFlow: "row nowrap",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: 2,
-      backgroundColor: "background.background",
-    },
-  };
-  const tileStyles = {
-    sx: {
-      width: "10rem",
-      height: "10rem",
-      border: "1px solid #777",
-      backgroundColor: "background.paper",
-    },
-  };
+
+  // pageStyles;
+
   return (
     <Box sx={widgetContainerStyles.sx}>
       <Box
@@ -55,16 +43,25 @@ export default function HomeContent() {
           gap: 2,
         }}
       >
-        <Box sx={containerStyles.sx}>
+        <Box
+          sx={{
+            ...containerStyles.sx,
+            display: "flex",
+            flexFlow: "row nowrap",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
           <Button
-            sx={tileStyles.sx}
+            sx={tileButtonStyles.sx}
             onClick={() => gotoDashboard("users")}
             startIcon={<Group />}
           >
             Users
           </Button>
           <Button
-            sx={tileStyles.sx}
+            sx={tileButtonStyles.sx}
             onClick={() => gotoDashboard("projects")}
             startIcon={<BackupTable />}
           >
@@ -73,13 +70,13 @@ export default function HomeContent() {
         </Box>
         <Box sx={containerStyles.sx}>
           <Button
-            sx={tileStyles.sx}
+            sx={tileButtonStyles.sx}
             onClick={() => gotoDashboard(`projects/${lastFile?.projectId}`)}
           >
             Last Touched {lastFile?.projectName}
           </Button>
           <Button
-            sx={tileStyles.sx}
+            sx={tileButtonStyles.sx}
             onClick={() => gotoDashboard("projects/")}
             startIcon={<Add />}
           >

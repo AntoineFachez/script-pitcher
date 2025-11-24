@@ -26,7 +26,7 @@ export const topNavActions = (
 ) => {
   return [
     {
-      customNavBarButton: !isDesktop && (
+      customNavBarButton: !isDesktop ? (
         <BasicDrawer
           handleToggleDrawer={handleToggleDrawer}
           orientationDrawer={orientationDrawer}
@@ -34,6 +34,8 @@ export const topNavActions = (
           iconToOpen={<ViewSidebarOutlined />}
           element={<SideNavBar />}
         />
+      ) : (
+        <Box className="standin" sx={{ width: "3rem" }}></Box>
       ),
     },
     {

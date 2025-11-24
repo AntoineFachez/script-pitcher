@@ -20,15 +20,18 @@ export const sidebarStyles = {
 export const pageStyles = {
   sx: {
     position: "relative",
-    // width: "100%",
+    width: "100%",
     height: "100%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
 
-    backgroundColor: "background.gridItem",
     overflow: "hidden",
+    flexGrow: 1, // **Crucial**: This box expands to fill all available space
+    overflowY: "auto", // **Crucial**: This is where the scrollbar appears
+    overflowX: "hidden",
+    backgroundColor: "background.paper",
   },
 };
 export const pageHeaderStyles = {
@@ -40,20 +43,28 @@ export const pageTitleStyles = {
   variant: "h2",
   sx: {
     width: "100%",
-    // height: "5rem",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: {
+      xs: "1.4rem", // Element is completely hidden (no space) on small screens
+      sm: "1.8rem", // Element is visible and takes up space from 'md' up
+      md: "1.8rem", // Element is visible and takes up space from 'md' up
+      lg: "2rem", // Element is visible and takes up space from 'md' up
+      xl: "2.2rem", // Element is visible and takes up space from 'md' up
+    },
     // display: {
     //   xs: "none", // Element is completely hidden (no space) on small screens
     //   md: "block", // Element is visible and takes up space from 'md' up
     // },
     // borderRadius: "1rem",
     // m: 1,
-    // p: 1,
-    textAlign: "center",
+    padding: "0 4rem",
+    // textAlign: "center",
+    // verticalAlign: "middle",
     // backgroundColor: "primary.dark",
-    // display: {
-    //   xs: "none", // Element is completely hidden (no space) on small screens
-    //   md: "block", // Element is visible and takes up space from 'md' up
-    // },
   },
 };
 export const pageMenuStyles = {
@@ -115,7 +126,7 @@ export const widgetContainerStyles = {
     justifyContent: "center",
     alignItems: "center",
     // p: "0.5rem",
-    // backgroundColor: "background.background",
+    backgroundColor: "background.background",
     overflow: "auto",
   },
 };
@@ -124,13 +135,13 @@ export const containerStyles = {
   sx: {
     width: "100%",
     height: "100%",
-    display: "flex",
-    flexFlow: "column nowrap",
-    justifyContent: "center",
-    alignItems: "center",
-    flexShrink: 0,
-    m: 0,
-    p: 0,
+    // display: "flex",
+    // flexFlow: "column nowrap",
+    // justifyContent: "center",
+    // alignItems: "center",
+    // flexShrink: 0,
+    // m: 0,
+    // p: 0,
   },
 };
 export const modalStyles = {
@@ -336,6 +347,16 @@ export const subtitleItemStyles = {
     width: "100%",
     display: "flex",
     textAlign: "center",
+  },
+};
+
+// The large Home Buttons
+export const tileButtonStyles = {
+  sx: {
+    width: "10rem",
+    height: "10rem",
+    border: "1px solid #777",
+    backgroundColor: "background.paper",
   },
 };
 export const bottomNavcenterButtonStyles = {

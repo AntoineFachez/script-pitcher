@@ -42,7 +42,7 @@ export function UiProvider({ documentId, children }) {
 
   const [orientationDrawer, setOrientationDrawer] = useState({
     top: false,
-    left: true,
+    left: false,
     bottom: false,
     right: false,
   });

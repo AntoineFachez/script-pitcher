@@ -18,7 +18,7 @@ import LoginForm from "@/components/auth/appAuth/LogInForm";
 import SignUpForm from "@/components/auth/appAuth/SignUpForm";
 import CustomBottomNav from "@/components/bottomNav/CustomBottomNav";
 
-import { containerStyles } from "@/theme/muiProps";
+import { containerStyles, pageStyles } from "@/theme/muiProps";
 import BasicDrawer from "@/components/drawer/Drawer";
 import { useUi } from "@/context/UiContext";
 import SideNavBar from "@/components/sideNavBar/SideNavBar";
@@ -38,7 +38,7 @@ export default function Body({ children }) {
     handleToggleDrawer,
   } = useUi();
   const [isSigningUp, setIsSigningUp] = useState(false);
-  const NAV_HEIGHT = isMobile ? 0 : "48px"; // Typical MUI AppBar height on desktop
+  const NAV_HEIGHT = isMobile ? "48px" : "48px"; // Typical MUI AppBar height on desktop
   const BOTTOM_NAV_HEIGHT = isDesktop ? 0 : "56px"; // Typical MUI BottomNavigation height
 
   const toggleAuthMode = () => {
@@ -76,13 +76,12 @@ export default function Body({ children }) {
           flexDirection: "column", // Stack children vertically
           height: "100vh", // Crucial: Use the full viewport height
           overflow: "hidden", // Prevent the whole app from scrolling
-          pt: NAV_HEIGHT,
         }}
       >
         {/* 1. Top Nav (Takes defined space) */}
-        <NavBar />
+        <NavBar spaceProps={{ height: NAV_HEIGHT }} />
 
-        {/* 2. Main Content (Takes all the remaining space) */}
+        {/* 2. Sidebar Nav (if isDesktop) */}
         <Box
           sx={{
             display: "flex",
@@ -90,6 +89,7 @@ export default function Body({ children }) {
             // height: "100vh", // Crucial: Use the full viewport height
             height: "100%", // Crucial: Use the full viewport height
             // overflow: "hidden",
+            pt: NAV_HEIGHT,
           }}
         >
           {isDesktop && (
@@ -99,20 +99,12 @@ export default function Body({ children }) {
             </>
           )}
 
-          <Box
-            component="main"
-            sx={{
-              flexGrow: 1, // **Crucial**: This box expands to fill all available space
-              width: "100%",
-              // height: "100%",
-              overflowY: "auto", // **Crucial**: This is where the scrollbar appears
-              overflowX: "hidden",
-            }}
-          >
+          {/* 3. Main Content (Takes all the remaining space) */}
+          <Box component="main" sx={pageStyles.sx}>
             {children}
           </Box>
 
-          {/* 3. Bottom Nav (Takes defined space) */}
+          {/* 4. Bottom Nav (Takes defined space) */}
           {!isDesktop || currentWindowSize === "md" ? (
             <CustomBottomNav sx={{ height: BOTTOM_NAV_HEIGHT }} />
           ) : null}
