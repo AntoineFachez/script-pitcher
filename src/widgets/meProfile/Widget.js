@@ -63,6 +63,7 @@ export default function MeContent({ initialProfile, initialInvitations }) {
     }
   }, [initialInvitations]);
   useEffect(() => {
+    setAppContext("me");
     setUserInFocus(firebaseUser);
     return () => {};
   }, []);

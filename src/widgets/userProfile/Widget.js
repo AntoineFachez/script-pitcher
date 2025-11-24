@@ -3,7 +3,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Avatar, Box, Divider, Typography } from "@mui/material";
+import { Avatar, Box, Divider, IconButton, Typography } from "@mui/material";
 
 import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
@@ -18,12 +18,14 @@ import { useUser } from "@/context/UserContext";
 import ProfileMenu from "@/components/menus/ProfileMenu";
 
 import ProfileHeader from "@/components/profileHeader/ProfileHeader";
+import { useData } from "@/context/DataContext";
+import { Person, PersonOff } from "@mui/icons-material";
 
 // Receive initial data as props from the Server Component
-export default function UserContent({ initialProfile }) {
+export default function UserContent({}) {
   const { appContext, setAppContext } = useApp();
   const { firebaseUser } = useAuth();
-
+  const { handleToggleUserAccessProject } = useData();
   const { modalContent, setModalContent, openModal, setOpenModal } = useUi();
   const { userInFocus, setUserInFocus } = useInFocus();
   const containerRef = useRef();
@@ -39,16 +41,29 @@ export default function UserContent({ initialProfile }) {
     return () => {};
   }, [appContext, setModalContent]);
 
-  useEffect(() => {
-    setUserInFocus(initialProfile);
-    return () => {};
-  }, [initialProfile]);
-
   return (
     <>
+      {" "}
+      {/* <Typography variant="h4">{userInFocus?.displayName}</Typography>
+      <Typography variant="subtitle1" color="text.secondary">
+        {userInFocus?.createdAt}
+      </Typography>
+      <Typography variant="subtitle1" color="text.secondary">
+        <IconButton
+          aria-label="publish"
+          onClick={handleToggleUserAccessProject} // <-- Use new handler
+          sx={{
+            color: userInFocus?.activated ? "success.main" : "#ffffff",
+          }}
+        >
+          {userInFocus?.activated ? <Person /> : <PersonOff />}
+        </IconButton>
+        {userInFocus?.activated ? "Activated" : "Not Activated"}
+      </Typography> */}
+      {/* ... rest of your UI ... */}
       <Box
         ref={containerRef}
-        className="userProfile"
+        className="userInFocus"
         sx={{
           position: "relative",
           width: "100%",
@@ -77,7 +92,6 @@ export default function UserContent({ initialProfile }) {
           titleText={userInFocus?.displayName}
           descriptionText={`Welcome back ${userInFocus?.displayName}`}
         />
-        <BasicTabs tabsArray={tabsArray} />
       </Box>
       <BasicModal
         content={modalContent}
