@@ -26,6 +26,7 @@ import {
   pageMainStyles,
   pageTitleStyles,
 } from "@/theme/muiProps";
+import { useData } from "@/context/DataContext";
 
 // We receive the server-fetched data as props
 export default function ProjectsClientPage({ serverProjects, serverUsers }) {
@@ -39,7 +40,7 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
     showPublishedProjects,
     setShowPublishedProjects,
   } = useUi();
-
+  const { setUsers, rolesInProjects } = useData();
   const { setProjectInFocus, genreInFocus, setGenreInFocus } = useInFocus();
 
   const [optimisticProjects, setOptimisticProjects] = useOptimistic(
@@ -52,8 +53,6 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
     }
   );
 
-  // 2. Use 'serverUsers' (from props) for the initial user state
-  const [users, setUsers] = useState(serverUsers || []);
   const [filteredData, setFilteredData] = useState([]);
 
   // 3. Perform all filtering here, using the OPTIMISTIC data
@@ -107,10 +106,14 @@ export default function ProjectsClientPage({ serverProjects, serverUsers }) {
 
   // 5. Set app context
   useEffect(() => {
-    setAppContext("projects");
+    setUsers(serverUsers);
     return () => {};
-  }, [setAppContext]);
+  }, [setUsers]);
+  useEffect(() => {
+    setAppContext("projects");
 
+    return () => {};
+  }, []);
   return (
     <>
       <Box className="pageHeader" sx={pageHeaderStyles.sx}>

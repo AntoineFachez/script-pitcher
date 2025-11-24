@@ -1,6 +1,6 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/APPCONFIG.JS
 
-import { Box } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Add, ViewSidebar, ViewSidebarOutlined } from "@mui/icons-material";
 import Fab from "@mui/material/Fab";
@@ -10,6 +10,7 @@ import NavBarButtonDashboard from "@/widgets/dashboard";
 import NavBarButtonMe from "@/widgets/meProfile";
 import NavBarButtonProjects from "@/widgets/projectProfile";
 import NavBarButtonSettings from "@/widgets/settings";
+import NavBarButtonUsers from "@/widgets/userProfile";
 
 import QuickMenu from "@/components/menus/QuickMenu";
 import BasicDrawer from "@/components/drawer/Drawer";
@@ -44,13 +45,57 @@ export const topNavActions = (
     },
   ];
 };
-export const sidePanelActions = (handleLogout) => {
+export const sidePanelActions = (
+  appContext,
+  showDataGrid,
+  setToggleDetails,
+  setShowDataGrid,
+  handleOpenAddItem,
+  toggleColorMode,
+  handleLogout
+) => {
   return [
     {
       customNavBarButton: (
         <NavBarButtonHome key="home" layoutContext="navBar" />
       ),
     },
+    {
+      customNavBarButton: <NavBarButtonMe key="me" layoutContext="navBar" />,
+    },
+    {
+      customNavBarButton: (
+        <NavBarButtonUsers key="users" layoutContext="navBar" />
+      ),
+    },
+    {
+      customNavBarButton: <Divider />,
+    },
+    // {
+    //   key: crypto.randomUUID(),
+    //   action: () => setShowDataGrid((prev) => !prev),
+    //   iconName: showDataGrid ? "CreditCard" : "TableChart",
+    //   label: "Show Table",
+    //   asNavigationAction: true,
+    // },
+    // {
+    //   key: crypto.randomUUID(),
+    //   action: () => setToggleDetails((prev) => !prev),
+    //   iconName: "Expand",
+    //   label: "Show Details",
+    //   asNavigationAction: true,
+    // },
+    // {
+    //   key: crypto.randomUUID(),
+    //   action: () => {
+    //     handleOpenAddItem();
+    //   },
+    //   iconName: "Add",
+    //   label: `Add ${appContext}`,
+    //   asNavigationAction: true,
+    //   size: "large",
+    // },
+    // { action: toggleColorMode, iconName: "LightMode" },
 
     { action: handleLogout, iconName: "Logout", asNavigationAction: true },
   ];
