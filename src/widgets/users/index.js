@@ -69,7 +69,7 @@ const columns = [
     // 4. Add a renderCell to make the icon clickable
     renderCell: (params) => {
       const { role } = params.row;
-      return <>{role.role}</>;
+      return <>{role?.role}</>;
     },
   },
   {
@@ -83,7 +83,7 @@ const columns = [
       const { role } = params.row;
       return (
         <>
-          <RelativeTimeCell value={role.joinedAt} /> ago
+          <RelativeTimeCell value={role?.joinedAt} /> ago
         </>
       );
     },
@@ -124,8 +124,11 @@ export default function Widget({
     const user = params.row;
     setAppContext("users");
     setUserInFocus(user);
-    if (user.uid) {
-      router.push(`/users/${user.uid}`);
+    console.log("clicked row user", user.id, firebaseUser);
+    if (user.id === firebaseUser.uid) {
+      router.push(`/me`);
+    } else if (user.id) {
+      router.push(`/users/${user.id}`);
     }
   };
 

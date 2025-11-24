@@ -21,6 +21,7 @@ export function DataProvider({ children }) {
   const [rolesInProjects, setRolesInProjects] = useState(null);
   const [users, setUsers] = useState(null);
   const [integratedProjects, setIntegratedProjects] = useState(null);
+  console.log("users", users);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -74,6 +75,7 @@ export function DataProvider({ children }) {
       setProjects,
       rolesInProjects,
       users,
+      setUsers,
       integratedProjects,
       handleTogglePublishProject,
       handleToggleUserAccessProject,
@@ -86,6 +88,7 @@ export function DataProvider({ children }) {
       setProjects,
       rolesInProjects,
       users,
+      setUsers,
       integratedProjects,
       handleTogglePublishProject,
       handleToggleUserAccessProject,

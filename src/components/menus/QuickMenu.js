@@ -4,10 +4,12 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Box } from "@mui/material";
-import { getButton } from "@/lib/maps/iconMap";
+
 import { useUi } from "@/context/UiContext";
 import { useApp } from "@/context/AppContext";
 import { useThemeContext } from "@/context/ThemeContext";
+
+import { getButton } from "@/lib/maps/iconMap";
 
 const ITEM_HEIGHT = 48;
 
@@ -92,7 +94,7 @@ export default function QuickMenu() {
               option.iconName, // iconName = "",
               option.action, // onClick,
               option.disabled, // disabled = false,
-              (option.size = {}), // sx = iconButtonStyles.sx,
+              option.size, // sx = iconButtonStyles.sx,
               option.variant, // variant = "outlined",
               option.href, // href = null,
               option.buttonText, // label = "",

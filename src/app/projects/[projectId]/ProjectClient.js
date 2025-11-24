@@ -12,8 +12,8 @@ import { useData } from "@/context/DataContext";
 import { useInFocus } from "@/context/InFocusContext";
 import { useUi } from "@/context/UiContext";
 
-import CrudItem from "@/widgets/crudItem";
 import WidgetIndex from "@/widgets/projectProfile";
+import CrudItem from "@/widgets/crudItem";
 
 export default function ProjectClient({ initialProject, initialFiles }) {
   const projectId = initialProject?.id;

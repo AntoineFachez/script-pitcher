@@ -28,7 +28,6 @@ export default async function ProjectsPage() {
   const { projects, users } = userId
     ? await getProjectsAndMembers(userId)
     : { projects: [], users: [] };
-
   // 3. Render the static parts and pass the data to the client
   return (
     <Box className="page" sx={pageStyles.sx}>
