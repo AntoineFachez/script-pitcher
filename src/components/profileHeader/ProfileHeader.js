@@ -75,36 +75,45 @@ const ProfileHeader = ({
       <Box
         className="profile--header"
         sx={{
-          // position: "fixed",
-          top: 0,
+          position: "relative",
           zIndex: 10,
 
-          height: newHeight,
-          overflow: "hidden",
+          // height: "fit-content",
+          // height: "auto",
+          // height: newHeight,
+          height: "100%",
+          maxHeight: "60vh",
 
           display: "flex",
           flexFlow: "column nowrap",
-          justifyContent: "flex-end",
+          justifyContent: "flex-start",
+          // justifyContent: "center",
           alignItems: "flex-start",
 
           backgroundColor: "background.paper",
           borderBottom: "1px solid",
           borderColor: "divider",
-          transform: `translateY(${boxTranslateY})`,
-          // translateY: `${scrollRatio * -60}px`,
+          // transform: `translateY(${boxTranslateY})`,
           transition: "height 0.1s linear, background-color 0.1s", // Smooth the height change
-          // p: "0 2rem",
         }}
       >
         <Box
           sx={{
+            // position: "fixed",
             position: "relative",
+            // top: 0,
             width: "100%",
-            // height: HEADER_HEIGHT,
-            height: newHeight,
+
+            // height: "fit-content",
+            // height: "auto",
+            // height: newHeight,
+            height: "70%",
+            // height: "50%",
+            // maxHeight: "40vh",
+
             display: "flex",
+            alignItems: "flex-start",
             flexFlow: "column nowrap",
-            // backgroundColor: "red",
           }}
         >
           <Banner
@@ -118,11 +127,18 @@ const ProfileHeader = ({
             scrollratio={scrollRatio}
           />
         </Box>
-        {menu}
-        {/* <Box
+
+        <Box
           sx={{
-            height: "fit-content",
-            // height: "100%",
+            // position: "absolute",
+            bottom: 0,
+            zIndex: 50,
+            width: "100%",
+            height: "40%",
+            minHeight: "fit-content",
+            // height: newHeight,
+            // height: "auto",
+
             display: "flex",
             flexFlow: "column nowrap",
             justifyContent: "flex-start",
@@ -130,32 +146,39 @@ const ProfileHeader = ({
             // p: 0,
             // pt: 0,
             // pb: 0,
+
             p: "0 2rem",
             overflow: "hidden",
-          }}
-        > */}
-        {/* Menu (Placeholder for your KebabMenu, etc.) */}
-        {/* Title Text */}
-        <Typography variant="h4" sx={{ p: "0 2rem" }}>
-          {titleText}
-        </Typography>
-        {/* Description Text (Fades out) */}
-        <Typography
-          variant="subtitle1"
-          color="text.secondary"
-          sx={{
-            maxHeight: descriptionMaxHeight,
-            opacity: descriptionOpacity,
-            transition: "opacity 0.2s linear",
-            mb: "1rem",
-            p: "0 2rem",
-            // p: 0,
-            backgroundColor: "transparent",
+            backgroundColor: "background.nav",
           }}
         >
-          {descriptionText}
-        </Typography>
-        {/* </Box> */}
+          {" "}
+          {menu}
+          {/* Menu (Placeholder for your KebabMenu, etc.) */}
+          {/* Title Text */}
+          <Typography variant="h4" sx={{}}>
+            {titleText}
+          </Typography>
+          {/* Description Text (Fades out) */}
+          <Typography
+            variant="subtitle1"
+            color="text.secondary"
+            sx={{
+              // height: "100%",
+              height: "fit-content",
+              // maxHeight: descriptionMaxHeight,
+              // opacity: descriptionOpacity,
+              transition: "opacity 0.2s linear",
+              // mb: "1rem",
+              // p: "0 2rem",
+              p: 0,
+              mb: "1rem",
+              backgroundColor: "transparent",
+            }}
+          >
+            {descriptionText}
+          </Typography>
+        </Box>
       </Box>
     </>
   );

@@ -11,8 +11,9 @@ const AvatarBase = styled(Avatar, {
   // Prevent scrollratio from being passed down to the Avatar DOM element
   shouldForwardProp: (prop) => prop !== "scrollratio",
 })(({ theme, scrollratio }) => ({
-  width: 64,
-  height: 64,
+  zIndex: 100,
+  width: 72,
+  height: 72,
   borderRadius: "50%",
   position: "absolute",
   bottom: -30, // Position slightly below the banner
@@ -22,8 +23,8 @@ const AvatarBase = styled(Avatar, {
 
   // Dynamic styles for scaling and lifting based on scrollratio
   transform: `
-        translateY(${scrollratio * -20}px)
-        scale(${1 - scrollratio * 0.4})
+        translateY(${scrollratio * 10}px)
+        scale(${1 - scrollratio * 0.1})
     `,
   transition: "transform 0.1s linear",
   transformOrigin: "bottom left",

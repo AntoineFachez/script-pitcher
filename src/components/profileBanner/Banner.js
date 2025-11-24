@@ -27,7 +27,7 @@ const BannerBase = styled(Box, {
   backgroundRepeat: "no-repeat",
 
   // CSS transform is highly performant for motion
-  transform: `translateY(${scrollratio * -30}px)`,
+  transform: `translateY(${scrollratio * 30}px)`,
   transition: "transform 0.1s linear",
 
   // Optional: Add a rounded top edge for a modern look

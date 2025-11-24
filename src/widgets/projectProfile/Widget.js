@@ -1,4 +1,4 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/PROJECTS/[PROJECTID]/PROJECT.JS
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/PROJECTPROFILE/WIDGET.JS
 
 "use client";
 
@@ -40,18 +40,11 @@ export default function Widget({
   const containerRef = useRef();
 
   const tabStyles = {
-    // position: "relative",
     width: "100%",
-    // 🔑 FIX: Set height to 100% of the viewport or container.
-    // Using '100vh' or 'calc' is safer than just '100%'.
     height: "100%", // Change to 100% of the viewport for testing, or use a calculated height
-    // height: "100vh", // Change to 100% of the viewport for testing, or use a calculated height
-    // "& >*": { height: "100%" },
     display: "flex",
     flexFlow: "column nowrap",
-    overflowY: "scroll", // Use overflowY for vertical scroll
-    overflowX: "hidden",
-    // gap: 2,
+    overflow: "hidden",
   };
   const tabsArray = [
     {
@@ -112,15 +105,16 @@ export default function Widget({
           // 🔑 FIX: Set height to 100% of the viewport or container.
           // Using '100vh' or 'calc' is safer than just '100%'.
           // height: "100vh", // Change to 100% of the viewport for testing, or use a calculated height
+          // height: "fit-content", // Change to 100% of the viewport for testing, or use a calculated height
           height: "100%", // Change to 100% of the viewport for testing, or use a calculated height
-          display: "flex",
+          // display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
           flexFlow: "column nowrap",
           overflowY: "scroll", // Use overflowY for vertical scroll
           overflowX: "hidden",
           // overflow: "hidden",
           // gap: 2,
-
-          backgroundColor: "green",
         }}
       >
         {" "}

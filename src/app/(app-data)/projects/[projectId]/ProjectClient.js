@@ -92,15 +92,15 @@ export default function ProjectClient({ initialProject, initialFiles }) {
   return (
     <>
       {" "}
-      <Box className="pageMain" sx={{ ...pageMainStyles.sx }}>
-        <WidgetIndex
-          initialProject={initialProject}
-          initialFiles={initialFiles}
-          projectInFocus={projectInFocus}
-          files={files}
-          togglePublishProject={togglePublishProject}
-        />{" "}
-      </Box>
+      {/* <Box className="pageMain" sx={{ ...pageMainStyles.sx }}> */}
+      <WidgetIndex
+        initialProject={initialProject}
+        initialFiles={initialFiles}
+        projectInFocus={projectInFocus}
+        files={files}
+        togglePublishProject={togglePublishProject}
+      />{" "}
+      {/* </Box> */}
     </>
   );
 }
