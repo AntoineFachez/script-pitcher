@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
 
 // The Client Component that handles the UI
-import User from "./User";
+import UserClient from "./UserClient";
 
 // This is the async Server Component responsible for fetching user data
 export default async function ViewUserPage({ params }) {
@@ -49,12 +49,38 @@ export default async function ViewUserPage({ params }) {
     projectQuery.docs.forEach((projectDoc) => {
       const projectData = projectDoc.data();
 
-      // Adapt the data structure to what the User.js component might expect for 'members'
+      // Get the raw member object (e.g., { role: "owner", joinedAt: Timestamp })
+      const rawMemberData = projectData.members[userId] || {};
+
+      // SANITIZE: Convert the specific member data timestamp to a string
+      const serializedMemberData = {
+        ...rawMemberData,
+        joinedAt:
+          rawMemberData.joinedAt &&
+          typeof rawMemberData.joinedAt.toDate === "function"
+            ? rawMemberData.joinedAt.toDate().toISOString()
+            : null, // or rawMemberData.joinedAt if it's already a string
+        createdAt:
+          rawMemberData.createdAt &&
+          typeof rawMemberData.createdAt.toDate === "function"
+            ? rawMemberData.createdAt.toDate().toISOString()
+            : null, // or rawMemberData.joinedAt if it's already a string
+        updatedAt:
+          rawMemberData.updatedAt &&
+          typeof rawMemberData.updatedAt.toDate === "function"
+            ? rawMemberData.updatedAt.toDate().toISOString()
+            : null, // or rawMemberData.joinedAt if it's already a string
+        lastLogin:
+          rawMemberData.lastLogin &&
+          typeof rawMemberData.lastLogin.toDate === "function"
+            ? rawMemberData.lastLogin.toDate().toISOString()
+            : null, // or rawMemberData.joinedAt if it's already a string
+      };
+
       rolesData.push({
         projectId: projectDoc.id,
         projectTitle: projectData.title,
-        role: projectData.members[userId], // The user's role in this project
-        // Add other necessary project details here if the client component needs them
+        role: serializedMemberData, // Passing the sanitized object here
       });
     });
 
@@ -75,20 +101,28 @@ export default async function ViewUserPage({ params }) {
   // --- 4. SERIALIZE TIMESTAMPS ---
 
   const serializableUserProfile = {
+    // 1. Copy all basic fields (strings, numbers, booleans)
     ...userProfile,
 
-    // Serialize the User's createdAt field
-    createdAt: userProfile?.createdAt
-      ? userProfile?.createdAt?.toDate().toISOString()
+    // 2. Overwrite ALL Timestamp fields with strings
+    createdAt: userProfile?.createdAt?.toDate
+      ? userProfile.createdAt.toDate().toISOString()
       : null,
 
-    // Serialize the User's lastLogin field
-    //TODO: implement lastLogIn Project Setter
-    lastLogin: userProfile?.lastLogin
-      ? userProfile?.lastLogin.toDate().toISOString()
+    // FIX: You were missing this field!
+    updatedAt: userProfile?.updatedAt?.toDate
+      ? userProfile.updatedAt.toDate().toISOString()
       : null,
 
-    // The 'members' (rolesData) array is already serializable
+    lastLogin: userProfile?.lastLogin?.toDate
+      ? userProfile.lastLogin.toDate().toISOString()
+      : null,
+
+    joinedAt: userProfile?.joinedAt?.toDate
+      ? userProfile.joinedAt.toDate().toISOString()
+      : null,
+
+    // 3. Attach the already-sanitized arrays/objects
     members: rolesData,
   };
 
@@ -97,7 +131,7 @@ export default async function ViewUserPage({ params }) {
     <>
       <Box sx={{ height: "100%" }}>
         {/* Pass the data to the client component that renders the UI */}
-        <User initialUser={serializableUserProfile} />
+        <UserClient initialUser={serializableUserProfile} />
       </Box>
     </>
   );

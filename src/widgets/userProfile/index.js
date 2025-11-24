@@ -12,10 +12,10 @@ import Widget from "./Widget";
 export default function UserIndex({
   handleSetNewAppContext,
   layoutContext,
-  initialProfile,
+  userProfile,
 }) {
   return (
-    <WidgetContext>
+    <WidgetContext userProfile={userProfile}>
       {layoutContext === "navBar" ? (
         <>
           <NavBarButton
@@ -27,7 +27,7 @@ export default function UserIndex({
         </>
       ) : (
         <>
-          <Widget />
+          <Widget userProfile={userProfile} />
         </>
       )}
     </WidgetContext>

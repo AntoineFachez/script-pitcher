@@ -17,9 +17,10 @@ import CrudItem from "@/widgets/crudItem";
 import Menu from "./Menu";
 
 import { titleStyle, widgetContainerStyles } from "@/theme/muiProps";
+import RolesList from "./RolesList";
 
 export default function Page() {
-  const { appContext } = useApp();
+  const { appContext, setAppContext } = useApp();
   const {
     modalContent,
     setModalContent,
@@ -58,12 +59,12 @@ export default function Page() {
     [users]
   );
 
-  // const uniqueRoles = useMemo(() => {
-  //   const allRoles = rolesInProjects?.map((r) => {
-  //     return r.role;
-  //   });
-  //   return [...new Set(allRoles)];
-  // }, [rolesInProjects]);
+  const uniqueRoles = useMemo(() => {
+    const allRoles = rolesInProjects?.map((r) => {
+      return r.role;
+    });
+    return [...new Set(allRoles)];
+  }, [rolesInProjects]);
 
   const displayedData = useMemo(() => {
     let data = usersList;
@@ -90,30 +91,28 @@ export default function Page() {
     },
   ];
   useEffect(() => {
+    setAppContext("users");
     setModalContent(<CrudItem context={appContext} crud="create" />);
 
     return () => {};
   }, [appContext, setModalContent]);
   return (
     <Box sx={widgetContainerStyles.sx}>
-      <Typography variant={titleStyle.variant} sx={titleStyle.sx}>
-        Users
-      </Typography>
       <Menu menuActions={menuActions} />
-      {/* {toggleDetails && (
+      {toggleDetails && (
         <RolesList
           uniqueRoles={uniqueRoles}
           roleInFocus={roleInFocus}
-          clearFilter={clearFilter}
+          // clearFilter={clearFilter}
           handleRoleClick={handleRoleClick}
         />
-      )} */}
+      )}
       <BasicModal
         content={modalContent}
         open={openModal}
         setOpen={setOpenModal}
       />
-      <Divider sx={{ my: 0 }} />
+      {/* <Divider sx={{ my: 0 }} /> */}
 
       <UsersWidget data={displayedData} />
     </Box>
