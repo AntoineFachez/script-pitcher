@@ -17,11 +17,9 @@ const DataContext = createContext(null);
 export function DataProvider({ children }) {
   const [projects, setProjects] = useState(null);
 
-  // console.log("projects", projects);
   const [rolesInProjects, setRolesInProjects] = useState(null);
   const [users, setUsers] = useState(null);
   const [integratedProjects, setIntegratedProjects] = useState(null);
-  console.log("users", users);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
