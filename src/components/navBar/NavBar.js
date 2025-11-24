@@ -18,13 +18,20 @@ import AppHeader from "../appHeader/AppHeader";
 export default function NavBar({}) {
   const { appContext, setAppContext, loading } = useApp();
   const { handleLogout } = useAuth();
-  const { currentWindowSize, handleToggleDrawer, orientationDrawer } = useUi();
+  const {
+    isDesktop,
+    currentWindowSize,
+    handleToggleDrawer,
+    orientationDrawer,
+  } = useUi();
   const { toggleColorMode } = useThemeContext();
 
   const optionsToRender = topNavActions(
     appContext,
     handleToggleDrawer,
-    orientationDrawer
+    orientationDrawer,
+    currentWindowSize,
+    isDesktop
   );
   return (
     <AppBar
@@ -38,7 +45,6 @@ export default function NavBar({}) {
         p: "0 24px",
       }}
     >
-      {currentWindowSize}
       {optionsToRender?.map((option, i) => {
         const onClickHandler = (e) => {
           e.stopPropagation();

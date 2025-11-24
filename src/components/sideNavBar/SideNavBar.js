@@ -1,7 +1,7 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/SIDENAVBAR/SIDENAVBAR.JS
 
 import React from "react";
-import { Box, Toolbar } from "@mui/material";
+import { Box, Divider, Toolbar } from "@mui/material";
 
 import { useAuth } from "@/context/AuthContext";
 import { useUi } from "@/context/UiContext";
@@ -10,9 +10,11 @@ import { useThemeContext } from "@/context/ThemeContext";
 
 import { getButton } from "@/lib/maps/iconMap";
 import { sidePanelActions } from "@/lib/appConfig";
+import { sidebarStyles } from "@/theme/muiProps";
 
 export default function SideNavBar() {
   const { appContext } = useApp();
+  const { isDesktop } = useUi();
   const { toggleColorMode } = useThemeContext();
   const { showDataGrid, setToggleDetails, setShowDataGrid, handleOpenAddItem } =
     useUi();
@@ -25,13 +27,16 @@ export default function SideNavBar() {
     setShowDataGrid,
     handleOpenAddItem,
     toggleColorMode,
-    handleLogout
+    handleLogout,
+    isDesktop
   );
 
   return (
-    <>
+    <Box sx={sidebarStyles.sx}>
+      <Divider />
       <Box
         sx={{
+          width: "100%",
           display: "flex",
           flexFlow: "column nowrap",
           alignItems: "center",
@@ -62,6 +67,7 @@ export default function SideNavBar() {
               );
         })}
       </Box>
-    </>
+      <Divider />
+    </Box>
   );
 }

@@ -31,7 +31,7 @@ export function UiProvider({ documentId, children }) {
   const [showNewProject, setShowNewProject] = useState(false);
   const [showNewFile, setShowNewFile] = useState(false);
 
-  const [openModal, setOpenModal] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
 
   const [modalContent, setModalContent] = useState(null);
   const [showPublishedProjects, setShowPublishedProjects] = useState(false);
@@ -42,7 +42,7 @@ export function UiProvider({ documentId, children }) {
 
   const [orientationDrawer, setOrientationDrawer] = useState({
     top: false,
-    left: false,
+    left: true,
     bottom: false,
     right: false,
   });

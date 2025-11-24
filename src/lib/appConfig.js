@@ -20,11 +20,13 @@ import AppHeader from "@/components/appHeader/AppHeader";
 export const topNavActions = (
   appContext,
   handleToggleDrawer,
-  orientationDrawer
+  orientationDrawer,
+  currentWindowSize,
+  isDesktop
 ) => {
   return [
     {
-      customNavBarButton: (
+      customNavBarButton: !isDesktop && (
         <BasicDrawer
           handleToggleDrawer={handleToggleDrawer}
           orientationDrawer={orientationDrawer}
@@ -36,6 +38,9 @@ export const topNavActions = (
     },
     {
       customNavBarButton: <AppHeader title={appContext} />,
+    },
+    {
+      customNavBarButton: currentWindowSize,
     },
 
     {
@@ -52,12 +57,23 @@ export const sidePanelActions = (
   setShowDataGrid,
   handleOpenAddItem,
   toggleColorMode,
-  handleLogout
+  handleLogout,
+  isDesktop
 ) => {
   return [
     {
       customNavBarButton: (
         <NavBarButtonHome key="home" layoutContext="navBar" />
+      ),
+    },
+    {
+      customNavBarButton: isDesktop && (
+        <NavBarButtonProjects key="projects" layoutContext="navBar" />
+      ),
+    },
+    {
+      customNavBarButton: isDesktop && (
+        <NavBarButtonDashboard key="dashboard" layoutContext="navBar" />
       ),
     },
     {

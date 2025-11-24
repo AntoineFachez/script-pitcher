@@ -2,6 +2,21 @@
 
 const randomDeg = Math.random() * 360;
 const baseValues = { borderRadius: "0.5rem" };
+export const sidebarStyles = {
+  sx: {
+    // width: { xs: "3rem", sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
+    width: "fit-content",
+    height: "100%",
+
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    // alignItems: "center",
+    // pl: { xs: 0, sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
+
+    border: "1px solid transparent",
+  },
+};
 export const pageStyles = {
   sx: {
     position: "relative",
@@ -65,6 +80,7 @@ export const pageMainStyles = {
       sm: "2rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
       md: "3rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
       lg: "4rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
+      xl: "4rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
     },
     overflow: "scroll",
   },
@@ -466,14 +482,30 @@ export const sharedComponents = {
   },
   MuiDrawer: {
     styleOverrides: {
+      paper: { zIndex: 1500, padding: 0, m: 0 },
       paperAnchorRight: ({ theme }) => ({
-        // width: anchor === "left" ? "fit-content" : null,
+        width: "40%",
 
         // height: "80vh",
         // bottom: 0,
         display: "flex",
         justifyContent: "flex-start",
         overflowY: "hidden",
+        // backgroundColor: "white",
+      }),
+
+      paperAnchorBottom: ({ theme }) => ({ padding: "3rem 1rem 0 1rem" }),
+      paperAnchorLeft: ({ theme }) => ({
+        width: "fit-content",
+
+        // height: "80vh",
+        // bottom: 0,
+        display: "flex",
+        justifyContent: "flex-start",
+        overflowY: "hidden",
+        // backgroundColor: "white",
+        padding: "3rem 0 0 0",
+        m: 0,
       }),
     },
   },

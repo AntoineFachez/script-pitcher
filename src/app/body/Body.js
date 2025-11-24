@@ -3,7 +3,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, Button, Typography, CircularProgress } from "@mui/material"; // ✅ ADDED: CircularProgress
+import {
+  Box,
+  Button,
+  Typography,
+  CircularProgress,
+  Divider,
+} from "@mui/material"; // ✅ ADDED: CircularProgress
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -15,6 +21,7 @@ import CustomBottomNav from "@/components/bottomNav/CustomBottomNav";
 import { containerStyles } from "@/theme/muiProps";
 import BasicDrawer from "@/components/drawer/Drawer";
 import { useUi } from "@/context/UiContext";
+import SideNavBar from "@/components/sideNavBar/SideNavBar";
 
 export default function Body({ children }) {
   // ✅ PULLING OUT THE RE-INTRODUCED isUserLoading
@@ -77,22 +84,39 @@ export default function Body({ children }) {
 
         {/* 2. Main Content (Takes all the remaining space) */}
         <Box
-          component="main"
           sx={{
-            flexGrow: 1, // **Crucial**: This box expands to fill all available space
-            width: "100%",
-            // height: "100%",
-            overflowY: "auto", // **Crucial**: This is where the scrollbar appears
-            overflowX: "hidden",
+            display: "flex",
+            flexFlow: isDesktop ? "row nowrap" : "column nowrap", // Stack children vertically
+            // height: "100vh", // Crucial: Use the full viewport height
+            height: "100%", // Crucial: Use the full viewport height
+            // overflow: "hidden",
           }}
         >
-          {children}
-        </Box>
+          {isDesktop && (
+            <>
+              <SideNavBar />
+              <Divider orientation="vertical" />
+            </>
+          )}
 
-        {/* 3. Bottom Nav (Takes defined space) */}
-        {!isDesktop || currentWindowSize === "md" ? (
-          <CustomBottomNav sx={{ height: BOTTOM_NAV_HEIGHT }} />
-        ) : null}
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1, // **Crucial**: This box expands to fill all available space
+              width: "100%",
+              // height: "100%",
+              overflowY: "auto", // **Crucial**: This is where the scrollbar appears
+              overflowX: "hidden",
+            }}
+          >
+            {children}
+          </Box>
+
+          {/* 3. Bottom Nav (Takes defined space) */}
+          {!isDesktop || currentWindowSize === "md" ? (
+            <CustomBottomNav sx={{ height: BOTTOM_NAV_HEIGHT }} />
+          ) : null}
+        </Box>
       </Box>
     );
   }
