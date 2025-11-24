@@ -1,0 +1,12 @@
+{
+  "widgetSpex": { "widgetName": "users" },
+  "schemeDefinition": {
+    "id": "userId",
+    "title": "fullName",
+    "subtitleArray": "roles",
+    "subtitleArrayItem": "role",
+    "description": "",
+    "imageUrl": "imageUrl",
+    "avatarUrl": "avatarUrl"
+  }
+}
