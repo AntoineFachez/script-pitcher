@@ -31,7 +31,7 @@ export function UiProvider({ documentId, children }) {
   const [showNewProject, setShowNewProject] = useState(false);
   const [showNewFile, setShowNewFile] = useState(false);
 
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(true);
 
   const [modalContent, setModalContent] = useState(null);
   const [showPublishedProjects, setShowPublishedProjects] = useState(false);

@@ -123,21 +123,91 @@ export const modalStyles = {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
+    width: "100%",
     // width: "50ch",
-    // width: "100%",
+    display: "flex",
+    flexFlow: "column wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    width: {
+      xs: "80%",
+      sm: "70%",
+      md: "50%",
+      lg: "40%",
+      xl: "40%",
+    },
     // height: "100%",
     // height: "100vh",
-    maxWidth: {
-      xs: "90%", // 90% width on extra small screens
-      sm: "600px", // 600px max width on small screens and up
-      md: "50ch", // 50 character width on medium screens and up
-    },
-    maxHeight: "100vh",
+    // maxWidth: {
+    //   xs: "40ch", // 90% width on extra small screens
+    //   sm: "40ch", // 600px max width on small screens and up
+    //   md: "50ch", // 50 character width on medium screens and up
+    // },
+    // maxHeight: "100%",
     bgcolor: "background.paper",
     border: "1px solid #ffffff20",
     borderRadius: `${baseValues.borderRadius}`,
     boxShadow: 24,
-    p: 4,
+    p: {
+      xs: 2,
+      sm: 2,
+      md: 3,
+      lg: 3,
+      xl: 4,
+    },
+  },
+};
+export const formStyles = {
+  sx: {
+    width: "100%",
+    // minWidth: {
+    //   xs: "20ch",
+    //   sm: "15ch",
+    //   md: "15ch",
+    // },
+    // maxWidth: "50ch",
+    mx: "auto",
+    p: {
+      xs: 2,
+      sm: 2,
+      md: 3,
+      lg: 3,
+      xl: 4,
+    },
+  },
+};
+export const formTitleStyles = {
+  variant: "h1",
+  sx: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "flex-start",
+    fontWeight: 300,
+    fontSize: {
+      xs: "1.2rem",
+      sm: "1.2rem",
+      md: "1.5rem",
+      lg: "2rem",
+      xl: "2rem",
+    },
+  },
+};
+export const formFieldsGroupStyles = {
+  sx: { display: "flex", flexDirection: "column", gap: 2 },
+};
+export const formFieldStyles = {
+  sx: {
+    // width: "100%",
+    // display: "flex",
+    // justifyContent: "flex-start",
+    // fontWeight: 300,
+    fontSize: {
+      xs: "1.2rem",
+      sm: "1.2rem",
+      md: "1.5rem",
+      lg: "2rem",
+      xl: "2rem",
+    },
   },
 };
 export const titleStyle = {
@@ -233,7 +303,7 @@ export const cardActionStyles = {
   },
 };
 export const iconButtonStyles = {
-  sx: { width: "2rem", height: "2rem", "& >*": { fontSize: "1.2rem" } },
+  sx: { width: 36, height: 36, "& >*": { fontSize: "1.2rem" } },
 };
 export const subtitleStyles = {
   sx: {
@@ -391,6 +461,19 @@ export const sharedComponents = {
         bottom: 0,
         width: "100%",
         backgroundColor: "inherit",
+      }),
+    },
+  },
+  MuiDrawer: {
+    styleOverrides: {
+      paperAnchorRight: ({ theme }) => ({
+        // width: anchor === "left" ? "fit-content" : null,
+
+        // height: "80vh",
+        // bottom: 0,
+        display: "flex",
+        justifyContent: "flex-start",
+        overflowY: "hidden",
       }),
     },
   },

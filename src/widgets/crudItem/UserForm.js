@@ -13,6 +13,12 @@ import {
 import { Save } from "@mui/icons-material";
 import { useAuth } from "@/context/AuthContext";
 import { useInFocus } from "@/context/InFocusContext";
+import {
+  formFieldsGroupStyles,
+  formFieldStyles,
+  formStyles,
+  formTitleStyles,
+} from "@/theme/muiProps";
 
 /**
  * Form for creating or editing a user document in Firestore.
@@ -126,13 +132,28 @@ export default function UserForm({ crud }) {
     <Paper
       component="form"
       onSubmit={handleSubmit}
-      sx={{ width: "100%", maxWidth: "50ch", mx: "auto", p: 2 }}
+      sx={{
+        ...formStyles.sx,
+        // width: "100%",
+        // minWidth: {
+        //   xs: "100%",
+        //   sm: "15ch",
+        //   md: "15ch",
+        // },
+        // maxWidth: "50ch",
+        // mx: "auto",
+      }}
     >
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <Typography variant="h5" gutterBottom sx={{ fontWeight: 100 }}>
-          {crud === "create" ? "Create User Profile" : "Edit User Profile"}
-        </Typography>
+      <Typography
+        variant={formTitleStyles.variant}
+        gutterBottom
+        sx={formTitleStyles.sx}
+      >
+        {crud === "create" ? "Create User Profile" : "Edit User Profile"}
+      </Typography>
+      <Box className="formfields--group" sx={formFieldsGroupStyles.sx}>
         <TextField
+          sx={formFieldStyles.sx}
           label="Display Name"
           name="displayName"
           value={formData.displayName}
@@ -140,6 +161,7 @@ export default function UserForm({ crud }) {
           required
         />
         <TextField
+          sx={formFieldStyles.sx}
           label="Email"
           name="email"
           value={formData.email}

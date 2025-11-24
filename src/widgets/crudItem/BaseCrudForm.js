@@ -14,6 +14,11 @@ import BasicDrawer from "@/components/drawer/Drawer";
 import AllProjectImages from "@/components/imageGallery/ImageGallery";
 import ProfileHeaderForm from "./ProfileHeaderForm";
 import { useState } from "react";
+import {
+  formFieldsGroupStyles,
+  formStyles,
+  formTitleStyles,
+} from "@/theme/muiProps";
 
 export default function BaseCrudForm({
   title,
@@ -48,23 +53,16 @@ export default function BaseCrudForm({
   );
 
   return (
-    <Paper
-      component="form"
-      onSubmit={onSubmit}
-      sx={{
-        display: "flex",
-        flexFlow: "column nowrap",
-        width: "100%",
-        mx: "auto",
-        p: 2,
-      }}
-    >
+    <Paper component="form" onSubmit={onSubmit} sx={formStyles.sx}>
       {/* 1. Header Title */}
-      <Box sx={{ width: "100%", mb: 2 }}>
-        <Typography variant="h5" sx={{ fontWeight: 100 }}>
-          {title}
-        </Typography>
-      </Box>
+
+      <Typography
+        variant={formTitleStyles.variant}
+        gutterBottom
+        sx={formTitleStyles.sx}
+      >
+        {title}
+      </Typography>
 
       <Box sx={{ display: "flex", flexWrap: "wrap", width: "100%" }}>
         {/* 2. Visual Header (Avatar/Banner) */}
@@ -83,7 +81,7 @@ export default function BaseCrudForm({
             pt: "3rem",
           }}
         >
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box className="formfields--group" sx={formFieldsGroupStyles.sx}>
             {children}
 
             {/* 4. Shared Feedback & Actions */}

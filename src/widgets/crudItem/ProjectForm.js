@@ -20,6 +20,7 @@ import { useCrud } from "@/context/CrudItemContext";
 import { useUi } from "@/context/UiContext";
 import BasicSelect from "@/components/select/BasicSelect";
 import FileUploader from "./FileUploader";
+import { formFieldsGroupStyles, formFieldStyles } from "@/theme/muiProps";
 
 export default function CrudProjectForm({ crud, projectInFocus }) {
   const router = useRouter();
@@ -256,79 +257,94 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
       submitButtonText={crud === "create" ? "Create Project" : "Save Changes"}
     >
       {/* --- CONTENT SPECIFIC TO PROJECTS --- */}
-      <TextField
-        label="Project Title"
-        name="title"
-        value={crudProject?.title || ""}
-        onChange={handleChange}
-        required={crud === "create"}
-      />
+      <Box
+        sx={{
+          display: "flex",
+          flexFlow: "row nowrap",
+          justifyContent: "space-between",
+        }}
+      >
+        <TextField
+          label="Project Title"
+          name="title"
+          value={crudProject?.title || ""}
+          onChange={handleChange}
+          required={crud === "create"}
+          sx={{ ...formFieldStyles.sx, width: "100%" }}
+        />
 
-      {/* BasicSelect uses props directly instead of context, so we pass them */}
-      <BasicSelect
-        selectOptions={selectOptions}
-        crudProject={crudProject}
-        setCrudProject={setCrudProject}
-      />
-
-      <Autocomplete
-        multiple
-        freeSolo
-        options={[]}
-        value={genres}
-        onChange={(event, newValue) => setGenres(newValue)}
-        renderTags={(value, getTagProps) =>
-          value.map((option, index) => (
-            <Chip
-              key={index}
-              variant="outlined"
-              label={option}
-              {...getTagProps({ index })}
-            />
-          ))
-        }
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            label="Genres"
-            placeholder="Type and press Enter"
+        {/* BasicSelect uses props directly instead of context, so we pass them */}
+        <Box sx={{ width: "100%", maxWidth: "25ch" }}>
+          <BasicSelect
+            selectOptions={selectOptions}
+            crudProject={crudProject}
+            setCrudProject={setCrudProject}
           />
-        )}
-      />
-      <Autocomplete
-        multiple
-        freeSolo
-        options={[]}
-        value={formats}
-        onChange={(event, newValue) => setFormats(newValue)}
-        renderTags={(value, getTagProps) =>
-          value.map((option, index) => (
-            <Chip
-              key={index}
+        </Box>
+      </Box>
+      <Box sx={formFieldsGroupStyles.sx}>
+        <Autocomplete
+          multiple
+          freeSolo
+          options={[]}
+          value={genres}
+          onChange={(event, newValue) => setGenres(newValue)}
+          renderTags={(value, getTagProps) =>
+            value.map((option, index) => (
+              <Chip
+                key={index}
+                variant="outlined"
+                label={option}
+                {...getTagProps({ index })}
+              />
+            ))
+          }
+          renderInput={(params) => (
+            <TextField
+              {...params}
               variant="outlined"
-              label={option}
-              {...getTagProps({ index })}
+              label="Genres"
+              placeholder="Type and press Enter"
+              sx={formFieldStyles.sx}
             />
-          ))
-        }
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            label="Formats"
-            placeholder="Type and press Enter"
-          />
-        )}
-      />
-      <TextField
-        label="Logline"
-        name="logline"
-        value={crudProject?.logline || ""}
-        onChange={handleChange}
-        multiline
-        rows={3}
-      />
+          )}
+        />
+        <Autocomplete
+          multiple
+          freeSolo
+          options={[]}
+          value={formats}
+          onChange={(event, newValue) => setFormats(newValue)}
+          renderTags={(value, getTagProps) =>
+            value.map((option, index) => (
+              <Chip
+                key={index}
+                variant="outlined"
+                label={option}
+                {...getTagProps({ index })}
+              />
+            ))
+          }
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Formats"
+              placeholder="Type and press Enter"
+              sx={formFieldStyles.sx}
+            />
+          )}
+        />
+        <TextField
+          label="Logline"
+          name="logline"
+          value={crudProject?.logline || ""}
+          onChange={handleChange}
+          multiline
+          rows={3}
+          sx={formFieldStyles.sx}
+        />
+      </Box>
 
       {crud === "create" && (
         <Box sx={{ mt: 1 }}>

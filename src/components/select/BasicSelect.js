@@ -38,43 +38,41 @@ export default function BasicSelect({
   };
 
   return (
-    <Box sx={{ minWidth: 120 }}>
-      <FormControl fullWidth variant="outlined">
-        {" "}
-        {/* Use fullWidth for better layout */}
-        <InputLabel id="project-status-label">Project Status</InputLabel>
-        <Select
-          labelId="project-status-label"
-          id="project-status-select"
-          name="status" // Add name for better form handling, though not strictly needed here
-          value={currentValue}
-          onChange={handleChange}
-          label="Project Status"
-        >
-          {/* Optional: Add a default 'None' or placeholder item */}
-          <MenuItem value="in developement">
-            <Typography
-              variant="body1"
-              sx={{ fontStyle: "italic", color: "text.secondary" }}
-            >
-              in developement (Default)
-            </Typography>
-          </MenuItem>
+    <FormControl fullWidth variant="outlined">
+      {" "}
+      {/* Use fullWidth for better layout */}
+      <InputLabel id="project-status-label">Project Status</InputLabel>
+      <Select
+        labelId="project-status-label"
+        id="project-status-select"
+        name="status" // Add name for better form handling, though not strictly needed here
+        value={currentValue}
+        onChange={handleChange}
+        label="Project Status"
+      >
+        {/* Optional: Add a default 'None' or placeholder item */}
+        <MenuItem value="in developement">
+          <Typography
+            variant="body1"
+            sx={{ fontStyle: "italic", color: "text.secondary" }}
+          >
+            in developement (Default)
+          </Typography>
+        </MenuItem>
 
-          {/* Map over the options provided by the parent component */}
-          {selectOptions.map((option, index) => (
-            <MenuItem
-              key={index}
-              value={option.status}
-              // Optional: Highlight if the option is the current value
-              selected={option.status === currentValue}
-            >
-              {option.status}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Box>
+        {/* Map over the options provided by the parent component */}
+        {selectOptions.map((option, index) => (
+          <MenuItem
+            key={index}
+            value={option.status}
+            // Optional: Highlight if the option is the current value
+            selected={option.status === currentValue}
+          >
+            {option.status}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 }
 
