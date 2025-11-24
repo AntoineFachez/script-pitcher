@@ -1,12 +1,12 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/SETTINGS/INDEX.JS
 
 "use client";
+import { Settings } from "@mui/icons-material";
 import { useUi } from "@/context/UiContext";
 
 import BasicDrawer from "@/components/drawer/Drawer";
 
-import SettingsContent from "./Widget";
-import { Settings } from "@mui/icons-material";
+import Widget from "./Widget";
 
 export default function SettingsIndex({ layoutContext }) {
   const { handleToggleDrawer, orientationDrawer } = useUi();
@@ -17,9 +17,9 @@ export default function SettingsIndex({ layoutContext }) {
           <BasicDrawer
             handleToggleDrawer={handleToggleDrawer}
             orientationDrawer={orientationDrawer}
-            anchor="left"
+            anchor="right"
             iconToOpen={<Settings />}
-            element={<SettingsContent />}
+            element={<Widget />}
           />
         </>
       ) : (
