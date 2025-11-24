@@ -8,14 +8,19 @@ function CustomTabPanel(props) {
 
   return (
     <Box
+      className="tab--item--container"
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      sx={{
+        height: "100%",
+        // "& >*": { height: "100%" },
+      }}
       {...other}
     >
       {/* 🛑 Adjusted: Only render children if value matches index */}
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <>{children}</>}
     </Box>
   );
 }
@@ -76,18 +81,7 @@ export default function DynamicTabs({ tabsArray = [], containerRef }) {
       </Tabs>
       {/* 2. Map over the array to create the CustomTabPanel content */}
       {tabsArray.map((tab, index) => (
-        <CustomTabPanel
-          className="tab--item"
-          key={index}
-          value={value}
-          index={index}
-          sx={
-            {
-              // height: "100%",
-              // "& >*": { height: "100%" },
-            }
-          }
-        >
+        <CustomTabPanel key={index} value={value} index={index}>
           {tab.content}
         </CustomTabPanel>
       ))}

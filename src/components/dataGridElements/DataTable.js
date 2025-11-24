@@ -111,7 +111,8 @@ export default function DataTable({
       paginationModel={paginationModel}
       onPaginationModelChange={setPaginationModel}
       // pageSizeOptions={[5, 10, 25, 50, 100]}
-      autoPageSize={true}
+      // autoPageSize={true}
+      autoPageSize={false}
       showToolbar
       slots={{
         toolbar: GridCustomToolbar,

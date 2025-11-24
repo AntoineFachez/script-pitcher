@@ -15,7 +15,7 @@ import {
   subtitleStyles,
 } from "@/theme/muiProps";
 
-import FilesListItem from "../../app/projects/elements/FilesListItem";
+import FilesListItem from "../../app/(app-data)/projects/elements/FilesListItem";
 import {
   Add,
   Favorite,

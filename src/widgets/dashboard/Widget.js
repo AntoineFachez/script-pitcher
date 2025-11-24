@@ -18,7 +18,7 @@ export default function DashboardContent() {
     setAppContext("dashboard");
     return () => {};
   }, []);
-  console.log("projects", projects[3]);
+  console.log("projects", projects?.[3]);
 
   const gaugeData = [
     {

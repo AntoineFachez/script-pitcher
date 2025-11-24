@@ -14,12 +14,13 @@ import {
 import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 const DataContext = createContext(null);
 
-export function DataProvider({ children }) {
-  const [projects, setProjects] = useState(null);
+export function DataProvider({ children, serverProjects, serverUsers }) {
+  const [projects, setProjects] = useState(serverProjects);
 
+  const [users, setUsers] = useState(serverUsers);
   const [rolesInProjects, setRolesInProjects] = useState(null);
-  const [users, setUsers] = useState(null);
   const [integratedProjects, setIntegratedProjects] = useState(null);
+  const [uniqueGenres, setUniqueGenres] = useState(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -75,6 +76,8 @@ export function DataProvider({ children }) {
       users,
       setUsers,
       integratedProjects,
+      uniqueGenres,
+      setUniqueGenres,
       handleTogglePublishProject,
       handleToggleUserAccessProject,
       handleTogglePublishFile,
@@ -88,6 +91,8 @@ export function DataProvider({ children }) {
       users,
       setUsers,
       integratedProjects,
+      uniqueGenres,
+      setUniqueGenres,
       handleTogglePublishProject,
       handleToggleUserAccessProject,
       handleTogglePublishFile,

@@ -89,9 +89,9 @@ export const pageMainStyles = {
     padding: {
       xs: 0, // Padding is 1rem on small screens (mobile)
       sm: "2rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
-      md: "3rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
-      lg: "4rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
-      xl: "4rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
+      md: "2.5rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
+      lg: "3rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
+      xl: "3.5rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
     },
     overflow: "scroll",
   },
