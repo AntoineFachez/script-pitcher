@@ -29,92 +29,19 @@ import RelativeTimeCell from "@/components/timeCells/RelativeTimeCell";
 
 import config from "@/lib/widgetConfigs/users.widgetConfig.json";
 const { widgetConfig, schemeDefinition } = config;
-const columns = [
-  {
-    field: "avatarUrl",
-    headerName: "",
-    align: dataGridImageCellStyles.sx.align,
-    width: dataGridImageCellStyles.sx.width,
-    // 4. Add a renderCell to make the icon clickable
-    renderCell: (params) => {
-      const { avatarUrl } = params.row;
-      return (
-        <ImageCell
-          avatarUrl={avatarUrl}
-          dataGridImageCellStyles={dataGridImageCellStyles}
-        />
-      );
-    },
-  },
-  {
-    field: "displayName",
-    headerName: "user",
-    align: "center",
-    flex: 1,
-    width: 100,
-  },
-  {
-    field: "company",
-    headerName: "Company",
-    align: "center",
-    flex: 1,
-    width: 100,
-  },
-  {
-    field: "userActive",
-    headerName: "Active",
-    align: "center",
-    width: 60,
-  },
-
-  {
-    field: "role",
-    headerName: "Role",
-    align: "center",
-    width: 60,
-    flex: 1,
-    // 4. Add a renderCell to make the icon clickable
-    renderCell: (params) => {
-      const { role } = params.row;
-      return <>{role?.role}</>;
-    },
-  },
-  {
-    field: "joinedAt",
-    headerName: "joined Team", // Change header name for clarity
-    align: "center",
-    // Increased width slightly to accommodate longer strings like "1y" or "10mo"
-    width: 80,
-
-    renderCell: (params) => {
-      const { role } = params.row;
-      return (
-        <>
-          <RelativeTimeCell value={role?.joinedAt} /> ago
-        </>
-      );
-    },
-  },
-  {
-    field: "topReadDocIds",
-    headerName: "topReadDocIds",
-    align: "right",
-    width: 80,
-  },
-];
 
 export default function UsersList({
   data,
   isLoading,
   // ... any other handlers passed from parent page
 }) {
-  console.log(widgetConfig);
-
   const router = useRouter();
+  const { setAppContext } = useApp();
   const { firebaseUser } = useAuth();
   const { setUserInFocus, roleInFocus, projectInFocus } = useInFocus();
-  const { setAppContext } = useApp();
+
   const {
+    isMobile,
     showCardMedia,
     modalContent,
     openModal,
@@ -172,6 +99,86 @@ export default function UsersList({
   const emailSubject = `Check out this user`;
   const emailBody = `Hey, I wanted you to see this user profile.`;
 
+  const columns = [
+    {
+      field: "avatarUrl",
+      headerName: "",
+      align: dataGridImageCellStyles.sx.align,
+      width: dataGridImageCellStyles.sx.width,
+      // 4. Add a renderCell to make the icon clickable
+      renderCell: (params) => {
+        const { avatarUrl } = params.row;
+        return (
+          <ImageCell
+            avatarUrl={avatarUrl}
+            dataGridImageCellStyles={dataGridImageCellStyles}
+          />
+        );
+      },
+      disableColumnMenu: true,
+    },
+    {
+      field: "displayName",
+      headerName: "user",
+      align: "left",
+      flex: 1,
+      width: 100,
+      disableColumnMenu: isMobile && true,
+    },
+    {
+      field: "company",
+      headerName: "Company",
+      align: "left",
+      flex: 1,
+      width: 100,
+      disableColumnMenu: isMobile && true,
+    },
+    {
+      field: "userActive",
+      headerName: "Active",
+      align: "center",
+      width: 60,
+      disableColumnMenu: isMobile && true,
+    },
+
+    {
+      field: "role",
+      headerName: "Role",
+      align: "left",
+      width: 60,
+      flex: 1,
+      // 4. Add a renderCell to make the icon clickable
+      renderCell: (params) => {
+        const { role } = params.row;
+        return <>{role?.role}</>;
+      },
+      disableColumnMenu: isMobile && true,
+    },
+    !isMobile && {
+      field: "joinedAt",
+      headerName: "joined Team", // Change header name for clarity
+      align: "center",
+      // Increased width slightly to accommodate longer strings like "1y" or "10mo"
+      width: 80,
+
+      renderCell: (params) => {
+        const { role } = params.row;
+        return (
+          <>
+            <RelativeTimeCell value={role?.joinedAt} /> ago
+          </>
+        );
+      },
+      disableColumnMenu: isMobile && true,
+    },
+    !isMobile && {
+      field: "topReadDocIds",
+      headerName: "topReadDocIds",
+      align: "right",
+      width: 80,
+    },
+  ];
+  const visibleColumns = columns.filter(Boolean);
   // --- This is the key refactoring ---
   // This function builds the props for each BasicCard
   const getCardProps = (user) => {
@@ -239,6 +246,8 @@ export default function UsersList({
 
   const rowActions = {
     header: "",
+    width: 40,
+    disableColumnMenu: true,
     menu: (param) => {
       const actions = [
         {
@@ -275,7 +284,7 @@ export default function UsersList({
         data={data}
         showDataGrid={showDataGrid}
         isLoading={isLoading}
-        columns={columns}
+        columns={visibleColumns}
         rowActions={rowActions}
         collectionName="users"
         widgetConfig={widgetConfig}

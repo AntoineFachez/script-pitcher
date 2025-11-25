@@ -9,9 +9,9 @@ export const appBarStyles = {
     flexFlow: "row nowrap",
     justifyContent: "space-between",
     alignItems: "center",
-    p: "0 24px",
+    // p: "0 24px",
     // backgroundColor: "background.nav",
-    backgroundColor: "background.nav",
+    backgroundColor: "bars.app",
   },
 };
 export const appMainStyles = {
@@ -44,7 +44,7 @@ export const sidebarStyles = {
     // pl: { xs: 0, sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
 
     border: "1px solid transparent",
-    backgroundColor: "background.nav",
+    backgroundColor: "bars.side",
   },
 };
 export const bottomBarStyles = {
@@ -53,7 +53,7 @@ export const bottomBarStyles = {
     bottom: 0,
     display: "flex",
     justifyContent: "space-around",
-    backgroundColor: "background.nav",
+    backgroundColor: "bars.bottom",
   },
 };
 export const pageStyles = {
@@ -65,7 +65,7 @@ export const pageStyles = {
     height: "100%",
     display: "flex",
     flexFlow: "column nowrap",
-    backgroundColor: "background.page",
+    backgroundColor: "page.background",
   },
 };
 export const pageHeaderStyles = {
@@ -76,7 +76,7 @@ export const pageHeaderStyles = {
     top: 0,
     width: "100%",
     height: "auto",
-    backgroundColor: "background.paper",
+    backgroundColor: "page.header",
   },
 };
 export const pageTitleStyles = {
@@ -102,10 +102,10 @@ export const pageTitleStyles = {
     // },
     // borderRadius: "1rem",
     // m: 1,
-    padding: "0 4rem",
+    // padding: "0 4rem",
     // textAlign: "center",
     // verticalAlign: "middle",
-    // backgroundColor: "primary.dark",
+    backgroundColor: "page.title",
   },
 };
 export const pageMenuStyles = {
@@ -399,6 +399,17 @@ export const dataGridContainerStyles = {
   className: "datagrid",
   component: "",
   sx: { display: "flex", flexDirection: "column" },
+};
+export const dataGridFooterContainerStyles = {
+  className: "datagrid",
+  component: "",
+  sx: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between", // Better for layout
+    alignItems: "center",
+    backgroundColor: "bars.tool",
+  },
 };
 export const sectionHeaderStyles = {
   className: "section--header",

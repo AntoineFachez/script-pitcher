@@ -9,11 +9,11 @@ import {
 } from "@mui/x-data-grid";
 import MuiPagination from "@mui/material/Pagination";
 
+import { useUi } from "@/context/UiContext";
 import { useDataGridRowsAndColumns } from "./dataGridUtils";
 
 import GridCustomToolbar from "./GridCustomToolbar";
 import CustomFooter from "./CustomFooter";
-import { useUi } from "@/context/UiContext";
 
 const initialState = {
   pagination: {
@@ -33,17 +33,20 @@ export default function DataTable({
   handleRowClick,
   handleCellClick,
 }) {
-  const { isMobile } = useUi();
+  const {
+    isDesktop,
+    isMobile,
+    isExpandedTable,
+    setIsExpandedTable,
+    densityDataGrid,
+    setDensityDataGrid,
+  } = useUi();
   const { rows, columnsWithActions } = useDataGridRowsAndColumns(
     data,
     columns,
     rowActions
   );
 
-  const [isExpandedTable, setIsExpandedTable] = useState(false);
-  const [density, setDensity] = useState(
-    isExpandedTable ? "comfortable" : "compact"
-  );
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 10,
     page: 0,
@@ -61,8 +64,11 @@ export default function DataTable({
   }, []);
 
   useEffect(() => {
-    setDensity(isExpandedTable ? "comfortable" : "compact");
+    setDensityDataGrid(isExpandedTable ? "comfortable" : "compact");
   }, [isExpandedTable]);
+  useEffect(() => {
+    setDensityDataGrid(isDesktop ? "compact" : "comfortable");
+  }, [isDesktop]);
 
   const Pagination = ({ page, onPageChange, className }) => {
     const apiRef = useGridApiContext();
@@ -110,7 +116,7 @@ export default function DataTable({
       // initialState={savedState.initialState}
       paginationModel={paginationModel}
       onPaginationModelChange={setPaginationModel}
-      // pageSizeOptions={[5, 10, 25, 50, 100]}
+      pageSizeOptions={[5, 10, 25, 50, 100]}
       autoPageSize={true}
       // autoPageSize={false}
       showToolbar
@@ -146,12 +152,12 @@ export default function DataTable({
       //   "& .MuiInputBase-root MuiInputBase-colorPrimary MuiTablePagination-select":
       //     { root: { width: "fit-content" } },
       // }}
-      density={density}
+      density={densityDataGrid}
       // onDensityChange={handleDensityChange}
-      onDensityChange={(newDensity) => setDensity(newDensity)}
+      onDensityChange={(newDensity) => setDensityDataGrid(newDensity)}
       // showColumnVerticalBorder={true}
       // hideFooter={!isExpandedTable ? true : false}
-      // hideFooterSelectedRowCount={!isExpandedTable ? true : false}
+      hideFooterSelectedRowCount={!isExpandedTable ? true : false}
       // hideFooterSelectedRowCount={false}
       // hideFooterPagination={!isExpandedTable ? true : false}
       // labelRowsPerPage="Items per Page"

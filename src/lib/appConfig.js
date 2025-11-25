@@ -35,7 +35,16 @@ export const topNavActions = (
           element={<SideNavBar />}
         />
       ) : (
-        <Box className="standin" sx={{ width: "3rem" }}></Box>
+        <>
+          <Box
+            className="standin"
+            sx={{
+              width: "4rem",
+              height: "100%",
+              backgroundColor: "page.title",
+            }}
+          />
+        </>
       ),
     },
     {

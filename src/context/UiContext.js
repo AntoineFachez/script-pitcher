@@ -28,6 +28,11 @@ export function UiProvider({ documentId, children }) {
   const [error, setError] = useState(null);
 
   const [showDataGrid, setShowDataGrid] = useState(true);
+  const [isExpandedTable, setIsExpandedTable] = useState(false);
+  const [densityDataGrid, setDensityDataGrid] = useState(
+    isExpandedTable ? "comfortable" : "compact"
+  );
+
   const [showNewProject, setShowNewProject] = useState(false);
   const [showNewFile, setShowNewFile] = useState(false);
 
@@ -97,6 +102,10 @@ export function UiProvider({ documentId, children }) {
       isMobile,
       showDataGrid,
       setShowDataGrid,
+      isExpandedTable,
+      setIsExpandedTable,
+      densityDataGrid,
+      setDensityDataGrid,
       showNewProject,
       setShowNewProject,
       showNewFile,

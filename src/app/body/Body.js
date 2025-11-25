@@ -61,7 +61,11 @@ export default function Body({ children }) {
   if (firebaseUser) {
     return (
       <>
-        <AppBar spaceProps={{ height: NAV_HEIGHT }} />
+        <AppBar
+          spaceProps={{
+            sx: { height: NAV_HEIGHT, p: `0 ${SIDEBAR_WIDTH}` },
+          }}
+        />
 
         <Box
           className={appMainStyles.className}

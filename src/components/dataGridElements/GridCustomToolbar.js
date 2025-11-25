@@ -270,7 +270,7 @@ const GridCustomToolbar = ({
         )}
       </Box>
       <ColumnsPanelTrigger />
-      <FilterPanelTrigger />
+      {/* <FilterPanelTrigger /> */}
       {/* <GridToolbarExportContainer /> */}
       <CustomToolbar />
       <IconButton

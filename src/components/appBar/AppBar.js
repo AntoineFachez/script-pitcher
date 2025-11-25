@@ -38,7 +38,7 @@ export default function BasicAppBar({ spaceProps }) {
     <AppBar
       className={`${appBarStyles.className}`}
       position="fixed"
-      sx={{ ...appBarStyles.sx, height: spaceProps.height }}
+      sx={{ ...appBarStyles.sx, ...spaceProps.sx }}
     >
       {optionsToRender?.map((option, i) => {
         const onClickHandler = (e) => {

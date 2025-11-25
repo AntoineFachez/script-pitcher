@@ -29,6 +29,8 @@ export const darkTheme = createTheme({
     action: { main: "#63e7ebdd", dark: "#0b886fff", light: "#d2ddab" }, //["ffd400","d2ddab","c2dfe3","95aeb5","0e1929"]
     success: { main: "#06ac59ff", dark: "#0b886fff", light: "#d2ddab" }, //["ffd400","d2ddab","c2dfe3","95aeb5","0e1929"]
     warning: { main: "#e1931dff", dark: "#e1931dff", light: "#e1931dff" }, //["ffd400","d2ddab","c2dfe3","95aeb5","0e1929"]
+    randomeRainbow:
+      "#ff0000 0%, #ff9a00 10%, #d0de21 20%, #4fdc4a 30%, #3fdad8 40%, #2fc9e2 50%, #1c7fee 60%, #5f15f2 70%, #ba0cf8 80%, #fb07d9 90%, #ff0000 100%",
     button: {
       inactive: "#6d7075ff",
       active: "hotpink",
@@ -38,11 +40,7 @@ export const darkTheme = createTheme({
       hover: "#91949152",
     },
     input: "#00000080",
-    randomeRainbow:
-      "#ff0000 0%, #ff9a00 10%, #d0de21 20%, #4fdc4a 30%, #3fdad8 40%, #2fc9e2 50%, #1c7fee 60%, #5f15f2 70%, #ba0cf8 80%, #fb07d9 90%, #ff0000 100%",
     background: {
-      nav: "#131417",
-      page: "#1e1e1eff",
       primary: "#181c22ff",
       contrast: "#b4c8e56e",
       paper: "#1f2329db",
@@ -50,6 +48,18 @@ export const darkTheme = createTheme({
       gridItem: "#353536ad",
       alpha: "#0e1929cc",
       shadow: "#00000033",
+    },
+    bars: {
+      app: "#131417",
+      side: "#131417",
+      bottom: "#131417",
+      widget: "#131417",
+      tool: "#131417",
+    },
+    page: {
+      background: "#1e1e1eff",
+      header: "#1e1e1eff",
+      title: "#131417",
     },
     card: {
       background: "#141414",

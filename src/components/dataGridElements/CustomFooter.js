@@ -8,20 +8,13 @@ import {
   useGridSelector,
 } from "@mui/x-data-grid";
 import { Typography, Box } from "@mui/material";
+import { dataGridFooterContainerStyles } from "@/theme/muiProps";
 
 export default function CustomFooter(props) {
   // props.rowCount and props.selectedRowCount are passed in automatically
 
   return (
-    <GridFooterContainer
-      sx={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "space-between", // Better for layout
-        alignItems: "center",
-        backgroundColor: "background.alpha",
-      }}
-    >
+    <GridFooterContainer sx={dataGridFooterContainerStyles.sx}>
       {/* This renders the "X rows selected" text */}
       <GridFooter {...props} sx={{ border: "none" }} />
 
