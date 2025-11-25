@@ -2,14 +2,14 @@
 
 "use client";
 import React, { useContext, useState } from "react";
-import NavBar from "./NavBar";
+import AppBar from "./AppBar";
 import { ContextProvider } from "./Context";
 
 export default function Index({ spaceProps }) {
   return (
     <>
       <ContextProvider>
-        <NavBar spaceProps={spaceProps} />
+        <AppBar spaceProps={spaceProps} />
       </ContextProvider>
     </>
   );

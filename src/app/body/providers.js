@@ -38,20 +38,24 @@ export function Providers({ children, meData }) {
                 <InFocusProvider>
                   <CrudProvider>
                     <Box
+                      className="providers"
                       component="div" // Use div instead of body here
                       sx={{
                         width: "100%",
                         height: "100%",
-                        bgcolor: "background.default",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "column",
+                        overflow: "hidden",
+                        bgcolor: "transparent",
                         color: "text.primary",
                         fontFamily: "sans-serif",
-                        overflow: "hidden",
-                        display: "flex",
-                        flexDirection: "column",
+                        // backgroundColor: "secondary.main",
                       }}
                       theme={darkTheme === "dark" ? "dark" : "light"}
                     >
-                      <AuthenticatedLayout>{children}</AuthenticatedLayout>
+                      <AuthenticatedLayout children={children} />
                     </Box>
                   </CrudProvider>
                 </InFocusProvider>

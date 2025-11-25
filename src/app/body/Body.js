@@ -14,15 +14,16 @@ import {
 import { useApp } from "@/context/AppContext";
 import { useAuth } from "@/context/AuthContext";
 
+import AppBar from "@/components/appBar/index";
 import CustomBottomNav from "@/components/bottomNav/CustomBottomNav";
 import LoginForm from "@/components/auth/appAuth/LogInForm";
 import SideNavBar from "@/components/sideNavBar/SideNavBar";
 import SignUpForm from "@/components/auth/appAuth/SignUpForm";
-import NavBar from "@/components/navBar/index";
 
 import { useUi } from "@/context/UiContext";
 
 import { containerStyles, pageStyles } from "@/theme/muiProps";
+import CircularIndeterminate from "@/components/progress/CircularIndeterminate";
 
 export default function Body({ children }) {
   const { appContext } = useApp();
@@ -40,20 +41,12 @@ export default function Body({ children }) {
   // This is CRITICAL for a smooth UX and preventing a flicker of the login form.
   if (isUserLoading) {
     return (
-      <Box
-        sx={{
-          ...containerStyles.sx,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-        }}
-      >
-        <CircularProgress />
-        <Typography variant="body1" sx={{ ml: 2 }}>
+      <>
+        <CircularIndeterminate color="secondary" />
+        <Typography variant="subtitile1" sx={{ pt: 4, ml: "1ch" }}>
           Loading user session...
         </Typography>
-      </Box>
+      </>
     );
   }
 
@@ -61,38 +54,36 @@ export default function Body({ children }) {
   // show the main application layout
   if (firebaseUser) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column", // Stack children vertically
-          height: "100vh", // Crucial: Use the full viewport height
-          overflow: "hidden", // Prevent the whole app from scrolling
-        }}
-      >
+      <>
         {/* 1. Top Nav (Takes defined space) */}
-        <NavBar spaceProps={{ height: NAV_HEIGHT }} />
+        <AppBar spaceProps={{ height: NAV_HEIGHT }} />
 
         {/* 2. Sidebar Nav (if isDesktop) */}
         <Box
+          className="app--main"
+          component="main"
           sx={{
+            width: "100%",
+            height: "100%",
             display: "flex",
             flexFlow: isDesktop ? "row nowrap" : "column nowrap", // Stack children vertically
-            // height: "100vh", // Crucial: Use the full viewport height
-            height: "100%", // Crucial: Use the full viewport height
-            // overflow: "hidden",
+            overflow: "hidden",
           }}
         >
           {isDesktop && (
             <>
               <SideNavBar />
-              <Divider orientation="vertical" />
+              {/* <Divider orientation="vertical" /> */}
             </>
           )}
 
           {/* 3. Main Content (Takes all the remaining space) */}
           <Box
-            component="main"
-            sx={{ ...pageStyles.sx, pb: BOTTOM_NAV_HEIGHT }}
+            className="app--floor"
+            sx={{
+              ...pageStyles.sx,
+              // pb: !isDesktop && appContext !== "home" ? BOTTOM_NAV_HEIGHT : 0,
+            }}
           >
             {children}
           </Box>
@@ -102,14 +93,14 @@ export default function Body({ children }) {
             <CustomBottomNav sx={{ height: BOTTOM_NAV_HEIGHT }} />
           ) : null}
         </Box>
-      </Box>
+      </>
     );
   }
 
   // 3. When the user is definitively logged out (not loading, no firebaseUser),
   // show the authentication forms
   return (
-    <Box sx={pageStyles.sx}>
+    <>
       <Typography variant="h4" component="h1">
         {isSigningUp ? "Create Account" : "Welcome Back"}
       </Typography>
@@ -126,6 +117,6 @@ export default function Body({ children }) {
           ? "Already have an account? Log In"
           : "Don't have an account? Sign Up"}
       </Button>
-    </Box>
+    </>
   );
 }

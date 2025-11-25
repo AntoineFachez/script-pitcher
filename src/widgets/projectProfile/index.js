@@ -3,7 +3,7 @@
 "use client";
 import React from "react";
 
-import NavBarButton from "@/components/navBar/navBarButton/NavBarButton";
+import NavBarButton from "@/components/appBar/navBarButton/NavBarButton";
 import { ProjectProvider, useProject } from "@/context/ProjectContext";
 
 import { WidgetContext } from "./Context";

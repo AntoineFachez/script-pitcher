@@ -4,6 +4,9 @@ const randomDeg = Math.random() * 360;
 const baseValues = { borderRadius: "0.5rem" };
 export const sidebarStyles = {
   sx: {
+    // position: "fixed",
+    // left: 0,
+    // zIndex: 1000,
     // width: { xs: "3rem", sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
     width: "fit-content",
     height: "100%",
@@ -15,6 +18,7 @@ export const sidebarStyles = {
     // pl: { xs: 0, sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
 
     border: "1px solid transparent",
+    // backgroudColor: "background.paper",
   },
 };
 export const pageStyles = {
@@ -22,16 +26,16 @@ export const pageStyles = {
     position: "relative",
     width: "100%",
     height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
+    // display: "flex",
+    // flexDirection: "column",
+    // justifyContent: "center",
+    // alignItems: "center",
 
-    overflow: "hidden",
-    flexGrow: 1, // **Crucial**: This box expands to fill all available space
-    overflowY: "auto", // **Crucial**: This is where the scrollbar appears
-    overflowX: "hidden",
-    backgroundColor: "background.paper",
+    // overflow: "hidden",
+    // flexGrow: 1, // **Crucial**: This box expands to fill all available space
+    // overflowY: "auto", // **Crucial**: This is where the scrollbar appears
+    // overflowX: "hidden",
+    backgroundColor: "background.page",
   },
 };
 export const pageHeaderStyles = {

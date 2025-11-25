@@ -7,14 +7,14 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import { Check, ContentCopy, GroupAdd } from "@mui/icons-material";
 
 import AppContext from "@/context/AppContext";
+import DataContext from "@/context/DataContext";
 import InFocusContext from "@/context/InFocusContext";
 import SearchContext from "@/context/SearchContext";
 
 import WidgetIndexTemplate from "../../uiItems/widgetItems/WidgetIndexTemplate";
 
 import Context from "./Context";
-import NavBar from "./NavBar";
-import DataContext from "@/context/DataContext";
+import NavBar from "./AppBar";
 
 export default function Widget({ spaceProps }) {
   const {

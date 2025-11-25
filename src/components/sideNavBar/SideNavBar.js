@@ -32,7 +32,26 @@ export default function SideNavBar() {
   );
 
   return (
-    <Box sx={sidebarStyles.sx}>
+    <Box
+      className="sidebar"
+      sx={{ ...sidebarStyles.sx, backgroudColor: "white" }}
+      // sx={{
+      //   // position: "fixed",
+      //   // left: 0,
+      //   // zIndex: 2000,
+      //   width: "fit-content",
+      //   height: "100%",
+
+      //   display: "flex",
+      //   flexDirection: "column",
+      //   justifyContent: "flex-start",
+      //   // alignItems: "center",
+      //   // pl: { xs: 0, sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
+
+      //   border: "1px solid transparent",
+      //   // backgroudColor: "white",
+      // }}
+    >
       <Divider />
       <Box
         sx={{

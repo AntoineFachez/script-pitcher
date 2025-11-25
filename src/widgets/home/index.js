@@ -2,7 +2,7 @@
 
 "use client";
 
-import NavBarButton from "@/components/navBar/navBarButton/NavBarButton";
+import NavBarButton from "@/components/appBar/navBarButton/NavBarButton";
 
 import { handleSetNewAppContext } from "@/lib/actions/appActions";
 import Widget from "./Widget";

@@ -29,7 +29,13 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body style={{ width: "100vw", height: "100vh" }}>
+      <body
+        style={{
+          width: "100vw",
+          height: "100vh",
+          backgroundColor: "secondary.main",
+        }}
+      >
         <Providers meData={meData}>{children}</Providers>
       </body>
     </html>

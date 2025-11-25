@@ -7,7 +7,7 @@ import React, { useEffect } from "react";
 import { useUser } from "@/context/UserContext";
 import { useApp } from "@/context/AppContext";
 
-import NavBarButton from "@/components/navBar/navBarButton/NavBarButton";
+import NavBarButton from "@/components/appBar/navBarButton/NavBarButton";
 
 import { WidgetContext } from "./Context";
 import Widget from "./Widget";

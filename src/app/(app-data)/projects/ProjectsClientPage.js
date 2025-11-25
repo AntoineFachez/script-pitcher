@@ -1,4 +1,4 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/PROJECTS/PROJECTSCLIENTPAGE.JS
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/(APP-DATA)/PROJECTS/PROJECTSCLIENTPAGE.JS
 
 "use client";
 
@@ -143,7 +143,6 @@ export default function ProjectsClientPage({}) {
         )}
       </Box>
       <Box className="pageMain" sx={{ ...pageMainStyles.sx }}>
-        {" "}
         <ProjectsWidget
           data={displayedData}
           filteredData={filteredData}
