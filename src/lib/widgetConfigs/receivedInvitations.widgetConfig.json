@@ -1,5 +1,5 @@
 {
-  "widgetSpex": {
+  "widgetConfig": {
     "widgetName": "receivedInvitations",
     "context": "users",
     "collection": "users",

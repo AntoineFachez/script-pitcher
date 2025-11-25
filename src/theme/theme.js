@@ -41,10 +41,10 @@ export const darkTheme = createTheme({
     randomeRainbow:
       "#ff0000 0%, #ff9a00 10%, #d0de21 20%, #4fdc4a 30%, #3fdad8 40%, #2fc9e2 50%, #1c7fee 60%, #5f15f2 70%, #ba0cf8 80%, #fb07d9 90%, #ff0000 100%",
     background: {
-      page: "#22395bff",
+      nav: "#131417",
+      page: "#1e1e1eff",
       primary: "#181c22ff",
       contrast: "#b4c8e56e",
-      nav: "#131417ff",
       paper: "#1f2329db",
       background: "#2424257e",
       gridItem: "#353536ad",
