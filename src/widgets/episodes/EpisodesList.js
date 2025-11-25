@@ -27,32 +27,6 @@ import {
   subtitleStyles,
 } from "@/theme/muiProps";
 
-const columns = [
-  {
-    field: "avatarUrl",
-    headerName: "",
-    align: dataGridImageCellStyles.sx.align,
-    width: dataGridImageCellStyles.sx.width,
-    // 4. Add a renderCell to make the icon clickable
-    renderCell: (params) => {
-      const { avatarUrl } = params.row;
-      return (
-        <ImageCell
-          avatarUrl={avatarUrl}
-          dataGridImageCellStyles={dataGridImageCellStyles}
-        />
-      );
-    },
-  },
-  { field: "title", headerName: "Title", width: 150 },
-  {
-    field: "description",
-    headerName: "Description",
-    flex: 1,
-    minWidth: 200,
-  },
-];
-
 export default function EpisodesList({
   data, // Comes from parent page
   isLoading,
@@ -62,6 +36,7 @@ export default function EpisodesList({
   const { setEpisodeInFocus, setItemInFocus, itemInFocus } = useInFocus(); // Use generic focus
   const { setAppContext } = useApp();
   const {
+    isMobile,
     showCardMedia,
     modalContent,
     openModal,
@@ -111,6 +86,39 @@ export default function EpisodesList({
   const emailSubject = `Check out this episode`;
   const emailBody = `Hey, I wanted you to see this episode.`;
 
+  const columns = [
+    {
+      field: "avatarUrl",
+      headerName: "",
+      align: dataGridImageCellStyles.sx.align,
+      width: dataGridImageCellStyles.sx.width,
+      // 4. Add a renderCell to make the icon clickable
+      renderCell: (params) => {
+        const { avatarUrl } = params.row;
+        return (
+          <ImageCell
+            avatarUrl={avatarUrl}
+            dataGridImageCellStyles={dataGridImageCellStyles}
+          />
+        );
+      },
+      disableColumnMenu: true,
+    },
+    {
+      field: "title",
+      headerName: "Title",
+      width: 150,
+      disableColumnMenu: isMobile && true,
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      flex: 1,
+      minWidth: 200,
+      disableColumnMenu: isMobile && true,
+    },
+  ];
+  const visibleColumns = columns.filter(Boolean);
   // --- getCardProps function ---
   const getCardProps = (episode) => {
     const kebabActions = [
@@ -152,6 +160,8 @@ export default function EpisodesList({
   // --- RowActions for DataTable ---
   const rowActions = {
     header: "",
+    width: 40,
+    disableColumnMenu: true,
     menu: (param) => {
       const episode = param.row;
       const actions = [
@@ -180,7 +190,7 @@ export default function EpisodesList({
         data={data}
         showDataGrid={showDataGrid}
         isLoading={isLoading}
-        columns={columns}
+        columns={visibleColumns}
         rowActions={rowActions}
         collectionName="users"
         widgetConfig={widgetConfig}

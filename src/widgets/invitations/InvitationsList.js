@@ -24,33 +24,6 @@ import config from "@/lib/widgetConfigs/invitations.widgetConfig.json";
 import MultiItems from "@/components/multiItems/MultiItems";
 const { widgetConfig, schemeDefinition } = config;
 
-const columns = [
-  {
-    field: "expiresAt",
-    headerName: "Expires", // Change header name for clarity
-    align: "center",
-    // Increased width slightly to accommodate longer strings like "1y" or "10mo"
-    width: 80,
-
-    renderCell: (params) => {
-      return <ExpirationTimeCell value={params.value} />;
-    },
-  },
-  {
-    field: "invitedEmail",
-    headerName: "invitedEmail",
-    align: "right",
-    width: 200,
-  },
-  {
-    field: "state",
-    headerName: "state",
-    align: "right",
-    width: 200,
-  },
-  { field: "role", headerName: "role", align: "center", width: 130 },
-];
-
 export default function InvitationsList({
   data,
   isLoading,
@@ -61,6 +34,7 @@ export default function InvitationsList({
   const { setUserInFocus, roleInFocus, projectInFocus } = useInFocus();
   const { setAppContext } = useApp();
   const {
+    isMobile,
     showCardMedia,
     modalContent,
     openModal,
@@ -119,6 +93,47 @@ export default function InvitationsList({
   // Example email content
   const emailSubject = `Check out this user`;
   const emailBody = `Hey, I wanted you to see this user profile.`;
+
+  const columns = [
+    {
+      field: "expiresAt",
+      headerName: "Expires", // Change header name for clarity
+      align: "center",
+      // Increased width slightly to accommodate longer strings like "1y" or "10mo"
+      width: 70,
+
+      renderCell: (params) => {
+        return <ExpirationTimeCell value={params.value} />;
+      },
+      disableColumnMenu: isMobile && true,
+    },
+    {
+      field: "invitedEmail",
+      headerName: "invitedEmail",
+      align: "left",
+      width: 200,
+      flex: 2,
+      disableColumnMenu: isMobile && true,
+    },
+    {
+      field: "state",
+      headerName: "state",
+      align: "left",
+      width: 70,
+      flex: 1,
+      disableColumnMenu: isMobile && true,
+    },
+    {
+      field: "role",
+      headerName: "role",
+      align: "left",
+      width: 70,
+      flex: 1,
+      disableColumnMenu: isMobile && true,
+    },
+  ];
+
+  const visibleColumns = columns.filter(Boolean);
 
   // --- This is the key refactoring ---
   // This function builds the props for each BasicCard
@@ -187,6 +202,8 @@ export default function InvitationsList({
 
   const rowActions = {
     header: "",
+    width: 40,
+    disableColumnMenu: true,
     menu: (param) => {
       const actions = [
         {
@@ -222,7 +239,7 @@ export default function InvitationsList({
         data={data}
         showDataGrid={showDataGrid}
         isLoading={isLoading}
-        columns={columns}
+        columns={visibleColumns}
         rowActions={rowActions}
         collectionName="users"
         widgetConfig={widgetConfig}

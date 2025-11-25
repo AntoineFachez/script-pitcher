@@ -37,7 +37,7 @@ export default function ProjectsList({
   const router = useRouter();
   const { setProjectInFocus, genreInFocus } = useInFocus();
   const { setAppContext } = useApp();
-  const { isDesktop, showCardMedia } = useUi();
+  const { isDesktop, isMobile, showCardMedia } = useUi();
   const [showDataGrid, setShowDataGrid] = useState(true);
 
   const handleRowClick = (params, event) => {
@@ -141,14 +141,8 @@ export default function ProjectsList({
           />
         );
       },
+      disableColumnMenu: true,
     },
-    { field: "title", headerName: "Title", flex: 1, width: 130 },
-    // {
-    //   field: "published",
-    //   headerName: "Published",
-    //   align: "center",
-    //   width: 100,
-    // },
     {
       field: "published",
       headerName: "Published",
@@ -175,12 +169,28 @@ export default function ProjectsList({
           </IconButton>
         );
       },
+      disableColumnMenu: isMobile && true,
     },
+    {
+      field: "title",
+      headerName: "Title",
+      flex: 1,
+      width: 130,
+      disableColumnMenu: isMobile && true,
+    },
+    // {
+    //   field: "published",
+    //   headerName: "Published",
+    //   align: "center",
+    //   width: 100,
+    // },
+
     {
       field: "genres",
       headerName: "Genres",
       align: "center",
       width: 100,
+      disableColumnMenu: isMobile && true,
     },
     // {
     //   field: "topReadDocIds",
@@ -189,9 +199,12 @@ export default function ProjectsList({
     //   width: 80,
     // },
   ];
+  const visibleColumns = columns.filter(Boolean);
 
   const rowActions = {
     header: "",
+    width: 40,
+    disableColumnMenu: true,
     menu: (param) => {
       const actions = [
         {
@@ -228,6 +241,7 @@ export default function ProjectsList({
 
   return (
     <>
+      {isMobile ? "is mobile" : " NOT mobile"}
       <Box
         className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
         sx={sectionHeaderStyles.sx}
@@ -242,7 +256,7 @@ export default function ProjectsList({
         data={data}
         showDataGrid={showDataGrid}
         isLoading={isLoading}
-        columns={columns}
+        columns={visibleColumns}
         rowActions={rowActions}
         collectionName="projects"
         widgetConfig={widgetConfig}

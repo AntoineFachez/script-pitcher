@@ -26,34 +26,6 @@ import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
 import config from "@/lib/widgetConfigs/characters.widgetConfig.json";
 const { widgetConfig, schemeDefinition } = config;
 
-// Define DataTable columns (not in widgetConfig.json)
-const columns = [
-  {
-    field: "avatarUrl",
-    headerName: "",
-    align: dataGridImageCellStyles.sx.align,
-    width: dataGridImageCellStyles.sx.width,
-    // 4. Add a renderCell to make the icon clickable
-    renderCell: (params) => {
-      const { avatarUrl } = params.row;
-      return (
-        <ImageCell
-          avatarUrl={avatarUrl}
-          dataGridImageCellStyles={dataGridImageCellStyles}
-        />
-      );
-    },
-  },
-  { field: "name", headerName: "Name", width: 150 },
-  { field: "archetype", headerName: "Archetype", width: 120 },
-  {
-    field: "description",
-    headerName: "Description",
-    flex: 1,
-    minWidth: 200,
-  },
-];
-
 export default function CharactersList({
   data, // Comes from parent page
   containerRef,
@@ -64,6 +36,7 @@ export default function CharactersList({
   const { setCharacterInFocus, itemInFocus, setItemInFocus } = useInFocus(); // Use generic focus
   const { appContext, setAppContext } = useApp();
   const {
+    isMobile,
     showCardMedia,
     modalContent,
     openModal,
@@ -112,6 +85,48 @@ export default function CharactersList({
   const emailSubject = `Check out this character`;
   const emailBody = `Hey, I wanted you to see this character.`;
 
+  // Define DataTable columns (not in widgetConfig.json)
+  const columns = [
+    {
+      field: "avatarUrl",
+      headerName: "",
+      align: dataGridImageCellStyles.sx.align,
+      width: dataGridImageCellStyles.sx.width,
+      // 4. Add a renderCell to make the icon clickable
+      renderCell: (params) => {
+        const { avatarUrl } = params.row;
+        return (
+          <ImageCell
+            avatarUrl={avatarUrl}
+            dataGridImageCellStyles={dataGridImageCellStyles}
+          />
+        );
+      },
+      disableColumnMenu: true,
+    },
+    {
+      field: "name",
+      headerName: "Name",
+      width: 150,
+      flex: 1,
+      disableColumnMenu: isMobile && true,
+    },
+    {
+      field: "archetype",
+      headerName: "Archetype",
+      width: 120,
+      flex: 2,
+      disableColumnMenu: isMobile && true,
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      flex: 2,
+      minWidth: 200,
+      disableColumnMenu: isMobile && true,
+    },
+  ];
+  const visibleColumns = columns.filter(Boolean);
   // --- getCardProps function ---
   const getCardProps = (character) => {
     const kebabActions = [
@@ -182,7 +197,7 @@ export default function CharactersList({
         data={data}
         showDataGrid={showDataGrid}
         isLoading={isLoading}
-        columns={columns}
+        columns={visibleColumns}
         rowActions={rowActions}
         collectionName="users"
         widgetConfig={widgetConfig}

@@ -42,7 +42,7 @@ export default function FilesList({
   const router = useRouter();
   const { projectInFocus, setFileInFocus, genreInFocus } = useInFocus();
   const { setAppContext } = useApp();
-  const { showCardMedia, setOpenModal, setModalContent } = useUi();
+  const { isMobile, showCardMedia, setOpenModal, setModalContent } = useUi();
   const { handleTogglePublishProject } = useData();
 
   const [showDataGrid, setShowDataGrid] = useState(false);
@@ -166,35 +166,20 @@ ${article.author}
           />
         );
       },
-    },
-    { field: "fileName", headerName: "Title", width: 300 },
-    {
-      field: "filePurpose",
-      headerName: "Purpose",
-      align: "center",
-      width: 100,
+      disableColumnMenu: true,
     },
     {
-      field: "status",
-      headerName: "Status",
-      // align: "center",
-      width: 100,
-    },
-    {
-      field: "createdAt",
-      headerName: "Uploaded",
-      align: "center",
-      width: 100,
-      renderCell: (params) => {
-        const relativeCreatedTime = formatShortTime(params.row.createdAt);
-        return <>{relativeCreatedTime} ago</>;
-      },
+      field: "fileName",
+      headerName: "Title",
+      width: 300,
+      flex: 1,
+      disableColumnMenu: isMobile && true,
     },
     {
       field: "published",
       headerName: "Published",
       align: "center",
-      width: 100,
+      width: 60,
       // 4. Add a renderCell to make the icon clickable
       renderCell: (params) => {
         const { id, published } = params.row;
@@ -216,6 +201,33 @@ ${article.author}
           </IconButton>
         );
       },
+      disableColumnMenu: isMobile && true,
+    },
+    {
+      field: "filePurpose",
+      headerName: "Purpose",
+      align: "center",
+      width: 100,
+      flex: 1,
+      disableColumnMenu: isMobile && true,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      align: "center",
+      width: 100,
+      disableColumnMenu: isMobile && true,
+    },
+    {
+      field: "createdAt",
+      headerName: "Uploaded",
+      align: "center",
+      width: 100,
+      renderCell: (params) => {
+        const relativeCreatedTime = formatShortTime(params.row.createdAt);
+        return <>{relativeCreatedTime} ago</>;
+      },
+      disableColumnMenu: isMobile && true,
     },
 
     // {
@@ -228,6 +240,8 @@ ${article.author}
 
   const rowActions = {
     header: "",
+    width: 40,
+    disableColumnMenu: true,
     menu: (param) => {
       const actions = [
         {
