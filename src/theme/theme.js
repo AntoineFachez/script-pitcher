@@ -44,7 +44,7 @@ export const darkTheme = createTheme({
       primary: "#181c22ff",
       contrast: "#b4c8e56e",
       paper: "#1f2329db",
-      background: "#2424257e",
+      background: "#242425",
       gridItem: "#353536ad",
       alpha: "#0e1929cc",
       shadow: "#00000033",
@@ -57,7 +57,7 @@ export const darkTheme = createTheme({
       tool: "#131417",
     },
     page: {
-      background: "#1e1e1eff",
+      background: "#1e1e1e",
       header: "#1e1e1eff",
       title: "#131417",
     },

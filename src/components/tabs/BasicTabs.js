@@ -71,7 +71,7 @@ export default function DynamicTabs({ tabsArray = [], containerRef }) {
           position: "sticky",
           zIndex: 100,
           top: 0,
-          backgroundColor: "background.nav",
+          backgroundColor: "bars.tool",
         }}
       >
         {/* 1. Map over the array to create the Tab headers */}

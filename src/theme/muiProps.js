@@ -14,19 +14,6 @@ export const appBarStyles = {
     backgroundColor: "bars.app",
   },
 };
-export const appMainStyles = {
-  className: "app--main",
-  component: "main",
-  sx: {
-    width: "100%",
-    height: `100%`,
-
-    display: "flex",
-    // justifyContent: "center",
-    // alignItems: "center",
-    overflow: "hidden",
-  },
-};
 
 export const sidebarStyles = {
   sx: {
@@ -54,6 +41,20 @@ export const bottomBarStyles = {
     display: "flex",
     justifyContent: "space-around",
     backgroundColor: "bars.bottom",
+  },
+};
+export const appMainStyles = {
+  className: "app--main",
+  component: "main",
+  sx: {
+    width: "100%",
+    height: `100%`,
+
+    display: "flex",
+    // justifyContent: "center",
+    // alignItems: "center",
+    backgroundColor: "page.background",
+    overflow: "hidden",
   },
 };
 export const pageStyles = {
@@ -200,7 +201,7 @@ export const widgetContainerStyles = {
     justifyContent: "center",
     alignItems: "center",
     // p: "0.5rem",
-    backgroundColor: "background.background",
+    backgroundColor: "widget.background",
     overflow: "auto",
   },
 };
@@ -497,7 +498,24 @@ export const bottomNavcenterButtonStyles = {
 };
 export const backButtonStyles = { sx: { position: "absolute", zIndex: 10 } };
 export const dataGridImageCellStyles = {
-  sx: { width: 20, align: "left", objectFit: "contain" },
+  sx: {
+    // width: "10px",
+    // height: "auto",
+    width: 100,
+    // width: "100%",
+    // height: 60,
+    // height: "100%",
+    // height: "auto",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    align: "center",
+    objectFit: "cover",
+    borderRadius: "10px",
+    borderWidth: "3px",
+    borderStyle: "solid",
+    borderColor: "#333433",
+  },
 };
 export const sharedComponents = {
   MuiAppBar: {
