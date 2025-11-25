@@ -12,12 +12,14 @@ import {
 } from "react";
 
 import { toggleProjectPublishState } from "@/lib/actions/projectActions";
+import { useUser } from "./UserContext";
 const DataContext = createContext(null);
 
 export function DataProvider({ children, serverProjects, serverUsers }) {
+  const { lastFile } = useUser();
   const [projects, setProjects] = useState(serverProjects);
-
   const [users, setUsers] = useState(serverUsers);
+
   const [rolesInProjects, setRolesInProjects] = useState(null);
   const [integratedProjects, setIntegratedProjects] = useState(null);
   const [uniqueGenres, setUniqueGenres] = useState(null);
@@ -72,6 +74,7 @@ export function DataProvider({ children, serverProjects, serverUsers }) {
     () => ({
       projects,
       setProjects,
+      lastFile,
       rolesInProjects,
       users,
       setUsers,
@@ -87,6 +90,7 @@ export function DataProvider({ children, serverProjects, serverUsers }) {
     [
       projects,
       setProjects,
+      lastFile,
       rolesInProjects,
       users,
       setUsers,

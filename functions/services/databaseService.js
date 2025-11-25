@@ -176,6 +176,8 @@ exports.createOnFileCreateHandler = (db) => {
     const lastTouchedFile = {
       projectId,
       projectName: projectData.name || projectData.title || "Unknown Project",
+      avatarUrl: projectData.avatarUrl,
+      bannerUrl: projectData.bannerUrl,
       fileId,
       fileName: fileData.name || "untitled.pdf",
       timestamp: fileData.createdAt || new Date().toISOString(),
