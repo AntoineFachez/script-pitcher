@@ -350,13 +350,28 @@ export const subtitleItemStyles = {
   },
 };
 
+export const tileButtonContainerStyles = {
+  sx: {
+    display: "flex",
+    flexFlow: "column nowrap",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: { xs: 2.4, sm: 3, md: 4, lg: 5, xl: 6 },
+  },
+};
 // The large Home Buttons
 export const tileButtonStyles = {
+  variant: "outlined",
   sx: {
-    width: "10rem",
-    height: "10rem",
+    width: { xs: "8rem", sm: "10rem", md: "10rem", lg: "10rem", xl: "10rem" },
+    height: { xs: "8rem", sm: "10rem", md: "10rem", lg: "10rem", xl: "10rem" },
     border: "1px solid #777",
+    p: 1,
+    m: 0,
     backgroundColor: "background.paper",
+    "&:hover": {
+      backgroundColor: "background.nav",
+    },
   },
 };
 export const bottomNavcenterButtonStyles = {
