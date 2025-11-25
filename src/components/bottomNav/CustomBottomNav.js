@@ -16,7 +16,12 @@ import AddNewItem from "@/widgets/crudItem";
 import { bottomNavcenterButtonStyles } from "@/theme/muiProps";
 import { useApp } from "@/context/AppContext";
 import { handleSetNewAppContext } from "@/lib/actions/appActions";
-import { IconButton, Menu, Toolbar } from "@mui/material";
+import {
+  BottomNavigationAction,
+  IconButton,
+  Menu,
+  Toolbar,
+} from "@mui/material";
 import { Add, More, Search } from "@mui/icons-material";
 
 export default function CustomBottomNav() {
@@ -28,14 +33,6 @@ export default function CustomBottomNav() {
 
   const optionsToRender = bottomNavActions(handleOpenAddItem);
 
-  const StyledFab = styled(Fab)({
-    position: "absolute",
-    zIndex: 1,
-    top: -30,
-    left: 0,
-    right: 0,
-    margin: "0 auto",
-  });
   return (
     <BottomNavigation
       showLabels
@@ -44,7 +41,8 @@ export default function CustomBottomNav() {
         setValue(newValue);
       }}
       sx={{
-        // position: "relative",
+        position: "fixed",
+        bottom: 0,
         display: "flex",
         justifyContent: "space-around",
         // p: "0 32",
