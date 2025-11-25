@@ -230,6 +230,7 @@ export default function ProjectsList({
     <>
       <Box
         className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
+        sx={sectionHeaderStyles.sx}
       >
         <SectionMenu
           showDataGrid={showDataGrid}
