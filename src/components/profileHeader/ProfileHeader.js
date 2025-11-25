@@ -82,7 +82,8 @@ const ProfileHeader = ({
           // height: "auto",
           // height: newHeight,
           height: "100%",
-          maxHeight: "60vh",
+
+          maxHeight: "fit-content",
 
           display: "flex",
           flexFlow: "column nowrap",
@@ -109,9 +110,9 @@ const ProfileHeader = ({
             // height: newHeight,
             height: "70%",
             // height: "50%",
-            // maxHeight: "40vh",
-
+            maxHeight: "40vh",
             display: "flex",
+            flexGrow: 1,
             alignItems: "flex-start",
             flexFlow: "column nowrap",
           }}
@@ -123,7 +124,7 @@ const ProfileHeader = ({
           />
           <RatioAvatar
             url={avatarImageUrl}
-            sx={profileAvatarStyles}
+            // sx={profileAvatarStyles}
             scrollratio={scrollRatio}
           />
         </Box>
@@ -136,10 +137,12 @@ const ProfileHeader = ({
             width: "100%",
             height: "40%",
             minHeight: "fit-content",
+            maxHeight: "fit-content",
             // height: newHeight,
             // height: "auto",
 
             display: "flex",
+            flexGrow: 4,
             flexFlow: "column nowrap",
             justifyContent: "flex-start",
             alignItems: "flex-start",
@@ -166,6 +169,7 @@ const ProfileHeader = ({
             sx={{
               // height: "100%",
               height: "fit-content",
+              maxHeight: "fit-content",
               // maxHeight: descriptionMaxHeight,
               // opacity: descriptionOpacity,
               transition: "opacity 0.2s linear",

@@ -117,8 +117,9 @@ export default function DataTable({
       paginationModel={paginationModel}
       onPaginationModelChange={setPaginationModel}
       pageSizeOptions={[5, 10, 25, 50, 100]}
-      autoPageSize={true}
-      // autoPageSize={false}
+      // autoPageSize={true}
+      autoPageSize={false}
+      // autoHeight
       showToolbar
       slots={{
         toolbar: GridCustomToolbar,
@@ -161,7 +162,7 @@ export default function DataTable({
       // hideFooterSelectedRowCount={false}
       // hideFooterPagination={!isExpandedTable ? true : false}
       // labelRowsPerPage="Items per Page"
-      autoHeight
+
       // slots={{
       //   // toolbar: CustomToolbar,
       //   toolbar: CustomToolbar,

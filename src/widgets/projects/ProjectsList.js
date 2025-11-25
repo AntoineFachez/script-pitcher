@@ -124,19 +124,18 @@ export default function ProjectsList({
       actions: footerActions,
     };
   };
-  const avatarWidth = isDesktop ? 80 : 20;
   const columns = [
     {
-      field: "avatarUrl",
+      field: "bannerUrl",
       headerName: "",
       align: dataGridImageCellStyles.sx.align,
       width: dataGridImageCellStyles.sx.width,
       // 4. Add a renderCell to make the icon clickable
       renderCell: (params) => {
-        const { avatarUrl } = params.row;
+        const { bannerUrl } = params.row;
         return (
           <ImageCell
-            avatarUrl={avatarUrl}
+            url={bannerUrl}
             dataGridImageCellStyles={dataGridImageCellStyles}
           />
         );
@@ -147,7 +146,7 @@ export default function ProjectsList({
       field: "published",
       headerName: "Published",
       align: "center",
-      width: 60,
+      width: isMobile ? 40 : 80,
       // 4. Add a renderCell to make the icon clickable
       renderCell: (params) => {
         const { id, published } = params.row;
@@ -241,7 +240,6 @@ export default function ProjectsList({
 
   return (
     <>
-      {isMobile ? "is mobile" : " NOT mobile"}
       <Box
         className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
         sx={sectionHeaderStyles.sx}

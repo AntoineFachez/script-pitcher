@@ -97,7 +97,7 @@ export default function EpisodesList({
         const { avatarUrl } = params.row;
         return (
           <ImageCell
-            avatarUrl={avatarUrl}
+            url={avatarUrl}
             dataGridImageCellStyles={dataGridImageCellStyles}
           />
         );

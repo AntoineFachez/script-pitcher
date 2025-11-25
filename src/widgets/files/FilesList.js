@@ -169,17 +169,10 @@ ${article.author}
       disableColumnMenu: true,
     },
     {
-      field: "fileName",
-      headerName: "Title",
-      width: 300,
-      flex: 1,
-      disableColumnMenu: isMobile && true,
-    },
-    {
       field: "published",
       headerName: "Published",
       align: "center",
-      width: 60,
+      width: isMobile ? 40 : 80,
       // 4. Add a renderCell to make the icon clickable
       renderCell: (params) => {
         const { id, published } = params.row;
@@ -204,9 +197,16 @@ ${article.author}
       disableColumnMenu: isMobile && true,
     },
     {
+      field: "fileName",
+      headerName: "Title",
+      width: 300,
+      flex: 1,
+      disableColumnMenu: isMobile && true,
+    },
+    {
       field: "filePurpose",
       headerName: "Purpose",
-      align: "center",
+      align: "left",
       width: 100,
       flex: 1,
       disableColumnMenu: isMobile && true,
@@ -222,7 +222,7 @@ ${article.author}
       field: "createdAt",
       headerName: "Uploaded",
       align: "center",
-      width: 100,
+      width: isMobile ? 40 : 80,
       renderCell: (params) => {
         const relativeCreatedTime = formatShortTime(params.row.createdAt);
         return <>{relativeCreatedTime} ago</>;

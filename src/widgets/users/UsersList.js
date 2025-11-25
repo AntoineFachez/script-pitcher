@@ -110,12 +110,19 @@ export default function UsersList({
         const { avatarUrl } = params.row;
         return (
           <ImageCell
-            avatarUrl={avatarUrl}
+            url={avatarUrl}
             dataGridImageCellStyles={dataGridImageCellStyles}
           />
         );
       },
       disableColumnMenu: true,
+    },
+    {
+      field: "userActive",
+      headerName: "Active",
+      align: "center",
+      width: isMobile ? 40 : 80,
+      disableColumnMenu: isMobile && true,
     },
     {
       field: "displayName",
@@ -131,13 +138,6 @@ export default function UsersList({
       align: "left",
       flex: 1,
       width: 100,
-      disableColumnMenu: isMobile && true,
-    },
-    {
-      field: "userActive",
-      headerName: "Active",
-      align: "center",
-      width: 60,
       disableColumnMenu: isMobile && true,
     },
 
@@ -159,7 +159,7 @@ export default function UsersList({
       headerName: "joined Team", // Change header name for clarity
       align: "center",
       // Increased width slightly to accommodate longer strings like "1y" or "10mo"
-      width: 80,
+      width: isMobile ? 40 : 80,
 
       renderCell: (params) => {
         const { role } = params.row;

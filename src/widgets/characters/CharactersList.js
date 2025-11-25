@@ -97,7 +97,7 @@ export default function CharactersList({
         const { avatarUrl } = params.row;
         return (
           <ImageCell
-            avatarUrl={avatarUrl}
+            url={avatarUrl}
             dataGridImageCellStyles={dataGridImageCellStyles}
           />
         );
@@ -193,6 +193,7 @@ export default function CharactersList({
           handleAddItem={handleAddItem}
         />
       </Box>
+
       <MultiItems
         data={data}
         showDataGrid={showDataGrid}
@@ -205,6 +206,7 @@ export default function CharactersList({
         getCardProps={getCardProps}
         handleRowClick={handleRowClick}
       />
+
       {/* <BasicModal
         content={modalContent}
         open={openModal}
