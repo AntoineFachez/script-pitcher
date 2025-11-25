@@ -24,6 +24,7 @@ import ProcessingTimeCell from "@/components/timeCells/ProcessingTimeCell";
 
 import { sectionHeaderStyles, subtitleStyles } from "@/theme/muiProps";
 import config from "@/lib/widgetConfigs/receivedInvitations.widgetConfig.json";
+import MultiItems from "@/components/multiItems/MultiItems";
 const { widgetConfig, schemeDefinition } = config;
 
 const columns = [
@@ -40,12 +41,19 @@ const columns = [
   },
 
   {
-    field: "invitedBy",
-    headerName: "invitedBy",
-    align: "right",
+    field: "invitedByName",
+    headerName: "invited By",
+    align: "center",
+    flex: 1,
     width: 200,
   },
-  { field: "projectId", headerName: "projectId", align: "center", width: 130 },
+  {
+    field: "projectId",
+    headerName: "projectId",
+    align: "center",
+    flex: 1,
+    width: 130,
+  },
   { field: "role", headerName: "role", align: "center", width: 130 },
   {
     field: "invitationPart",
@@ -73,7 +81,7 @@ export default function Widget({
   } = useUi();
   const [showDataGrid, setShowDataGrid] = useState(true);
 
-  const handleAddUser = () => {
+  const handleAddItem = () => {
     setModalContent(<CrudItem context="users" crud="inviteUser" />);
     setOpenModal(true);
   };

@@ -46,11 +46,18 @@ const columns = [
       );
     },
   },
-  { field: "displayName", headerName: "user", align: "center", width: 100 },
+  {
+    field: "displayName",
+    headerName: "user",
+    align: "center",
+    flex: 1,
+    width: 100,
+  },
   {
     field: "company",
     headerName: "Company",
     align: "center",
+    flex: 1,
     width: 100,
   },
   {
@@ -65,6 +72,7 @@ const columns = [
     headerName: "Role",
     align: "center",
     width: 60,
+    flex: 1,
     // 4. Add a renderCell to make the icon clickable
     renderCell: (params) => {
       const { role } = params.row;
@@ -255,6 +263,7 @@ export default function UsersList({
     <>
       <Box
         className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
+        sx={sectionHeaderStyles.sx}
       >
         <SectionMenu
           showDataGrid={showDataGrid}

@@ -142,7 +142,7 @@ export default function ProjectsList({
         );
       },
     },
-    { field: "title", headerName: "Title", width: 130 },
+    { field: "title", headerName: "Title", flex: 1, width: 130 },
     // {
     //   field: "published",
     //   headerName: "Published",
