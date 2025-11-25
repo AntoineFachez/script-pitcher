@@ -22,7 +22,12 @@ import SignUpForm from "@/components/auth/appAuth/SignUpForm";
 
 import { useUi } from "@/context/UiContext";
 
-import { containerStyles, pageStyles } from "@/theme/muiProps";
+import {
+  appFloorStyles,
+  appMainStyles,
+  containerStyles,
+  pageStyles,
+} from "@/theme/muiProps";
 import CircularIndeterminate from "@/components/progress/CircularIndeterminate";
 
 export default function Body({ children }) {
@@ -32,7 +37,7 @@ export default function Body({ children }) {
   const [isSigningUp, setIsSigningUp] = useState(false);
   const NAV_HEIGHT = isMobile ? "48px" : "48px"; // Typical MUI AppBar height on desktop
   const SIDEBAR_WIDTH = isDesktop ? "72px" : 0; // Typical MUI AppBar height on desktop
-  const BOTTOM_NAV_HEIGHT = isDesktop ? 0 : "48px"; // Typical MUI BottomNavigation height
+  const BOTTOM_NAV_HEIGHT = isDesktop ? 0 : "56px"; // Typical MUI BottomNavigation height
 
   const toggleAuthMode = () => {
     setIsSigningUp((prev) => !prev);
@@ -56,52 +61,49 @@ export default function Body({ children }) {
   if (firebaseUser) {
     return (
       <>
-        {/* 1. Top Nav (Takes defined space) */}
         <AppBar spaceProps={{ height: NAV_HEIGHT }} />
 
-        {/* 2. Sidebar Nav (if isDesktop) */}
         <Box
-          className="app--main"
-          component="main"
+          className={appMainStyles.className}
+          component={appMainStyles.component}
           sx={{
+            ...appMainStyles.sx,
             width: "100%",
             height: `100%`,
 
             display: "flex",
             // justifyContent: "center",
             // alignItems: "center",
-            flexFlow: isDesktop ? "row nowrap" : "column nowrap", // Stack children vertically
             overflow: "hidden",
+            flexFlow: isDesktop ? "row nowrap" : "column nowrap", // Stack children vertically
             padding: `${NAV_HEIGHT} 0 ${BOTTOM_NAV_HEIGHT} 0`,
           }}
         >
           {isDesktop && (
-            <>
+            <Box
+              sx={{
+                position: "absolute",
+                left: 0,
+                zIndex: 2000,
+                height: "100%",
+              }}
+            >
               <SideNavBar SIDEBAR_WIDTH={SIDEBAR_WIDTH} />
-              {/* <Divider orientation="vertical" /> */}
-            </>
+            </Box>
           )}
 
-          {/* 3. Main Content (Takes all the remaining space) */}
           <Box
-            className="app--floor"
+            className={pageStyles.className}
             sx={{
               ...pageStyles.sx,
-              width: `calc(100% - ${SIDEBAR_WIDTH})`,
-              height: `100%`,
-              // height: `calc(100% - ${NAV_HEIGHT})`,
-
-              // pb: !isDesktop && appContext !== "home" ? BOTTOM_NAV_HEIGHT : 0,
-              // padding: `${NAV_HEIGHT} 0 ${BOTTOM_NAV_HEIGHT} 0`,
-              // pb: BOTTOM_NAV_HEIGHT,
+              pl: SIDEBAR_WIDTH,
             }}
           >
             {children}
           </Box>
 
-          {/* 4. Bottom Nav (Takes defined space) */}
           {!isDesktop && appContext !== "home" ? (
-            <CustomBottomNav sx={{ height: BOTTOM_NAV_HEIGHT }} />
+            <CustomBottomNav BOTTOM_NAV_HEIGHT={BOTTOM_NAV_HEIGHT} />
           ) : null}
         </Box>
       </>

@@ -13,7 +13,7 @@ import { getButton } from "@/lib/maps/iconMap";
 import { bottomNavActions } from "@/lib/appConfig";
 import AddNewItem from "@/widgets/crudItem";
 
-import { bottomNavcenterButtonStyles } from "@/theme/muiProps";
+import { bottomBarStyles, bottomNavcenterButtonStyles } from "@/theme/muiProps";
 import { useApp } from "@/context/AppContext";
 import { handleSetNewAppContext } from "@/lib/actions/appActions";
 import {
@@ -24,7 +24,7 @@ import {
 } from "@mui/material";
 import { Add, More, Search } from "@mui/icons-material";
 
-export default function CustomBottomNav() {
+export default function CustomBottomNav({ BOTTOM_NAV_HEIGHT }) {
   const { setToggleDetails, showDataGrid, setShowDataGrid, handleOpenAddItem } =
     useUi();
   const { projectInFocus, setProjectInFocus } = useInFocus();
@@ -40,14 +40,7 @@ export default function CustomBottomNav() {
       onChange={(event, newValue) => {
         setValue(newValue);
       }}
-      sx={{
-        position: "fixed",
-        bottom: 0,
-        display: "flex",
-        justifyContent: "space-around",
-        backgroundColor: "background.nav",
-        // p: "0 32",
-      }}
+      sx={{ ...bottomBarStyles.sx, height: BOTTOM_NAV_HEIGHT }}
     >
       {optionsToRender.map((option, i) => {
         const onClickHandler = (e) => {

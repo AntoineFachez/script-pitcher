@@ -14,6 +14,7 @@ import { useThemeContext } from "@/context/ThemeContext";
 import { useUi } from "@/context/UiContext";
 
 import AppHeader from "../appHeader/AppHeader";
+import { appBarStyles } from "@/theme/muiProps";
 
 export default function BasicAppBar({ spaceProps }) {
   const { appContext, setAppContext, loading } = useApp();
@@ -35,18 +36,9 @@ export default function BasicAppBar({ spaceProps }) {
   );
   return (
     <AppBar
-      className="appBar"
+      className={`${appBarStyles.className}`}
       position="fixed"
-      sx={{
-        height: spaceProps.height,
-        display: "flex",
-        flexFlow: "row nowrap",
-        justifyContent: "space-between",
-        alignItems: "center",
-        p: "0 24px",
-        // backgroundColor: "background.nav",
-        backgroundColor: "background.nav",
-      }}
+      sx={{ ...appBarStyles.sx, height: spaceProps.height }}
     >
       {optionsToRender?.map((option, i) => {
         const onClickHandler = (e) => {

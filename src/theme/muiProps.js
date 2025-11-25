@@ -2,11 +2,37 @@
 
 const randomDeg = Math.random() * 360;
 const baseValues = { borderRadius: "0.5rem" };
+export const appBarStyles = {
+  className: "app--bar",
+  sx: {
+    display: "flex",
+    flexFlow: "row nowrap",
+    justifyContent: "space-between",
+    alignItems: "center",
+    p: "0 24px",
+    // backgroundColor: "background.nav",
+    backgroundColor: "background.nav",
+  },
+};
+export const appMainStyles = {
+  className: "app--main",
+  component: "main",
+  sx: {
+    width: "100%",
+    height: `100%`,
+
+    display: "flex",
+    // justifyContent: "center",
+    // alignItems: "center",
+    overflow: "hidden",
+  },
+};
+
 export const sidebarStyles = {
   sx: {
-    // position: "fixed",
+    // position: "absolute",
     // left: 0,
-    // zIndex: 1000,
+    // zIndex: 2000,
     // width: { xs: "3rem", sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
     width: "fit-content",
     height: "100%",
@@ -18,23 +44,27 @@ export const sidebarStyles = {
     // pl: { xs: 0, sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
 
     border: "1px solid transparent",
-    backgroudColor: "background.page",
+    backgroundColor: "background.nav",
+  },
+};
+export const bottomBarStyles = {
+  sx: {
+    position: "fixed",
+    bottom: 0,
+    display: "flex",
+    justifyContent: "space-around",
+    backgroundColor: "background.nav",
   },
 };
 export const pageStyles = {
+  className: "page",
+  component: "",
   sx: {
     position: "relative",
     width: "100%",
     height: "100%",
-    // display: "flex",
-    // flexDirection: "column",
-    // justifyContent: "center",
-    // alignItems: "center",
-
-    // overflow: "hidden",
-    // flexGrow: 1, // **Crucial**: This box expands to fill all available space
-    // overflowY: "auto", // **Crucial**: This is where the scrollbar appears
-    // overflowX: "hidden",
+    display: "flex",
+    flexFlow: "column nowrap",
     backgroundColor: "background.page",
   },
 };
@@ -46,7 +76,7 @@ export const pageHeaderStyles = {
     top: 0,
     width: "100%",
     height: "auto",
-    backgroundColor: "primary.dark",
+    backgroundColor: "background.paper",
   },
 };
 export const pageTitleStyles = {
@@ -87,6 +117,7 @@ export const pageMenuStyles = {
     justifyContent: "center",
     alignItems: "center",
     gap: 1,
+    backgroundColor: "primary.dark",
   },
 };
 export const pageMainStyles = {
@@ -105,8 +136,8 @@ export const pageMainStyles = {
     //   lg: "3rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
     //   xl: "3.5rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
     // },
-    // overflow: "scroll",
-    overflow: "hidden",
+    overflow: "scroll",
+    // overflow: "hidden",
   },
 };
 export const profileHeaderFormStyles = {
@@ -367,12 +398,12 @@ export const cardStyles = {
 export const dataGridContainerStyles = {
   className: "datagrid",
   component: "",
-  sx: { height: "100%", pb: "100px" },
+  sx: { display: "flex", flexDirection: "column" },
 };
 export const sectionHeaderStyles = {
   className: "section--header",
   component: "",
-  sx: { position: "sticky", top: 0, pt: "2rem" },
+  sx: { position: "", top: 0, pt: "" },
 };
 export const cardActionStyles = {
   sx: {
