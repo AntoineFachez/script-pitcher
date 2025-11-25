@@ -11,32 +11,23 @@ import {
   Divider,
 } from "@mui/material"; // ✅ ADDED: CircularProgress
 
+import { useApp } from "@/context/AppContext";
 import { useAuth } from "@/context/AuthContext";
 
-import NavBar from "@/components/navBar/index";
-import LoginForm from "@/components/auth/appAuth/LogInForm";
-import SignUpForm from "@/components/auth/appAuth/SignUpForm";
 import CustomBottomNav from "@/components/bottomNav/CustomBottomNav";
+import LoginForm from "@/components/auth/appAuth/LogInForm";
+import SideNavBar from "@/components/sideNavBar/SideNavBar";
+import SignUpForm from "@/components/auth/appAuth/SignUpForm";
+import NavBar from "@/components/navBar/index";
+
+import { useUi } from "@/context/UiContext";
 
 import { containerStyles, pageStyles } from "@/theme/muiProps";
-import BasicDrawer from "@/components/drawer/Drawer";
-import { useUi } from "@/context/UiContext";
-import SideNavBar from "@/components/sideNavBar/SideNavBar";
 
 export default function Body({ children }) {
-  // ✅ PULLING OUT THE RE-INTRODUCED isUserLoading
+  const { appContext } = useApp();
   const { firebaseUser, isUserLoading } = useAuth();
-  const {
-    currentWindowSize,
-    isDesktop,
-    isMobile,
-    modalContent,
-    setModalContent,
-    openModal,
-    setOpenModal,
-    orientationDrawer,
-    handleToggleDrawer,
-  } = useUi();
+  const { currentWindowSize, isDesktop, isMobile } = useUi();
   const [isSigningUp, setIsSigningUp] = useState(false);
   const NAV_HEIGHT = isMobile ? "48px" : "48px"; // Typical MUI AppBar height on desktop
   const BOTTOM_NAV_HEIGHT = isDesktop ? 0 : "56px"; // Typical MUI BottomNavigation height
@@ -89,7 +80,6 @@ export default function Body({ children }) {
             // height: "100vh", // Crucial: Use the full viewport height
             height: "100%", // Crucial: Use the full viewport height
             // overflow: "hidden",
-            pt: NAV_HEIGHT,
           }}
         >
           {isDesktop && (
@@ -100,12 +90,15 @@ export default function Body({ children }) {
           )}
 
           {/* 3. Main Content (Takes all the remaining space) */}
-          <Box component="main" sx={pageStyles.sx}>
+          <Box
+            component="main"
+            sx={{ ...pageStyles.sx, pb: BOTTOM_NAV_HEIGHT }}
+          >
             {children}
           </Box>
 
           {/* 4. Bottom Nav (Takes defined space) */}
-          {!isDesktop || currentWindowSize === "md" ? (
+          {!isDesktop && appContext !== "home" ? (
             <CustomBottomNav sx={{ height: BOTTOM_NAV_HEIGHT }} />
           ) : null}
         </Box>
@@ -116,38 +109,23 @@ export default function Body({ children }) {
   // 3. When the user is definitively logged out (not loading, no firebaseUser),
   // show the authentication forms
   return (
-    <Box sx={containerStyles.sx}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 3,
-          padding: 4,
-          borderRadius: 2,
-          boxShadow: 3,
-          backgroundColor: "background.paper",
-          maxWidth: "400px",
-          width: "100%",
-        }}
+    <Box sx={pageStyles.sx}>
+      <Typography variant="h4" component="h1">
+        {isSigningUp ? "Create Account" : "Welcome Back"}
+      </Typography>
+
+      {isSigningUp ? <SignUpForm /> : <LoginForm />}
+
+      <Button
+        onClick={toggleAuthMode}
+        variant="text"
+        size="small"
+        sx={{ textTransform: "none", mt: 1 }}
       >
-        <Typography variant="h4" component="h1">
-          {isSigningUp ? "Create Account" : "Welcome Back"}
-        </Typography>
-
-        {isSigningUp ? <SignUpForm /> : <LoginForm />}
-
-        <Button
-          onClick={toggleAuthMode}
-          variant="text"
-          size="small"
-          sx={{ textTransform: "none", mt: 1 }}
-        >
-          {isSigningUp
-            ? "Already have an account? Log In"
-            : "Don't have an account? Sign Up"}
-        </Button>
-      </Box>
+        {isSigningUp
+          ? "Already have an account? Log In"
+          : "Don't have an account? Sign Up"}
+      </Button>
     </Box>
   );
 }
