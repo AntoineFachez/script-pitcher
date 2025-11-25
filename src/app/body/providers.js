@@ -51,7 +51,7 @@ export function Providers({ children, meData }) {
                         bgcolor: "transparent",
                         color: "text.primary",
                         fontFamily: "sans-serif",
-                        // backgroundColor: "secondary.main",
+                        // backgroundColor: "page.background",
                       }}
                       theme={darkTheme === "dark" ? "dark" : "light"}
                     >

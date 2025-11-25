@@ -72,24 +72,19 @@ export default function Body({ children }) {
           component={appMainStyles.component}
           sx={{
             ...appMainStyles.sx,
-            width: "100%",
-            height: `100%`,
 
-            display: "flex",
-            // justifyContent: "center",
-            // alignItems: "center",
-            overflow: "hidden",
             flexFlow: isDesktop ? "row nowrap" : "column nowrap", // Stack children vertically
             padding: `${NAV_HEIGHT} 0 ${BOTTOM_NAV_HEIGHT} 0`,
           }}
         >
           {isDesktop && (
             <Box
+              className="sidebar--container"
               sx={{
                 position: "absolute",
                 left: 0,
                 zIndex: 2000,
-                height: "100%",
+                height: `calc(100% - ${NAV_HEIGHT})`,
               }}
             >
               <SideNavBar SIDEBAR_WIDTH={SIDEBAR_WIDTH} />
