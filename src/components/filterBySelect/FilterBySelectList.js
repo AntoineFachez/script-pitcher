@@ -1,48 +1,44 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/PROJECTS/ELEMENTS/GERNRESLIST.JS
-
-"use client";
-
 import { getButton } from "@/lib/maps/iconMap";
 import { pageMenuStyles } from "@/theme/muiProps";
 import { Box, Button } from "@mui/material";
 import React from "react";
 
-export default function GernresList({
-  uniqueGenres,
-  genreInFocus,
+export default function FilterBySelectList({
+  array,
+  itemInFocus,
   clearFilter,
-  handleGenreClick,
+  handleClickFilter,
 }) {
   return (
     <Box sx={pageMenuStyles.sx}>
-      {uniqueGenres?.map((genre, i) => {
+      {array?.map((item, i) => {
         return (
-          <Box key={i}>
+          <>
             {/* {getButton(
               i,
               null,
-              () => handleGenreClick(genre),
+              () => handleClickFilter(item),
               null,
               {},
               "outlined",
               null,
-              genre,
+              item,
               false,
               true
             )} */}
             <Button
-              key={genre}
+              key={item}
               variant="outlined"
-              onClick={() => handleGenreClick(genre)}
+              onClick={() => handleClickFilter(item)}
               sx={{
                 borderColor:
-                  genreInFocus === genre ? "button.active" : "button.inactive",
+                  itemInFocus === item ? "button.active" : "button.inactive",
                 backgroundColor: "button.background",
               }}
             >
-              {genre}
+              {item}
             </Button>
-          </Box>
+          </>
         );
       })}
       <Button variant="contained" onClick={clearFilter}>

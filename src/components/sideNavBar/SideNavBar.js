@@ -12,7 +12,7 @@ import { getButton } from "@/lib/maps/iconMap";
 import { sidePanelActions } from "@/lib/appConfig";
 import { sidebarStyles } from "@/theme/muiProps";
 
-export default function SideNavBar() {
+export default function SideNavBar({ SIDEBAR_WIDTH }) {
   const { appContext } = useApp();
   const { isDesktop } = useUi();
   const { toggleColorMode } = useThemeContext();
@@ -34,7 +34,11 @@ export default function SideNavBar() {
   return (
     <Box
       className="sidebar"
-      sx={{ ...sidebarStyles.sx, backgroudColor: "white" }}
+      sx={{
+        // ...sidebarStyles.sx,
+        width: SIDEBAR_WIDTH,
+        backgroudColor: "white",
+      }}
       // sx={{
       //   // position: "fixed",
       //   // left: 0,

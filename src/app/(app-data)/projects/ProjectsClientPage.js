@@ -13,13 +13,16 @@ import { useUi } from "@/context/UiContext";
 
 // Components
 import BasicModal from "@/components/modal/Modal";
+import FilterBySelectList from "@/components/filterBySelect/FilterBySelectList";
 import ProjectsList from "@/widgets/projects/ProjectsList";
 
 // Server Actions
+
+// Configs
 import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 
 // Local elements
-import GernresList from "./elements/GernresList";
+
 import {
   pageHeaderStyles,
   pageMainStyles,
@@ -131,11 +134,11 @@ export default function ProjectsClientPage({}) {
         sx={pageHeaderStyles.sx}
       >
         {toggleDetails && (
-          <GernresList
-            uniqueGenres={extractUniqueGenres}
-            genreInFocus={genreInFocus}
+          <FilterBySelectList
+            array={extractUniqueGenres}
+            itemInFocus={genreInFocus}
             clearFilter={clearFilter}
-            handleGenreClick={handleGenreClick}
+            handleClickFilter={handleGenreClick}
           />
         )}
       </Box>

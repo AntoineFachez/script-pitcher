@@ -45,6 +45,7 @@ export default function CustomBottomNav() {
         bottom: 0,
         display: "flex",
         justifyContent: "space-around",
+        backgroundColor: "background.nav",
         // p: "0 32",
       }}
     >

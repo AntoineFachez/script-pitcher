@@ -5,15 +5,19 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Divider, Typography } from "@mui/material";
 
+// Global Contexts
 import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
 import { useData } from "@/context/DataContext";
 import { useInFocus } from "@/context/InFocusContext";
 
+// Components
 import BasicModal from "@/components/modal/Modal";
-import UsersList from "@/widgets/users/UsersList";
 import CrudItem from "@/widgets/crudItem";
+import FilterBySelectList from "@/components/filterBySelect/FilterBySelectList";
+import UsersList from "@/widgets/users/UsersList";
 
+// Configs
 import config from "@/lib/widgetConfigs/users.widgetConfig.json";
 const { widgetConfig, schemeDefinition } = config;
 
@@ -24,7 +28,6 @@ import {
   titleStyle,
   widgetContainerStyles,
 } from "@/theme/muiProps";
-import RolesList from "./elements/RolesList";
 
 export default function Page() {
   const { appContext, setAppContext } = useApp();
@@ -111,11 +114,11 @@ export default function Page() {
         sx={pageHeaderStyles.sx}
       >
         {toggleDetails && (
-          <RolesList
-            uniqueRoles={uniqueRoles}
-            roleInFocus={roleInFocus}
+          <FilterBySelectList
+            array={uniqueRoles}
+            itemInFocus={roleInFocus}
             // clearFilter={clearFilter}
-            handleRoleClick={handleRoleClick}
+            handleClickFilter={handleRoleClick}
           />
         )}
       </Box>

@@ -10,7 +10,7 @@ import { useUi } from "@/context/UiContext";
 import BasicCard from "../card/BasicCard";
 import DataTable from "../dataGridElements/DataTable";
 
-import { flexListItemStyles } from "@/theme/muiProps";
+import { flexListItemStyles, dataGridContainerStyles } from "@/theme/muiProps";
 
 export default function MultiItems({
   containerRef,
@@ -36,16 +36,21 @@ export default function MultiItems({
     <>
       {" "}
       {showDataGrid ? (
-        <Box sx={{ height: "100%" }}>
-          <DataTable
-            loading={isLoading}
-            data={data}
-            columns={columns} // From widgetConfig.json
-            rowActions={rowActions}
-            handleRowClick={handleRowClick}
-            handleCellClick={null}
-          />
-        </Box>
+        <>
+          <Box
+            className={`${dataGridContainerStyles.className}__${widgetConfig.context}`}
+            sx={dataGridContainerStyles.sx}
+          >
+            <DataTable
+              loading={isLoading}
+              data={data}
+              columns={columns} // From widgetConfig.json
+              rowActions={rowActions}
+              handleRowClick={handleRowClick}
+              handleCellClick={null}
+            />
+          </Box>
+        </>
       ) : (
         <Grid
           className="grid--container"

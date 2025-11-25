@@ -44,6 +44,8 @@ export default function BasicAppBar({ spaceProps }) {
         justifyContent: "space-between",
         alignItems: "center",
         p: "0 24px",
+        // backgroundColor: "background.nav",
+        backgroundColor: "background.nav",
       }}
     >
       {optionsToRender?.map((option, i) => {

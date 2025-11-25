@@ -41,7 +41,13 @@ export const pageStyles = {
 export const pageHeaderStyles = {
   className: "pageHeader",
   component: "",
-  sx: { position: "sticky", top: 0, width: "100%" },
+  sx: {
+    position: "sticky",
+    top: 0,
+    width: "100%",
+    height: "auto",
+    backgroundColor: "primary.dark",
+  },
 };
 export const pageTitleStyles = {
   component: "",
@@ -85,7 +91,7 @@ export const pageMenuStyles = {
 };
 export const pageMainStyles = {
   className: "page--main",
-  component: "main",
+  component: "",
   sx: {
     // display: "flex",
     width: "100%",
@@ -99,7 +105,8 @@ export const pageMainStyles = {
     //   lg: "3rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
     //   xl: "3.5rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
     // },
-    overflow: "scroll",
+    // overflow: "scroll",
+    overflow: "hidden",
   },
 };
 export const profileHeaderFormStyles = {
@@ -357,6 +364,11 @@ export const cardStyles = {
 //     backgroundColor: "background.nav",
 //   },
 // };
+export const dataGridContainerStyles = {
+  className: "datagrid",
+  component: "",
+  sx: { height: "100%", pb: "100px" },
+};
 export const sectionHeaderStyles = {
   className: "section--header",
   component: "",

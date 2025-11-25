@@ -21,6 +21,7 @@ import ExpirationTimeCell from "@/components/timeCells/ExpirationTimeCell";
 import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
 
 import config from "@/lib/widgetConfigs/invitations.widgetConfig.json";
+import MultiItems from "@/components/multiItems/MultiItems";
 const { widgetConfig, schemeDefinition } = config;
 
 const columns = [
