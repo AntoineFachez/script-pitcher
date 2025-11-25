@@ -3,30 +3,31 @@
 
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { IconButton, ImageListItem, Typography } from "@mui/material";
+import { Box, IconButton, ImageListItem, Typography } from "@mui/material";
 import { Public, PublicOff, Favorite, Share, Edit } from "@mui/icons-material";
+
+import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 
 import { useApp } from "@/context/AppContext";
 import { useData } from "@/context/DataContext";
 import { useInFocus } from "@/context/InFocusContext";
 import { useUi } from "@/context/UiContext";
 
-import DataTable from "@/components/dataGridElements/DataTable";
 import KebabMenu from "@/components/menus/KebabMenu";
-import CardGrid from "@/components/cardGrid/CardGrid"; // Import generic CardGrid
+import MultiItems from "@/components/multiItems/MultiItems"; // Import generic MultiItems
 import ShareButton from "@/components/share/ShareButton";
-
-import widgetData from "./widgetSpex.json"; // Assuming columns are not in this file
-const { widgetSpex, schemeDefinition } = widgetData;
-import { toggleProjectPublishState } from "@/lib/actions/projectActions";
-import Image from "next/image";
-import { dataGridImageCellStyles } from "@/theme/muiProps";
 import ImageCell from "@/components/dataGridElements/ImageCell";
 
+import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
+import SectionMenu from "@/components/menus/SectionMenu";
+
+import config from "@/lib/widgetConfigs/projects.widgetConfig.json";
+const { widgetConfig, schemeDefinition } = config;
+
 // Receive handlers as props
-export default function Widget({
+export default function ProjectsList({
   data,
   isLoading,
   // Prop-drilled handlers from the parent page
@@ -36,8 +37,8 @@ export default function Widget({
   const router = useRouter();
   const { setProjectInFocus, genreInFocus } = useInFocus();
   const { setAppContext } = useApp();
-  const { isDesktop, showDataGrid, showCardMedia } = useUi();
-  // const { handleTogglePublishProject } = useData(); // Context handler
+  const { isDesktop, showCardMedia } = useUi();
+  const [showDataGrid, setShowDataGrid] = useState(true);
 
   const handleRowClick = (params, event) => {
     event.defaultMuiPrevented = true;
@@ -227,14 +228,23 @@ export default function Widget({
 
   return (
     <>
-      <CardGrid
+      <Box
+        className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
+      >
+        <SectionMenu
+          showDataGrid={showDataGrid}
+          setShowDataGrid={setShowDataGrid}
+          handleAddItem={null}
+        />{" "}
+      </Box>
+      <MultiItems
         data={data}
         showDataGrid={showDataGrid}
         isLoading={isLoading}
         columns={columns}
         rowActions={rowActions}
         collectionName="projects"
-        widgetSpex={widgetSpex}
+        widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
         getCardProps={getCardProps}
         handleRowClick={handleRowClick}

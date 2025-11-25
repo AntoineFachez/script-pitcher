@@ -11,18 +11,21 @@ import { useUi } from "@/context/UiContext";
 import { Box, IconButton, ImageListItem, Typography } from "@mui/material";
 import { Favorite, Share, Edit } from "@mui/icons-material";
 
-import DataTable from "@/components/dataGridElements/DataTable";
+import ImageCell from "@/components/dataGridElements/ImageCell";
 import KebabMenu from "@/components/menus/KebabMenu";
-import CardGrid from "@/components/cardGrid/CardGrid";
+import MultiItems from "@/components/multiItems/MultiItems";
 import ShareButton from "@/components/share/ShareButton";
-
-import widgetData from "./widgetSpex.json";
+import SectionMenu from "@/components/menus/SectionMenu";
 
 import CrudItem from "../crudItem";
-import SectionMenu from "@/components/menus/SectionMenu";
-import ImageCell from "@/components/dataGridElements/ImageCell";
-import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
-const { widgetSpex, schemeDefinition } = widgetData;
+
+import config from "@/lib/widgetConfigs/episodes.widgetConfig.json";
+const { widgetConfig, schemeDefinition } = config;
+import {
+  dataGridImageCellStyles,
+  sectionHeaderStyles,
+  subtitleStyles,
+} from "@/theme/muiProps";
 
 const columns = [
   {
@@ -50,7 +53,7 @@ const columns = [
   },
 ];
 
-export default function Widget({
+export default function EpisodesList({
   data, // Comes from parent page
   isLoading,
   // ... any other handlers passed from parent page
@@ -68,16 +71,25 @@ export default function Widget({
 
   const [showDataGrid, setShowDataGrid] = useState(true);
 
-  const handleAddEpisode = () => {
-    setModalContent(<CrudItem context="episodes" crud="create" />);
+  const handleAddItem = () => {
+    setModalContent(
+      <CrudItem context={widgetConfig.collection} crud="create" />
+    );
+    setOpenModal(true);
+  };
+  const handleClickEdit = (item) => {
+    setEpisodeInFocus(item);
+    setModalContent(
+      <CrudItem context={widgetConfig.collection} crud="update" />
+    );
     setOpenModal(true);
   };
 
   const handleRowClick = (params, event) => {
     event.defaultMuiPrevented = true;
-    const episode = params.row;
-    setAppContext("episodes");
-    setItemInFocus(episode);
+    const item = params.row;
+    setAppContext(widgetConfig.context);
+    setItemInFocus(item);
   };
 
   // --- Define click handlers for cards ---
@@ -93,11 +105,6 @@ export default function Widget({
 
   const handleClickSubTitle = (item) => {
     console.log("Subtitle clicked:", item);
-  };
-  const handleClickEdit = (item) => {
-    setEpisodeInFocus(item);
-    setModalContent(<CrudItem context="episodes" crud="update" />);
-    setOpenModal(true);
   };
 
   // Example email content
@@ -160,24 +167,23 @@ export default function Widget({
   };
   return (
     <>
-      <Box className="sectionHeader" sx={sectionHeaderStyles.sx}>
-        {/* <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
-          {widgetSpex?.title}
-        </Typography> */}
+      <Box
+        className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
+      >
         <SectionMenu
           showDataGrid={showDataGrid}
           setShowDataGrid={setShowDataGrid}
-          handleAddItem={handleAddEpisode}
-        />{" "}
+          handleAddItem={handleAddItem}
+        />
       </Box>
-      <CardGrid
+      <MultiItems
         data={data}
         showDataGrid={showDataGrid}
         isLoading={isLoading}
         columns={columns}
         rowActions={rowActions}
-        collectionName="episodes"
-        widgetSpex={widgetSpex}
+        collectionName="users"
+        widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
         getCardProps={getCardProps}
         handleRowClick={handleRowClick}

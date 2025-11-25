@@ -11,10 +11,11 @@ import { useData } from "@/context/DataContext";
 import { useInFocus } from "@/context/InFocusContext";
 
 import BasicModal from "@/components/modal/Modal";
-import UsersWidget from "@/widgets/users";
+import UsersList from "@/widgets/users/UsersList";
 import CrudItem from "@/widgets/crudItem";
 
-import Menu from "./elements/Menu";
+import config from "@/lib/widgetConfigs/users.widgetConfig.json";
+const { widgetConfig, schemeDefinition } = config;
 
 import {
   pageHeaderStyles,
@@ -104,7 +105,11 @@ export default function Page() {
   }, [appContext, setModalContent]);
   return (
     <>
-      <Box className="pageHeader" sx={pageHeaderStyles.sx}>
+      <Box
+        className={`${pageHeaderStyles.className}__${widgetConfig.context}`}
+        component={pageHeaderStyles.component}
+        sx={pageHeaderStyles.sx}
+      >
         {toggleDetails && (
           <RolesList
             uniqueRoles={uniqueRoles}
@@ -115,8 +120,12 @@ export default function Page() {
         )}
       </Box>
 
-      <Box className="pageMain" sx={{ ...pageMainStyles.sx }}>
-        <UsersWidget data={displayedData} />
+      <Box
+        className={`${pageMainStyles.className}__${widgetConfig.context}`}
+        component={pageMainStyles.component}
+        sx={{ ...pageMainStyles.sx }}
+      >
+        <UsersList data={displayedData} />
       </Box>
       <BasicModal
         content={modalContent}

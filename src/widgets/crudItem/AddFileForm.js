@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react"; // Removed unused 'useMemo'
+import { useState } from "react"; // Removed unused 'useMemo'
 import {
   Box,
   TextField,
@@ -17,8 +17,9 @@ import { Save } from "@mui/icons-material";
 
 import { useAuth } from "@/context/AuthContext";
 import { useCrud } from "@/context/CrudItemContext";
+import { formStyles } from "@/theme/muiProps";
 
-export default function AddFileForm() {
+export default function AddFileForm({ widgetConfig }) {
   const { firebaseUser } = useAuth();
   const { projectInFocus, error, setError } = useCrud();
   const [filePurpose, setFilePurpose] = useState("");
@@ -132,9 +133,18 @@ export default function AddFileForm() {
   };
 
   return (
-    <>
+    <Paper
+      className={`${formStyles.className}__${widgetConfig?.context}`}
+      component={formStyles.component}
+      onSubmit={onSubmit}
+      sx={formStyles.sx}
+    >
       <Box sx={{ width: "100%", display: "flex", flexFlow: "row wrap" }}>
-        <Typography variant="h5" gutterBottom sx={{ fontWeight: 100 }}>
+        <Typography
+          variant={formTitleStyles.variant}
+          gutterBottom
+          sx={formTitleStyles.sx}
+        >
           Add File to Project: {projectInFocus?.title}
         </Typography>
       </Box>
@@ -194,6 +204,6 @@ export default function AddFileForm() {
           {isUploading ? "Uploading..." : !file ? "Add PDF" : `Submit`}
         </Button>{" "}
       </Box>
-    </>
+    </Paper>
   );
 }

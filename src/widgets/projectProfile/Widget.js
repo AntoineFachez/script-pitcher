@@ -15,11 +15,11 @@ import BasicTabs from "@/components/tabs/BasicTabs";
 import ProfileHeader from "@/components/profileHeader/ProfileHeader";
 import ProfileMenu from "@/components/menus/ProfileMenu";
 
-import CharacterSection from "@/widgets/characters";
-import EpisodesSection from "@/widgets/episodes";
+import CharacterSection from "@/widgets/characters/CharactersList";
+import EpisodesList from "@/widgets/episodes/EpisodesList";
 import FilesList from "@/widgets/files/FilesList";
-import InvitationsList from "@/widgets/invitations";
-import UsersList from "@/widgets/users";
+import InvitationsList from "@/widgets/invitations/InvitationsList";
+import UsersList from "@/widgets/users/UsersList";
 
 export default function Widget({
   initialProject,
@@ -75,7 +75,7 @@ export default function Widget({
       content:
         episodes?.length > 0 ? (
           <Box className="tab--item" sx={tabStyles}>
-            <EpisodesSection data={episodes} />{" "}
+            <EpisodesList data={episodes} />{" "}
           </Box>
         ) : (
           <Typography color="text.secondary">No Episodes.</Typography>

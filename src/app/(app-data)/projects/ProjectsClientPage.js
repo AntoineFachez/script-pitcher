@@ -13,8 +13,7 @@ import { useUi } from "@/context/UiContext";
 
 // Components
 import BasicModal from "@/components/modal/Modal";
-import CrudItem from "@/widgets/crudItem";
-import ProjectsWidget from "@/widgets/projects/ProjectsList";
+import ProjectsList from "@/widgets/projects/ProjectsList";
 
 // Server Actions
 import { toggleProjectPublishState } from "@/lib/actions/projectActions";
@@ -27,6 +26,8 @@ import {
   pageTitleStyles,
 } from "@/theme/muiProps";
 
+import config from "@/lib/widgetConfigs/projects.widgetConfig.json";
+const { widgetConfig, schemeDefinition } = config;
 // We receive the server-fetched data as props
 export default function ProjectsClientPage({}) {
   const { appContext, setAppContext } = useApp();
@@ -116,14 +117,6 @@ export default function ProjectsClientPage({}) {
     },
   ];
 
-  // useEffect(() => {
-  //   setUsers(serverUsers);
-  //   return () => {};
-  // }, [setUsers, serverUsers]);
-  // useEffect(() => {
-  //   setProjects(serverProjects);
-  //   return () => {};
-  // }, [setProjects, serverProjects]);
   // 5. Set app context
   useEffect(() => {
     setAppContext("projects");
@@ -132,7 +125,11 @@ export default function ProjectsClientPage({}) {
   }, []);
   return (
     <>
-      <Box className="pageHeader" sx={pageHeaderStyles.sx}>
+      <Box
+        className={`${pageHeaderStyles.className}__${widgetConfig.context}`}
+        component={pageHeaderStyles.component}
+        sx={pageHeaderStyles.sx}
+      >
         {toggleDetails && (
           <GernresList
             uniqueGenres={extractUniqueGenres}
@@ -142,8 +139,12 @@ export default function ProjectsClientPage({}) {
           />
         )}
       </Box>
-      <Box className="pageMain" sx={{ ...pageMainStyles.sx }}>
-        <ProjectsWidget
+      <Box
+        className={`${pageMainStyles.className}__${widgetConfig.context}`}
+        component={pageMainStyles.component}
+        sx={{ ...pageMainStyles.sx }}
+      >
+        <ProjectsList
           data={displayedData}
           filteredData={filteredData}
           setFilteredData={setFilteredData}

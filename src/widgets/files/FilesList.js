@@ -21,9 +21,6 @@ import { useUi } from "@/context/UiContext";
 
 import KebabMenu from "@/components/menus/KebabMenu";
 
-import widgetData from "./widgetSpex.json";
-const { widgetSpex, schemeDefinition } = widgetData;
-
 import { formatShortTime, useRelativeTime } from "@/hooks/useRelativeTime";
 import CardGrid from "@/components/cardGrid/CardGrid";
 import ShareButton from "@/components/share/ShareButton";
@@ -32,8 +29,11 @@ import SectionMenu from "@/components/menus/SectionMenu";
 import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
 import ImageCell from "@/components/dataGridElements/ImageCell";
 
+import config from "@/lib/widgetConfigs/files.widgetConfig.json";
+const { widgetConfig, schemeDefinition } = config;
+
 // Receive handlers as props
-export default function Widget({
+export default function FilesList({
   data,
   projectId,
   setFilteredData,
@@ -47,18 +47,23 @@ export default function Widget({
 
   const [showDataGrid, setShowDataGrid] = useState(false);
 
-  const handleAddFile = () => {
-    setModalContent(<CrudItem context="newFile" crud="add" />);
+  const handleAddItem = () => {
+    setModalContent(<CrudItem context={widgetConfig.collection} crud="add" />);
+    setOpenModal(true);
+  };
+  const handleClickEdit = (item) => {
+    setCharacterInFocus(item);
+    setModalContent(
+      <CrudItem context={widgetConfig.collection} crud="update" />
+    );
     setOpenModal(true);
   };
 
   const handleRowClick = (params, event) => {
     event.defaultMuiPrevented = true;
-    setAppContext("files");
-    setFileInFocus(params.row);
-    if (params.row?.id) {
-      router.push(`/projects/${projectInFocus.id}/files/${params.row.id}`);
-    }
+    const item = params.row;
+    setAppContext(widgetConfig.context);
+    setItemInFocus(item);
   };
 
   const handleClickAvatar = (item) => {
@@ -260,13 +265,10 @@ ${article.author}
   return (
     <>
       <Box className="sectionHeader" sx={sectionHeaderStyles.sx}>
-        {/* <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
-          {widgetSpex?.title}
-        </Typography>{" "} */}
         <SectionMenu
           showDataGrid={showDataGrid}
           setShowDataGrid={setShowDataGrid}
-          handleAddItem={handleAddFile}
+          handleAddItem={handleAddItem}
         />{" "}
       </Box>
       <CardGrid
@@ -276,7 +278,7 @@ ${article.author}
         columns={columns}
         rowActions={rowActions}
         collectionName={"files"}
-        widgetSpex={widgetSpex}
+        widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
         getCardProps={getCardProps}
         handleRowClick={handleRowClick}

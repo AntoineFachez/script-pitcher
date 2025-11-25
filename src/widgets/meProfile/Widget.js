@@ -13,7 +13,7 @@ import BasicModal from "@/components/modal/Modal";
 import BasicTabs from "@/components/tabs/BasicTabs";
 import CrudItem from "@/widgets/crudItem";
 
-import ReceivedInvitationsList from "@/widgets/receivedInvitations";
+import ReceivedInvitationsList from "@/widgets/receivedInvitations/ReceivedInvitationsList";
 
 import { useInFocus } from "@/context/InFocusContext";
 import { useAuth } from "@/context/AuthContext";

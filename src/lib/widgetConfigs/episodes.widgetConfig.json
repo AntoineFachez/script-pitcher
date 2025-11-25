@@ -1,5 +1,10 @@
 {
-  "widgetSpex": { "widgetName": "episodes", "title": "Episodes" },
+  "widgetConfig": {
+    "widgetName": "episodes",
+    "collection": "episodes",
+    "context": "episodes",
+    "title": "Episodes"
+  },
   "schemeDefinition": {
     "id": "id",
     "title": "title",

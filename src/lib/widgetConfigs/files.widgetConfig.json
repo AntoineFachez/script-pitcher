@@ -1,5 +1,10 @@
 {
-  "widgetSpex": { "widgetName": "files", "title": "Files" },
+  "widgetConfig": {
+    "widgetName": "files",
+    "context": "files",
+    "collection": "files",
+    "title": "Files"
+  },
   "schemeDefinition": {
     "id": "id",
     "title": "title",

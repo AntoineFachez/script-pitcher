@@ -1,5 +1,4 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/CHARACTERS/INDEX.JS
-// NEW WIDGET IMPLEMENTATION
 
 "use client";
 
@@ -13,20 +12,21 @@ import { useInFocus } from "@/context/InFocusContext";
 import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
 
-import KebabMenu from "@/components/menus/KebabMenu";
-import CardGrid from "@/components/cardGrid/CardGrid";
-import ShareButton from "@/components/share/ShareButton";
 import BasicModal from "@/components/modal/Modal";
+import ImageCell from "@/components/dataGridElements/ImageCell";
+import KebabMenu from "@/components/menus/KebabMenu";
+import MultiItems from "@/components/multiItems/MultiItems";
+import ShareButton from "@/components/share/ShareButton";
 import SectionMenu from "@/components/menus/SectionMenu";
 
-import widgetData from "./widgetSpex.json";
 import CrudItem from "../crudItem";
 
-import ImageCell from "@/components/dataGridElements/ImageCell";
 import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
 
-const { widgetSpex, schemeDefinition } = widgetData;
-// Define DataTable columns (not in widgetSpex.json)
+import config from "@/lib/widgetConfigs/characters.widgetConfig.json";
+const { widgetConfig, schemeDefinition } = config;
+
+// Define DataTable columns (not in widgetConfig.json)
 const columns = [
   {
     field: "avatarUrl",
@@ -54,7 +54,7 @@ const columns = [
   },
 ];
 
-export default function Widget({
+export default function CharactersList({
   data, // Comes from parent page
   containerRef,
   isLoading,
@@ -72,20 +72,25 @@ export default function Widget({
   } = useUi();
   const [showDataGrid, setShowDataGrid] = useState(true);
 
-  const handleAddCharacter = () => {
-    setModalContent(<CrudItem context="characters" crud="create" />);
+  const handleAddItem = () => {
+    setModalContent(
+      <CrudItem context={widgetConfig.collection} crud="create" />
+    );
+    setOpenModal(true);
+  };
+  const handleClickEdit = (item) => {
+    setCharacterInFocus(item);
+    setModalContent(
+      <CrudItem context={widgetConfig.collection} crud="update" />
+    );
     setOpenModal(true);
   };
 
   const handleRowClick = (params, event) => {
     event.defaultMuiPrevented = true;
-    const character = params.row;
-    setAppContext("characters");
-    setItemInFocus(character);
-    // Note: Characters might not have individual pages, so no navigation
-    // if (character.id) {
-    //   router.push(`/characters/${character.id}`);
-    // }
+    const item = params.row;
+    setAppContext(widgetConfig.context);
+    setItemInFocus(item);
   };
 
   // --- Define click handlers for cards ---
@@ -101,12 +106,6 @@ export default function Widget({
 
   const handleClickSubTitle = (item) => {
     console.log("Subtitle clicked:", item);
-  };
-
-  const handleClickEdit = (item) => {
-    setCharacterInFocus(item);
-    setModalContent(<CrudItem context="characters" crud="update" />);
-    setOpenModal(true);
   };
 
   // Example email content
@@ -170,34 +169,32 @@ export default function Widget({
 
   return (
     <>
-      <Box className="sectionHeader" sx={sectionHeaderStyles.sx}>
-        {/* <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
-          {widgetSpex?.title}
-        </Typography> */}
+      <Box
+        className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
+      >
         <SectionMenu
           showDataGrid={showDataGrid}
           setShowDataGrid={setShowDataGrid}
-          handleAddItem={handleAddCharacter}
-        />{" "}
+          handleAddItem={handleAddItem}
+        />
       </Box>
-      <CardGrid
-        containerRef={containerRef}
+      <MultiItems
         data={data}
         showDataGrid={showDataGrid}
         isLoading={isLoading}
         columns={columns}
         rowActions={rowActions}
         collectionName="users"
-        widgetSpex={widgetSpex}
+        widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
         getCardProps={getCardProps}
         handleRowClick={handleRowClick}
-      />{" "}
-      <BasicModal
+      />
+      {/* <BasicModal
         content={modalContent}
         open={openModal}
         setOpen={setOpenModal}
-      />
+      /> */}
     </>
   );
 }

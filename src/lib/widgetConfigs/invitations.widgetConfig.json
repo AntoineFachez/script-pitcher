@@ -1,5 +1,10 @@
 {
-  "widgetSpex": { "widgetName": "users", "title": "Invitations" },
+  "widgetConfig": {
+    "widgetName": "invitations",
+    "collection": "users",
+    "context": "users",
+    "title": "Invitations"
+  },
 
   "schemeDefinition": {
     "id": "uid",

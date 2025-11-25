@@ -18,7 +18,7 @@ export const sidebarStyles = {
     // pl: { xs: 0, sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
 
     border: "1px solid transparent",
-    // backgroudColor: "background.paper",
+    backgroudColor: "background.page",
   },
 };
 export const pageStyles = {
@@ -39,6 +39,7 @@ export const pageStyles = {
   },
 };
 export const pageHeaderStyles = {
+  className: "pageHeader",
   component: "",
   sx: { position: "sticky", top: 0, width: "100%" },
 };
@@ -83,36 +84,67 @@ export const pageMenuStyles = {
   },
 };
 export const pageMainStyles = {
-  component: "",
+  className: "page--main",
+  component: "main",
   sx: {
     // display: "flex",
     width: "100%",
     height: "100%",
     // flexFlow: "column nowrap",
     // justifyContent: "center",
-    padding: {
-      xs: 0, // Padding is 1rem on small screens (mobile)
-      sm: "2rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
-      md: "2.5rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
-      lg: "3rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
-      xl: "3.5rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
-    },
+    // padding: {
+    //   xs: 0, // Padding is 1rem on small screens (mobile)
+    //   sm: "2rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
+    //   md: "2.5rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
+    //   lg: "3rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
+    //   xl: "3.5rem", // Padding is 2rem on medium/larger screens (tablet/desktop)
+    // },
     overflow: "scroll",
   },
 };
-export const profileAvatarStyles = {
+export const profileHeaderFormStyles = {
+  className: "profileHeader",
+  sx: {
+    position: "relative",
+    width: "100%",
+  },
+};
+export const profileHeaderAvatarContainerStyles = {
+  className: "profileHeader--avatar",
+  sx: {
+    width: "100%",
+    height: "100%",
+  },
+};
+export const profileHeaderAvatarStyles = {
+  className: "profileHeader--avatar",
   sx: {
     position: "absolute",
+    zIndex: 10,
+    width: "4rem",
+    height: "4rem",
     bottom: 130,
     left: "2rem",
   },
 };
 export const profileHeaderStyles = {
+  className: "profileHeader",
+  component: "",
   sx: {
     width: "100%",
-    pl: "2rem",
     textAlign: "left",
-    pl: "2rem",
+    p: "2rem",
+  },
+};
+export const profileHeaderBannerStyles = {
+  className: "profileHeader--banner",
+  component: "",
+  sx: {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+    // minHeight: "200px",
+    border: "solid #ccc 1px",
   },
 };
 export const profileDescriptionTextStyles = {
@@ -189,6 +221,8 @@ export const modalStyles = {
   },
 };
 export const formStyles = {
+  className: "baseCrudForm",
+  component: "form",
   sx: {
     width: "100%",
     // minWidth: {
@@ -224,6 +258,8 @@ export const formTitleStyles = {
   },
 };
 export const formFieldsGroupStyles = {
+  className: "formfields--group",
+  component: "",
   sx: { display: "flex", flexDirection: "column", gap: 2 },
 };
 export const formFieldStyles = {
@@ -322,6 +358,8 @@ export const cardStyles = {
 //   },
 // };
 export const sectionHeaderStyles = {
+  className: "section--header",
+  component: "",
   sx: { position: "sticky", top: 0, pt: "2rem" },
 };
 export const cardActionStyles = {
@@ -331,6 +369,16 @@ export const cardActionStyles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  },
+};
+export const basicAvatarStyles = {
+  className: "basicAvatar",
+  component: "",
+  sx: {
+    position: "relative",
+    width: "4rem",
+    height: "4rem",
+    bottom: "36px",
   },
 };
 export const iconButtonStyles = {

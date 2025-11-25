@@ -1,7 +1,7 @@
 import { Box, List, ListItem, Typography } from "@mui/material";
 import React from "react";
 
-export default function ListCustom({ array, schemeDefinition }) {
+export default function CustomList({ array, schemeDefinition }) {
   return (
     <List>
       {array?.map((item) => (

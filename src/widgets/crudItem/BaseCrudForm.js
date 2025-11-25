@@ -21,6 +21,7 @@ import {
 } from "@/theme/muiProps";
 
 export default function BaseCrudForm({
+  widgetConfig,
   title,
   formData, // The current data object (must have avatarUrl/imageUrl)
   setFormData, // To update avatar/image from the drawer
@@ -53,7 +54,12 @@ export default function BaseCrudForm({
   );
 
   return (
-    <Paper component="form" onSubmit={onSubmit} sx={formStyles.sx}>
+    <Paper
+      className={`${formStyles.className}__${widgetConfig?.context}`}
+      component={formStyles.component}
+      sx={formStyles.sx}
+      onSubmit={onSubmit}
+    >
       {/* 1. Header Title */}
 
       <Typography
@@ -67,6 +73,7 @@ export default function BaseCrudForm({
       <Box sx={{ display: "flex", flexWrap: "wrap", width: "100%" }}>
         {/* 2. Visual Header (Avatar/Banner) */}
         <ProfileHeaderForm
+          widgetConfig={widgetConfig}
           formData={formData}
           setSelectedImageUrlContext={setSelectedImageUrlContext}
           handleToggleDrawer={handleToggleDrawer}
@@ -81,7 +88,10 @@ export default function BaseCrudForm({
             pt: "3rem",
           }}
         >
-          <Box className="formfields--group" sx={formFieldsGroupStyles.sx}>
+          <Box
+            className={`${formFieldsGroupStyles.className}__${widgetConfig?.context}`}
+            sx={formFieldsGroupStyles.sx}
+          >
             {children}
 
             {/* 4. Shared Feedback & Actions */}

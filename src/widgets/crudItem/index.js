@@ -43,7 +43,7 @@ export default function CrudItem({ context, crud, itemInFocus, type }) {
     return <ProjectForm crud={crud} projectInFocus={itemInFocus} />;
   }
 
-  if (context === "newFile" && crud === "add") {
+  if (context === "files" && crud === "add") {
     // 'add' a file to an existing project
     return <AddFileForm />;
   }

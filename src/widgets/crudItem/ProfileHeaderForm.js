@@ -1,45 +1,30 @@
 import React from "react";
-import { Box, IconButton } from "@mui/material";
-import {
-  Camera,
-  CameraAlt,
-  Edit,
-  Save,
-  ViewSidebar,
-} from "@mui/icons-material";
-import BasicAvatar from "@/components/avatar/BasicAvatar";
-import Banner from "@/components/profileBanner/Banner";
 import Image from "next/image";
+import { Box, IconButton } from "@mui/material";
+import { CameraAlt } from "@mui/icons-material";
+import BasicAvatar from "@/components/avatar/BasicAvatar";
+
+import {
+  profileHeaderFormStyles,
+  profileHeaderBannerStyles,
+  profileHeaderAvatarContainerStyles,
+  basicAvatarStyles,
+} from "@/theme/muiProps";
 
 export default function ProfileHeaderForm({
+  widgetConfig,
   formData,
   setSelectedImageUrlContext,
   handleToggleDrawer,
 }) {
-  const avatarStyles = {
-    position: "relative",
-    width: "4rem",
-    height: "4rem",
-    bottom: "36px",
-  };
-
   return (
     <Box
-      className="profileHeader"
-      sx={{
-        position: "relative",
-        width: "100%",
-      }}
+      className={`${profileHeaderFormStyles?.className}__${widgetConfig?.context}`}
+      sx={profileHeaderFormStyles}
     >
       <Box
-        className="profileHeader--banner"
-        sx={{
-          position: "relative",
-          width: "100%",
-          height: "100%",
-          // minHeight: "200px",
-          border: "solid #ccc 1px",
-        }}
+        className={`${profileHeaderBannerStyles?.className}__${widgetConfig?.context}`}
+        // sx={profileHeaderBannerStyles.sx}
       >
         <IconButton
           onClick={(e) => {
@@ -60,17 +45,12 @@ export default function ProfileHeaderForm({
           fill
           src={formData?.bannerUrl}
           alt={formData?.bannerUrl}
-          style={{
-            objectFit: "cover",
-          }}
+          style={{ objectFit: "cover" }}
         />
       </Box>
       <Box
-        className="profileHeader--avatar"
-        sx={{
-          width: "100%",
-          height: "100%",
-        }}
+        className={`${profileHeaderAvatarContainerStyles?.className}__${widgetConfig?.context}`}
+        sx={profileHeaderAvatarContainerStyles.sx}
       >
         <IconButton
           onClick={(e) => {
@@ -86,9 +66,10 @@ export default function ProfileHeaderForm({
           <CameraAlt />
         </IconButton>
         <BasicAvatar
+          className={`${basicAvatarStyles?.className}__${widgetConfig?.context}`}
           itemName={formData?.title}
           url={formData?.avatarUrl}
-          sx={avatarStyles}
+          sx={basicAvatarStyles.sx}
         />
       </Box>
     </Box>

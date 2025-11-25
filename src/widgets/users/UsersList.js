@@ -1,158 +1,279 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/USERS/USERSLIST.JS
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/USERS/INDEX.JS
 
-import React from "react";
+"use client";
+import React, { useState } from "react";
+import { IconButton, Chip, Typography, Box } from "@mui/material";
+import { Favorite, Share, Person, PersonOff, Edit } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
+
+import { useInFocus } from "@/context/InFocusContext";
+import { useApp } from "@/context/AppContext";
+import { useUi } from "@/context/UiContext";
+import { useAuth } from "@/context/AuthContext";
+
+import KebabMenu from "@/components/menus/KebabMenu";
+import MultiItems from "@/components/multiItems/MultiItems";
+import ShareButton from "@/components/share/ShareButton";
+import SectionMenu from "@/components/menus/SectionMenu";
+
+import CrudItem from "../crudItem";
+
 import {
-  Box,
-  Chip,
-  IconButton,
-  List,
-  ListItem,
-  Typography,
-} from "@mui/material";
-import {
-  flexListItemStyles,
-  flexListStyles,
+  dataGridImageCellStyles,
+  sectionHeaderStyles,
   subtitleStyles,
 } from "@/theme/muiProps";
+import ImageCell from "@/components/dataGridElements/ImageCell";
+import ExpirationTimeCell from "@/components/timeCells/ExpirationTimeCell";
+import RelativeTimeCell from "@/components/timeCells/RelativeTimeCell";
 
-import FilesListItem from "../../app/(app-data)/projects/elements/FilesListItem";
-import {
-  Add,
-  Favorite,
-  Person,
-  PersonOff,
-  Public,
-  PublicOff,
-  Share,
-} from "@mui/icons-material";
-import BasicCard from "@/components/card/BasicCard";
-import KebabMenu from "@/components/menus/KebabMenu";
-import ShareButton from "@/components/share/ShareButton";
+import config from "@/lib/widgetConfigs/users.widgetConfig.json";
+const { widgetConfig, schemeDefinition } = config;
+const columns = [
+  {
+    field: "avatarUrl",
+    headerName: "",
+    align: dataGridImageCellStyles.sx.align,
+    width: dataGridImageCellStyles.sx.width,
+    // 4. Add a renderCell to make the icon clickable
+    renderCell: (params) => {
+      const { avatarUrl } = params.row;
+      return (
+        <ImageCell
+          avatarUrl={avatarUrl}
+          dataGridImageCellStyles={dataGridImageCellStyles}
+        />
+      );
+    },
+  },
+  { field: "displayName", headerName: "user", align: "center", width: 100 },
+  {
+    field: "company",
+    headerName: "Company",
+    align: "center",
+    width: 100,
+  },
+  {
+    field: "userActive",
+    headerName: "Active",
+    align: "center",
+    width: 60,
+  },
 
-import { useUi } from "@/context/UiContext";
-import { useInFocus } from "@/context/InFocusContext";
-import { useData } from "@/context/DataContext";
+  {
+    field: "role",
+    headerName: "Role",
+    align: "center",
+    width: 60,
+    // 4. Add a renderCell to make the icon clickable
+    renderCell: (params) => {
+      const { role } = params.row;
+      return <>{role?.role}</>;
+    },
+  },
+  {
+    field: "joinedAt",
+    headerName: "joined Team", // Change header name for clarity
+    align: "center",
+    // Increased width slightly to accommodate longer strings like "1y" or "10mo"
+    width: 80,
+
+    renderCell: (params) => {
+      const { role } = params.row;
+      return (
+        <>
+          <RelativeTimeCell value={role?.joinedAt} /> ago
+        </>
+      );
+    },
+  },
+  {
+    field: "topReadDocIds",
+    headerName: "topReadDocIds",
+    align: "right",
+    width: 80,
+  },
+];
 
 export default function UsersList({
   data,
-
-  schemeDefinition,
-  handleClickAvatar,
-  handleClickTitle,
-  handleClickSubTitle,
-  handleClickEdit,
-  handleAddFile,
-  handleToggleActiveUser,
-  genreInFocus,
-  emailSubject,
-  emailBody,
+  isLoading,
+  // ... any other handlers passed from parent page
 }) {
-  const { toggleDetails } = useUi();
-  const { rolesInProjects } = useData();
-  const { userInFocus } = useInFocus();
+  console.log(widgetConfig);
 
-  const CustomList = ({ rolesInProjects }) => {
-    return (
-      <Box
-        sx={{ width: "100%", backgroundColor: "primary.dark" }}
-        className="customList"
-      >
-        <Box
-          component="nav"
-          sx={{ width: "100%", display: "flex", justifyContent: "flex-end" }}
+  const router = useRouter();
+  const { firebaseUser } = useAuth();
+  const { setUserInFocus, roleInFocus, projectInFocus } = useInFocus();
+  const { setAppContext } = useApp();
+  const {
+    showCardMedia,
+    modalContent,
+    openModal,
+    setOpenModal,
+    setModalContent,
+  } = useUi();
+  const [showDataGrid, setShowDataGrid] = useState(true);
+
+  const handleAddUser = () => {
+    setModalContent(<CrudItem context="users" crud="inviteUser" />);
+    setOpenModal(true);
+  };
+
+  const handleRowClick = (params, event) => {
+    event.defaultMuiPrevented = true;
+    const user = params.row;
+    setAppContext("users");
+    setUserInFocus(user);
+    console.log("clicked row user", user.id, firebaseUser);
+    if (user.id === firebaseUser.uid) {
+      router.push(`/me`);
+    } else if (user.id) {
+      router.push(`/users/${user.id}`);
+    }
+  };
+
+  // --- Define click handlers for cards ---
+  const handleClickAvatar = (item) => {
+    // Logic for clicking avatar
+    console.log("Avatar clicked:", item);
+  };
+
+  const handleClickTitle = (item) => {
+    // Logic for clicking title (navigation)
+    setAppContext("users");
+    setUserInFocus(item);
+  };
+
+  const handleClickSubTitle = (item) => {
+    // Logic for clicking subtitle (e.g., filter by role)
+    console.log("Subtitle clicked:", item);
+  };
+
+  const handleClickEdit = (item) => {
+    // Logic for editing
+    console.log("Edit clicked:", item);
+  };
+
+  const handleToggleActiveUser = (item) => {
+    // Logic for toggling active status
+    console.log("Toggle active clicked:", item);
+  };
+
+  // Example email content
+  const emailSubject = `Check out this user`;
+  const emailBody = `Hey, I wanted you to see this user profile.`;
+
+  // --- This is the key refactoring ---
+  // This function builds the props for each BasicCard
+  const getCardProps = (user) => {
+    const kebabActions = [
+      {
+        id: "edit",
+        name: "Edit User",
+        icon: <Edit />,
+        action: () => handleClickEdit(user),
+      },
+      {
+        id: "toggleActive",
+        name: user.userActive ? "Deactivate" : "Activate",
+        icon: user.userActive ? <Person /> : <PersonOff />,
+        action: () => handleToggleActiveUser(user),
+      },
+    ];
+
+    const footerActions = (
+      <>
+        <IconButton aria-label="add to favorites">
+          <Favorite />
+        </IconButton>
+        <ShareButton
+          recipient="friend@example.com"
+          subject={emailSubject}
+          body={emailBody}
         >
-          <IconButton onClick={() => handleAddFile(rolesInProjects)}>
-            <Add />
-          </IconButton>
-        </Box>
-        <List
-          sx={{ width: "100%", backgroundColor: "primary.dark" }}
-          className="filesList"
+          <Share />
+        </ShareButton>
+        <IconButton
+          aria-label="toggle active"
+          onClick={() => handleToggleActiveUser(user)}
+          sx={{
+            color: user?.userActive ? "success.main" : "warning.main",
+          }}
         >
-          {rolesInProjects?.files?.map((file, i) => {
-            return <FilesListItem key={i} file={file} />;
-          })}
-        </List>
-      </Box>
+          {user?.userActive ? <Person /> : <PersonOff />}
+        </IconButton>
+      </>
     );
+
+    const customSubTitleItem = user.roles?.map((role) => (
+      <Chip
+        key={role.role} // Assuming role is an object { role: '...' }
+        sx={subtitleStyles.sx}
+        variant="body1"
+        label={role.role}
+        onClick={() => handleClickSubTitle(role)}
+      />
+    ));
+
+    return {
+      showCardMedia: false, // Users don't have media
+      schemeDefinition,
+      handleClickAvatar,
+      handleClickTitle,
+      handleClickSubTitle,
+      subTitleInFocus: roleInFocus,
+      customSubTitleItem, // Pass the generated chips
+      headerActions: <KebabMenu actions={kebabActions} />,
+      actions: footerActions,
+    };
+  };
+
+  const rowActions = {
+    header: "",
+    menu: (param) => {
+      const actions = [
+        {
+          id: "addDocument",
+          name: "Add Document",
+          icon: "Add",
+          action: () => console.log("handleOpenForm(param.collection)"),
+        },
+        {
+          id: "deleteCollection",
+          name: "Delete Collection",
+          icon: "Delete",
+          action: () => console.log("handleDeleteCollection(param.collection)"),
+        },
+      ];
+      // Render the KebabMenu component with the actions
+      return <KebabMenu actions={actions} />;
+    },
   };
 
   return (
-    <List sx={{ ...flexListStyles.sx, alignItems: "flex-start" }}>
-      {data?.map((user, i) => {
-        const customSubTitleItem = [
-          <Chip
-            key={user.userId}
-            sx={subtitleStyles.sx}
-            variant="body1"
-            label={user.role}
-          />,
-        ];
-        const footerActions = () => (
-          <>
-            <IconButton aria-label="add to favorites">
-              <Favorite />
-            </IconButton>
-
-            <ShareButton
-              recipient="friend@example.com"
-              subject={emailSubject}
-              body={emailBody}
-            >
-              <Share />
-            </ShareButton>
-            <IconButton
-              aria-label="publish"
-              onClick={() => handleToggleActiveUser(user)}
-              color="success"
-              sx={{
-                color: user?.userActive ? "success.main" : "warning.main",
-              }}
-            >
-              {user?.userActive ? <Person /> : <PersonOff />}
-            </IconButton>
-          </>
-        );
-        const actions = footerActions();
-        const kebabActions = [
-          {
-            action: () => handleClickEdit(user),
-            icon: "Edit",
-            loading: false,
-          },
-          {
-            action: () => handleToggleActiveUser(user),
-            icon: user.published ? "Person" : "PersonOff",
-            loading: false,
-          },
-        ];
-        const cardProps = {
-          showCardMedia: false,
-          schemeDefinition,
-          handleClickAvatar,
-          handleClickTitle,
-          handleClickSubTitle,
-          subTitleInFocus: genreInFocus,
-          customSubTitleItem,
-          headerActions: <KebabMenu actions={kebabActions} />,
-          actions,
-        };
-        return (
-          <>
-            <BasicCard
-              key={`${i}${user?.userId}`}
-              item={user}
-              itemInFocus={userInFocus}
-              collection={"users"}
-              disablePadding
-              schemeDefinition={schemeDefinition}
-              customItem={<CustomList rolesInProjects={rolesInProjects} />}
-              cardProps={cardProps}
-              toggleDetails={toggleDetails}
-            />
-          </>
-        );
-      })}
-    </List>
+    <>
+      <Box
+        className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
+      >
+        <SectionMenu
+          showDataGrid={showDataGrid}
+          setShowDataGrid={setShowDataGrid}
+          handleAddItem={handleAddUser}
+        />
+      </Box>
+      <MultiItems
+        data={data}
+        showDataGrid={showDataGrid}
+        isLoading={isLoading}
+        columns={columns}
+        rowActions={rowActions}
+        collectionName="users"
+        widgetConfig={widgetConfig}
+        schemeDefinition={schemeDefinition}
+        getCardProps={getCardProps}
+        handleRowClick={handleRowClick}
+      />
+    </>
   );
 }

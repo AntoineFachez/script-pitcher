@@ -1,5 +1,10 @@
 {
-  "widgetSpex": { "widgetName": "users", "title": "Team" },
+  "widgetConfig": {
+    "widgetName": "users",
+    "context": "users",
+    "collection": "users",
+    "title": "Team"
+  },
   "schemeDefinition": {
     "id": "uid",
     "title": "displayName",

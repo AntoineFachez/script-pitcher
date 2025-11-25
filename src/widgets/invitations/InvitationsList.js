@@ -1,158 +1,234 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/USERS/USERSLIST.JS
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/INVITATIONS/INVITATIONSLIST.JS
 
-import React from "react";
-import {
-  Box,
-  Chip,
-  IconButton,
-  List,
-  ListItem,
-  Typography,
-} from "@mui/material";
-import {
-  flexListItemStyles,
-  flexListStyles,
-  subtitleStyles,
-} from "@/theme/muiProps";
+"use client";
 
-import FilesListItem from "../../app/(app-data)/projects/elements/FilesListItem";
-import {
-  Add,
-  Favorite,
-  Person,
-  PersonOff,
-  Public,
-  PublicOff,
-  Share,
-} from "@mui/icons-material";
-import BasicCard from "@/components/card/BasicCard";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useInFocus } from "@/context/InFocusContext";
+import { useApp } from "@/context/AppContext";
+import { useUi } from "@/context/UiContext";
+import { useAuth } from "@/context/AuthContext";
+import { IconButton, Chip, Typography, Box } from "@mui/material";
+import { Favorite, Share, Person, PersonOff, Edit } from "@mui/icons-material";
+
 import KebabMenu from "@/components/menus/KebabMenu";
 import ShareButton from "@/components/share/ShareButton";
 
-import { useUi } from "@/context/UiContext";
-import { useInFocus } from "@/context/InFocusContext";
-import { useData } from "@/context/DataContext";
+import SectionMenu from "@/components/menus/SectionMenu";
+import CrudItem from "../crudItem";
+import ExpirationTimeCell from "@/components/timeCells/ExpirationTimeCell";
 
-export default function UsersList({
+import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
+
+import config from "@/lib/widgetConfigs/invitations.widgetConfig.json";
+const { widgetConfig, schemeDefinition } = config;
+
+const columns = [
+  {
+    field: "expiresAt",
+    headerName: "Expires", // Change header name for clarity
+    align: "center",
+    // Increased width slightly to accommodate longer strings like "1y" or "10mo"
+    width: 80,
+
+    renderCell: (params) => {
+      return <ExpirationTimeCell value={params.value} />;
+    },
+  },
+  {
+    field: "invitedEmail",
+    headerName: "invitedEmail",
+    align: "right",
+    width: 200,
+  },
+  {
+    field: "state",
+    headerName: "state",
+    align: "right",
+    width: 200,
+  },
+  { field: "role", headerName: "role", align: "center", width: 130 },
+];
+
+export default function InvitationsList({
   data,
-
-  schemeDefinition,
-  handleClickAvatar,
-  handleClickTitle,
-  handleClickSubTitle,
-  handleClickEdit,
-  handleAddFile,
-  handleToggleActiveUser,
-  genreInFocus,
-  emailSubject,
-  emailBody,
+  isLoading,
+  // ... any other handlers passed from parent page
 }) {
-  const { toggleDetails } = useUi();
-  const { rolesInProjects } = useData();
-  const { userInFocus } = useInFocus();
+  const router = useRouter();
+  const { firebaseUser } = useAuth();
+  const { setUserInFocus, roleInFocus, projectInFocus } = useInFocus();
+  const { setAppContext } = useApp();
+  const {
+    showCardMedia,
+    modalContent,
+    openModal,
+    setOpenModal,
+    setModalContent,
+  } = useUi();
+  const [showDataGrid, setShowDataGrid] = useState(true);
 
-  const CustomList = ({ rolesInProjects }) => {
-    return (
-      <Box
-        sx={{ width: "100%", backgroundColor: "primary.dark" }}
-        className="customList"
-      >
-        <Box
-          component="nav"
-          sx={{ width: "100%", display: "flex", justifyContent: "flex-end" }}
-        >
-          <IconButton onClick={() => handleAddFile(rolesInProjects)}>
-            <Add />
-          </IconButton>
-        </Box>
-        <List
-          sx={{ width: "100%", backgroundColor: "primary.dark" }}
-          className="filesList"
-        >
-          {rolesInProjects?.files?.map((file, i) => {
-            return <FilesListItem key={i} file={file} />;
-          })}
-        </List>
-      </Box>
+  const handleAddItem = () => {
+    setModalContent(
+      <CrudItem context={widgetConfig.collection} crud="inviteUser" />
     );
+    setOpenModal(true);
+  };
+
+  const handleRowClick = (params, event) => {
+    event.defaultMuiPrevented = true;
+    const item = params.row;
+    setAppContext(widgetConfig.context);
+    setUserInFocus(item);
+    if (user.uid) {
+      router.push(`/users/${user.uid}`);
+    }
+  };
+
+  const handleClickEdit = (item) => {
+    setCharacterInFocus(item);
+    setModalContent(
+      <CrudItem context={widgetConfig.collection} crud="update" />
+    );
+    setOpenModal(true);
+  };
+
+  // --- Define click handlers for cards ---
+  const handleClickAvatar = (item) => {
+    // Logic for clicking avatar
+    console.log("Avatar clicked:", item);
+  };
+
+  const handleClickTitle = (item) => {
+    // Logic for clicking title (navigation)
+    setAppContext("users");
+    setUserInFocus(item);
+  };
+
+  const handleClickSubTitle = (item) => {
+    // Logic for clicking subtitle (e.g., filter by role)
+    console.log("Subtitle clicked:", item);
+  };
+
+  const handleToggleActiveUser = (item) => {
+    // Logic for toggling active status
+    console.log("Toggle active clicked:", item);
+  };
+
+  // Example email content
+  const emailSubject = `Check out this user`;
+  const emailBody = `Hey, I wanted you to see this user profile.`;
+
+  // --- This is the key refactoring ---
+  // This function builds the props for each BasicCard
+  const getCardProps = (user) => {
+    const kebabActions = [
+      {
+        id: "edit",
+        name: "Edit User",
+        icon: <Edit />,
+        action: () => handleClickEdit(user),
+      },
+      {
+        id: "toggleActive",
+        name: user.userActive ? "Deactivate" : "Activate",
+        icon: user.userActive ? <Person /> : <PersonOff />,
+        action: () => handleToggleActiveUser(user),
+      },
+    ];
+
+    const footerActions = (
+      <>
+        <IconButton aria-label="add to favorites">
+          <Favorite />
+        </IconButton>
+        <ShareButton
+          recipient="friend@example.com"
+          subject={emailSubject}
+          body={emailBody}
+        >
+          <Share />
+        </ShareButton>
+        <IconButton
+          aria-label="toggle active"
+          onClick={() => handleToggleActiveUser(user)}
+          sx={{
+            color: user?.userActive ? "success.main" : "warning.main",
+          }}
+        >
+          {user?.userActive ? <Person /> : <PersonOff />}
+        </IconButton>
+      </>
+    );
+
+    const customSubTitleItem = user.roles?.map((role) => (
+      <Chip
+        key={role.role} // Assuming role is an object { role: '...' }
+        sx={subtitleStyles.sx}
+        variant="body1"
+        label={role.role}
+        onClick={() => handleClickSubTitle(role)}
+      />
+    ));
+
+    return {
+      showCardMedia: false, // Users don't have media
+      schemeDefinition,
+      handleClickAvatar,
+      handleClickTitle,
+      handleClickSubTitle,
+      subTitleInFocus: roleInFocus,
+      customSubTitleItem, // Pass the generated chips
+      headerActions: <KebabMenu actions={kebabActions} />,
+      actions: footerActions,
+    };
+  };
+
+  const rowActions = {
+    header: "",
+    menu: (param) => {
+      const actions = [
+        {
+          id: "addDocument",
+          name: "Add Document",
+          icon: "Add",
+          action: () => console.log("handleOpenForm(param.collection)"),
+        },
+        {
+          id: "deleteCollection",
+          name: "Delete Collection",
+          icon: "Delete",
+          action: () => console.log("handleDeleteCollection(param.collection)"),
+        },
+      ];
+      // Render the KebabMenu component with the actions
+      return <KebabMenu actions={actions} />;
+    },
   };
 
   return (
-    <List sx={{ ...flexListStyles.sx, alignItems: "flex-start" }}>
-      {data?.map((user, i) => {
-        const customSubTitleItem = [
-          <Chip
-            key={user.userId}
-            sx={subtitleStyles.sx}
-            variant="body1"
-            label={user.role}
-          />,
-        ];
-        const footerActions = () => (
-          <>
-            <IconButton aria-label="add to favorites">
-              <Favorite />
-            </IconButton>
-
-            <ShareButton
-              recipient="friend@example.com"
-              subject={emailSubject}
-              body={emailBody}
-            >
-              <Share />
-            </ShareButton>
-            <IconButton
-              aria-label="publish"
-              onClick={() => handleToggleActiveUser(user)}
-              color="success"
-              sx={{
-                color: user?.userActive ? "success.main" : "warning.main",
-              }}
-            >
-              {user?.userActive ? <Person /> : <PersonOff />}
-            </IconButton>
-          </>
-        );
-        const actions = footerActions();
-        const kebabActions = [
-          {
-            action: () => handleClickEdit(user),
-            icon: "Edit",
-            loading: false,
-          },
-          {
-            action: () => handleToggleActiveUser(user),
-            icon: user.published ? "Person" : "PersonOff",
-            loading: false,
-          },
-        ];
-        const cardProps = {
-          showCardMedia: false,
-          schemeDefinition,
-          handleClickAvatar,
-          handleClickTitle,
-          handleClickSubTitle,
-          subTitleInFocus: genreInFocus,
-          customSubTitleItem,
-          headerActions: <KebabMenu actions={kebabActions} />,
-          actions,
-        };
-        return (
-          <>
-            <BasicCard
-              key={`${i}${user?.userId}`}
-              item={user}
-              itemInFocus={userInFocus}
-              collection={"users"}
-              disablePadding
-              schemeDefinition={schemeDefinition}
-              customItem={<CustomList rolesInProjects={rolesInProjects} />}
-              cardProps={cardProps}
-              toggleDetails={toggleDetails}
-            />
-          </>
-        );
-      })}
-    </List>
+    <>
+      <Box
+        className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
+      >
+        <SectionMenu
+          showDataGrid={showDataGrid}
+          setShowDataGrid={setShowDataGrid}
+          handleAddItem={handleAddItem}
+        />
+      </Box>
+      <MultiItems
+        data={data}
+        showDataGrid={showDataGrid}
+        isLoading={isLoading}
+        columns={columns}
+        rowActions={rowActions}
+        collectionName="users"
+        widgetConfig={widgetConfig}
+        schemeDefinition={schemeDefinition}
+        getCardProps={getCardProps}
+        handleRowClick={handleRowClick}
+      />
+    </>
   );
 }

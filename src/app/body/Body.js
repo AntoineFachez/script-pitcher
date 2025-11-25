@@ -66,6 +66,8 @@ export default function Body({ children }) {
             width: "100%",
             height: "100%",
             display: "flex",
+            // justifyContent: "center",
+            // alignItems: "center",
             flexFlow: isDesktop ? "row nowrap" : "column nowrap", // Stack children vertically
             overflow: "hidden",
           }}
