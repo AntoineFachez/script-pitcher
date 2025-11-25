@@ -11,13 +11,13 @@ const AvatarBase = styled(Avatar, {
   // Prevent scrollratio from being passed down to the Avatar DOM element
   shouldForwardProp: (prop) => prop !== "scrollratio",
 })(({ theme, scrollratio }) => ({
+  position: "absolute",
   zIndex: 100,
+  left: theme.spacing(3),
   width: 72,
   height: 72,
   borderRadius: "50%",
-  position: "absolute",
   bottom: -30, // Position slightly below the banner
-  left: theme.spacing(3),
   border: `4px solid ${theme.palette.background.paper}`,
   overflow: "hidden",
 
@@ -33,17 +33,22 @@ const AvatarBase = styled(Avatar, {
 }));
 
 // 2. FUNCTIONAL COMPONENT (Props Handling)
-export default function BasicAvatar({
+export default function RatioAvatar({
   url,
   sx,
   scrollratio = 0,
   itemName = "",
 }) {
+  console.log("scrollratio", scrollratio);
+
   // We combine the passed-in sx with the dynamic styles from AvatarBase
   return (
-    <AvatarBase src={url} sx={{ ...sx }} scrollratio={scrollratio}>
-      {/* Placeholder for text initials if the image fails */}
-      {url ? null : stringAvatar(itemName).children}
-    </AvatarBase>
+    <>
+      {" "}
+      <AvatarBase src={url} sx={{ ...sx }} scrollratio={scrollratio}>
+        {/* Placeholder for text initials if the image fails */}
+        {url ? null : stringAvatar(itemName).children}
+      </AvatarBase>
+    </>
   );
 }

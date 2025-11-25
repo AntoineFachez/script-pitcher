@@ -3,7 +3,7 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Banner from "../profileBanner/Banner";
-import BasicAvatar from "../avatar/Avatar";
+import RatioAvatar from "../avatar/RatioAvatar";
 import {
   profileAvatarStyles,
   profileDescriptionTextStyles,
@@ -121,9 +121,9 @@ const ProfileHeader = ({
             scrollratio={scrollRatio}
             newHeight={newHeight}
           />
-          <BasicAvatar
+          <RatioAvatar
             url={avatarImageUrl}
-            styles={profileAvatarStyles}
+            sx={profileAvatarStyles}
             scrollratio={scrollRatio}
           />
         </Box>

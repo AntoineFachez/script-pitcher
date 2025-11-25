@@ -7,7 +7,7 @@ import {
   Save,
   ViewSidebar,
 } from "@mui/icons-material";
-import BasicAvatar from "@/components/avatar/Avatar";
+import BasicAvatar from "@/components/avatar/BasicAvatar";
 import Banner from "@/components/profileBanner/Banner";
 import Image from "next/image";
 
