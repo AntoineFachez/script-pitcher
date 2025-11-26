@@ -167,26 +167,27 @@ export const profileHeaderAvatarStyles = {
     left: "2rem",
   },
 };
-export const profileHeaderStyles = {
-  className: "profileHeader",
-  component: "",
-  sx: {
-    width: "100%",
-    textAlign: "left",
-    p: "2rem",
-  },
-};
-export const profileHeaderBannerStyles = {
-  className: "profileHeader--banner",
-  component: "",
-  sx: {
-    position: "relative",
-    width: "100%",
-    height: "100%",
-    // minHeight: "200px",
-    border: "solid #ccc 1px",
-  },
-};
+// export const profileHeaderStyles = {
+//   className: "profileHeader",
+//   component: "",
+//   sx: {
+//     width: "100%",
+//     textAlign: "left",
+//     p: "2rem",
+//   },
+// };
+// export const profileHeaderBannerStyles = {
+//   className: "profileHeader--banner",
+//   component: "",
+//   sx: {
+//     position: "relative",
+//     width: "100%",
+//     height: "100%",
+//     // minHeight: "200px",
+//     border: "solid #ccc 1px",
+//   },
+// };
+//TODO: check if needed:
 export const profileDescriptionTextStyles = {
   sx: {
     pl: "2rem",
@@ -222,47 +223,47 @@ export const containerProps = {
     // p: 0,
   },
 };
-export const modalStyles = {
-  sx: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "100%",
-    // width: "50ch",
-    display: "flex",
-    flexFlow: "column wrap",
-    justifyContent: "center",
-    alignItems: "center",
-    width: {
-      xs: "80%",
-      sm: "70%",
-      md: "50%",
-      lg: "40%",
-      xl: "40%",
-    },
-    // height: "100%",
-    // height: "100vh",
-    // maxWidth: {
-    //   xs: "40ch", // 90% width on extra small screens
-    //   sm: "40ch", // 600px max width on small screens and up
-    //   md: "50ch", // 50 character width on medium screens and up
-    // },
-    // maxHeight: "100%",
-    bgcolor: "background.paper",
-    border: "1px solid #ffffff20",
-    borderRadius: `${baseValues.borderRadius}`,
-    boxShadow: 24,
-    p: {
-      xs: 2,
-      sm: 2,
-      md: 3,
-      lg: 3,
-      xl: 4,
-    },
-  },
-};
-export const formStyles = {
+// export const modalStyles = {
+//   sx: {
+//     position: "absolute",
+//     top: "50%",
+//     left: "50%",
+//     transform: "translate(-50%, -50%)",
+//     width: "100%",
+//     // width: "50ch",
+//     display: "flex",
+//     flexFlow: "column wrap",
+//     justifyContent: "center",
+//     alignItems: "center",
+//     width: {
+//       xs: "80%",
+//       sm: "70%",
+//       md: "50%",
+//       lg: "40%",
+//       xl: "40%",
+//     },
+//     // height: "100%",
+//     // height: "100vh",
+//     // maxWidth: {
+//     //   xs: "40ch", // 90% width on extra small screens
+//     //   sm: "40ch", // 600px max width on small screens and up
+//     //   md: "50ch", // 50 character width on medium screens and up
+//     // },
+//     // maxHeight: "100%",
+//     bgcolor: "background.paper",
+//     border: "1px solid #ffffff20",
+//     borderRadius: `${baseValues.borderRadius}`,
+//     boxShadow: 24,
+//     p: {
+//       xs: 2,
+//       sm: 2,
+//       md: 3,
+//       lg: 3,
+//       xl: 4,
+//     },
+//   },
+// };
+export const formProps = {
   className: "baseCrudForm",
   component: "form",
   sx: {
@@ -283,7 +284,7 @@ export const formStyles = {
     },
   },
 };
-export const formTitleStyles = {
+export const formTitleProps = {
   variant: "h1",
   sx: {
     width: "100%",
@@ -299,12 +300,13 @@ export const formTitleStyles = {
     },
   },
 };
-export const formFieldsGroupStyles = {
+export const formFieldsGroupProps = {
   className: "formfields--group",
   component: "",
   sx: { display: "flex", flexDirection: "column", gap: 2 },
 };
-export const formFieldStyles = {
+export const formFieldProps = {
+  variant: "outlined",
   sx: {
     // width: "100%",
     // display: "flex",
@@ -319,7 +321,7 @@ export const formFieldStyles = {
     },
   },
 };
-export const titleStyle = {
+export const titleProps = {
   component: "",
   variant: "h2",
   sx: {
@@ -367,23 +369,23 @@ export const flexListStyles = {
     // borderRadius: "0 0 4px 4px",
   },
 };
-export const cardStyles = {
-  sx: {
-    position: "relative",
-    maxWidth: {
-      xs: "95%", // Mobile
-      lg: "400px", // Example: Desktop limit
-    },
-    height: "100%",
+// export const cardStyles = {
+//   sx: {
+//     position: "relative",
+//     maxWidth: {
+//       xs: "95%", // Mobile
+//       lg: "400px", // Example: Desktop limit
+//     },
+//     height: "100%",
 
-    flex: "8 6 220px",
-    // flex: {
-    //   xs: "8 6 220px",
-    //   md: "4 2 120px",
-    //   lg: "1 1 100%", // Overrides with "8 6 220px" from 'lg' screen up
-    // },
-  },
-};
+//     flex: "8 6 220px",
+//     // flex: {
+//     //   xs: "8 6 220px",
+//     //   md: "4 2 120px",
+//     //   lg: "1 1 100%", // Overrides with "8 6 220px" from 'lg' screen up
+//     // },
+//   },
+// };
 // export const flexListItemStyles = {
 //   sx: {
 //     width: "100%",
@@ -421,16 +423,15 @@ export const cardStyles = {
 //   sx: { position: "", top: 0, pt: "" },
 // };
 
-//TODO: check where is this needed:
-export const cardActionStyles = {
-  sx: {
-    // width: "4ch",
-    // maxWidth: "4ch",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-};
+// export const cardActionStyles = {
+//   sx: {
+//     // width: "4ch",
+//     // maxWidth: "4ch",
+//     display: "flex",
+//     justifyContent: "center",
+//     alignItems: "center",
+//   },
+// };
 // export const basicAvatarStyles = {
 //   className: "basicAvatar",
 //   component: "",
@@ -502,7 +503,10 @@ export const subtitleProps = {
 //     "&:hover": { backgroundColor: "background.nav" },
 //   },
 // };
-export const backButtonStyles = { sx: { position: "absolute", zIndex: 10 } };
+// export const backButtonProps = {
+//   className: "button--back",
+//   sx: { position: "absolute", zIndex: 1000 },
+// };
 export const dataGridImageCellStyles = {
   sx: {
     // width: "10px",

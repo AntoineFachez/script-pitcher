@@ -73,7 +73,7 @@ export default function ProjectsList({
   const emailBody = `Hey, I wanted you to see this project.`;
 
   // --- This is the key refactoring ---
-  const getCardProps = (project) => {
+  const getCardActions = (project) => {
     const kebabActions = [
       {
         id: "edit",
@@ -256,7 +256,7 @@ export default function ProjectsList({
         collectionName="projects"
         widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
-        getCardProps={getCardProps}
+        getCardActions={getCardActions}
         handleRowClick={handleRowClick}
       />
     </>

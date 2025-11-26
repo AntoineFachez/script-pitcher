@@ -14,10 +14,10 @@ import { Save } from "@mui/icons-material";
 import { useAuth } from "@/context/AuthContext";
 import { useInFocus } from "@/context/InFocusContext";
 import {
-  formFieldsGroupStyles,
-  formFieldStyles,
-  formStyles,
-  formTitleStyles,
+  formFieldsGroupProps,
+  formFieldProps,
+  formProps,
+  formTitleProps,
 } from "@/theme/muiProps";
 
 /**
@@ -129,31 +129,13 @@ export default function UserForm({ crud }) {
   };
 
   return (
-    <Paper
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{
-        ...formStyles.sx,
-        // width: "100%",
-        // minWidth: {
-        //   xs: "100%",
-        //   sm: "15ch",
-        //   md: "15ch",
-        // },
-        // maxWidth: "50ch",
-        // mx: "auto",
-      }}
-    >
-      <Typography
-        variant={formTitleStyles.variant}
-        gutterBottom
-        sx={formTitleStyles.sx}
-      >
+    <Paper onSubmit={handleSubmit} {...formProps}>
+      <Typography gutterBottom {...formTitleProps}>
         {crud === "create" ? "Create User Profile" : "Edit User Profile"}
       </Typography>
-      <Box className="formfields--group" sx={formFieldsGroupStyles.sx}>
+      <Box {...formFieldsGroupProps}>
         <TextField
-          sx={formFieldStyles.sx}
+          {...formFieldProps}
           label="Display Name"
           name="displayName"
           value={formData.displayName}
@@ -161,7 +143,7 @@ export default function UserForm({ crud }) {
           required
         />
         <TextField
-          sx={formFieldStyles.sx}
+          {...formFieldProps}
           label="Email"
           name="email"
           value={formData.email}

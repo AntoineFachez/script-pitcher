@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Box,
   Typography,
@@ -23,17 +23,23 @@ import DownloadFileButton from "@/components/downloadButton/DownloadButton";
 
 import ElementList from "@/widgets/fileProfile/ElementsList";
 import BackButton from "@/components/backButton/BackButton";
-import { backButtonStyles } from "@/theme/muiProps";
+import { useApp } from "@/context/AppContext";
 
 /**
  * This component consumes the DocumentContext and renders the UI.
  * It shows loading, error, and success states.
  */
 export default function Widget({ togglePublishProject }) {
+  const { setAppContext } = useApp();
   const { orientationDrawer, handleToggleDrawer } = useUi();
   const { projectId, fileData, loading, error, handleDeleteElement } =
     useFile();
   const containerRef = useRef();
+  useEffect(() => {
+    setAppContext("files");
+
+    return () => {};
+  }, []);
   // 4. Handle the loading state
   if (loading) {
     return (
@@ -106,7 +112,7 @@ export default function Widget({ togglePublishProject }) {
 
   return (
     <>
-      <BackButton sx={backButtonStyles} />
+      <BackButton />
       <Box
         ref={containerRef}
         className="pdfviewer"

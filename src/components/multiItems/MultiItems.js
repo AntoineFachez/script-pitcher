@@ -20,7 +20,7 @@ export default function MultiItems({
   collectionName,
   widgetConfig,
   schemeDefinition,
-  getCardProps, // Function from parent to get item-specific props
+  getCardActions, // Function from parent to get item-specific props
   handleRowClick,
 }) {
   const { toggleDetails, showCardMedia } = useUi();
@@ -63,7 +63,7 @@ export default function MultiItems({
         >
           {data.map((item, index) => {
             // Get all item-specific props from the parent widget
-            const cardProps = getCardProps(item);
+            const cardActions = getCardActions(item);
 
             return (
               <BasicCard
@@ -72,11 +72,11 @@ export default function MultiItems({
                 itemInFocus={itemInFocus} // Use generic itemInFocus
                 collection={collectionName}
                 schemeDefinition={schemeDefinition}
-                cardProps={cardProps} // Pass all props (actions, handlers, etc.)
+                cardActions={cardActions} // Pass all props (actions, handlers, etc.)
                 toggleDetails={toggleDetails}
                 disablePadding
 
-                // customItem prop can still be passed via cardProps if needed
+                // customItem prop can still be passed via cardActions if needed
               />
             );
           })}

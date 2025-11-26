@@ -4,23 +4,23 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { IconButton, Chip, Typography, Box } from "@mui/material";
+import { Favorite, Share, Person, PersonOff, Edit } from "@mui/icons-material";
+
 import { useInFocus } from "@/context/InFocusContext";
 import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
 import { useAuth } from "@/context/AuthContext";
-import { IconButton, Chip, Typography, Box } from "@mui/material";
-import { Favorite, Share, Person, PersonOff, Edit } from "@mui/icons-material";
 
-import KebabMenu from "@/components/menus/KebabMenu";
-import ShareButton from "@/components/share/ShareButton";
-
-import SectionMenu from "@/components/sectionHeader/SectionMenu";
-import CrudItem from "../crudItem";
 import ExpirationTimeCell from "@/components/timeCells/ExpirationTimeCell";
+import KebabMenu from "@/components/menus/KebabMenu";
+import MultiItems from "@/components/multiItems/MultiItems";
+import ShareButton from "@/components/share/ShareButton";
+import SectionHeader from "@/components/sectionHeader/SectionHeader";
+
+import CrudItem from "../crudItem";
 
 import config from "@/lib/widgetConfigs/invitations.widgetConfig.json";
-import MultiItems from "@/components/multiItems/MultiItems";
-import SectionHeader from "@/components/sectionHeader/SectionHeader";
 const { widgetConfig, schemeDefinition } = config;
 
 export default function InvitationsList({
@@ -136,7 +136,7 @@ export default function InvitationsList({
 
   // --- This is the key refactoring ---
   // This function builds the props for each BasicCard
-  const getCardProps = (user) => {
+  const getCardActions = (user) => {
     const kebabActions = [
       {
         id: "edit",
@@ -240,7 +240,7 @@ export default function InvitationsList({
         collectionName="users"
         widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
-        getCardProps={getCardProps}
+        getCardActions={getCardActions}
         handleRowClick={handleRowClick}
       />
     </>

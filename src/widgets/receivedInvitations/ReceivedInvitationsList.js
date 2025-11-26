@@ -127,7 +127,7 @@ export default function Widget({
 
   // --- This is the key refactoring ---
   // This function builds the props for each BasicCard
-  const getCardProps = (user) => {
+  const getCardActions = (user) => {
     const kebabActions = [
       {
         id: "edit",
@@ -229,7 +229,7 @@ export default function Widget({
         collectionName="users"
         widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
-        getCardProps={getCardProps}
+        getCardActions={getCardActions}
         handleRowClick={handleRowClick}
       />
     </>

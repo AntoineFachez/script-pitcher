@@ -64,7 +64,11 @@ export default function FilesList({
     event.defaultMuiPrevented = true;
     const item = params.row;
     setAppContext(widgetConfig.context);
-    setItemInFocus(item);
+
+    setFileInFocus(item);
+    if (item.id) {
+      router.push(`/projects/${projectInFocus.id}/files/${item.id}`);
+    }
   };
 
   const handleClickAvatar = (item) => {
@@ -114,8 +118,8 @@ You can read it here: ${article.url}
 Best,
 ${article.author}
 `;
-  // --- getCardProps function ---
-  const getCardProps = (episode) => {
+  // --- getCardActions function ---
+  const getCardActions = (episode) => {
     const kebabActions = [
       {
         id: "edit",
@@ -294,7 +298,7 @@ ${article.author}
         collectionName={"files"}
         widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
-        getCardProps={getCardProps}
+        getCardActions={getCardActions}
         handleRowClick={handleRowClick}
       />
     </>

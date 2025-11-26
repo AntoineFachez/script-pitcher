@@ -10,7 +10,7 @@ import Avatar from "@mui/material/Avatar";
 import { stringAvatar } from "@/utils/colorHelpers";
 import { subtitleProps } from "@/theme/muiProps";
 
-export default function CardItemHeader({ cardProps }) {
+export default function CardItemHeader({ cardActions }) {
   const {
     item,
     headerActions,
@@ -22,7 +22,7 @@ export default function CardItemHeader({ cardProps }) {
     handleClickTitle,
     handleClickSubTitle,
     alertElement,
-  } = cardProps;
+  } = cardActions;
   return (
     <>
       <CardHeader

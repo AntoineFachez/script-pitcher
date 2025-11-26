@@ -15,9 +15,9 @@ import AllProjectImages from "@/components/imageGallery/ImageGallery";
 import ProfileHeaderForm from "./ProfileHeaderForm";
 import { useState } from "react";
 import {
-  formFieldsGroupStyles,
-  formStyles,
-  formTitleStyles,
+  formFieldsGroupProps,
+  formProps,
+  formTitleProps,
 } from "@/theme/muiProps";
 
 export default function BaseCrudForm({
@@ -55,18 +55,13 @@ export default function BaseCrudForm({
 
   return (
     <Paper
-      className={`${formStyles.className}__${widgetConfig?.context}`}
-      component={formStyles.component}
-      sx={formStyles.sx}
+      className={`${formProps.className}__${widgetConfig?.context}`}
+      {...formProps}
       onSubmit={onSubmit}
     >
       {/* 1. Header Title */}
 
-      <Typography
-        variant={formTitleStyles.variant}
-        gutterBottom
-        sx={formTitleStyles.sx}
-      >
+      <Typography gutterBottom {...formTitleProps}>
         {title}
       </Typography>
 
@@ -89,8 +84,8 @@ export default function BaseCrudForm({
           }}
         >
           <Box
-            className={`${formFieldsGroupStyles.className}__${widgetConfig?.context}`}
-            sx={formFieldsGroupStyles.sx}
+            className={`${formFieldsGroupProps.className}__${widgetConfig?.context}`}
+            {...formFieldsGroupProps}
           >
             {children}
 

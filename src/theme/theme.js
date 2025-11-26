@@ -154,5 +154,6 @@ export const brightTheme = createTheme({
     ...sharedComponents,
   },
   transitions: { duration: { shortest: 200 } },
+  baseValues: { borderRadius: "0.5rem" },
   deviceLayout,
 });

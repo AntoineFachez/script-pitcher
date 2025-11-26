@@ -55,24 +55,28 @@ export default function CrudItem({ context, crud, itemInFocus, type }) {
     // 'create' or 'update' a project
     return <EpisodeForm crud={crud} />;
   }
-  if (context === "users" && crud === "create") {
-    // 'create' or 'update' a project
-    return <UserForm crud={crud} />;
-  }
-  if (context === "me" && crud === "update") {
-    // 'create' or 'update' a project
-    return <UserForm crud={crud} />;
-  }
   if (context === "users" && crud === "inviteUser") {
     // 'inviteUser' a user to a project
     return <InviteUserForm crud={crud} />;
   }
-
-  // <-- 2. ADD THE NEW CONTEXT BLOCK -->
-  if (context === "me") {
-    // 'update' my profile
+  if (context === "users" || context === "me") {
+    // 'create' or 'update' a project
     return <UserForm crud={crud} />;
   }
+  // if (context === "users" && crud === "create") {
+  //   // 'create' or 'update' a project
+  //   return <UserForm crud={crud} />;
+  // }
+  // if (context === "me" && crud === "update") {
+  //   // 'create' or 'update' a project
+  //   return <UserForm crud={crud} />;
+  // }
+
+  // <-- 2. ADD THE NEW CONTEXT BLOCK -->
+  // if (context === "me") {
+  //   // 'update' my profile
+  //   return <UserForm crud={crud} />;
+  // }
 
   return null; // Or some error/fallback UI
 }

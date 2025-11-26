@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { Button, IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-export default function BackButton({ sx }) {
+export default function BackButton({}) {
   const params = useParams();
 
   // Next.js automatically extracts 'projectId' if your folder is named [projectId]
@@ -19,7 +19,7 @@ export default function BackButton({ sx }) {
     <Link
       href={`/projects/${projectId}`}
       passHref
-      style={{ textDecoration: "none", ...sx.sx }}
+      style={{ textDecoration: "none", ...backButtonProps.sx }}
     >
       <IconButton variant="outlined">
         <ArrowBackIcon />
@@ -27,3 +27,7 @@ export default function BackButton({ sx }) {
     </Link>
   );
 }
+const backButtonProps = {
+  className: "button--back",
+  sx: { position: "absolute", zIndex: 100 },
+};

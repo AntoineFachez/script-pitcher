@@ -21,7 +21,7 @@ import CrudItem from "../crudItem";
 
 import config from "@/lib/widgetConfigs/episodes.widgetConfig.json";
 const { widgetConfig, schemeDefinition } = config;
-import { dataGridImageCellStyles, subtitleStyles } from "@/theme/muiProps";
+import { dataGridImageCellStyles } from "@/theme/muiProps";
 import SectionHeader from "@/components/sectionHeader/SectionHeader";
 
 export default function EpisodesList({
@@ -116,8 +116,8 @@ export default function EpisodesList({
     },
   ];
   const visibleColumns = columns.filter(Boolean);
-  // --- getCardProps function ---
-  const getCardProps = (episode) => {
+  // --- getCardActions function ---
+  const getCardActions = (episode) => {
     const kebabActions = [
       {
         id: "edit",
@@ -190,7 +190,7 @@ export default function EpisodesList({
         collectionName="users"
         widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
-        getCardProps={getCardProps}
+        getCardActions={getCardActions}
         handleRowClick={handleRowClick}
       />
     </>

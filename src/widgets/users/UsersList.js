@@ -176,7 +176,7 @@ export default function UsersList({
   const visibleColumns = columns.filter(Boolean);
   // --- This is the key refactoring ---
   // This function builds the props for each BasicCard
-  const getCardProps = (user) => {
+  const getCardActions = (user) => {
     const kebabActions = [
       {
         id: "edit",
@@ -279,7 +279,7 @@ export default function UsersList({
         collectionName="users"
         widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
-        getCardProps={getCardProps}
+        getCardActions={getCardActions}
         handleRowClick={handleRowClick}
       />
     </>

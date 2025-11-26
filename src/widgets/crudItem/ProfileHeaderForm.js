@@ -4,8 +4,6 @@ import { Box, IconButton } from "@mui/material";
 import { CameraAlt } from "@mui/icons-material";
 import BasicAvatar from "@/components/avatar/BasicAvatar";
 
-import { profileHeaderBannerStyles } from "@/theme/muiProps";
-
 export default function ProfileHeaderForm({
   widgetConfig,
   formData,
@@ -18,8 +16,8 @@ export default function ProfileHeaderForm({
       {...profileHeaderFormProps}
     >
       <Box
-        className={`${profileHeaderBannerStyles?.className}__${widgetConfig?.context}`}
-        // sx={profileHeaderBannerStyles.sx}
+        className={`${profileHeaderBannerProps?.className}__${widgetConfig?.context}`}
+        {...profileHeaderBannerProps}
       >
         <IconButton
           onClick={(e) => {
@@ -92,5 +90,16 @@ const profileHeaderAvatarcontainerProps = {
   sx: {
     width: "100%",
     height: "100%",
+  },
+};
+const profileHeaderBannerProps = {
+  className: "profileHeader--banner",
+  component: "",
+  sx: {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+    // minHeight: "200px",
+    border: "solid #ccc 1px",
   },
 };

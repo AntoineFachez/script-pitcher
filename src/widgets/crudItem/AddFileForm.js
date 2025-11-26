@@ -17,7 +17,7 @@ import { Save } from "@mui/icons-material";
 
 import { useAuth } from "@/context/AuthContext";
 import { useCrud } from "@/context/CrudItemContext";
-import { formStyles } from "@/theme/muiProps";
+import { formProps } from "@/theme/muiProps";
 
 export default function AddFileForm({ widgetConfig }) {
   const { firebaseUser } = useAuth();
@@ -134,17 +134,12 @@ export default function AddFileForm({ widgetConfig }) {
 
   return (
     <Paper
-      className={`${formStyles.className}__${widgetConfig?.context}`}
-      component={formStyles.component}
+      className={`${formProps.className}__${widgetConfig?.context}`}
       onSubmit={onSubmit}
-      sx={formStyles.sx}
+      {...formProps}
     >
       <Box sx={{ width: "100%", display: "flex", flexFlow: "row wrap" }}>
-        <Typography
-          variant={formTitleStyles.variant}
-          gutterBottom
-          sx={formTitleStyles.sx}
-        >
+        <Typography gutterBottom {...formTitleProps}>
           Add File to Project: {projectInFocus?.title}
         </Typography>
       </Box>

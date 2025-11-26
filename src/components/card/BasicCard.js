@@ -8,10 +8,9 @@ import Collapse from "@mui/material/Collapse";
 import CardItemHeader from "./CardItemHeader";
 import CardItemActions from "./CardItemActions";
 import CardItemMedia from "./CardItemMedia";
-import { cardStyles } from "@/theme/muiProps";
 
 export default function BasicCard({
-  cardProps,
+  cardActions,
   item,
   itemInFocus,
   collection,
@@ -37,13 +36,15 @@ export default function BasicCard({
         key={item[schemeDefinition?.id]}
         href={`/${collection}/${item[schemeDefinition?.id]}`} // Use the correct path
         passHref
-        onClick={() => cardProps.handleClickTitle(item)}
+        onClick={() => cardActions.handleClickTitle(item)}
       >
-        {toggleDetails && <CardItemHeader cardProps={{ ...cardProps, item }} />}
+        {toggleDetails && (
+          <CardItemHeader cardActions={{ ...cardActions, item }} />
+        )}
       </Link>
 
-      {cardProps.showCardMedia && (
-        <CardItemMedia cardProps={{ ...cardProps, item }} />
+      {cardActions.showCardMedia && (
+        <CardItemMedia cardActions={{ ...cardActions, item }} />
       )}
       <Collapse
         in={expanded}
@@ -55,9 +56,26 @@ export default function BasicCard({
       </Collapse>
       {toggleDetails && (
         <CardItemActions
-          cardProps={{ ...cardProps, expanded, handleExpandClick }}
+          cardActions={{ ...cardActions, expanded, handleExpandClick }}
         />
       )}
     </Card>
   );
 }
+const cardStyles = {
+  sx: {
+    position: "relative",
+    maxWidth: {
+      xs: "95%", // Mobile
+      lg: "400px", // Example: Desktop limit
+    },
+    height: "100%",
+
+    flex: "8 6 220px",
+    // flex: {
+    //   xs: "8 6 220px",
+    //   md: "4 2 120px",
+    //   lg: "1 1 100%", // Overrides with "8 6 220px" from 'lg' screen up
+    // },
+  },
+};

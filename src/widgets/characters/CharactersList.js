@@ -128,8 +128,8 @@ export default function CharactersList({
     },
   ];
   const visibleColumns = columns.filter(Boolean);
-  // --- getCardProps function ---
-  const getCardProps = (character) => {
+  // --- getCardActions function ---
+  const getCardActions = (character) => {
     const kebabActions = [
       {
         id: "edit",
@@ -201,7 +201,7 @@ export default function CharactersList({
         collectionName="users"
         widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
-        getCardProps={getCardProps}
+        getCardActions={getCardActions}
         handleRowClick={handleRowClick}
       />
 

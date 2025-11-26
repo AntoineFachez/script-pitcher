@@ -30,11 +30,11 @@ const Expand = styled((props) => {
   ],
 }));
 
-export default function CardItemActions({ cardProps }) {
-  const { expanded, handleExpandClick, actions } = cardProps;
+export default function CardItemActions({ cardActions }) {
+  const { expanded, handleExpandClick, actions } = cardActions;
 
   return (
-    <CardActions disableSpacing>
+    <CardActions disableSpacing {...cardActionProps}>
       {actions}
 
       <Expand
@@ -49,3 +49,13 @@ export default function CardItemActions({ cardProps }) {
     </CardActions>
   );
 }
+const cardActionProps = {
+  className: "card--actions",
+  sx: {
+    // width: "4ch",
+    // maxWidth: "4ch",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+};

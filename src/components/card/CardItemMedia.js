@@ -6,7 +6,7 @@ import { Box, CardMedia, Chip, List, Typography } from "@mui/material";
 import { useUi } from "@/context/UiContext";
 import { getButton } from "@/lib/maps/iconMap";
 
-export default function CardItemMedia({ cardProps }) {
+export default function CardItemMedia({ cardActions }) {
   const { toggleDetails } = useUi();
   const {
     item,
@@ -20,7 +20,7 @@ export default function CardItemMedia({ cardProps }) {
     handleClickSubTitle,
     handleAddImteImage,
     alertElement,
-  } = cardProps;
+  } = cardActions;
 
   const projectTitle = (
     <Typography
