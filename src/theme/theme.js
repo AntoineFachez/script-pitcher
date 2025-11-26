@@ -15,11 +15,8 @@ export const deviceLayout = {
     desktop: "8 6 220px",
   },
 };
-const baseBorder = {
-  borderWidth: "1px",
-  borderColor: "#63e7eb",
-  borderRadius: "10px",
-};
+const baseBorder = "3px #262626ff solid";
+
 // --- Dark Theme ---
 export const darkTheme = createTheme({
   palette: {
@@ -37,8 +34,8 @@ export const darkTheme = createTheme({
       "#ff0000 0%, #ff9a00 10%, #d0de21 20%, #4fdc4a 30%, #3fdad8 40%, #2fc9e2 50%, #1c7fee 60%, #5f15f2 70%, #ba0cf8 80%, #fb07d9 90%, #ff0000 100%",
     button: {
       inactive: "#6d7075ff",
-      active: "hotpink",
-      activeBackground: "#dbdde2ff",
+      active: "#ff69b4",
+      activeBackground: "#1f1f1fff",
       // background: "#4a4c4a0d",
       background: "transparent",
       hover: "#91949152",

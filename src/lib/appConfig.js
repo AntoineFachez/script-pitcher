@@ -14,7 +14,7 @@ import NavBarButtonUsers from "@/widgets/userProfile";
 
 import QuickMenu from "@/components/menus/QuickMenu";
 import BasicDrawer from "@/components/drawer/Drawer";
-import SideNavBar from "@/components/sideNavBar/SideNavBar";
+import SideNavBar from "@/components/sideBar/SideBar";
 import AppHeader from "@/components/appHeader/AppHeader";
 
 export const topNavActions = (

@@ -24,5 +24,5 @@ export default function SectionHeader({
 const sectionHeaderProps = {
   className: "section--header",
   component: "",
-  sx: { position: "", top: 0, pt: "" },
+  sx: { position: "", top: 0, padding: "0.5rem 0 0 0.5rem" },
 };

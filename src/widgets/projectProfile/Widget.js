@@ -43,7 +43,10 @@ export default function Widget({
     width: "100%",
     height: "100%", // Change to 100% of the viewport for testing, or use a calculated height
     display: "flex",
+    // justifyContent: "center",
+    // alignItems: "center",
     flexFlow: "column nowrap",
+    // padding: "0 2rem",
     overflow: "hidden",
   };
   const tabsArray = [
