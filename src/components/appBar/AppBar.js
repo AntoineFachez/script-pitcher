@@ -1,31 +1,23 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/NAVBAR/NAVBAR.JS
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/APPBAR/APPBAR.JS
 
 "use client";
 import React from "react";
-import { AppBar, Box, Container, Toolbar } from "@mui/material";
+import { AppBar } from "@mui/material";
 
 import { getButton } from "@/lib/maps/iconMap";
-import { handleSetNewAppContext } from "@/lib/actions/appActions";
 import { topNavActions } from "@/lib/appConfig";
 
 import { useApp } from "@/context/AppContext";
-import { useAuth } from "@/context/AuthContext";
-import { useThemeContext } from "@/context/ThemeContext";
 import { useUi } from "@/context/UiContext";
 
-import AppHeader from "../appHeader/AppHeader";
-import { appBarStyles } from "@/theme/muiProps";
-
-export default function BasicAppBar({ spaceProps }) {
-  const { appContext, setAppContext, loading } = useApp();
-  const { handleLogout } = useAuth();
+export default function BasicAppBar({}) {
+  const { appContext } = useApp();
   const {
     isDesktop,
     currentWindowSize,
     handleToggleDrawer,
     orientationDrawer,
   } = useUi();
-  const { toggleColorMode } = useThemeContext();
 
   const optionsToRender = topNavActions(
     appContext,
@@ -35,11 +27,7 @@ export default function BasicAppBar({ spaceProps }) {
     isDesktop
   );
   return (
-    <AppBar
-      className={`${appBarStyles.className}`}
-      position="fixed"
-      sx={{ ...appBarStyles.sx, ...spaceProps.sx }}
-    >
+    <AppBar {...appBarProps}>
       {optionsToRender?.map((option, i) => {
         const onClickHandler = (e) => {
           e.stopPropagation();
@@ -67,3 +55,15 @@ export default function BasicAppBar({ spaceProps }) {
     </AppBar>
   );
 }
+const appBarProps = {
+  className: "app--bar",
+  sx: {
+    display: "flex",
+    flexFlow: "row nowrap",
+    justifyContent: "space-between",
+    alignItems: "center",
+    // p: "0 24px",
+    // backgroundColor: "background.nav",
+    backgroundColor: "bars.app",
+  },
+};

@@ -2,18 +2,18 @@
 
 const randomDeg = Math.random() * 360;
 const baseValues = { borderRadius: "0.5rem" };
-export const appBarStyles = {
-  className: "app--bar",
-  sx: {
-    display: "flex",
-    flexFlow: "row nowrap",
-    justifyContent: "space-between",
-    alignItems: "center",
-    // p: "0 24px",
-    // backgroundColor: "background.nav",
-    backgroundColor: "bars.app",
-  },
-};
+// export const appBarStyles = {
+//   className: "app--bar",
+//   sx: {
+//     display: "flex",
+//     flexFlow: "row nowrap",
+//     justifyContent: "space-between",
+//     alignItems: "center",
+//     // p: "0 24px",
+//     // backgroundColor: "background.nav",
+//     backgroundColor: "bars.app",
+//   },
+// };
 
 export const sidebarStyles = {
   sx: {

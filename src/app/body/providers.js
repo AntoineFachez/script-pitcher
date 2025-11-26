@@ -55,7 +55,7 @@ export function Providers({ children, meData }) {
                       }}
                       theme={darkTheme === "dark" ? "dark" : "light"}
                     >
-                      <AuthenticatedLayout children={children} />
+                      <AuthenticatedLayout>{children}</AuthenticatedLayout>
                     </Box>
                   </CrudProvider>
                 </InFocusProvider>
