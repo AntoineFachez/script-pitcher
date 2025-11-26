@@ -26,6 +26,7 @@ import SectionHeader from "@/components/sectionHeader/SectionHeader";
 const { widgetConfig, schemeDefinition } = config;
 
 export default function UsersList({
+  context,
   data,
   isLoading,
   // ... any other handlers passed from parent page
@@ -55,11 +56,11 @@ export default function UsersList({
     const user = params.row;
     setAppContext("users");
     setUserInFocus(user);
-    console.log("clicked row user", user.id, firebaseUser);
-    if (user.id === firebaseUser.uid) {
+    console.log("clicked row user", user, user.uid, firebaseUser);
+    if (user.uid === firebaseUser.uid) {
       router.push(`/me`);
-    } else if (user.id) {
-      router.push(`/users/${user.id}`);
+    } else if (user.uid) {
+      router.push(`/users/${user.uid}`);
     }
   };
 

@@ -3,27 +3,7 @@
 "use server";
 
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
-import { FieldPath } from "firebase-admin/firestore";
-
-// (The getDocsInBatches function remains the same as my previous answer)
-async function getDocsInBatches(collectionRef, ids) {
-  if (!ids || ids.length === 0) {
-    return [];
-  }
-  const batches = [];
-  const batchSize = 30;
-  for (let i = 0; i < ids.length; i += batchSize) {
-    const batchIds = ids.slice(i, i + batchSize);
-    const q = collectionRef.where(FieldPath.documentId(), "in", batchIds);
-    batches.push(q.get());
-  }
-  const snapshots = await Promise.all(batches);
-  const results = [];
-  snapshots.forEach((snapshot) => {
-    snapshot.docs.forEach((doc) => results.push({ id: doc.id, ...doc.data() }));
-  });
-  return results;
-}
+import { getDocsInBatches } from "../firebase/utils";
 
 export async function getProjectsAndMembers(userId) {
   // console.log(
@@ -41,7 +21,6 @@ export async function getProjectsAndMembers(userId) {
     const summarySnap = await summaryRef.get();
 
     if (!summarySnap.exists) {
-      // This is correct (it's a property)
       // console.log(
       //   `[getProjectsAndMembers] ⚠️ No summary document found for user ${userId}. Returning empty data.`
       // );
@@ -99,9 +78,6 @@ export async function getProjectsAndMembers(userId) {
     }
 
     // --- START FIX: Serialize Timestamps ---
-    // We must convert all Timestamp objects to strings before returning.
-    // This is the same logic you use in [projectId]/page.js.
-
     const serializableProjects = fetchedProjects.map((project) => {
       const members = project.members
         ? Object.fromEntries(
@@ -119,7 +95,7 @@ export async function getProjectsAndMembers(userId) {
         ...project,
         createdAt: project?.createdAt?.toDate().toISOString() || null,
         updatedAt: project?.updatedAt?.toDate().toISOString() || null,
-        members: members, // Add the serialized members map
+        members: members,
       };
     });
 
@@ -133,15 +109,58 @@ export async function getProjectsAndMembers(userId) {
     });
     // --- END FIX ---
 
+    // --- START FIX: Enrichment / Cross-Referencing ---
+
+    // 1. Create a Map of users for fast lookup by ID
+    const userMap = new Map(serializableUsers.map((u) => [u.id, u]));
+
+    // 2. Enrich Projects: Inject full user profile data into the project.members object
+    const enrichedProjects = serializableProjects.map((project) => {
+      const enrichedMembers = {};
+
+      // Iterate over the existing members (which contain role/joinedAt)
+      if (project.members) {
+        Object.entries(project.members).forEach(([uid, roleData]) => {
+          const userProfile = userMap.get(uid) || {};
+
+          // Merge user profile properties into the member object.
+          // Note: If `roleData` and `userProfile` share keys, the order determines priority.
+          // Usually we want the profile data (displayName, avatar) + the role data.
+          enrichedMembers[uid] = {
+            ...userProfile, // displayName, email, etc.
+            ...roleData, // role, joinedAt, etc.
+          };
+        });
+      }
+
+      return {
+        ...project,
+        members: enrichedMembers,
+      };
+    });
+
+    // 3. Enrich Users: Add an array of projects the user belongs to
+    const enrichedUsers = serializableUsers.map((user) => {
+      // Find all projects where this user's ID exists in the members keys
+      const userProjects = enrichedProjects.filter(
+        (project) => project.members && project.members[user.id]
+      );
+
+      return {
+        ...user,
+        projects: userProjects, // Attaches the full array of (now enriched) projects
+      };
+    });
+
+    // --- END FIX ---
+
     // console.log(
-    //   "[getProjectsAndMembers] 🎉 Fetch complete. Returning SERIALIZED data."
+    //   "[getProjectsAndMembers] 🎉 Fetch complete. Returning ENRICHED data."
     // );
 
-    // Return the serialized, client-safe data
-    return { projects: serializableProjects, users: serializableUsers };
+    return { projects: enrichedProjects, users: enrichedUsers };
   } catch (err) {
     console.error("Error fetching projects and members:", err.message);
-    // Re-throw the error so the client's 'catch' block can see it
     throw new Error(err.message);
   }
 }

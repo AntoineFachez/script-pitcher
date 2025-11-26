@@ -52,6 +52,7 @@ export default async function ViewProjectPage({ params }) {
         .get();
       usersQuery.docs.forEach((doc) => {
         membersData.push({
+          uid: doc.id,
           ...doc.data(),
           role: projectProfile?.members[doc.id],
         });
