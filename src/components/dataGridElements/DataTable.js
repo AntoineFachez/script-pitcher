@@ -1,37 +1,20 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/DATAGRIDELEMENTS/DATATABLE.JS
 
-import { useState, useEffect, useMemo, useCallback } from "react";
-import {
-  DataGrid,
-  useGridApiContext,
-  useGridSelector,
-  gridPageCountSelector,
-} from "@mui/x-data-grid";
-import MuiPagination from "@mui/material/Pagination";
-
+import { useState, useEffect, useCallback } from "react";
+import { DataGrid } from "@mui/x-data-grid";
 import { useUi } from "@/context/UiContext";
 import { useDataGridRowsAndColumns } from "./dataGridUtils";
-
 import GridCustomToolbar from "./GridCustomToolbar";
-import CustomFooter from "./CustomFooter";
 
-const initialState = {
-  pagination: {
-    paginationModel: {
-      pageSize: 5,
-    },
-  },
-  scroll: {
-    left: 0, // Start at the leftmost position
-  },
-};
+// 1. Define constants outside to prevent re-creation
+const PAGE_SIZE_OPTIONS = [5, 10, 25, 50, 100];
+
 export default function DataTable({
   loading,
   data,
   columns,
   rowActions,
   handleRowClick,
-  handleCellClick,
 }) {
   const {
     isDesktop,
@@ -41,141 +24,74 @@ export default function DataTable({
     densityDataGrid,
     setDensityDataGrid,
   } = useUi();
+
   const { rows, columnsWithActions } = useDataGridRowsAndColumns(
     data,
     columns,
     rowActions
   );
 
+  // 2. Controlled Pagination State
+  // This is the "Single Source of Truth" for your pagination.
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 10,
     page: 0,
   });
-  const [savedState, setSavedState] = useState({
-    count: 0,
-    initialState: data?.initialState,
-    density: "compact",
-  });
-  const syncState = useCallback((newInitialState) => {
-    setSavedState((prev) => ({
-      count: prev.count + 1,
-      initialState: newInitialState,
-    }));
-  }, []);
 
+  // 3. Simplified Density Logic
+  // Combine your effects to avoid race conditions
   useEffect(() => {
-    setDensityDataGrid(isExpandedTable ? "comfortable" : "compact");
-  }, [isExpandedTable]);
-  useEffect(() => {
-    setDensityDataGrid(isDesktop ? "compact" : "comfortable");
-  }, [isDesktop]);
-
-  const Pagination = ({ page, onPageChange, className }) => {
-    const apiRef = useGridApiContext();
-    const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
-    return (
-      <MuiPagination
-        color="primary"
-        className={className}
-        count={pageCount}
-        page={page + 1}
-        onChange={(event, newPage) => {
-          onPageChange(event, newPage - 1);
-        }}
-      />
-    );
-  };
+    if (isExpandedTable) {
+      setDensityDataGrid("comfortable");
+    } else {
+      setDensityDataGrid(isDesktop ? "compact" : "comfortable");
+    }
+  }, [isExpandedTable, isDesktop, setDensityDataGrid]);
 
   return (
     <DataGrid
-      columnBuffer={1}
-      columnThreshold={1}
-      key={savedState.count}
+      // --- DATA ---
       loading={loading}
       rows={rows}
-      // rowCount={rows.length}
       columns={columnsWithActions}
+      // --- EVENTS ---
       onRowClick={handleRowClick}
-      // onCellClick={handleCellClick}
-      // isCellEditable={() => "collection"}
-      checkboxSelection={!isMobile}
-      disableRowSelectionOnClick={true}
-      initialState={{
-        ...data?.initialState,
-        // filter: {
-        //   filterModel: {
-        //     items: [{ field: "docCount", operator: ">", value: 10 }],
-        //   },
-        // },
-        pagination: { paginationModel: { pageSize: 5 } },
-        // sorting: {
-        //   sortModel: [{ field: "docCount", sort: "desc" }],
-        // },
-      }}
-      // initialState={savedState.initialState}
+      disableRowSelectionOnClick
+      // --- PAGINATION (Controlled) ---
+      // We use paginationModel instead of initialState.pagination
       paginationModel={paginationModel}
       onPaginationModelChange={setPaginationModel}
-      pageSizeOptions={[5, 10, 25, 50, 100]}
-      // autoPageSize={true}
-      autoPageSize={false}
-      // autoHeight
-      showToolbar
+      pageSizeOptions={PAGE_SIZE_OPTIONS}
+      // --- LAYOUT & UI ---
+      density={densityDataGrid}
+      onDensityChange={(newDensity) => setDensityDataGrid(newDensity)}
+      showColumnVerticalBorder={true}
+      checkboxSelection={!isMobile}
+      // --- SLOTS (Injecting Custom Components) ---
       slots={{
         toolbar: GridCustomToolbar,
-        footer: CustomFooter,
+        // If you want a custom footer, uncomment this:
+        // footer: CustomFooter,
       }}
+      // --- SLOT PROPS (Configuring those Components) ---
       slotProps={{
         toolbar: {
-          syncState,
-          isExpandedTable: isExpandedTable,
-          setIsExpandedTable: setIsExpandedTable,
+          isExpandedTable,
+          setIsExpandedTable,
         },
-        basePagination: {
-          material: {
-            ActionsComponent: Pagination,
-          },
-        },
+        // This targets the default Pagination component to style the "Rows per page" dropdown
         pagination: {
-          pageSizeOptions: [5, 10, 25, 50, 100],
-          sx: {
-            "& .MuiInputBase-root": {
-              backgroundColor: "red",
+          SelectProps: {
+            MenuProps: {
+              sx: {
+                "& .MuiList-root": {
+                  backgroundColor: "steelblue",
+                },
+              },
             },
           },
         },
-        footer: { customProp: "value" },
       }}
-      // sx={{
-      //   border: 0,
-      //   // MuiPaper: { root: { width: "100%" } },
-      //   MuiInputBase: { root: { width: "100%" } },
-      //   "& .MuiInputBase-root MuiInputBase-colorPrimary MuiTablePagination-select":
-      //     { root: { width: "fit-content" } },
-      // }}
-      density={densityDataGrid}
-      // onDensityChange={handleDensityChange}
-      onDensityChange={(newDensity) => setDensityDataGrid(newDensity)}
-      // showColumnVerticalBorder={true}
-      // hideFooter={!isExpandedTable ? true : false}
-      hideFooterSelectedRowCount={!isExpandedTable ? true : false}
-      // hideFooterSelectedRowCount={false}
-      // hideFooterPagination={!isExpandedTable ? true : false}
-      // labelRowsPerPage="Items per Page"
-
-      // slots={{
-      //   // toolbar: CustomToolbar,
-      //   toolbar: CustomToolbar,
-      //   // toolbar: ToolbarContainer,
-      //   // noRowsOverlay: MyNoRowsOverlay,
-      //   // toolbar: GridToolbar && Toolbar,
-      //   // toolbar: (
-      //   //   <>
-      //   //     <Toolbar />
-      //   //   </>
-      //   // ),
-      //   // rowReorderIcon: <SwapVert />,
-      // }}
     />
   );
 }

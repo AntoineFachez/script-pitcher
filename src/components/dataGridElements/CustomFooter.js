@@ -12,17 +12,19 @@ export default function CustomFooter(props) {
   // props.rowCount and props.selectedRowCount are passed in automatically
 
   return (
-    <GridFooterContainer {...dataGridFooterContainerProps}>
-      {/* This renders the "X rows selected" text */}
+    <>
       <GridFooter {...props} sx={{ border: "none" }} />
+      <GridFooterContainer {...dataGridFooterContainerProps}>
+        {/* This renders the "X rows selected" text */}
 
-      {/* This renders the "1-5 of X" and page controls */}
-      {/* <GridPagination {...props} /> */}
-    </GridFooterContainer>
+        {/* This renders the "1-5 of X" and page controls */}
+        <GridPagination {...props} />
+      </GridFooterContainer>
+    </>
   );
 }
 const dataGridFooterContainerProps = {
-  className: "datagrid",
+  className: "datagrid--customFooter",
   component: "",
   sx: {
     width: "100%",
