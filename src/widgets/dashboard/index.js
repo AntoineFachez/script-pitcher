@@ -3,6 +3,7 @@
 "use client";
 import React from "react";
 
+import { useData } from "@/context/DataContext";
 import NavBarButton from "@/components/appBar/navBarButton/NavBarButton";
 
 import { WidgetContext } from "./Context";
@@ -10,9 +11,10 @@ import Widget from "./Widget";
 
 export default function DashboardIndex({
   layoutContext,
-  initialData,
+  // initialData,
   handleSetNewAppContext,
 }) {
+  const {} = useData();
   return (
     <>
       <WidgetContext>
@@ -28,7 +30,9 @@ export default function DashboardIndex({
           </>
         ) : (
           <>
-            <Widget initialData={initialData} />
+            <Widget
+            // initialData={initialData}
+            />
           </>
         )}
       </WidgetContext>
