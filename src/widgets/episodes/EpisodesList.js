@@ -15,14 +15,13 @@ import ImageCell from "@/components/dataGridElements/ImageCell";
 import KebabMenu from "@/components/menus/KebabMenu";
 import MultiItems from "@/components/multiItems/MultiItems";
 import ShareButton from "@/components/share/ShareButton";
-import SectionMenu from "@/components/sectionHeader/SectionMenu";
+import SectionHeader from "@/components/sectionHeader/SectionHeader";
 
 import CrudItem from "../crudItem";
 
+import { dataGridImageCellStyles } from "@/theme/muiProps";
 import config from "@/lib/widgetConfigs/episodes.widgetConfig.json";
 const { widgetConfig, schemeDefinition } = config;
-import { dataGridImageCellStyles } from "@/theme/muiProps";
-import SectionHeader from "@/components/sectionHeader/SectionHeader";
 
 export default function EpisodesList({
   data, // Comes from parent page

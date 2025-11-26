@@ -5,7 +5,6 @@ import { getCurrentUser } from "@/lib/auth/auth";
 import { getMeData } from "@/lib/data/meFetchers";
 
 import "./globals.css";
-import { getProjectsAndMembers } from "@/lib/data/projectFetchers";
 
 // You can define your app's metadata here
 export const metadata = {
