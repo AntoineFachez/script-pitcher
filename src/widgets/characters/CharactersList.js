@@ -17,13 +17,14 @@ import ImageCell from "@/components/dataGridElements/ImageCell";
 import KebabMenu from "@/components/menus/KebabMenu";
 import MultiItems from "@/components/multiItems/MultiItems";
 import ShareButton from "@/components/share/ShareButton";
-import SectionMenu from "@/components/menus/SectionMenu";
+import SectionMenu from "@/components/sectionHeader/SectionMenu";
 
 import CrudItem from "../crudItem";
 
-import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
+import { dataGridImageCellStyles } from "@/theme/muiProps";
 
 import config from "@/lib/widgetConfigs/characters.widgetConfig.json";
+import SectionHeader from "@/components/sectionHeader/SectionHeader";
 const { widgetConfig, schemeDefinition } = config;
 
 export default function CharactersList({
@@ -184,15 +185,12 @@ export default function CharactersList({
 
   return (
     <>
-      <Box
-        className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
-      >
-        <SectionMenu
-          showDataGrid={showDataGrid}
-          setShowDataGrid={setShowDataGrid}
-          handleAddItem={handleAddItem}
-        />
-      </Box>
+      <SectionHeader
+        widgetConfig={widgetConfig}
+        showDataGrid={showDataGrid}
+        setShowDataGrid={setShowDataGrid}
+        handleAddItem={handleAddItem}
+      />
 
       <MultiItems
         data={data}

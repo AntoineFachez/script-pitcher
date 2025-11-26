@@ -20,10 +20,11 @@ import MultiItems from "@/components/multiItems/MultiItems"; // Import generic M
 import ShareButton from "@/components/share/ShareButton";
 import ImageCell from "@/components/dataGridElements/ImageCell";
 
-import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
-import SectionMenu from "@/components/menus/SectionMenu";
+import { dataGridImageCellStyles } from "@/theme/muiProps";
+import SectionMenu from "@/components/sectionHeader/SectionMenu";
 
 import config from "@/lib/widgetConfigs/projects.widgetConfig.json";
+import SectionHeader from "@/components/sectionHeader/SectionHeader";
 const { widgetConfig, schemeDefinition } = config;
 
 // Receive handlers as props
@@ -240,16 +241,12 @@ export default function ProjectsList({
 
   return (
     <>
-      <Box
-        className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
-        sx={sectionHeaderStyles.sx}
-      >
-        <SectionMenu
-          showDataGrid={showDataGrid}
-          setShowDataGrid={setShowDataGrid}
-          handleAddItem={null}
-        />{" "}
-      </Box>
+      <SectionHeader
+        widgetConfig={widgetConfig}
+        showDataGrid={showDataGrid}
+        setShowDataGrid={setShowDataGrid}
+        handleAddItem={null}
+      />
       <MultiItems
         data={data}
         showDataGrid={showDataGrid}

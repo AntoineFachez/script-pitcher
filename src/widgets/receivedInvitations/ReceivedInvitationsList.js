@@ -12,19 +12,18 @@ import { useAuth } from "@/context/AuthContext";
 import { IconButton, Chip, Typography, Box } from "@mui/material";
 import { Favorite, Share, Person, PersonOff, Edit } from "@mui/icons-material";
 
-import DataTable from "@/components/dataGridElements/DataTable";
 import KebabMenu from "@/components/menus/KebabMenu";
-import CardGrid from "@/components/cardGrid/CardGrid"; // Import generic CardGrid
+
 import ShareButton from "@/components/share/ShareButton";
 
-import SectionMenu from "@/components/menus/SectionMenu";
 import CrudItem from "../crudItem";
 
 import ProcessingTimeCell from "@/components/timeCells/ProcessingTimeCell";
 
-import { sectionHeaderStyles, subtitleStyles } from "@/theme/muiProps";
+import { subtitleStyles } from "@/theme/muiProps";
 import config from "@/lib/widgetConfigs/receivedInvitations.widgetConfig.json";
 import MultiItems from "@/components/multiItems/MultiItems";
+import SectionHeader from "@/components/sectionHeader/SectionHeader";
 const { widgetConfig, schemeDefinition } = config;
 
 const columns = [
@@ -215,15 +214,12 @@ export default function Widget({
 
   return (
     <>
-      <Box
-        className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
-      >
-        <SectionMenu
-          showDataGrid={showDataGrid}
-          setShowDataGrid={setShowDataGrid}
-          handleAddItem={handleAddItem}
-        />
-      </Box>
+      <SectionHeader
+        widgetConfig={widgetConfig}
+        showDataGrid={showDataGrid}
+        setShowDataGrid={setShowDataGrid}
+        handleAddItem={handleAddItem}
+      />
       <MultiItems
         data={data}
         showDataGrid={showDataGrid}

@@ -25,11 +25,12 @@ import { formatShortTime, useRelativeTime } from "@/hooks/useRelativeTime";
 import CardGrid from "@/components/cardGrid/CardGrid";
 import ShareButton from "@/components/share/ShareButton";
 import CrudItem from "../crudItem";
-import SectionMenu from "@/components/menus/SectionMenu";
-import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
+import SectionMenu from "@/components/sectionHeader/SectionMenu";
+import { dataGridImageCellStyles } from "@/theme/muiProps";
 import ImageCell from "@/components/dataGridElements/ImageCell";
 
 import config from "@/lib/widgetConfigs/files.widgetConfig.json";
+import SectionHeader from "@/components/sectionHeader/SectionHeader";
 const { widgetConfig, schemeDefinition } = config;
 
 // Receive handlers as props
@@ -278,13 +279,12 @@ ${article.author}
 
   return (
     <>
-      <Box className="sectionHeader" sx={sectionHeaderStyles.sx}>
-        <SectionMenu
-          showDataGrid={showDataGrid}
-          setShowDataGrid={setShowDataGrid}
-          handleAddItem={handleAddItem}
-        />{" "}
-      </Box>
+      <SectionHeader
+        widgetConfig={widgetConfig}
+        showDataGrid={showDataGrid}
+        setShowDataGrid={setShowDataGrid}
+        handleAddItem={handleAddItem}
+      />
       <CardGrid
         data={data}
         showDataGrid={showDataGrid}

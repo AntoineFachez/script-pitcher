@@ -34,15 +34,15 @@ const baseValues = { borderRadius: "0.5rem" };
 //     backgroundColor: "bars.side",
 //   },
 // };
-export const bottomBarStyles = {
-  sx: {
-    position: "fixed",
-    bottom: 0,
-    display: "flex",
-    justifyContent: "space-around",
-    backgroundColor: "bars.bottom",
-  },
-};
+// export const bottomBarStyles = {
+//   sx: {
+//     position: "fixed",
+//     bottom: 0,
+//     display: "flex",
+//     justifyContent: "space-around",
+//     backgroundColor: "bars.bottom",
+//   },
+// };
 export const appMainStyles = {
   className: "app--main",
   component: "main",
@@ -396,27 +396,27 @@ export const cardStyles = {
 //     backgroundColor: "background.nav",
 //   },
 // };
-export const dataGridContainerStyles = {
-  className: "datagrid",
-  component: "",
-  sx: { display: "flex", flexDirection: "column" },
-};
-export const dataGridFooterContainerStyles = {
-  className: "datagrid",
-  component: "",
-  sx: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between", // Better for layout
-    alignItems: "center",
-    backgroundColor: "bars.tool",
-  },
-};
-export const sectionHeaderStyles = {
-  className: "section--header",
-  component: "",
-  sx: { position: "", top: 0, pt: "" },
-};
+// export const dataGridContainerStyles = {
+//   className: "datagrid",
+//   component: "",
+//   sx: { display: "flex", flexDirection: "column" },
+// };
+// export const dataGridFooterContainerStyles = {
+//   className: "datagrid",
+//   component: "",
+//   sx: {
+//     width: "100%",
+//     display: "flex",
+//     justifyContent: "space-between", // Better for layout
+//     alignItems: "center",
+//     backgroundColor: "bars.tool",
+//   },
+// };
+// export const sectionHeaderStyles = {
+//   className: "section--header",
+//   component: "",
+//   sx: { position: "", top: 0, pt: "" },
+// };
 export const cardActionStyles = {
   sx: {
     // width: "4ch",

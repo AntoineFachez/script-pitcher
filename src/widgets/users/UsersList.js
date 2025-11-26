@@ -14,20 +14,15 @@ import { useAuth } from "@/context/AuthContext";
 import KebabMenu from "@/components/menus/KebabMenu";
 import MultiItems from "@/components/multiItems/MultiItems";
 import ShareButton from "@/components/share/ShareButton";
-import SectionMenu from "@/components/menus/SectionMenu";
 
 import CrudItem from "../crudItem";
 
-import {
-  dataGridImageCellStyles,
-  sectionHeaderStyles,
-  subtitleStyles,
-} from "@/theme/muiProps";
+import { dataGridImageCellStyles, subtitleStyles } from "@/theme/muiProps";
 import ImageCell from "@/components/dataGridElements/ImageCell";
-import ExpirationTimeCell from "@/components/timeCells/ExpirationTimeCell";
 import RelativeTimeCell from "@/components/timeCells/RelativeTimeCell";
 
 import config from "@/lib/widgetConfigs/users.widgetConfig.json";
+import SectionHeader from "@/components/sectionHeader/SectionHeader";
 const { widgetConfig, schemeDefinition } = config;
 
 export default function UsersList({
@@ -50,7 +45,7 @@ export default function UsersList({
   } = useUi();
   const [showDataGrid, setShowDataGrid] = useState(true);
 
-  const handleAddUser = () => {
+  const handleAddItem = () => {
     setModalContent(<CrudItem context="users" crud="inviteUser" />);
     setOpenModal(true);
   };
@@ -270,16 +265,12 @@ export default function UsersList({
 
   return (
     <>
-      <Box
-        className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
-        sx={sectionHeaderStyles.sx}
-      >
-        <SectionMenu
-          showDataGrid={showDataGrid}
-          setShowDataGrid={setShowDataGrid}
-          handleAddItem={handleAddUser}
-        />
-      </Box>
+      <SectionHeader
+        widgetConfig={widgetConfig}
+        showDataGrid={showDataGrid}
+        setShowDataGrid={setShowDataGrid}
+        handleAddItem={handleAddItem}
+      />
       <MultiItems
         data={data}
         showDataGrid={showDataGrid}

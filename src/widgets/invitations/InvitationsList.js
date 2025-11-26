@@ -14,14 +14,13 @@ import { Favorite, Share, Person, PersonOff, Edit } from "@mui/icons-material";
 import KebabMenu from "@/components/menus/KebabMenu";
 import ShareButton from "@/components/share/ShareButton";
 
-import SectionMenu from "@/components/menus/SectionMenu";
+import SectionMenu from "@/components/sectionHeader/SectionMenu";
 import CrudItem from "../crudItem";
 import ExpirationTimeCell from "@/components/timeCells/ExpirationTimeCell";
 
-import { dataGridImageCellStyles, sectionHeaderStyles } from "@/theme/muiProps";
-
 import config from "@/lib/widgetConfigs/invitations.widgetConfig.json";
 import MultiItems from "@/components/multiItems/MultiItems";
+import SectionHeader from "@/components/sectionHeader/SectionHeader";
 const { widgetConfig, schemeDefinition } = config;
 
 export default function InvitationsList({
@@ -226,15 +225,12 @@ export default function InvitationsList({
 
   return (
     <>
-      <Box
-        className={`${sectionHeaderStyles.className}__${widgetConfig.context}`}
-      >
-        <SectionMenu
-          showDataGrid={showDataGrid}
-          setShowDataGrid={setShowDataGrid}
-          handleAddItem={handleAddItem}
-        />
-      </Box>
+      <SectionHeader
+        widgetConfig={widgetConfig}
+        showDataGrid={showDataGrid}
+        setShowDataGrid={setShowDataGrid}
+        handleAddItem={handleAddItem}
+      />
       <MultiItems
         data={data}
         showDataGrid={showDataGrid}

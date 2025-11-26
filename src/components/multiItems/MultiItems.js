@@ -10,8 +10,6 @@ import { useUi } from "@/context/UiContext";
 import BasicCard from "../card/BasicCard";
 import DataTable from "../dataGridElements/DataTable";
 
-import { flexListItemStyles, dataGridContainerStyles } from "@/theme/muiProps";
-
 export default function MultiItems({
   containerRef,
   data,
@@ -38,8 +36,8 @@ export default function MultiItems({
       {showDataGrid ? (
         <>
           <Box
-            className={`${dataGridContainerStyles.className}__${widgetConfig.context}`}
-            sx={dataGridContainerStyles.sx}
+            className={`${dataGridContainerProps.className}__${widgetConfig.context}`}
+            {...dataGridContainerProps}
           >
             <DataTable
               loading={isLoading}
@@ -87,3 +85,8 @@ export default function MultiItems({
     </>
   );
 }
+const dataGridContainerProps = {
+  className: "datagrid",
+  component: "",
+  sx: { display: "flex", flexDirection: "column" },
+};
