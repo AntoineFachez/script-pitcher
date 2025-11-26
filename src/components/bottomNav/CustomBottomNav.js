@@ -13,7 +13,7 @@ import { getButton } from "@/lib/maps/iconMap";
 import { bottomNavActions } from "@/lib/appConfig";
 import AddNewItem from "@/widgets/crudItem";
 
-import { bottomBarStyles, bottomNavcenterButtonStyles } from "@/theme/muiProps";
+// import { bottomBarStyles, bottomNavcenterButtonStyles } from "@/theme/muiProps";
 import { useApp } from "@/context/AppContext";
 import { handleSetNewAppContext } from "@/lib/actions/appActions";
 import {
@@ -40,7 +40,8 @@ export default function CustomBottomNav({ BOTTOM_NAV_HEIGHT }) {
       onChange={(event, newValue) => {
         setValue(newValue);
       }}
-      sx={{ ...bottomBarStyles.sx, height: BOTTOM_NAV_HEIGHT }}
+      sx={{ height: BOTTOM_NAV_HEIGHT }}
+      {...bottomBarProps}
     >
       {optionsToRender.map((option, i) => {
         const onClickHandler = (e) => {
@@ -72,3 +73,27 @@ export default function CustomBottomNav({ BOTTOM_NAV_HEIGHT }) {
     </BottomNavigation>
   );
 }
+const bottomBarProps = {
+  sx: {
+    position: "fixed",
+    bottom: 0,
+    display: "flex",
+    justifyContent: "space-around",
+    backgroundColor: "bars.bottom",
+  },
+};
+const bottomNavcenterButtonStyles = {
+  sx: {
+    position: "absolute",
+    zIndex: 10,
+    top: "50%",
+    transform: "translate(0%, -48px)",
+    // width: "3rem",
+    height: "5rem",
+    "& >*": { fontSize: "2.5rem" },
+    backgroundColor: "background.nav",
+    borderRadius: "50%",
+    scale: 1.5,
+    "&:hover": { backgroundColor: "background.nav" },
+  },
+};

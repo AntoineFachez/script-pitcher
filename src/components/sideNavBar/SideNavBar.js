@@ -10,7 +10,6 @@ import { useThemeContext } from "@/context/ThemeContext";
 
 import { getButton } from "@/lib/maps/iconMap";
 import { sidePanelActions } from "@/lib/appConfig";
-import { sidebarStyles } from "@/theme/muiProps";
 
 export default function SideNavBar({ SIDEBAR_WIDTH }) {
   const { appContext } = useApp();
@@ -33,11 +32,10 @@ export default function SideNavBar({ SIDEBAR_WIDTH }) {
 
   return (
     <Box
-      className="sidebar"
       sx={{
-        ...sidebarStyles.sx,
         width: SIDEBAR_WIDTH,
       }}
+      {...sidebarProps}
     >
       <Divider />
       <Box
@@ -77,3 +75,23 @@ export default function SideNavBar({ SIDEBAR_WIDTH }) {
     </Box>
   );
 }
+const sidebarProps = {
+  className: "sidebar",
+  sx: {
+    // position: "absolute",
+    // left: 0,
+    // zIndex: 2000,
+    // width: { xs: "3rem", sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
+    width: "fit-content",
+    height: "100%",
+
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    // alignItems: "center",
+    // pl: { xs: 0, sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
+
+    border: "1px solid transparent",
+    backgroundColor: "bars.side",
+  },
+};

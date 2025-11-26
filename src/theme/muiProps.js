@@ -15,25 +15,25 @@ const baseValues = { borderRadius: "0.5rem" };
 //   },
 // };
 
-export const sidebarStyles = {
-  sx: {
-    // position: "absolute",
-    // left: 0,
-    // zIndex: 2000,
-    // width: { xs: "3rem", sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
-    width: "fit-content",
-    height: "100%",
+// export const sidebarStyles = {
+//   sx: {
+//     // position: "absolute",
+//     // left: 0,
+//     // zIndex: 2000,
+//     // width: { xs: "3rem", sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
+//     width: "fit-content",
+//     height: "100%",
 
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    // alignItems: "center",
-    // pl: { xs: 0, sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
+//     display: "flex",
+//     flexDirection: "column",
+//     justifyContent: "flex-start",
+//     // alignItems: "center",
+//     // pl: { xs: 0, sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
 
-    border: "1px solid transparent",
-    backgroundColor: "bars.side",
-  },
-};
+//     border: "1px solid transparent",
+//     backgroundColor: "bars.side",
+//   },
+// };
 export const bottomBarStyles = {
   sx: {
     position: "fixed",
@@ -481,21 +481,21 @@ export const tileButtonStyles = {
     },
   },
 };
-export const bottomNavcenterButtonStyles = {
-  sx: {
-    position: "absolute",
-    zIndex: 10,
-    top: "50%",
-    transform: "translate(0%, -48px)",
-    // width: "3rem",
-    height: "5rem",
-    "& >*": { fontSize: "2.5rem" },
-    backgroundColor: "background.nav",
-    borderRadius: "50%",
-    scale: 1.5,
-    "&:hover": { backgroundColor: "background.nav" },
-  },
-};
+// export const bottomNavcenterButtonStyles = {
+//   sx: {
+//     position: "absolute",
+//     zIndex: 10,
+//     top: "50%",
+//     transform: "translate(0%, -48px)",
+//     // width: "3rem",
+//     height: "5rem",
+//     "& >*": { fontSize: "2.5rem" },
+//     backgroundColor: "background.nav",
+//     borderRadius: "50%",
+//     scale: 1.5,
+//     "&:hover": { backgroundColor: "background.nav" },
+//   },
+// };
 export const backButtonStyles = { sx: { position: "absolute", zIndex: 10 } };
 export const dataGridImageCellStyles = {
   sx: {
