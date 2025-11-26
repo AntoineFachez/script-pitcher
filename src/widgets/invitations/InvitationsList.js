@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IconButton, Chip, Typography, Box } from "@mui/material";
 import { Favorite, Share, Person, PersonOff, Edit } from "@mui/icons-material";
@@ -21,6 +21,7 @@ import SectionHeader from "@/components/sectionHeader/SectionHeader";
 import CrudItem from "../crudItem";
 
 import config from "@/lib/widgetConfigs/invitations.widgetConfig.json";
+import InfoPanel from "@/components/infoPanel/InfoPanel";
 const { widgetConfig, schemeDefinition } = config;
 
 export default function InvitationsList({
@@ -41,6 +42,14 @@ export default function InvitationsList({
     setModalContent,
   } = useUi();
   const [showDataGrid, setShowDataGrid] = useState(true);
+  const [filteredData, setFilteredData] = useState(true);
+  const [filterBy, setFilterBy] = useState("pending");
+
+  useEffect(() => {
+    const filterByStatus = data.filter((item) => item.status === filterBy);
+    setFilteredData(filterByStatus);
+    return () => {};
+  }, [data]);
 
   const handleAddItem = () => {
     setModalContent(
@@ -115,8 +124,8 @@ export default function InvitationsList({
       disableColumnMenu: isMobile && true,
     },
     {
-      field: "state",
-      headerName: "state",
+      field: "status",
+      headerName: "status",
       align: "left",
       width: 70,
       flex: 1,
@@ -230,18 +239,31 @@ export default function InvitationsList({
         setShowDataGrid={setShowDataGrid}
         handleAddItem={handleAddItem}
       />
-      <MultiItems
-        data={data}
-        showDataGrid={showDataGrid}
-        isLoading={isLoading}
-        columns={visibleColumns}
-        rowActions={rowActions}
-        collectionName="users"
-        widgetConfig={widgetConfig}
-        schemeDefinition={schemeDefinition}
-        getCardActions={getCardActions}
-        handleRowClick={handleRowClick}
-      />
+      {filteredData?.length > 0 ? (
+        <MultiItems
+          data={filteredData}
+          showDataGrid={showDataGrid}
+          isLoading={isLoading}
+          columns={visibleColumns}
+          rowActions={rowActions}
+          collectionName="users"
+          widgetConfig={widgetConfig}
+          schemeDefinition={schemeDefinition}
+          getCardActions={getCardActions}
+          handleRowClick={handleRowClick}
+        />
+      ) : (
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <InfoPanel message="no pending invitations" severity="info" />
+        </Box>
+      )}
     </>
   );
 }
