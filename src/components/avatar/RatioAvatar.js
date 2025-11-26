@@ -39,8 +39,6 @@ export default function RatioAvatar({
   scrollratio = 0,
   itemName = "",
 }) {
-  console.log("scrollratio", scrollratio);
-
   // We combine the passed-in sx with the dynamic styles from AvatarBase
   return (
     <>

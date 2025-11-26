@@ -4,12 +4,7 @@ import { Box, IconButton } from "@mui/material";
 import { CameraAlt } from "@mui/icons-material";
 import BasicAvatar from "@/components/avatar/BasicAvatar";
 
-import {
-  profileHeaderFormStyles,
-  profileHeaderBannerStyles,
-  profileHeaderAvatarContainerStyles,
-  basicAvatarStyles,
-} from "@/theme/muiProps";
+import { profileHeaderBannerStyles } from "@/theme/muiProps";
 
 export default function ProfileHeaderForm({
   widgetConfig,
@@ -19,8 +14,8 @@ export default function ProfileHeaderForm({
 }) {
   return (
     <Box
-      className={`${profileHeaderFormStyles?.className}__${widgetConfig?.context}`}
-      sx={profileHeaderFormStyles}
+      className={`${profileHeaderFormProps?.className}__${widgetConfig?.context}`}
+      {...profileHeaderFormProps}
     >
       <Box
         className={`${profileHeaderBannerStyles?.className}__${widgetConfig?.context}`}
@@ -49,8 +44,8 @@ export default function ProfileHeaderForm({
         />
       </Box>
       <Box
-        className={`${profileHeaderAvatarContainerStyles?.className}__${widgetConfig?.context}`}
-        sx={profileHeaderAvatarContainerStyles.sx}
+        {...profileHeaderAvatarcontainerProps}
+        className={`${profileHeaderAvatarcontainerProps?.className}__${widgetConfig?.context}`}
       >
         <IconButton
           onClick={(e) => {
@@ -66,12 +61,36 @@ export default function ProfileHeaderForm({
           <CameraAlt />
         </IconButton>
         <BasicAvatar
-          className={`${basicAvatarStyles?.className}__${widgetConfig?.context}`}
+          {...basicAvatarProps}
+          className={`${basicAvatarProps?.className}__${widgetConfig?.context}`}
           itemName={formData?.title}
           url={formData?.avatarUrl}
-          sx={basicAvatarStyles.sx}
         />
       </Box>
     </Box>
   );
 }
+export const basicAvatarProps = {
+  className: "basicAvatar",
+  component: "",
+  sx: {
+    position: "relative",
+    width: "4rem",
+    height: "4rem",
+    bottom: "36px",
+  },
+};
+const profileHeaderFormProps = {
+  className: "profileHeader--form",
+  sx: {
+    position: "relative",
+    width: "100%",
+  },
+};
+const profileHeaderAvatarcontainerProps = {
+  className: "profileHeader--avatar",
+  sx: {
+    width: "100%",
+    height: "100%",
+  },
+};

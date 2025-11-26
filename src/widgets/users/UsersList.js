@@ -17,7 +17,7 @@ import ShareButton from "@/components/share/ShareButton";
 
 import CrudItem from "../crudItem";
 
-import { dataGridImageCellStyles, subtitleStyles } from "@/theme/muiProps";
+import { dataGridImageCellStyles, subtitleProps } from "@/theme/muiProps";
 import ImageCell from "@/components/dataGridElements/ImageCell";
 import RelativeTimeCell from "@/components/timeCells/RelativeTimeCell";
 
@@ -218,9 +218,8 @@ export default function UsersList({
 
     const customSubTitleItem = user.roles?.map((role) => (
       <Chip
+        {...subtitleProps}
         key={role.role} // Assuming role is an object { role: '...' }
-        sx={subtitleStyles.sx}
-        variant="body1"
         label={role.role}
         onClick={() => handleClickSubTitle(role)}
       />

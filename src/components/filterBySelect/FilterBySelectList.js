@@ -1,7 +1,7 @@
-import { getButton } from "@/lib/maps/iconMap";
-import { pageMenuStyles } from "@/theme/muiProps";
-import { Box, Button } from "@mui/material";
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/FILTERBYSELECT/FILTERBYSELECTLIST.JS
+
 import React from "react";
+import { Box, Button } from "@mui/material";
 
 export default function FilterBySelectList({
   array,
@@ -10,7 +10,7 @@ export default function FilterBySelectList({
   handleClickFilter,
 }) {
   return (
-    <Box sx={pageMenuStyles.sx}>
+    <Box {...pageMenuProps}>
       {array?.map((item, i) => {
         return (
           <>
@@ -47,3 +47,16 @@ export default function FilterBySelectList({
     </Box>
   );
 }
+const pageMenuProps = {
+  className: "page--menu__filterBySelect",
+  component: "",
+  sx: {
+    marginBottom: 0,
+    display: "flex",
+    flexFlow: "row wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 1,
+    backgroundColor: "primary.dark",
+  },
+};

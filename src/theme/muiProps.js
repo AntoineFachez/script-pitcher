@@ -43,33 +43,33 @@ const baseValues = { borderRadius: "0.5rem" };
 //     backgroundColor: "bars.bottom",
 //   },
 // };
-export const appMainStyles = {
-  className: "app--main",
-  component: "main",
-  sx: {
-    width: "100%",
-    height: `100%`,
+// export const appMainStyles = {
+//   className: "app--main",
+//   component: "main",
+//   sx: {
+//     width: "100%",
+//     height: `100%`,
 
-    display: "flex",
-    // justifyContent: "center",
-    // alignItems: "center",
-    backgroundColor: "page.background",
-    overflow: "hidden",
-  },
-};
-export const pageStyles = {
-  className: "page",
-  component: "",
-  sx: {
-    position: "relative",
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    flexFlow: "column nowrap",
-    backgroundColor: "page.background",
-  },
-};
-export const pageHeaderStyles = {
+//     display: "flex",
+//     // justifyContent: "center",
+//     // alignItems: "center",
+//     backgroundColor: "page.background",
+//     overflow: "hidden",
+//   },
+// };
+// export const pageStyles = {
+//   className: "page",
+//   component: "",
+//   sx: {
+//     position: "relative",
+//     width: "100%",
+//     height: "100%",
+//     display: "flex",
+//     flexFlow: "column nowrap",
+//     backgroundColor: "page.background",
+//   },
+// };
+export const pageHeaderProps = {
   className: "pageHeader",
   component: "",
   sx: {
@@ -80,48 +80,48 @@ export const pageHeaderStyles = {
     backgroundColor: "page.header",
   },
 };
-export const pageTitleStyles = {
-  component: "",
-  variant: "h2",
-  sx: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    fontSize: {
-      xs: "1.4rem", // Element is completely hidden (no space) on small screens
-      sm: "1.8rem", // Element is visible and takes up space from 'md' up
-      md: "1.8rem", // Element is visible and takes up space from 'md' up
-      lg: "2rem", // Element is visible and takes up space from 'md' up
-      xl: "2.2rem", // Element is visible and takes up space from 'md' up
-    },
-    // display: {
-    //   xs: "none", // Element is completely hidden (no space) on small screens
-    //   md: "block", // Element is visible and takes up space from 'md' up
-    // },
-    // borderRadius: "1rem",
-    // m: 1,
-    // padding: "0 4rem",
-    // textAlign: "center",
-    // verticalAlign: "middle",
-    backgroundColor: "page.title",
-  },
-};
-export const pageMenuStyles = {
-  component: "",
-  sx: {
-    marginBottom: 0,
-    display: "flex",
-    flexFlow: "row wrap",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 1,
-    backgroundColor: "primary.dark",
-  },
-};
-export const pageMainStyles = {
+// export const pageTitleStyles = {
+//   component: "",
+//   variant: "h2",
+//   sx: {
+//     width: "100%",
+//     height: "100%",
+//     display: "flex",
+//     flexDirection: "column",
+//     justifyContent: "center",
+//     alignItems: "center",
+//     fontSize: {
+//       xs: "1.4rem", // Element is completely hidden (no space) on small screens
+//       sm: "1.8rem", // Element is visible and takes up space from 'md' up
+//       md: "1.8rem", // Element is visible and takes up space from 'md' up
+//       lg: "2rem", // Element is visible and takes up space from 'md' up
+//       xl: "2.2rem", // Element is visible and takes up space from 'md' up
+//     },
+//     // display: {
+//     //   xs: "none", // Element is completely hidden (no space) on small screens
+//     //   md: "block", // Element is visible and takes up space from 'md' up
+//     // },
+//     // borderRadius: "1rem",
+//     // m: 1,
+//     // padding: "0 4rem",
+//     // textAlign: "center",
+//     // verticalAlign: "middle",
+//     backgroundColor: "page.title",
+//   },
+// };
+// export const pageMenuStyles = {
+//   component: "",
+//   sx: {
+//     marginBottom: 0,
+//     display: "flex",
+//     flexFlow: "row wrap",
+//     justifyContent: "center",
+//     alignItems: "center",
+//     gap: 1,
+//     backgroundColor: "primary.dark",
+//   },
+// };
+export const pageMainProps = {
   className: "page--main",
   component: "",
   sx: {
@@ -141,20 +141,21 @@ export const pageMainStyles = {
     // overflow: "hidden",
   },
 };
-export const profileHeaderFormStyles = {
-  className: "profileHeader",
-  sx: {
-    position: "relative",
-    width: "100%",
-  },
-};
-export const profileHeaderAvatarContainerStyles = {
-  className: "profileHeader--avatar",
-  sx: {
-    width: "100%",
-    height: "100%",
-  },
-};
+// export const profileHeaderFormStyles = {
+//   className: "profileHeader",
+//   sx: {
+//     position: "relative",
+//     width: "100%",
+//   },
+// };
+// export const profileHeaderAvatarcontainerProps = {
+//   className: "profileHeader--avatar",
+//   sx: {
+//     width: "100%",
+//     height: "100%",
+//   },
+// };
+//TODO: check if needed:
 export const profileHeaderAvatarStyles = {
   className: "profileHeader--avatar",
   sx: {
@@ -191,7 +192,8 @@ export const profileDescriptionTextStyles = {
     pl: "2rem",
   },
 };
-export const widgetContainerStyles = {
+export const widgetcontainerProps = {
+  className: "widgetContainer",
   sx: {
     position: "relative",
     width: "100%",
@@ -205,7 +207,8 @@ export const widgetContainerStyles = {
     overflow: "auto",
   },
 };
-export const containerStyles = {
+export const containerProps = {
+  className: "container",
   component: "",
   sx: {
     width: "100%",
@@ -396,12 +399,12 @@ export const cardStyles = {
 //     backgroundColor: "background.nav",
 //   },
 // };
-// export const dataGridContainerStyles = {
+// export const dataGridcontainerProps = {
 //   className: "datagrid",
 //   component: "",
 //   sx: { display: "flex", flexDirection: "column" },
 // };
-// export const dataGridFooterContainerStyles = {
+// export const dataGridFootercontainerProps = {
 //   className: "datagrid",
 //   component: "",
 //   sx: {
@@ -417,6 +420,8 @@ export const cardStyles = {
 //   component: "",
 //   sx: { position: "", top: 0, pt: "" },
 // };
+
+//TODO: check where is this needed:
 export const cardActionStyles = {
   sx: {
     // width: "4ch",
@@ -426,61 +431,62 @@ export const cardActionStyles = {
     alignItems: "center",
   },
 };
-export const basicAvatarStyles = {
-  className: "basicAvatar",
-  component: "",
-  sx: {
-    position: "relative",
-    width: "4rem",
-    height: "4rem",
-    bottom: "36px",
-  },
-};
-export const iconButtonStyles = {
-  sx: { width: 36, height: 36, "& >*": { fontSize: "1.2rem" } },
-};
-export const subtitleStyles = {
+// export const basicAvatarStyles = {
+//   className: "basicAvatar",
+//   component: "",
+//   sx: {
+//     position: "relative",
+//     width: "4rem",
+//     height: "4rem",
+//     bottom: "36px",
+//   },
+// };
+// export const iconButtonStyles = {
+//   sx: { width: 36, height: 36, "& >*": { fontSize: "1.2rem" } },
+// };
+export const subtitleProps = {
+  variant: "body1",
   sx: {
     width: "100%",
     display: "flex",
-    flexFlow: "row",
+    flexFlow: "row wrap",
     justifyContent: "space-between",
     alignItems: "center",
     gap: 1,
   },
 };
-export const subtitleItemStyles = {
-  sx: {
-    width: "100%",
-    display: "flex",
-    textAlign: "center",
-  },
-};
+// export const subtitleItemStyles = { variant:"outlined",
+//   sx: {
+//     width: "100%",
+//     display: "flex",
+//     textAlign: "center",
+//   },
+// };
 
-export const tileButtonContainerStyles = {
-  sx: {
-    display: "flex",
-    flexFlow: "column nowrap",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: { xs: 2.4, sm: 3, md: 4, lg: 5, xl: 6 },
-  },
-};
+// export const tileButtoncontainerProps = {
+//   sx: {
+//     display: "flex",
+//     flexFlow: "column nowrap",
+//     justifyContent: "center",
+//     alignItems: "center",
+//     gap: { xs: 2.4, sm: 3, md: 4, lg: 5, xl: 6 },
+//   },
+// };
 // The large Home Buttons
-export const tileButtonStyles = {
-  variant: "outlined",
-  sx: {
-    width: { xs: "8rem", sm: "10rem", md: "10rem", lg: "10rem", xl: "10rem" },
-    height: { xs: "8rem", sm: "10rem", md: "10rem", lg: "10rem", xl: "10rem" },
-    border: "1px solid #777",
-    p: 1,
-    m: 0,
-    backgroundColor: "background.paper",
-    "&:hover": {
-      backgroundColor: "background.nav",
-    },
-  },
-};
+// export const tileButtonStyles = {
+//   variant: "outlined",
+//   sx: {
+//     width: { xs: "8rem", sm: "10rem", md: "10rem", lg: "10rem", xl: "10rem" },
+//     height: { xs: "8rem", sm: "10rem", md: "10rem", lg: "10rem", xl: "10rem" },
+//     border: "1px solid #777",
+//     p: 1,
+//     m: 0,
+//     backgroundColor: "background.paper",
+//     "&:hover": {
+//       backgroundColor: "background.nav",
+//     },
+//   },
+// };
 // export const bottomNavcenterButtonStyles = {
 //   sx: {
 //     position: "absolute",

@@ -1,8 +1,10 @@
+// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/CARD/CARDITEMMEDIA.JS
+
+import React from "react";
+import { Box, CardMedia, Chip, List, Typography } from "@mui/material";
+
 import { useUi } from "@/context/UiContext";
 import { getButton } from "@/lib/maps/iconMap";
-import { subtitleItemStyles } from "@/theme/muiProps";
-import { Box, CardMedia, Chip, List, Typography } from "@mui/material";
-import React from "react";
 
 export default function CardItemMedia({ cardProps }) {
   const { toggleDetails } = useUi();
@@ -19,6 +21,7 @@ export default function CardItemMedia({ cardProps }) {
     handleAddImteImage,
     alertElement,
   } = cardProps;
+
   const projectTitle = (
     <Typography
       sx={{
@@ -54,7 +57,7 @@ export default function CardItemMedia({ cardProps }) {
                     variant="outlined"
                     // variant={"filled"}
                     sx={{
-                      ...subtitleItemStyles,
+                      ...subtitleItemProps,
                       borderColor:
                         subTitleInFocus ===
                         sub[schemeDefinition?.subtitleArrayItem]
@@ -125,3 +128,11 @@ export default function CardItemMedia({ cardProps }) {
     </Box>
   );
 }
+export const subtitleItemProps = {
+  variant: "outlined",
+  sx: {
+    width: "100%",
+    display: "flex",
+    textAlign: "center",
+  },
+};

@@ -11,7 +11,6 @@ import { useUi } from "@/context/UiContext";
 
 import BasicModal from "@/components/modal/Modal";
 import BasicTabs from "@/components/tabs/BasicTabs";
-import CrudItem from "@/widgets/crudItem";
 
 import ReceivedInvitationsList from "@/widgets/receivedInvitations/ReceivedInvitationsList";
 
@@ -21,13 +20,6 @@ import { useUser } from "@/context/UserContext";
 
 import ProfileMenu from "@/components/menus/ProfileMenu";
 
-import {
-  widgetContainerStyles,
-  containerStyles,
-  profileAvatarStyles,
-  profileHeaderStyles,
-  profileDescriptionTextStyles,
-} from "@/theme/muiProps";
 import ProfileHeader from "@/components/profileHeader/ProfileHeader";
 
 // Receive initial data as props from the Server Component

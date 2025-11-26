@@ -14,7 +14,7 @@ import { useUi } from "@/context/UiContext";
 // Components
 import BasicModal from "@/components/modal/Modal";
 import FilterBySelectList from "@/components/filterBySelect/FilterBySelectList";
-import ProjectsList from "@/widgets/projects/ProjectsList";
+import List from "@/widgets/projects/ProjectsList";
 
 // Server Actions
 
@@ -23,11 +23,7 @@ import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 
 // Local elements
 
-import {
-  pageHeaderStyles,
-  pageMainStyles,
-  pageTitleStyles,
-} from "@/theme/muiProps";
+import { pageMainProps, pageHeaderProps } from "@/theme/muiProps";
 
 import config from "@/lib/widgetConfigs/projects.widgetConfig.json";
 const { widgetConfig, schemeDefinition } = config;
@@ -129,9 +125,8 @@ export default function ProjectsClientPage({}) {
   return (
     <>
       <Box
-        className={`${pageHeaderStyles.className}__${widgetConfig.context}`}
-        component={pageHeaderStyles.component}
-        sx={pageHeaderStyles.sx}
+        {...pageHeaderProps}
+        className={`${pageHeaderProps.className}__${widgetConfig.context}`}
       >
         {toggleDetails && (
           <FilterBySelectList
@@ -143,11 +138,10 @@ export default function ProjectsClientPage({}) {
         )}
       </Box>
       <Box
-        className={`${pageMainStyles.className}__${widgetConfig.context}`}
-        component={pageMainStyles.component}
-        sx={{ ...pageMainStyles.sx }}
+        {...pageMainProps}
+        className={`${pageMainProps.className}__${widgetConfig.context}`}
       >
-        <ProjectsList
+        <List
           data={displayedData}
           filteredData={filteredData}
           setFilteredData={setFilteredData}

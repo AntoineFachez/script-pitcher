@@ -8,7 +8,7 @@ import { useData } from "@/context/DataContext";
 
 import BasicRadar from "@/components/charts/BasicRadarChart";
 import BasicGauge from "@/components/charts/BasicGauge";
-import { containerStyles, widgetContainerStyles } from "@/theme/muiProps";
+import { widgetContainerProps, containerProps } from "@/theme/muiProps";
 import BasicBars from "@/components/charts/BasicBarChart";
 
 export default function DashboardContent() {
@@ -36,10 +36,11 @@ export default function DashboardContent() {
   ];
   return (
     <>
-      <Box sx={widgetContainerStyles.sx}>
+      <Box {...widgetContainerProps}>
         <Box
+          {...containerProps}
           sx={{
-            ...containerStyles.sx,
+            ...containerProps.sx,
             height: "fit-content",
             display: "flex",
             flexFlow: "column nowrap",

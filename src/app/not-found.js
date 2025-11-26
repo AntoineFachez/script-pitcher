@@ -4,11 +4,11 @@
 
 import { Box, Typography } from "@mui/material";
 import Link from "next/link";
-import { containerStyles, titleStyle } from "@/theme/muiProps";
+import { containerProps, titleStyle } from "@/theme/muiProps";
 
 export default function NotFound() {
   return (
-    <Box sx={containerStyles.sx}>
+    <Box {...containerProps}>
       <Typography sx={titleStyle.sx}>404</Typography>
       <Typography sx={titleStyle.sx}>This page could not be found.</Typography>
 

@@ -8,7 +8,7 @@ import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
 
 import { stringAvatar } from "@/utils/colorHelpers";
-import { subtitleItemStyles, subtitleStyles } from "@/theme/muiProps";
+import { subtitleProps } from "@/theme/muiProps";
 
 export default function CardItemHeader({ cardProps }) {
   const {
@@ -26,20 +26,7 @@ export default function CardItemHeader({ cardProps }) {
   return (
     <>
       <CardHeader
-        sx={{
-          position: "relative",
-          width: "100%",
-          // height: "fit-content",
-          display: "flex",
-          flexFlow: "row nowrap",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          "& .MuiCardHeader-action": { marginRight: 0 },
-          cursor: "pointer",
-          p: 0,
-          m: 2,
-        }}
-        variant={{}}
+        {...cardHeaderProps}
         avatar={
           alertElement ? (
             <>{alertElement(item)}</>
@@ -73,12 +60,8 @@ export default function CardItemHeader({ cardProps }) {
           subheader: isSelected ? {} : {},
         }}
         subheader={
-          <Box sx={{ ...subtitleStyles.sx, flexFlow: "row wrap" }}>
-            <Typography
-              onClick={() => handleClick(item)}
-              sx={subtitleStyles}
-              variant={{}}
-            >
+          <Box {...subtitleProps}>
+            <Typography onClick={() => handleClick(item)}>
               {customSubTitleItem}{" "}
             </Typography>
           </Box>
@@ -88,3 +71,21 @@ export default function CardItemHeader({ cardProps }) {
     </>
   );
 }
+
+const cardHeaderProps = {
+  className: "cardHeader",
+  variant: {},
+  sx: {
+    position: "relative",
+    width: "100%",
+    // height: "fit-content",
+    display: "flex",
+    flexFlow: "row nowrap",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    "& .MuiCardHeader-action": { marginRight: 0 },
+    cursor: "pointer",
+    p: 0,
+    m: 2,
+  },
+};

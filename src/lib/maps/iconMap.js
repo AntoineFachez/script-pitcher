@@ -1,6 +1,5 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/MAPS/ICONMAP.JS
 
-import { iconButtonStyles } from "@/theme/muiProps";
 import Link from "next/link";
 import {
   BottomNavigationAction,
@@ -111,7 +110,7 @@ export const getButton = (
   iconName = "",
   onClick,
   disabled = false,
-  sx = iconButtonStyles.sx,
+  sx = iconButtonProps.sx,
   variant = "outlined",
   href = null,
   label = "",
@@ -159,4 +158,7 @@ export const getButton = (
       {...actionProps}
     />
   ) : null;
+};
+const iconButtonProps = {
+  sx: { width: 36, height: 36, "& >*": { fontSize: "1.2rem" } },
 };

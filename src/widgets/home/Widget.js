@@ -1,23 +1,15 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/HOME/WIDGET.JS
 
 import React, { useEffect } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Box, Button } from "@mui/material";
+import { Add, BackupTable, Group } from "@mui/icons-material";
 
 import { useApp } from "@/context/AppContext";
 import { useData } from "@/context/DataContext";
 
-import {
-  containerStyles,
-  tileButtonContainerStyles,
-  tileButtonStyles,
-  titleStyle,
-  widgetContainerStyles,
-} from "@/theme/muiProps";
-import { Box, Button } from "@mui/material";
-import { Add, BackupTable, Group } from "@mui/icons-material";
-import BasicAvatar from "@/components/avatar/BasicAvatar";
-import Image from "next/image";
-import SecureImage from "@/components/secureImage/SecureImage";
+import { widgetcontainerProps } from "@/theme/muiProps";
 
 export default function HomeContent() {
   const { setAppContext } = useApp();
@@ -33,33 +25,44 @@ export default function HomeContent() {
     return () => {};
   }, []);
 
-  // pageStyles;
-
   return (
-    <Box sx={widgetContainerStyles.sx}>
-      <Box className="tile--buttons" sx={{ ...tileButtonContainerStyles.sx }}>
-        <Box sx={{ ...tileButtonContainerStyles.sx, flexFlow: "row nowrap" }}>
+    <Box {...widgetcontainerProps}>
+      <Box
+        sx={{
+          display: "flex",
+          flexFlow: "column nowrap",
+          gap: { xs: 2.4, sm: 3, md: 4, lg: 5, xl: 6 },
+        }}
+      >
+        <Box
+          sx={{
+            flexFlow: "row nowrap",
+          }}
+          {...tileButtonContainerProps}
+        >
           <Button
-            variant={tileButtonStyles.variant}
-            sx={tileButtonStyles.sx}
+            {...tileButtonProps}
             onClick={() => gotoDashboard("users")}
             startIcon={<Group />}
           >
             Users
           </Button>
           <Button
-            variant={tileButtonStyles.variant}
-            sx={tileButtonStyles.sx}
+            {...tileButtonProps}
             onClick={() => gotoDashboard("projects")}
             startIcon={<BackupTable />}
           >
             Projects
           </Button>
         </Box>
-        <Box sx={{ ...tileButtonContainerStyles.sx, flexFlow: "row nowrap" }}>
+        <Box
+          sx={{
+            flexFlow: "row nowrap",
+          }}
+          {...tileButtonContainerProps}
+        >
           <Button
-            variant={tileButtonStyles.variant}
-            sx={tileButtonStyles.sx}
+            {...tileButtonProps}
             onClick={() => gotoDashboard(`projects/${lastFile?.projectId}`)}
           >
             {!lastFile ? (
@@ -76,8 +79,7 @@ export default function HomeContent() {
             )}
           </Button>
           <Button
-            variant={tileButtonStyles.variant}
-            sx={tileButtonStyles.sx}
+            {...tileButtonProps}
             onClick={() => gotoDashboard("projects/")}
             startIcon={<Add />}
           >
@@ -89,3 +91,27 @@ export default function HomeContent() {
     </Box>
   );
 }
+export const tileButtonContainerProps = {
+  sx: {
+    display: "flex",
+    flexFlow: "row nowrap",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: { xs: 2.4, sm: 3, md: 4, lg: 5, xl: 6 },
+  },
+};
+const tileButtonProps = {
+  className: "tile--buttons",
+  variant: "outlined",
+  sx: {
+    width: { xs: "8rem", sm: "10rem", md: "10rem", lg: "10rem", xl: "10rem" },
+    height: { xs: "8rem", sm: "10rem", md: "10rem", lg: "10rem", xl: "10rem" },
+    border: "1px solid #777",
+    p: 1,
+    m: 0,
+    backgroundColor: "background.paper",
+    "&:hover": {
+      backgroundColor: "background.nav",
+    },
+  },
+};

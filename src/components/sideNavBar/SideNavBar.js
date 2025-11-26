@@ -31,12 +31,7 @@ export default function SideNavBar({ SIDEBAR_WIDTH }) {
   );
 
   return (
-    <Box
-      sx={{
-        width: SIDEBAR_WIDTH,
-      }}
-      {...sidebarProps}
-    >
+    <Box {...sidebarProps} sx={{ ...sidebarProps.sx, width: SIDEBAR_WIDTH }}>
       <Divider />
       <Box
         sx={{

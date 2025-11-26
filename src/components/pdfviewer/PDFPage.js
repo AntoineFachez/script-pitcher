@@ -75,7 +75,7 @@ export default function PDFPage({ element, scale, styleMap, pageIndex }) {
 
       // 1. Create the outer paragraph container
       // This is absolutely positioned on the page
-      const paraContainerStyles = {
+      const paracontainerProps = {
         position: "absolute",
         left: `${paraPos.x0 * scale}px`,
         top: `${paraPos.y0 * scale}px`,
@@ -87,7 +87,7 @@ export default function PDFPage({ element, scale, styleMap, pageIndex }) {
       };
 
       return (
-        <AnimationWrapper style={paraContainerStyles}>
+        <AnimationWrapper style={paracontainerProps}>
           {/* 2. Map over the child spans inside the paragraph */}
           {element.elements.map((span) => {
             const spanPos = span.position;

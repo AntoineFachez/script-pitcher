@@ -15,19 +15,13 @@ import { useInFocus } from "@/context/InFocusContext";
 import BasicModal from "@/components/modal/Modal";
 import CrudItem from "@/widgets/crudItem";
 import FilterBySelectList from "@/components/filterBySelect/FilterBySelectList";
-import UsersList from "@/widgets/users/UsersList";
+import List from "@/widgets/users/UsersList";
 
 // Configs
 import config from "@/lib/widgetConfigs/users.widgetConfig.json";
 const { widgetConfig, schemeDefinition } = config;
 
-import {
-  pageHeaderStyles,
-  pageMainStyles,
-  pageStyles,
-  titleStyle,
-  widgetContainerStyles,
-} from "@/theme/muiProps";
+import { pageHeaderProps, pageMainProps } from "@/theme/muiProps";
 
 export default function Page() {
   const { appContext, setAppContext } = useApp();
@@ -109,9 +103,9 @@ export default function Page() {
   return (
     <>
       <Box
-        className={`${pageHeaderStyles.className}__${widgetConfig.context}`}
-        component={pageHeaderStyles.component}
-        sx={pageHeaderStyles.sx}
+        className={`${pageHeaderProps.className}__${widgetConfig.context}`}
+        component={pageHeaderProps.component}
+        sx={pageHeaderProps.sx}
       >
         {toggleDetails && (
           <FilterBySelectList
@@ -124,11 +118,10 @@ export default function Page() {
       </Box>
 
       <Box
-        className={`${pageMainStyles.className}__${widgetConfig.context}`}
-        component={pageMainStyles.component}
-        sx={{ ...pageMainStyles.sx }}
+        className={`${pageMainProps.className}__${widgetConfig.context}`}
+        {...pageMainProps}
       >
-        <UsersList data={displayedData} />
+        <List data={displayedData} />
       </Box>
       <BasicModal
         content={modalContent}

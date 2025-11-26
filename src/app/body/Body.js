@@ -22,12 +22,7 @@ import SignUpForm from "@/components/auth/appAuth/SignUpForm";
 
 import { useUi } from "@/context/UiContext";
 
-import {
-  appFloorStyles,
-  appMainStyles,
-  containerStyles,
-  pageStyles,
-} from "@/theme/muiProps";
+import { appFloorStyles } from "@/theme/muiProps";
 import CircularIndeterminate from "@/components/progress/CircularIndeterminate";
 
 export default function Body({ children }) {
@@ -68,11 +63,9 @@ export default function Body({ children }) {
         />
 
         <Box
-          className={appMainStyles.className}
-          component={appMainStyles.component}
+          {...appMainProps}
           sx={{
-            ...appMainStyles.sx,
-
+            ...appMainProps.sx,
             flexFlow: isDesktop ? "row nowrap" : "column nowrap", // Stack children vertically
             padding: `${NAV_HEIGHT} 0 ${BOTTOM_NAV_HEIGHT} 0`,
           }}
@@ -91,13 +84,7 @@ export default function Body({ children }) {
             </Box>
           )}
 
-          <Box
-            className={pageStyles.className}
-            sx={{
-              ...pageStyles.sx,
-              pl: SIDEBAR_WIDTH,
-            }}
-          >
+          <Box {...pageProps} sx={{ ...pageProps.sx, pl: SIDEBAR_WIDTH }}>
             {children}
           </Box>
 
@@ -132,3 +119,29 @@ export default function Body({ children }) {
     </>
   );
 }
+const appMainProps = {
+  className: "app--main",
+  component: "main",
+  sx: {
+    width: "100%",
+    height: `100%`,
+
+    display: "flex",
+    // justifyContent: "center",
+    // alignItems: "center",
+    backgroundColor: "page.background",
+    overflow: "hidden",
+  },
+};
+const pageProps = {
+  className: "page",
+  component: "",
+  sx: {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexFlow: "column nowrap",
+    backgroundColor: "page.background",
+  },
+};
