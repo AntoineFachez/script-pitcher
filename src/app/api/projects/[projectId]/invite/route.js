@@ -50,7 +50,7 @@ export async function POST(request, { params }) {
       invitedEmail: targetEmail,
       role: role,
       invitedById: decodedToken.uid,
-      state: "pending",
+      status: "pending",
       createdAt: FieldValue.serverTimestamp(),
       expiresAt: new Date(Date.now() + sevenDaysInMs),
     };
