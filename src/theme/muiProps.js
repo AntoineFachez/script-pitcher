@@ -650,6 +650,13 @@ export const sharedComponents = {
     },
   },
 
+  MuiTabs: {
+    styleOverrides: {
+      indicator: ({ theme }) => ({
+        backgroundColor: theme.palette.button.active,
+      }),
+    },
+  },
   MuiButton: {
     styleOverrides: {
       root: ({ theme }) => ({
@@ -787,7 +794,7 @@ export const sharedComponents = {
         //         display: "flex",
         //         justifyContent: "space-between",
         //         alignItems: "center",
-        backgroundColor: theme.palette.datagrid.columnHeader,
+        backgroundColor: theme.palette.bars.tool,
         "& .MuiDataGrid-columnHeaderTitleContainer": {
           // border: "none",
           //         display: "flex",
@@ -827,6 +834,9 @@ export const sharedComponents = {
         width: "100%",
         backgroundColor: theme.palette.datagrid.footerContainer,
       }),
+      sortButton: ({ theme }) => ({
+        color: theme.palette.button.active,
+      }),
       "& .MuiList": {
         width: "5rem",
         minWidth: null,
@@ -835,7 +845,7 @@ export const sharedComponents = {
 
       root: ({ theme }) => ({
         ...theme.palette.datagrid,
-
+        border: "none",
         // width: "100%",
         // height: "100%",
         "& .highlighted-row": {
@@ -875,6 +885,7 @@ export const sharedComponents = {
           //   scrollbarWidth: "auto",
         },
         "& .MuiDataGrid-virtualScrollerContent": {
+          border: "none",
           //         height: "100%",
         },
         "& .MuiDataGrid-root--densityComfortable": {

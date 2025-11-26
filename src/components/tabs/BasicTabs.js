@@ -35,6 +35,7 @@ function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
     "aria-controls": `simple-tabpanel-${index}`,
+    sx: {},
   };
 }
 
@@ -73,6 +74,8 @@ export default function DynamicTabs({ tabsArray = [], containerRef }) {
           top: 0,
           backgroundColor: "bars.tool",
         }}
+        // indicatorColor="secondary"
+        textColor="inherit"
       >
         {/* 1. Map over the array to create the Tab headers */}
         {tabsArray.map((tab, index) => (
