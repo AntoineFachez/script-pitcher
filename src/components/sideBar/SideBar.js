@@ -11,7 +11,7 @@ import { useThemeContext } from "@/context/ThemeContext";
 import { getButton } from "@/lib/maps/iconMap";
 import { sidePanelActions } from "@/lib/appConfig";
 
-export default function SideNavBar({ SIDEBAR_WIDTH }) {
+export default function SideBar({ SIDEBAR_WIDTH }) {
   const { appContext } = useApp();
   const { isDesktop } = useUi();
   const { toggleColorMode } = useThemeContext();

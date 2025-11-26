@@ -15,9 +15,9 @@ import { useApp } from "@/context/AppContext";
 import { useAuth } from "@/context/AuthContext";
 
 import AppBar from "@/components/appBar/index";
-import CustomBottomNav from "@/components/bottomNav/CustomBottomNav";
+import CustomBottomNav from "@/components/bottomBar/BottomBar";
 import LoginForm from "@/components/auth/appAuth/LogInForm";
-import SideNavBar from "@/components/sideNavBar/SideNavBar";
+import SideNavBar from "@/components/sideBar/SideBar";
 import SignUpForm from "@/components/auth/appAuth/SignUpForm";
 
 import { useUi } from "@/context/UiContext";

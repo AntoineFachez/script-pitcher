@@ -24,7 +24,7 @@ import {
 } from "@mui/material";
 import { Add, More, Search } from "@mui/icons-material";
 
-export default function CustomBottomNav({ BOTTOM_NAV_HEIGHT }) {
+export default function BottomBar({ BOTTOM_NAV_HEIGHT }) {
   const { setToggleDetails, showDataGrid, setShowDataGrid, handleOpenAddItem } =
     useUi();
   const { projectInFocus, setProjectInFocus } = useInFocus();
