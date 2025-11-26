@@ -2,73 +2,7 @@
 
 const randomDeg = Math.random() * 360;
 const baseValues = { borderRadius: "0.5rem" };
-// export const appBarStyles = {
-//   className: "app--bar",
-//   sx: {
-//     display: "flex",
-//     flexFlow: "row nowrap",
-//     justifyContent: "space-between",
-//     alignItems: "center",
-//     // p: "0 24px",
-//     // backgroundColor: "background.nav",
-//     backgroundColor: "bars.app",
-//   },
-// };
 
-// export const sidebarStyles = {
-//   sx: {
-//     // position: "absolute",
-//     // left: 0,
-//     // zIndex: 2000,
-//     // width: { xs: "3rem", sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
-//     width: "fit-content",
-//     height: "100%",
-
-//     display: "flex",
-//     flexDirection: "column",
-//     justifyContent: "flex-start",
-//     // alignItems: "center",
-//     // pl: { xs: 0, sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
-
-//     border: "1px solid transparent",
-//     backgroundColor: "bars.side",
-//   },
-// };
-// export const bottomBarStyles = {
-//   sx: {
-//     position: "fixed",
-//     bottom: 0,
-//     display: "flex",
-//     justifyContent: "space-around",
-//     backgroundColor: "bars.bottom",
-//   },
-// };
-// export const appMainStyles = {
-//   className: "app--main",
-//   component: "main",
-//   sx: {
-//     width: "100%",
-//     height: `100%`,
-
-//     display: "flex",
-//     // justifyContent: "center",
-//     // alignItems: "center",
-//     backgroundColor: "page.background",
-//     overflow: "hidden",
-//   },
-// };
-// export const pageStyles = {
-//   className: "page",
-//   component: "",
-//   sx: {
-//     position: "relative",
-//     width: "100%",
-//     height: "100%",
-//     display: "flex",
-//     flexFlow: "column nowrap",
-//     backgroundColor: "page.background",
-//   },
-// };
 export const pageHeaderProps = {
   className: "pageHeader",
   component: "",
@@ -80,47 +14,7 @@ export const pageHeaderProps = {
     backgroundColor: "page.header",
   },
 };
-// export const pageTitleStyles = {
-//   component: "",
-//   variant: "h2",
-//   sx: {
-//     width: "100%",
-//     height: "100%",
-//     display: "flex",
-//     flexDirection: "column",
-//     justifyContent: "center",
-//     alignItems: "center",
-//     fontSize: {
-//       xs: "1.4rem", // Element is completely hidden (no space) on small screens
-//       sm: "1.8rem", // Element is visible and takes up space from 'md' up
-//       md: "1.8rem", // Element is visible and takes up space from 'md' up
-//       lg: "2rem", // Element is visible and takes up space from 'md' up
-//       xl: "2.2rem", // Element is visible and takes up space from 'md' up
-//     },
-//     // display: {
-//     //   xs: "none", // Element is completely hidden (no space) on small screens
-//     //   md: "block", // Element is visible and takes up space from 'md' up
-//     // },
-//     // borderRadius: "1rem",
-//     // m: 1,
-//     // padding: "0 4rem",
-//     // textAlign: "center",
-//     // verticalAlign: "middle",
-//     backgroundColor: "page.title",
-//   },
-// };
-// export const pageMenuStyles = {
-//   component: "",
-//   sx: {
-//     marginBottom: 0,
-//     display: "flex",
-//     flexFlow: "row wrap",
-//     justifyContent: "center",
-//     alignItems: "center",
-//     gap: 1,
-//     backgroundColor: "primary.dark",
-//   },
-// };
+
 export const pageMainProps = {
   className: "page--main",
   component: "",
@@ -141,20 +35,7 @@ export const pageMainProps = {
     // overflow: "hidden",
   },
 };
-// export const profileHeaderFormStyles = {
-//   className: "profileHeader",
-//   sx: {
-//     position: "relative",
-//     width: "100%",
-//   },
-// };
-// export const profileHeaderAvatarcontainerProps = {
-//   className: "profileHeader--avatar",
-//   sx: {
-//     width: "100%",
-//     height: "100%",
-//   },
-// };
+
 //TODO: check if needed:
 export const profileHeaderAvatarStyles = {
   className: "profileHeader--avatar",
@@ -167,33 +48,14 @@ export const profileHeaderAvatarStyles = {
     left: "2rem",
   },
 };
-// export const profileHeaderStyles = {
-//   className: "profileHeader",
-//   component: "",
-//   sx: {
-//     width: "100%",
-//     textAlign: "left",
-//     p: "2rem",
-//   },
-// };
-// export const profileHeaderBannerStyles = {
-//   className: "profileHeader--banner",
-//   component: "",
-//   sx: {
-//     position: "relative",
-//     width: "100%",
-//     height: "100%",
-//     // minHeight: "200px",
-//     border: "solid #ccc 1px",
-//   },
-// };
+
 //TODO: check if needed:
 export const profileDescriptionTextStyles = {
   sx: {
     pl: "2rem",
   },
 };
-export const widgetcontainerProps = {
+export const widgetContainerProps = {
   className: "widgetContainer",
   sx: {
     position: "relative",
@@ -223,46 +85,7 @@ export const containerProps = {
     // p: 0,
   },
 };
-// export const modalStyles = {
-//   sx: {
-//     position: "absolute",
-//     top: "50%",
-//     left: "50%",
-//     transform: "translate(-50%, -50%)",
-//     width: "100%",
-//     // width: "50ch",
-//     display: "flex",
-//     flexFlow: "column wrap",
-//     justifyContent: "center",
-//     alignItems: "center",
-//     width: {
-//       xs: "80%",
-//       sm: "70%",
-//       md: "50%",
-//       lg: "40%",
-//       xl: "40%",
-//     },
-//     // height: "100%",
-//     // height: "100vh",
-//     // maxWidth: {
-//     //   xs: "40ch", // 90% width on extra small screens
-//     //   sm: "40ch", // 600px max width on small screens and up
-//     //   md: "50ch", // 50 character width on medium screens and up
-//     // },
-//     // maxHeight: "100%",
-//     bgcolor: "background.paper",
-//     border: "1px solid #ffffff20",
-//     borderRadius: `${baseValues.borderRadius}`,
-//     boxShadow: 24,
-//     p: {
-//       xs: 2,
-//       sm: 2,
-//       md: 3,
-//       lg: 3,
-//       xl: 4,
-//     },
-//   },
-// };
+
 export const formProps = {
   className: "baseCrudForm",
   component: "form",
@@ -334,6 +157,8 @@ export const titleProps = {
     backgroundColor: "primary.dark",
   },
 };
+
+//* not needed yet:
 export const draggableStyles = {
   component: "",
   sx: {
@@ -350,6 +175,7 @@ export const draggableStyles = {
     cursor: "grab",
   },
 };
+//TODO: check if needed:
 export const flexListStyles = {
   sx: {
     width: "100%",
@@ -369,82 +195,7 @@ export const flexListStyles = {
     // borderRadius: "0 0 4px 4px",
   },
 };
-// export const cardStyles = {
-//   sx: {
-//     position: "relative",
-//     maxWidth: {
-//       xs: "95%", // Mobile
-//       lg: "400px", // Example: Desktop limit
-//     },
-//     height: "100%",
 
-//     flex: "8 6 220px",
-//     // flex: {
-//     //   xs: "8 6 220px",
-//     //   md: "4 2 120px",
-//     //   lg: "1 1 100%", // Overrides with "8 6 220px" from 'lg' screen up
-//     // },
-//   },
-// };
-// export const flexListItemStyles = {
-//   sx: {
-//     width: "100%",
-//     maxWidth: 345,
-//     height: "100%",
-//     // maxHeight: 360,
-//     display: "flex",
-//     flexFlow: "column nowrap",
-//     // flexShrink: 4,
-//     // flexGrow: 4,
-//     p: 0,
-//     m: 0,
-//     backgroundColor: "background.nav",
-//   },
-// };
-// export const dataGridcontainerProps = {
-//   className: "datagrid",
-//   component: "",
-//   sx: { display: "flex", flexDirection: "column" },
-// };
-// export const dataGridFootercontainerProps = {
-//   className: "datagrid",
-//   component: "",
-//   sx: {
-//     width: "100%",
-//     display: "flex",
-//     justifyContent: "space-between", // Better for layout
-//     alignItems: "center",
-//     backgroundColor: "bars.tool",
-//   },
-// };
-// export const sectionHeaderStyles = {
-//   className: "section--header",
-//   component: "",
-//   sx: { position: "", top: 0, pt: "" },
-// };
-
-// export const cardActionStyles = {
-//   sx: {
-//     // width: "4ch",
-//     // maxWidth: "4ch",
-//     display: "flex",
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-// };
-// export const basicAvatarStyles = {
-//   className: "basicAvatar",
-//   component: "",
-//   sx: {
-//     position: "relative",
-//     width: "4rem",
-//     height: "4rem",
-//     bottom: "36px",
-//   },
-// };
-// export const iconButtonStyles = {
-//   sx: { width: 36, height: 36, "& >*": { fontSize: "1.2rem" } },
-// };
 export const subtitleProps = {
   variant: "body1",
   sx: {
@@ -456,57 +207,7 @@ export const subtitleProps = {
     gap: 1,
   },
 };
-// export const subtitleItemStyles = { variant:"outlined",
-//   sx: {
-//     width: "100%",
-//     display: "flex",
-//     textAlign: "center",
-//   },
-// };
 
-// export const tileButtoncontainerProps = {
-//   sx: {
-//     display: "flex",
-//     flexFlow: "column nowrap",
-//     justifyContent: "center",
-//     alignItems: "center",
-//     gap: { xs: 2.4, sm: 3, md: 4, lg: 5, xl: 6 },
-//   },
-// };
-// The large Home Buttons
-// export const tileButtonStyles = {
-//   variant: "outlined",
-//   sx: {
-//     width: { xs: "8rem", sm: "10rem", md: "10rem", lg: "10rem", xl: "10rem" },
-//     height: { xs: "8rem", sm: "10rem", md: "10rem", lg: "10rem", xl: "10rem" },
-//     border: "1px solid #777",
-//     p: 1,
-//     m: 0,
-//     backgroundColor: "background.paper",
-//     "&:hover": {
-//       backgroundColor: "background.nav",
-//     },
-//   },
-// };
-// export const bottomNavcenterButtonStyles = {
-//   sx: {
-//     position: "absolute",
-//     zIndex: 10,
-//     top: "50%",
-//     transform: "translate(0%, -48px)",
-//     // width: "3rem",
-//     height: "5rem",
-//     "& >*": { fontSize: "2.5rem" },
-//     backgroundColor: "background.nav",
-//     borderRadius: "50%",
-//     scale: 1.5,
-//     "&:hover": { backgroundColor: "background.nav" },
-//   },
-// };
-// export const backButtonProps = {
-//   className: "button--back",
-//   sx: { position: "absolute", zIndex: 1000 },
-// };
 export const dataGridImageCellStyles = {
   sx: {
     // width: "10px",
@@ -990,53 +691,156 @@ export const sharedComponents = {
       }),
     },
   },
-  // MuiDataGrid: {
-  //   styleOverwrites: {
-  //     root: {
-  //       border: "none",
-  //       outline: "none",
-  //       borderRadius: 0,
-  //       borderTopLeftRadius: 0,
-  //       borderTopRightRadius: 0,
-  //       "& .activeRow": {
-  //         border: "none",
-  //         outline: "none",
-  //         backgroundColor: "steelblue",
-  //         "&:hover": {
-  //           /* Nest the hover pseudo-class here */
-  //           backgroundColor:
-  //             "steelblue" /* Change the hover color to dodgerblue */,
-  //         },
-  //         "& > *": {
-  //           outline: "none",
-  //           border: "none",
-  //         },
-  //       },
-  //       "& .inactiveRow": {
-  //         backgroundColor: "grey",
-  //         "&:hover": {
-  //           backgroundColor: "green" /* Change the hover color to dodgerblue */,
-  //         },
-  //         "& > *": {},
-  //       },
-  //     },
-  //   },
-  // },
 
   MuiDataGrid: {
+    defaultProps: {
+      slotProps: {
+        // "menu" targets the Column Menu (sort, hide, etc.)
+        menu: {
+          sx: {
+            // This creates a specific selector for Lists inside DataGrid Menus
+            "& .MuiList-root": {
+              backgroundColor: "steelblue",
+              // Your custom styles:
+              display: "flex",
+              flexDirection: "row",
+            },
+          },
+        },
+        // "panel" targets the Filter Panel (if you need that too)
+        panel: {
+          sx: {
+            "& .MuiList-root": {
+              backgroundColor: "steelblue",
+              // Your custom styles:
+              display: "flex",
+              flexDirection: "row",
+              // Apply similar styles here if needed
+            },
+          },
+        },
+        // 1. Target the Pagination Slot
+        pagination: {
+          pageSizeOptions: [5, 10, 25, 50, 100],
+          sx: {
+            "& .MuiInputBase-root": {
+              backgroundColor: "red",
+            },
+            "& .MuiList-root": {
+              backgroundColor: "steelblue",
+              // Your custom styles:
+              display: "flex",
+              flexDirection: "row",
+            },
+          },
+          // 2. Pass props to the MuiSelect component inside Pagination
+          SelectProps: {
+            // 3. Pass props to the Menu (Popover) that the Select opens
+            MenuProps: {
+              // 4. Use SX to target the List inside that specific Menu
+              sx: {
+                "& .MuiList-root": {
+                  backgroundColor: "steelblue", // Your custom color
+                  display: "flex",
+                  flexDirection: "column",
+
+                  // Optional: Style the specific items
+                  "& .MuiMenuItem-root": {
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "darkblue",
+                    },
+                  },
+                },
+                // If you need to style the Paper (the container of the list)
+                "& .MuiPaper-root": {
+                  backgroundColor: "steelblue",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     styleOverrides: {
       row: ({ theme }) => ({
         // backgroundColor: "#9ccae9ff",
         "&:hover": {
-          backgroundColor: theme.palette.action.dark,
+          // backgroundColor: theme.palette.action.dark,
         },
       }),
-      root: ({ theme }) => ({
-        backgroundColor: theme.palette.background.paper,
+      topContainer: ({ theme }) => ({
+        display: "flex",
+        justifyContent: "space-between",
+        "&:hover": { backgroundColor: "#333433" },
+      }),
+      toolbar: ({ theme }) => ({
+        display: "flex",
+        justifyContent: "space-between",
+        "&:hover": { backgroundColor: "#333433" },
+      }),
+      main: ({ theme }) => ({
+        backgroundColor: theme.palette.datagrid.main,
+      }),
+      columnHeader: ({ theme }) => ({
+        // border: "none",
+        //         display: "flex",
+        //         justifyContent: "space-between",
+        //         alignItems: "center",
+        backgroundColor: theme.palette.datagrid.columnHeader,
+        "& .MuiDataGrid-columnHeaderTitleContainer": {
+          // border: "none",
+          //         display: "flex",
+          //         justifyContent: "space-between",
+          //         alignItems: "center",
+          backgroundColor: theme.palette.datagrid.columnHeader,
+        },
+        "& .MuiDataGrid-columnHeader": {
+          // border: "none",
+          //         display: "flex",
+          //         justifyContent: "space-between",
+          //         alignItems: "center",
+          backgroundColor: theme.palette.datagrid.columnHeader,
+        },
+        "& .MuiDataGrid-columnSeparator": {
+          ...theme.palette.datagrid.border,
+          //         // width: "100%",
+          // color: theme.palette.datagrid.borderColor,
+        },
+        "& .MuiDataGrid-columnSeparator > *": {
+          //         // width: "100%",
+          // color: "#fff",
+          backgroundColor: theme.palette.datagrid.columnHeader,
+        },
+        "& .MuiDataGrid-columnHeaderTitleContainer > svg": {
+          backgroundColor: "steelblue",
+          //         // width: "100%",
+          //         color: "#fff",
+          // backgroundColor: "#333433",
+          //         "&:hover": {
+          //           color: "white",
+          //           backgroundColor: "steelblue",
+          //         },
+        },
+      }),
+      footerContainer: ({ theme }) => ({
         width: "100%",
-        height: "100%",
+        backgroundColor: theme.palette.datagrid.footerContainer,
+      }),
+      "& .MuiList": {
+        width: "5rem",
+        minWidth: null,
+        backgroundColor: "steelblue",
+      },
+
+      root: ({ theme }) => ({
+        ...theme.palette.datagrid,
+
+        // width: "100%",
+        // height: "100%",
         "& .highlighted-row": {
           backgroundColor: theme.palette.secondary.dark,
+
           "&:hover": {
             backgroundColor: theme.palette.action.light,
           },
@@ -1048,23 +852,18 @@ export const sharedComponents = {
             backgroundColor: theme.palette.action.light,
           },
         },
-        "& .MuiDataGrid-toolbar": {
-          display: "flex",
-          justifyContent: "space-between",
-          "&:hover": { backgroundColor: "#333433" },
-        },
+        // "& .MuiDataGrid-toolbar": {
+        //   display: "flex",
+        //   justifyContent: "space-between",
+        //   "&:hover": { backgroundColor: "#333433" },
+        // },
         //       border: "none",
         "& .MuiDataGrid-topContainer": {
           //         // height: "100%",
           //         color: "#fff",
           //         backgroundColor: "#333433",
         },
-        "& .MuiDataGrid-main > *": {
-          //         // height: "100%",
-          //         borderTopLeftRadius: 0,
-          //         borderTopRightRadius: 0,
-          //         // backgroundColor: "red",
-        },
+
         "& .MuiDataGrid-virtualScroller": {
           //   height: "100%",
           //   scrollbarWidth: "auto",
@@ -1079,20 +878,15 @@ export const sharedComponents = {
           //         height: "100%",
         },
         "& .MuiDataGrid-root--densityComfortable": {
-          //         border: "none",
+          // border: "none",
           //         outline: "none",
         },
         "& .MuiDataGrid-withBorderColor > *": {
           // backgroundColor: "steelblue",
-          //         border: "none",
+          // border: "none",
           //         outline: "none",
         },
-        "& .MuiDataGrid-columnHeader": {
-          // backgroundColor: "steelblue",
-          //         // width: "100%",
-          //         color: "#fff",
-          // backgroundColor: "#333433",
-        },
+
         "& .MuiDataGrid-filler": {
           //         // width: "100%",
           //         // height: "1rem",
@@ -1100,26 +894,6 @@ export const sharedComponents = {
           // backgroundColor: "#fff",
           //         "& >*": {
           //           // height: "1rem",
-          //         },
-        },
-        "& .MuiDataGrid-columnSeparator > *": {
-          //         // width: "100%",
-          // color: "#fff",
-          // backgroundColor: "steelblue",
-        },
-        "& .MuiDataGrid-columnHeaderTitleContainer": {
-          //         display: "flex",
-          //         justifyContent: "space-between",
-          //         alignItems: "center",
-          // backgroundColor: "steelblue",
-        },
-        "& .MuiDataGrid-columnHeaderTitleContainer > svg": {
-          //         // width: "100%",
-          //         color: "#fff",
-          // backgroundColor: "#333433",
-          //         "&:hover": {
-          //           color: "white",
-          //           backgroundColor: "steelblue",
           //         },
         },
 
@@ -1130,7 +904,7 @@ export const sharedComponents = {
           //         backgroundColor: "steelblue",
         },
         "& .MuiDataGrid-menuIcon, & .MuiDataGrid-menuIcon > *": {
-          //         border: "none",
+          // border: "none",
           //         color: "#fff",
           //         outline: "none",
         },
@@ -1139,21 +913,22 @@ export const sharedComponents = {
           color: "#aaa",
           outline: "none",
           userSelect: "none",
+          ...theme.palette.datagrid,
         },
         "& .MuiDataGrid-cell--accordion": {
           padding: 0,
           overflow: "visible !important",
         },
-        //       "& .MuiDataGrid-cell:active": {
-        //         outline: "none",
-        //       },
-        //       "& .MuiDataGrid-cell:focus": {
-        //         color: "#fff",
-        //         outline: "none",
-        //       },
-        //       "& .MuiDataGrid-cell:hover": {
-        //         color: "#fff",
-        //       },
+        "& .MuiDataGrid-cell:active": {
+          outline: "none",
+        },
+        "& .MuiDataGrid-cell:focus": {
+          color: "#fff",
+          outline: "none",
+        },
+        "& .MuiDataGrid-cell:hover": {
+          color: "#fff",
+        },
 
         "& .MuiTablePagination-select .MuiInputBase-root": {
           width: "5rem",

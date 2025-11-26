@@ -178,9 +178,8 @@ export default function InvitationsList({
 
     const customSubTitleItem = user.roles?.map((role) => (
       <Chip
+        {...subtitleProps}
         key={role.role} // Assuming role is an object { role: '...' }
-        sx={subtitleStyles.sx}
-        variant="body1"
         label={role.role}
         onClick={() => handleClickSubTitle(role)}
       />

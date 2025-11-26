@@ -20,7 +20,7 @@ import CrudItem from "../crudItem";
 
 import ProcessingTimeCell from "@/components/timeCells/ProcessingTimeCell";
 
-import { subtitleStyles } from "@/theme/muiProps";
+import { subtitleProps } from "@/theme/muiProps";
 import config from "@/lib/widgetConfigs/receivedInvitations.widgetConfig.json";
 import MultiItems from "@/components/multiItems/MultiItems";
 import SectionHeader from "@/components/sectionHeader/SectionHeader";
@@ -169,9 +169,8 @@ export default function Widget({
 
     const customSubTitleItem = user.roles?.map((role) => (
       <Chip
+        {...subtitleProps}
         key={role.role} // Assuming role is an object { role: '...' }
-        sx={subtitleStyles.sx}
-        variant="body1"
         label={role.role}
         onClick={() => handleClickSubTitle(role)}
       />
