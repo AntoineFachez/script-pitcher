@@ -4,7 +4,7 @@
 
 import React from "react";
 
-import NavBarButton from "@/components/appBar/navBarButton/NavBarButton";
+import { WidgetLayout } from "../shared/WidgetLayout";
 
 import { WidgetContext } from "./Context";
 import Widget from "./Widget";
@@ -16,20 +16,14 @@ export default function UserIndex({
 }) {
   return (
     <WidgetContext userProfile={userProfile}>
-      {layoutContext === "navBar" ? (
-        <>
-          <NavBarButton
-            iconName="Group"
-            href="/users"
-            prop="users"
-            handleSetNewAppContext={handleSetNewAppContext}
-          />{" "}
-        </>
-      ) : (
-        <>
-          <Widget userProfile={userProfile} />
-        </>
-      )}
+      <WidgetLayout
+        layoutContext={layoutContext}
+        onNavBarClick={handleSetNewAppContext}
+        iconName="Group"
+        href="/users"
+      >
+        <Widget userProfile={userProfile} />
+      </WidgetLayout>
     </WidgetContext>
   );
 }

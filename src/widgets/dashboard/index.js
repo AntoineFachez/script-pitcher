@@ -4,10 +4,10 @@
 import React from "react";
 
 import { useData } from "@/context/DataContext";
-import NavBarButton from "@/components/appBar/navBarButton/NavBarButton";
 
 import { WidgetContext } from "./Context";
 import Widget from "./Widget";
+import { WidgetLayout } from "../shared/WidgetLayout";
 
 export default function DashboardIndex({
   layoutContext,
@@ -18,23 +18,16 @@ export default function DashboardIndex({
   return (
     <>
       <WidgetContext>
-        {layoutContext === "navBar" ? (
-          <>
-            <NavBarButton
-              iconName="Dashboard"
-              href="/dashboard"
-              prop="dashboard"
-              badgeCount={null}
-              handleSetNewAppContext={handleSetNewAppContext}
-            />{" "}
-          </>
-        ) : (
-          <>
-            <Widget
-            // initialData={initialData}
-            />
-          </>
-        )}
+        <WidgetLayout
+          layoutContext={layoutContext}
+          onNavBarClick={handleSetNewAppContext}
+          iconName="Dashboard"
+          href="/dashboard"
+        >
+          <Widget
+          // initialData={initialData}
+          />
+        </WidgetLayout>
       </WidgetContext>
     </>
   );

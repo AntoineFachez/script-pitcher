@@ -3,8 +3,8 @@
 "use client";
 import React from "react";
 
-import NavBarButton from "@/components/appBar/navBarButton/NavBarButton";
 import { FileProvider } from "@/context/FileContext";
+import { WidgetLayout } from "../shared/WidgetLayout";
 
 import { WidgetContext } from "./Context";
 import Widget from "./Widget";
@@ -20,21 +20,14 @@ export default function FileIndex({
     <>
       <FileProvider projectId={projectId} fileId={fileId}>
         <WidgetContext>
-          {layoutContext === "navBar" ? (
-            <>
-              <NavBarButton
-                iconName="Article"
-                href="/projects"
-                prop="projects"
-                badgeCount={null}
-                handleSetNewAppContext={handleSetNewAppContext}
-              />{" "}
-            </>
-          ) : (
-            <>
-              <Widget togglePublishProject={togglePublishProject} />
-            </>
-          )}
+          <WidgetLayout
+            layoutContext={layoutContext}
+            onNavBarClick={handleSetNewAppContext}
+            iconName="Article"
+            href="/projects"
+          >
+            <Widget togglePublishProject={togglePublishProject} />
+          </WidgetLayout>
         </WidgetContext>
       </FileProvider>
     </>

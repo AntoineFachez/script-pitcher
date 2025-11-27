@@ -3,12 +3,11 @@
 "use client";
 import React from "react";
 
-import NavBarButton from "@/components/appBar/navBarButton/NavBarButton";
-import { ProjectProvider, useProject } from "@/context/ProjectContext";
+import { ProjectProvider } from "@/context/ProjectContext";
+import { WidgetLayout } from "../shared/WidgetLayout";
 
 import { WidgetContext } from "./Context";
 import Widget from "./Widget";
-import { Box } from "@mui/material";
 
 export default function ProjectIndex({
   layoutContext,
@@ -22,25 +21,18 @@ export default function ProjectIndex({
     <>
       <ProjectProvider projectId={projectId}>
         <WidgetContext>
-          {layoutContext === "navBar" ? (
-            <>
-              <NavBarButton
-                iconName="Article"
-                href="/projects"
-                prop="projects"
-                badgeCount={null}
-                handleSetNewAppContext={handleSetNewAppContext}
-              />{" "}
-            </>
-          ) : (
-            <>
-              <Widget
-                initialProject={initialProject}
-                files={initialFiles}
-                togglePublishProject={togglePublishProject}
-              />
-            </>
-          )}
+          <WidgetLayout
+            layoutContext={layoutContext}
+            onNavBarClick={handleSetNewAppContext}
+            iconName="Article"
+            href="/projects"
+          >
+            <Widget
+              initialProject={initialProject}
+              files={initialFiles}
+              togglePublishProject={togglePublishProject}
+            />
+          </WidgetLayout>
         </WidgetContext>
       </ProjectProvider>{" "}
     </>

@@ -2,22 +2,19 @@
 
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 
 import { useUser } from "@/context/UserContext";
-import { useApp } from "@/context/AppContext";
-
-import NavBarButton from "@/components/appBar/navBarButton/NavBarButton";
 
 import { WidgetContext } from "./Context";
 import Widget from "./Widget";
+import { WidgetLayout } from "../shared/WidgetLayout";
 
 export default function MeIndex({
   handleSetNewAppContext,
   layoutContext,
   initialProfile,
 }) {
-  const { setAppContext } = useApp();
   const { receivedInvitations } = useUser();
   let invitationCount;
   let pendingInvitations = [];
@@ -30,24 +27,17 @@ export default function MeIndex({
 
   return (
     <WidgetContext>
-      {layoutContext === "navBar" ? (
-        <>
-          <NavBarButton
-            iconName="Person"
-            href="/me"
-            prop="me"
-            badgeCount={invitationCount}
-            handleSetNewAppContext={handleSetNewAppContext}
-          />{" "}
-        </>
-      ) : (
-        <>
-          <Widget
-            initialProfile={initialProfile}
-            initialInvitations={pendingInvitations}
-          />
-        </>
-      )}
+      <WidgetLayout
+        layoutContext={layoutContext}
+        onNavBarClick={handleSetNewAppContext}
+        iconName="Person"
+        href="/me"
+      >
+        <Widget
+          initialProfile={initialProfile}
+          initialInvitations={pendingInvitations}
+        />
+      </WidgetLayout>
     </WidgetContext>
   );
 }

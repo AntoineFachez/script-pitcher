@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useThemeContext } from "@/context/ThemeContext";
 import { useUi } from "@/context/UiContext";
-import { getButton } from "@/lib/maps/iconMap";
+import { ActionIcon } from "@/components/buttons/ActionIcon";
 
 export default function SettingsContent() {
   const { appContext } = useApp();
@@ -77,16 +77,17 @@ export default function SettingsContent() {
 
           return option.iconName ? (
             <>
-              {getButton(
-                i, // i,
-                option.iconName, // iconName = "",
-                option.action, // onClick,
-                option.disabled, // disabled = false,
-                option.size, // sx = iconButtonStyles.sx,
-                option.variant, // variant = "outlined",
-                option.href, // href = null,
-                option.buttonText // label = "",
-              )}
+              <ActionIcon
+                key={i}
+                iconName={option.iconName}
+                onClick={option.action}
+                disabled={option.disabled}
+                sx={option.size}
+                variant={option.variant}
+                href={option.href}
+                label={option.buttonText || option.label}
+                asNavigationAction={option.asNavigationAction}
+              />
             </>
           ) : (
             <FormControlLabel
