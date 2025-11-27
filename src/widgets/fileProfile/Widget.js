@@ -17,13 +17,14 @@ import { useFile } from "@/context/FileContext";
 import { useUi } from "@/context/UiContext";
 
 import BasicDrawer from "@/components/drawer/Drawer";
-import PdfViewer from "@/components/pdfviewer/PdfViewer";
+
 import ProfileHeader from "@/components/profileHeader/ProfileHeader";
 import DownloadFileButton from "@/components/downloadButton/DownloadButton";
 
 import ElementList from "@/widgets/fileProfile/ElementsList";
 import BackButton from "@/components/backButton/BackButton";
 import { useApp } from "@/context/AppContext";
+import PdfViewer from "@/components/pdfviewer/PDFViewer";
 
 /**
  * This component consumes the DocumentContext and renders the UI.

@@ -7,11 +7,12 @@ import FilesClient from "./FileClient"; // We will create this next
  * It reads the URL parameters (`params`) and passes them to the
  * FilesProvider, which will then fetch the data.
  */
-export default function ViewFilePage({ params }) {
-  const { projectId, fileId } = params;
+export default async function ViewFilePage({ params }) {
+  // 2. Await the params before using them
+  const resolvedParams = await params;
+  const { projectId, fileId } = resolvedParams;
 
   if (!projectId || !fileId) {
-    // This should not happen if your routing is set up
     return <div>Missing project or file ID.</div>;
   }
 

@@ -18,21 +18,16 @@ const fadeInUp = {
   },
 };
 
-export default function PDFPage({ element, scale, styleMap, pageIndex }) {
+export default function PDFPage({
+  element,
+  scale,
+  styleMap,
+  pageIndex,
+  onElementClick,
+  isEditing,
+  isAnchored,
+}) {
   const pos = element.position;
-
-  const AnimationWrapper = ({ children, style }) => (
-    <Box
-      component={motion.div} // <--- Magic happens here
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-50px" }} // Triggers 50px before element hits bottom
-      variants={fadeInUp}
-      sx={style}
-    >
-      {children}
-    </Box>
-  );
 
   // Use a switch to handle different element types
   switch (element.type) {
@@ -47,26 +42,16 @@ export default function PDFPage({ element, scale, styleMap, pageIndex }) {
         width: `${(pos.x1 - pos.x0) * scale}px`,
         height: `${(pos.y1 - pos.y0) * scale}px`,
         zIndex: element.zIndex,
-
-        // Text-specific styles
-        // fontFamily: style.fontFamily,
-        // fontSize: `${style.fontSize * scale}px`,
-        // color: style.color,
-        // textAlign: element.textAlign,
-        // // textAlign: "justify",
-        // whiteSpace: "pre-wrap", // Respect whitespace from PDF
         lineHeight: 1.1, // A sensible default
       };
-      // console.log(element.isParagraph ? "paragraph" : "no paragraph");
+
       return (
-        <>
-          <PDFText
-            element={element}
-            style={elementStyles}
-            styleMap={styleMap}
-            scale={scale}
-          />
-        </>
+        <PDFText
+          element={element}
+          style={elementStyles}
+          styleMap={styleMap}
+          scale={scale}
+        />
       );
     }
     // --- NEW: Handle the grouped paragraph ---
@@ -80,14 +65,36 @@ export default function PDFPage({ element, scale, styleMap, pageIndex }) {
         left: `${paraPos.x0 * scale}px`,
         top: `${paraPos.y0 * scale}px`,
         width: `${(paraPos.x1 - paraPos.x0) * scale}px`,
-        // width: "100%",
         height: `${(paraPos.y1 - paraPos.y0) * scale}px`,
         zIndex: element.zIndex,
         backgroundColor: "transparent",
       };
 
       return (
-        <AnimationWrapper style={paracontainerProps}>
+        <Box
+          id={`element-${element.uniqueId}`} // ID for IntersectionObserver
+          data-id={element.uniqueId} // Explicit data attribute for easier lookup
+          onClick={onElementClick} // Click handler
+          component={motion.div} // <--- Magic happens here
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }} // Triggers 50px before element hits bottom
+          variants={fadeInUp}
+          sx={{
+            ...paracontainerProps,
+            cursor: isEditing ? "pointer" : "default",
+            "&:hover": isEditing
+              ? {
+                  outline: "2px solid #1DB954", // Spotify Green
+                  backgroundColor: "rgba(29, 185, 84, 0.1)",
+                }
+              : {},
+            ...(isAnchored && {
+              borderLeft: "4px solid #1DB954",
+              paddingLeft: "4px",
+            }),
+          }}
+        >
           {/* 2. Map over the child spans inside the paragraph */}
           {element.elements.map((span) => {
             const spanPos = span.position;
@@ -103,18 +110,28 @@ export default function PDFPage({ element, scale, styleMap, pageIndex }) {
             };
 
             return (
-              <>
-                <PDFText
-                  key={span.uniqueId}
-                  element={span}
-                  style={spanRelativeStyles}
-                  styleMap={styleMap}
-                  scale={scale}
-                />
-              </>
+              <PDFText
+                key={span.uniqueId}
+                element={span}
+                style={spanRelativeStyles}
+                styleMap={styleMap}
+                scale={scale}
+              />
             );
           })}
-        </AnimationWrapper>
+          {isAnchored && (
+            <Box
+              sx={{
+                position: "absolute",
+                left: -24,
+                top: 0,
+                color: "#1DB954",
+              }}
+            >
+              <span style={{ fontSize: "20px" }}>🎵</span>
+            </Box>
+          )}
+        </Box>
       );
     }
 

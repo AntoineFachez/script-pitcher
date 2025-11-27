@@ -1,5 +1,3 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/COMPONENTS/PDFVIEWER/PDFVIEWER.JS
-
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
@@ -17,10 +15,16 @@ const Loader = () => (
 );
 
 // The main viewer component
-export default function PdfViewer({ containerRef }) {
+// The main viewer component
+function PdfViewerContent({ containerRef }) {
   const { fileData, loading, error } = useFile();
+  const { isEditing, addAnchor, anchors, activeTrack, playlistUrl, token } =
+    useSoundtrack();
+  const { playTrack } = useSpotifyPlayer();
 
   const [scale, setScale] = useState(0.1);
+  const [selectorOpen, setSelectorOpen] = useState(false);
+  const [selectedElementId, setSelectedElementId] = useState(null);
 
   // Memoize the style map for efficiency
   const styleMap = useMemo(() => {
@@ -142,6 +146,73 @@ export default function PdfViewer({ containerRef }) {
     // --- UPDATED DEPENDENCY ARRAY ---
   }, [fileData]);
 
+  // Keep track of the last triggered anchor to prevent duplicate plays
+  const lastTriggeredRef = useRef(null);
+
+  // Scroll Detection Logic
+  useEffect(() => {
+    console.log("Scroll Detection Effect running. Anchors:", anchors);
+    if (isEditing || anchors.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const elementId = entry.target.getAttribute("data-id");
+            const idToMatch =
+              elementId || entry.target.id.replace("element-", "");
+
+            const anchor = anchors.find((a) => a.elementId === idToMatch);
+
+            if (anchor) {
+              if (lastTriggeredRef.current !== anchor.elementId) {
+                // console.log(`🎵 Switching track: "${anchor.trackName}" (Anchor: ${idToMatch})`);
+                playTrack(anchor.trackUri, anchor.deviceId);
+                lastTriggeredRef.current = anchor.elementId;
+              } else {
+                // console.log(`Skipping duplicate trigger for anchor: ${idToMatch}`);
+              }
+            }
+          }
+        });
+      },
+      {
+        root: null,
+        // Trigger when the element crosses the line 50% from the bottom (i.e., enters the top half of the screen)
+        // Top margin -10% means we ignore the very top 10% (header area)
+        rootMargin: "-10% 0px -50% 0px",
+        threshold: 0,
+      }
+    );
+
+    // Observe all anchored elements
+    anchors.forEach((anchor) => {
+      const element = document.getElementById(`element-${anchor.elementId}`);
+      if (element) {
+        observer.observe(element);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, [anchors, isEditing, playTrack, loading, groupedPages]);
+
+  const handleElementClick = (elementId) => {
+    if (!isEditing) return;
+    setSelectedElementId(elementId);
+    setSelectorOpen(true);
+  };
+
+  const handleTrackSelect = (track) => {
+    addAnchor({
+      elementId: selectedElementId,
+      trackUri: track.uri,
+      trackName: track.name,
+      offsetMs: 0,
+    });
+    setSelectorOpen(false);
+    setSelectedElementId(null);
+  };
+
   if (loading) return <Loader />;
   if (error)
     return (
@@ -159,6 +230,13 @@ export default function PdfViewer({ containerRef }) {
   return (
     // This outer Box is the responsive container we measure
     <>
+      <SoundtrackPanel />
+      <TrackSelector
+        open={selectorOpen}
+        onClose={() => setSelectorOpen(false)}
+        onSelect={handleTrackSelect}
+      />
+
       {groupedPages.map((page, pageIndex) => {
         const aspectRatio = `${page.dimensions.width} / ${page.dimensions.height}`;
 
@@ -199,6 +277,9 @@ export default function PdfViewer({ containerRef }) {
             )}
             {/* The elements array now contains grouped paragraphs */}
             {page.elements.map((element) => {
+              const isAnchored = anchors.some(
+                (a) => a.elementId === element.uniqueId
+              );
               return (
                 <PDFPage
                   key={element.uniqueId} // <-- Use the new stable key
@@ -206,6 +287,9 @@ export default function PdfViewer({ containerRef }) {
                   scale={scale}
                   styleMap={styleMap}
                   pageIndex={pageIndex}
+                  onElementClick={() => handleElementClick(element.uniqueId)}
+                  isEditing={isEditing}
+                  isAnchored={isAnchored}
                 />
               );
             })}
@@ -214,5 +298,18 @@ export default function PdfViewer({ containerRef }) {
       })}
       {/* {JSON.stringify(fileData?.processedData)} */}
     </>
+  );
+}
+
+import { SoundtrackProvider, useSoundtrack } from "@/context/SoundtrackContext";
+import { useSpotifyPlayer } from "@/lib/spotify/useSpotifyPlayer";
+import SoundtrackPanel from "./soundtrack/SoundtrackPanel";
+import TrackSelector from "./soundtrack/TrackSelector";
+
+export default function PdfViewer(props) {
+  return (
+    <SoundtrackProvider>
+      <PdfViewerContent {...props} />
+    </SoundtrackProvider>
   );
 }
