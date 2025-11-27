@@ -151,7 +151,6 @@ function PdfViewerContent({ containerRef }) {
 
   // Scroll Detection Logic
   useEffect(() => {
-    console.log("Scroll Detection Effect running. Anchors:", anchors);
     if (isEditing || anchors.length === 0) return;
 
     const observer = new IntersectionObserver(
