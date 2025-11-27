@@ -23,10 +23,14 @@ export default function NavBarButton({ iconName, prop, href, badgeCount }) {
       sx={
         appContext === prop
           ? {
+              ...navBarButtonStyles.sx,
               color: "button.active",
               backgroundColor: "button.activeBackground",
             }
-          : { color: "button.inactive" }
+          : {
+              ...navBarButtonStyles.sx,
+              color: "button.inactive",
+            }
       }
     >
       <Badge badgeContent={badgeCount} color="secondary">
@@ -35,3 +39,6 @@ export default function NavBarButton({ iconName, prop, href, badgeCount }) {
     </IconButton>
   );
 }
+const navBarButtonStyles = {
+  sx: { width: "3rem", height: "3rem" },
+};

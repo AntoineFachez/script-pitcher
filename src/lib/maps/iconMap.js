@@ -105,6 +105,9 @@ export const iconMap = {
   youtube:
     "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://youtube.com&size=256",
 };
+/**
+ * @deprecated Use ActionIcon component instead
+ */
 export const getButton = (
   i,
   iconName = "",
