@@ -44,6 +44,11 @@ Based on the project structure, Script-Pitcher offers the following core functio
 
 - **Robust Authentication:** Secure session management using **NextAuth.js JWT strategy** synced with Firebase Auth for client-side SDK access.
 
+- **🎵 Spotify Scroll Soundtrack:** An immersive feature that links script paragraphs to Spotify tracks. As users scroll through the script, the music automatically changes to match the scene, creating a dynamic reading experience.
+  - **PKCE Authentication:** Securely connects to Spotify using the Authorization Code Flow with PKCE.
+  - **Scroll Detection:** Uses `IntersectionObserver` to trigger tracks when anchored paragraphs enter the viewport.
+  - **Note:** Requires a **Spotify Premium** account for the Web Playback SDK.
+
 ## ⚙️ Tech Stack
 
 | Category          | Technology                                           | Purpose                                                                                                     |
