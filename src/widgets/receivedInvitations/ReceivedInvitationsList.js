@@ -34,6 +34,7 @@ const subtitleProps = {
 import config from "@/lib/widgetConfigs/receivedInvitations.widgetConfig.json";
 import MultiItems from "@/components/multiItems/MultiItems";
 import SectionHeader from "@/components/sectionHeader/SectionHeader";
+import { EMAIL_CONTENT } from "@/lib/constants/notifications";
 const { widgetConfig, schemeDefinition } = config;
 
 const columns = [
@@ -132,8 +133,8 @@ export default function Widget({
   };
 
   // Example email content
-  const emailSubject = `Check out this user`;
-  const emailBody = `Hey, I wanted you to see this user profile.`;
+  const emailSubject = EMAIL_CONTENT.USER.SUBJECT;
+  const emailBody = EMAIL_CONTENT.USER.BODY;
 
   // --- This is the key refactoring ---
   // This function builds the props for each BasicCard

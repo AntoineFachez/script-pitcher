@@ -11,6 +11,7 @@ import {
   createStatusColumn,
 } from "../shared/columnFactories";
 import { useStandardConfig } from "../shared/useStandardConfig";
+import { EMAIL_CONTENT } from "@/lib/constants/notifications";
 
 export function useProjectConfig({
   onEditProject,
@@ -27,8 +28,8 @@ export function useProjectConfig({
 
   // --- Card Actions ---
   const getCardActions = (project) => {
-    const emailSubject = `Check out this project`;
-    const emailBody = `Hey, I wanted you to see this project.`;
+    const emailSubject = EMAIL_CONTENT.PROJECT.SUBJECT;
+    const emailBody = EMAIL_CONTENT.PROJECT.BODY;
 
     // Determine role from UserContext (myProjects map)
     const userRole = myProjects?.[project.id]?.role;

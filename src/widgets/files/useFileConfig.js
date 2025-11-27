@@ -10,6 +10,7 @@ import {
   createRelativeTimeColumn,
 } from "../shared/columnFactories";
 import { useStandardConfig } from "../shared/useStandardConfig";
+import { EMAIL_CONTENT } from "@/lib/constants/notifications";
 
 export function useFileConfig({
   handleClickEdit,
@@ -25,8 +26,8 @@ export function useFileConfig({
 
   // --- Card Actions ---
   const getCardActions = (episode) => {
-    const emailSubject = `Check out this article: ${episode.title || "File"}`;
-    const emailBody = `Hey, check this out.`;
+    const emailSubject = EMAIL_CONTENT.FILE.SUBJECT(episode.title);
+    const emailBody = EMAIL_CONTENT.FILE.BODY;
 
     const kebabActions = [
       {

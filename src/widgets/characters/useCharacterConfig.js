@@ -6,6 +6,7 @@ import KebabMenu from "@/components/menus/KebabMenu";
 import ShareButton from "@/components/share/ShareButton";
 import ImageCell from "@/components/dataGridElements/ImageCell";
 import { dataGridImageCellStyles } from "../shared/constants";
+import { EMAIL_CONTENT } from "@/lib/constants/notifications";
 
 export function useCharacterConfig({
   handleClickEdit,
@@ -17,8 +18,8 @@ export function useCharacterConfig({
 }) {
   // --- Card Actions ---
   const getCardActions = (character) => {
-    const emailSubject = `Check out this character`;
-    const emailBody = `Hey, I wanted you to see this character.`;
+    const emailSubject = EMAIL_CONTENT.CHARACTER.SUBJECT;
+    const emailBody = EMAIL_CONTENT.CHARACTER.BODY;
 
     const kebabActions = [
       {

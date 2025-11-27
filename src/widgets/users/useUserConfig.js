@@ -9,6 +9,7 @@ import {
   createRelativeTimeColumn,
 } from "../shared/columnFactories";
 import { useStandardConfig } from "../shared/useStandardConfig";
+import { EMAIL_CONTENT } from "@/lib/constants/notifications";
 import { subtitleProps } from "../shared/constants";
 
 export function useUserConfig({
@@ -24,8 +25,8 @@ export function useUserConfig({
 
   // --- Card Actions ---
   const getCardActions = (user) => {
-    const emailSubject = `Check out this user`;
-    const emailBody = `Hey, I wanted you to see this user profile.`;
+    const emailSubject = EMAIL_CONTENT.USER.SUBJECT;
+    const emailBody = EMAIL_CONTENT.USER.BODY;
 
     const kebabActions = [
       {

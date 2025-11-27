@@ -6,6 +6,7 @@ import KebabMenu from "@/components/menus/KebabMenu";
 import ShareButton from "@/components/share/ShareButton";
 import ImageCell from "@/components/dataGridElements/ImageCell";
 import { dataGridImageCellStyles } from "../shared/constants";
+import { EMAIL_CONTENT } from "@/lib/constants/notifications";
 
 export function useEpisodeConfig({
   handleClickEdit,
@@ -16,8 +17,8 @@ export function useEpisodeConfig({
   userRole,
 }) {
   // Example email content
-  const emailSubject = `Check out this episode`;
-  const emailBody = `Hey, I wanted you to see this episode.`;
+  const emailSubject = EMAIL_CONTENT.EPISODE.SUBJECT;
+  const emailBody = EMAIL_CONTENT.EPISODE.BODY;
 
   // --- Card Actions ---
   const getCardActions = (episode) => {
