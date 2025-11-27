@@ -5,11 +5,11 @@ import React, { useContext, useState } from "react";
 import AppBar from "./AppBar";
 import { ContextProvider } from "./Context";
 
-export default function Index({ spaceProps }) {
+export default function Index({ NAV_HEIGHT }) {
   return (
     <>
       <ContextProvider>
-        <AppBar spaceProps={spaceProps} />
+        <AppBar NAV_HEIGHT={NAV_HEIGHT} />
       </ContextProvider>
     </>
   );

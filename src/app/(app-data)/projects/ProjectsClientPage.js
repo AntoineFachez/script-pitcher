@@ -23,12 +23,10 @@ import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 
 // Local elements
 
-
-
 import config from "@/lib/widgetConfigs/projects.widgetConfig.json";
 const { widgetConfig, schemeDefinition } = config;
 // We receive the server-fetched data as props
-export default function ProjectsClientPage({ }) {
+export default function ProjectsClientPage({}) {
   const { appContext, setAppContext } = useApp();
   const {
     modalContent,
@@ -79,14 +77,13 @@ export default function ProjectsClientPage({ }) {
         project.genres?.some((g) => g.genre === genreInFocus)
       );
     }
-    setUniqueGenres(data);
     return data;
-  }, [
-    optimisticProjects,
-    showPublishedProjects,
-    genreInFocus,
-    setUniqueGenres,
-  ]);
+  }, [optimisticProjects, showPublishedProjects, genreInFocus]);
+
+  // Update unique genres when displayed data changes
+  useEffect(() => {
+    setUniqueGenres(displayedData);
+  }, [displayedData, setUniqueGenres]);
 
   // --- 4. Define all handlers here ---
 
@@ -120,7 +117,7 @@ export default function ProjectsClientPage({ }) {
   useEffect(() => {
     setAppContext("projects");
 
-    return () => { };
+    return () => {};
   }, []);
   return (
     <>

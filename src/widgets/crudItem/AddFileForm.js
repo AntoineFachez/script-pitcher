@@ -135,7 +135,8 @@ export default function AddFileForm({ widgetConfig }) {
   return (
     <Paper
       className={`${formProps.className}__${widgetConfig?.context}`}
-      onSubmit={onSubmit}
+      component="form"
+      onSubmit={handleSubmit}
       {...formProps}
     >
       <Box sx={{ width: "100%", display: "flex", flexFlow: "row wrap" }}>
@@ -143,11 +144,7 @@ export default function AddFileForm({ widgetConfig }) {
           Add File to Project: {projectInFocus?.title}
         </Typography>
       </Box>
-      <Box
-        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-        component="form"
-        onSubmit={handleSubmit}
-      >
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <TextField
           label="File Purpose"
           variant="outlined"

@@ -13,6 +13,7 @@ export function useCharacterConfig({
   schemeDefinition,
   showCardMedia,
   isMobile,
+  userRole,
 }) {
   // --- Card Actions ---
   const getCardActions = (character) => {
@@ -27,6 +28,9 @@ export function useCharacterConfig({
         action: () => handleClickEdit(character),
       },
     ];
+
+    // Filter actions for viewers
+    const visibleKebabActions = userRole === "viewer" ? [] : kebabActions;
 
     const footerActions = (
       <>
@@ -50,7 +54,7 @@ export function useCharacterConfig({
       handleClickTitle: (item) => onItemClick(item),
       handleClickSubTitle: (item) => console.log("Subtitle clicked:", item),
       subTitleInFocus: null,
-      headerActions: <KebabMenu actions={kebabActions} />,
+      headerActions: <KebabMenu actions={visibleKebabActions} />,
       actions: footerActions,
     };
   };
@@ -97,6 +101,8 @@ export function useCharacterConfig({
   const rowActions = {
     header: "",
     menu: (param) => {
+      if (userRole === "viewer") return null;
+
       const actions = [
         {
           id: "edit",

@@ -9,7 +9,7 @@ import ProjectClient from "@/app/(app-data)/projects/[projectId]/ProjectClient";
 
 // This is now an async Server Component
 export default async function ViewProjectPage({ params }) {
-  const projectId = params.projectId;
+  const { projectId } = await params;
   let db;
 
   // 2. Fetch data directly on the server

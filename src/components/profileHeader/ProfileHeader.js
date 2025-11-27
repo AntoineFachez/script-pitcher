@@ -4,6 +4,8 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Banner from "../profileBanner/Banner";
 import RatioAvatar from "../avatar/RatioAvatar";
+import { useAuth } from "@/context/AuthContext";
+import { useInFocus } from "@/context/InFocusContext";
 
 // Constants for the effect
 // Constants for the effect
@@ -20,6 +22,13 @@ const ProfileHeader = ({
   titleText,
   descriptionText,
 }) => {
+  const { firebaseUser } = useAuth();
+  const { projectInFocus } = useInFocus();
+
+  // Determine current user's role
+  const currentUserMember = projectInFocus?.members?.[firebaseUser?.uid];
+  const userRole = currentUserMember?.role?.role || currentUserMember?.role;
+  const isViewer = userRole === "viewer";
   const [scrollY, setScrollY] = useState(0);
 
   // 1. Hook to track scroll position
@@ -83,7 +92,7 @@ const ProfileHeader = ({
         {/* ProfileInfo */}
         <Box {...profileHeaderInfoProps}>
           {/* ActionButtons */}
-          {menu}
+          {!isViewer && menu}
           {/* Title Text */}
           <Typography variant="h4" sx={{}}>
             {titleText}

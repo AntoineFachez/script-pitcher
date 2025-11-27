@@ -11,8 +11,9 @@ const UiContext = createContext(null);
 
 // 2. Create the Provider component
 export function UiProvider({ documentId, children }) {
-  const { appContext } = useApp();
   const theme = useTheme();
+  const { appContext } = useApp();
+
   // 1. Define only the 'up' checks (>= breakpoints).
   // These are the only media queries you need to run.
   const isSmUp = useMediaQuery(theme.breakpoints.up("sm"));
@@ -27,7 +28,7 @@ export function UiProvider({ documentId, children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [showDataGrid, setShowDataGrid] = useState(true);
+  const [showDataGrid, setShowDataGrid] = useState(false);
   const [isExpandedTable, setIsExpandedTable] = useState(false);
   const [densityDataGrid, setDensityDataGrid] = useState(
     isExpandedTable ? "comfortable" : "compact"

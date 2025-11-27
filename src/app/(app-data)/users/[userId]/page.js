@@ -13,7 +13,7 @@ import UserClient from "./UserClient";
 // This is the async Server Component responsible for fetching user data
 export default async function ViewUserPage({ params }) {
   // 1. CRITICAL FIX: Access parameter directly to satisfy the Next.js router check
-  const userId = params.userId;
+  const { userId } = await params;
   let db;
 
   if (!userId) {

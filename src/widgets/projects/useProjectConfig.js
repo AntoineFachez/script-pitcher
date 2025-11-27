@@ -3,6 +3,8 @@ import { Public, PublicOff, Edit } from "@mui/icons-material";
 
 import { useData } from "@/context/DataContext";
 import { useUi } from "@/context/UiContext";
+import { useAuth } from "@/context/AuthContext";
+import { useUser } from "@/context/UserContext";
 import KebabMenu from "@/components/menus/KebabMenu";
 import {
   createImageColumn,
@@ -20,10 +22,17 @@ export function useProjectConfig({
   const { isMobile, showCardMedia } = useUi();
   const { createRowActions, StandardCardFooter } = useStandardConfig();
 
+  const { firebaseUser } = useAuth();
+  const { myProjects } = useUser();
+
   // --- Card Actions ---
   const getCardActions = (project) => {
     const emailSubject = `Check out this project`;
     const emailBody = `Hey, I wanted you to see this project.`;
+
+    // Determine role from UserContext (myProjects map)
+    const userRole = myProjects?.[project.id]?.role;
+    const isViewer = userRole === "viewer";
 
     const kebabActions = [
       {
@@ -41,6 +50,9 @@ export function useProjectConfig({
       },
     ];
 
+    // Filter actions for viewers
+    const visibleKebabActions = isViewer ? [] : kebabActions;
+
     const footerActions = (
       <StandardCardFooter
         emailSubject={emailSubject}
@@ -50,6 +62,8 @@ export function useProjectConfig({
         }
         toggleIcon={project?.published ? <Public /> : <PublicOff />}
         toggleColor={project?.published ? "success.main" : "inactive.main"}
+        // Disable toggle for viewers
+        disabled={isViewer}
       />
     );
 
@@ -60,7 +74,7 @@ export function useProjectConfig({
       handleClickTitle: (item) => onItemClick(item),
       handleClickSubTitle: (item) => onSetGenreFocus(item.genre),
       subTitleInFocus: null, // Passed from parent if needed
-      headerActions: <KebabMenu actions={kebabActions} />,
+      headerActions: <KebabMenu actions={visibleKebabActions} />,
       actions: footerActions,
     };
   };
@@ -96,10 +110,17 @@ export function useProjectConfig({
   const rowActions = createRowActions({
     onAdd: () => console.log("handleOpenForm(param.collection)"),
     onDelete: () => console.log("handleDeleteCollection(param.collection)"),
-    onToggle: (param) =>
-      handleTogglePublishProject(param.id, param.published).catch((err) => {
-        console.error("Failed to toggle from widget", err);
-      }),
+    onToggle: (param) => {
+      // Check role for this specific project
+      const role = myProjects?.[param.id]?.role;
+      if (role === "viewer") return; // Block action
+
+      return handleTogglePublishProject(param.id, param.published).catch(
+        (err) => {
+          console.error("Failed to toggle from widget", err);
+        }
+      );
+    },
   });
 
   return {

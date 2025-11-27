@@ -11,6 +11,7 @@ import NavBarButtonMe from "@/widgets/meProfile";
 import NavBarButtonProjects from "@/widgets/projectProfile";
 import NavBarButtonSettings from "@/widgets/settings";
 import NavBarButtonUsers from "@/widgets/userProfile";
+import NavBarButtonLogout from "@/widgets/appAuth";
 
 import QuickMenu from "@/components/menus/QuickMenu";
 import BasicDrawer from "@/components/drawer/Drawer";
@@ -26,6 +27,7 @@ export const topNavActions = (
 ) => {
   return [
     {
+      key: "drawer-toggle",
       customNavBarButton: !isDesktop ? (
         <BasicDrawer
           handleToggleDrawer={handleToggleDrawer}
@@ -48,13 +50,16 @@ export const topNavActions = (
       ),
     },
     {
+      key: "app-header",
       customNavBarButton: <AppHeader title={appContext} />,
     },
     {
+      key: "window-size",
       customNavBarButton: currentWindowSize,
     },
 
     {
+      key: "settings",
       customNavBarButton: (
         <NavBarButtonSettings key="settings" layoutContext="navBar" />
       ),
@@ -72,6 +77,9 @@ export const sidePanelActions = (
   isDesktop
 ) => {
   return [
+    {
+      customNavBarButton: <Divider key="dividerTop" sx={{ width: "100%" }} />,
+    },
     {
       customNavBarButton: (
         <NavBarButtonHome key="home" layoutContext="navBar" />
@@ -96,7 +104,14 @@ export const sidePanelActions = (
       ),
     },
     {
-      customNavBarButton: <Divider />,
+      customNavBarButton: (
+        <Divider key="dividerBottom" sx={{ width: "100%" }} />
+      ),
+    },
+    {
+      customNavBarButton: (
+        <NavBarButtonLogout key="logout" layoutContext="navBar" />
+      ),
     },
     // {
     //   key: crypto.randomUUID(),
@@ -124,7 +139,7 @@ export const sidePanelActions = (
     // },
     // { action: toggleColorMode, iconName: "LightMode" },
 
-    { action: handleLogout, iconName: "Logout", asNavigationAction: true },
+    // { action: handleLogout, iconName: "Logout", asNavigationAction: true },
   ];
 };
 export const bottomNavActions = (handleOpenAddItem) => {
@@ -138,29 +153,39 @@ export const bottomNavActions = (handleOpenAddItem) => {
   });
   return [
     {
+      key: "dashboard",
       customNavBarButton: (
         <NavBarButtonDashboard key="dashboard" layoutContext="navBar" />
       ),
     },
 
     {
+      key: "projects",
       customNavBarButton: (
         <NavBarButtonProjects key="projects" layoutContext="navBar" />
       ),
     },
     {
-      customNavBarButton: <Box sx={{ width: "3rem" }} />,
+      key: "spacer",
+      customNavBarButton: (
+        // Wrapper to swallow props injected by BottomNavigation
+        <Box sx={{ width: "3rem" }} component="span" />
+      ),
     },
     {
+      key: "quick-menu",
       customNavBarButton: <QuickMenu />,
     },
 
     {
+      key: "add-fab",
       customNavBarButton: (
         <StyledFab
           color="secondary"
           aria-label="add"
           onClick={() => handleOpenAddItem("create")}
+          // Prevent BottomNavigation props from reaching the DOM
+          showLabel={undefined}
         >
           <Add />
         </StyledFab>
@@ -174,6 +199,7 @@ export const bottomNavActions = (handleOpenAddItem) => {
     // },
 
     {
+      key: "me",
       customNavBarButton: <NavBarButtonMe key="me" layoutContext="navBar" />,
     },
   ];

@@ -16,7 +16,6 @@ const { widgetConfig, schemeDefinition } = config;
 
 export default function UsersList({ context, data, isLoading }) {
   const router = useRouter();
-  const { setAppContext } = useApp();
   const { firebaseUser } = useAuth();
   const { setUserInFocus, roleInFocus } = useInFocus();
 

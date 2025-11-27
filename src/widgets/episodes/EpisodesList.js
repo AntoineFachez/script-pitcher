@@ -1,5 +1,4 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/EPISODES/INDEX.JS
-// NEW WIDGET IMPLEMENTATION
 
 "use client";
 
@@ -7,6 +6,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useInFocus } from "@/context/InFocusContext";
 import { useUi } from "@/context/UiContext";
+import { useAuth } from "@/context/AuthContext";
 import SectionHeader from "@/components/sectionHeader/SectionHeader";
 import MultiItems from "@/components/multiItems/MultiItems";
 import { useEpisodeConfig } from "./useEpisodeConfig";
@@ -24,7 +24,15 @@ export default function EpisodesList({
   const { setEpisodeInFocus, setItemInFocus, itemInFocus } = useInFocus(); // Use generic focus
   const { isMobile, showCardMedia, modalContent, openModal } = useUi();
 
-  const [showDataGrid, setShowDataGrid] = useState(true);
+  const [showDataGrid, setShowDataGrid] = useState(false);
+
+  const { firebaseUser } = useAuth();
+  const { projectInFocus } = useInFocus();
+
+  // Determine current user's role
+  const currentUserMember = projectInFocus?.members?.[firebaseUser?.uid];
+  const userRole = currentUserMember?.role?.role || currentUserMember?.role;
+  const isViewer = userRole === "viewer";
 
   const { handleAddItem, handleClickEdit, handleItemClick, handleRowClick } =
     useWidgetHandlers({
@@ -39,6 +47,7 @@ export default function EpisodesList({
     schemeDefinition,
     showCardMedia,
     isMobile,
+    userRole, // Pass the role
   });
   return (
     <>
@@ -46,7 +55,7 @@ export default function EpisodesList({
         widgetConfig={widgetConfig}
         showDataGrid={showDataGrid}
         setShowDataGrid={setShowDataGrid}
-        handleAddItem={handleAddItem}
+        handleAddItem={isViewer ? null : handleAddItem}
       />
 
       <MultiItems

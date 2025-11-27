@@ -6,6 +6,7 @@ import React, { useRef } from "react";
 import { Box, Button, Typography } from "@mui/material";
 
 import { useApp } from "@/context/AppContext";
+import { useAuth } from "@/context/AuthContext";
 import { useInFocus } from "@/context/InFocusContext";
 import { useProject } from "@/context/ProjectContext";
 import { useUi } from "@/context/UiContext";
@@ -38,6 +39,7 @@ export default function Widget({
   const { invitations, characters, episodes, loading } = useProject();
   const { projectInFocus } = useInFocus();
   const containerRef = useRef();
+  console.log("projectInFocus", projectInFocus?.members);
 
   const tabStyles = {
     width: "100%",
@@ -49,8 +51,16 @@ export default function Widget({
     // padding: "0 2rem",
     overflow: "hidden",
   };
+  const { firebaseUser } = useAuth();
+
+  // Determine current user's role
+  const currentUserMember = projectInFocus?.members?.[firebaseUser?.uid];
+  const userRole = currentUserMember?.role?.role || currentUserMember?.role;
+  const isViewer = userRole === "viewer";
+
   const tabsArray = [
-    {
+    // Hide Team tab for viewers
+    !isViewer && {
       label: "Team",
       content:
         initialProject?.members?.length > 0 ? (
@@ -95,7 +105,7 @@ export default function Widget({
           <Typography color="text.secondary">No Files.</Typography>
         ),
     },
-  ];
+  ].filter(Boolean);
 
   return (
     <>

@@ -13,6 +13,7 @@ export function useEpisodeConfig({
   schemeDefinition,
   showCardMedia,
   isMobile,
+  userRole,
 }) {
   // Example email content
   const emailSubject = `Check out this episode`;
@@ -28,6 +29,9 @@ export function useEpisodeConfig({
         action: () => handleClickEdit(episode),
       },
     ];
+
+    // Filter actions for viewers
+    const visibleKebabActions = userRole === "viewer" ? [] : kebabActions;
 
     const footerActions = (
       <>
@@ -51,7 +55,7 @@ export function useEpisodeConfig({
       handleClickTitle: (item) => onItemClick(item),
       handleClickSubTitle: (item) => console.log("Subtitle clicked:", item),
       subTitleInFocus: null, // No subtitle focus for episodes
-      headerActions: <KebabMenu actions={kebabActions} />,
+      headerActions: <KebabMenu actions={visibleKebabActions} />,
       actions: footerActions,
     };
   };
@@ -92,6 +96,8 @@ export function useEpisodeConfig({
     width: 40,
     disableColumnMenu: true,
     menu: (param) => {
+      if (userRole === "viewer") return null;
+
       const episode = param.row;
       const actions = [
         {

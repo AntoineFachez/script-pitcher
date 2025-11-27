@@ -10,7 +10,7 @@ import { topNavActions } from "@/lib/appConfig";
 import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
 
-export default function BasicAppBar({}) {
+export default function BasicAppBar({ NAV_HEIGHT }) {
   const { appContext } = useApp();
   const {
     isDesktop,
@@ -27,30 +27,13 @@ export default function BasicAppBar({}) {
     isDesktop
   );
   return (
-    <AppBar {...appBarProps}>
+    <AppBar {...appBarProps} sx={{ ...appBarProps.sx, height: NAV_HEIGHT }}>
       {optionsToRender?.map((option, i) => {
         const onClickHandler = (e) => {
           e.stopPropagation();
-
           option.action(option.prop);
         };
-
-        return option.customNavBarButton
-          ? option.customNavBarButton
-          : getButton(
-              i,
-              option.iconName,
-              onClickHandler,
-              false,
-              appContext === option.prop
-                ? {
-                    color: "button.active",
-                    backgroundColor: "button.activeBackground",
-                  }
-                : { color: "button.inactive" },
-              "contained",
-              option.href
-            );
+        return option.customNavBarButton;
       })}
     </AppBar>
   );
@@ -58,12 +41,12 @@ export default function BasicAppBar({}) {
 const appBarProps = {
   className: "app--bar",
   sx: {
+    width: "100%",
     display: "flex",
     flexFlow: "row nowrap",
     justifyContent: "space-between",
     alignItems: "center",
-    // p: "0 24px",
-    // backgroundColor: "background.nav",
+
     backgroundColor: "bars.app",
   },
 };

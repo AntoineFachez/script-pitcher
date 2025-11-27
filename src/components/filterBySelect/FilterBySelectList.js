@@ -13,32 +13,18 @@ export default function FilterBySelectList({
     <Box {...pageMenuProps}>
       {array?.map((item, i) => {
         return (
-          <>
-            {/* {getButton(
-              i,
-              null,
-              () => handleClickFilter(item),
-              null,
-              {},
-              "outlined",
-              null,
-              item,
-              false,
-              true
-            )} */}
-            <Button
-              key={item}
-              variant="outlined"
-              onClick={() => handleClickFilter(item)}
-              sx={{
-                borderColor:
-                  itemInFocus === item ? "button.active" : "button.inactive",
-                backgroundColor: "button.background",
-              }}
-            >
-              {item}
-            </Button>
-          </>
+          <Button
+            key={item}
+            variant="outlined"
+            onClick={() => handleClickFilter(item)}
+            sx={{
+              borderColor:
+                itemInFocus === item ? "button.active" : "button.inactive",
+              backgroundColor: "button.background",
+            }}
+          >
+            {item}
+          </Button>
         );
       })}
       <Button variant="contained" onClick={clearFilter}>

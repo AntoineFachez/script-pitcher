@@ -11,7 +11,7 @@ const SESSION_COOKIE_NAME = "__session";
 // 🟢 getCurrentUser: Reads and verifies a simple Firebase session cookie
 export async function getCurrentUser() {
   // 1. Read the correct session cookie name
-  const sessionCookie = cookies().get(SESSION_COOKIE_NAME)?.value;
+  const sessionCookie = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
 
   if (!sessionCookie) {
     // console.log("[getCurrentUser] Session cookie not found. User is logged out.");

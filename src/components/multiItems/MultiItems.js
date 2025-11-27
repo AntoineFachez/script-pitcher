@@ -23,7 +23,7 @@ export default function MultiItems({
   getCardActions, // Function from parent to get item-specific props
   handleRowClick,
 }) {
-  const { toggleDetails, showCardMedia } = useUi();
+  const { isMobile, toggleDetails, showCardMedia } = useUi();
   const { itemInFocus } = useInFocus(); // Using a generic itemInFocus
 
   if (!data || data.length === 0) {
@@ -54,11 +54,11 @@ export default function MultiItems({
           className="grid--container"
           ref={containerRef}
           container
-          spacing={0}
+          spacing={isMobile ? 2 : 5}
           sx={{
             width: "100%",
             height: "100%",
-            p: 0,
+            p: isMobile ? 2 : 5,
           }}
         >
           {data.map((item, index) => {

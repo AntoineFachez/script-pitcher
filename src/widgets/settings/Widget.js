@@ -99,7 +99,11 @@ export default function SettingsContent() {
                   checked={option.checked}
                   selected={option.checked}
                   onChange={option.change} // Use onChange for inputs
-                  inputProps={{ "aria-label": "controlled" }}
+                  inputProps={
+                    option.type === "switch"
+                      ? { "aria-label": "controlled" }
+                      : undefined
+                  }
                 />
               }
               label={option.label}

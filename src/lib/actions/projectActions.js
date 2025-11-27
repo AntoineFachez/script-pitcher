@@ -42,7 +42,8 @@ export async function toggleProjectPublishState(projectId, newPublishedState) {
     if (userRole !== "owner") {
       // 🛑 Critical Fail: Only owners are allowed to publish/unpublish
       console.warn(
-        `User ${userId} attempted to change publish state on project ${projectId} but is only a ${userRole || "non-member"
+        `User ${userId} attempted to change publish state on project ${projectId} but is only a ${
+          userRole || "non-member"
         }.`
       );
       return {
@@ -69,7 +70,12 @@ export async function toggleProjectPublishState(projectId, newPublishedState) {
  * @param {object} params - { projectId, email, role, userProfile }
  * @returns {Promise<{success: boolean, invitationData?: object, error?: string}>}
  */
-export async function inviteUserAction({ projectId, email, role, userProfile }) {
+export async function inviteUserAction({
+  projectId,
+  email,
+  role,
+  userProfile,
+}) {
   // 1. AUTHENTICATION
   const user = await getCurrentUser();
   if (!user || !user.uid) {
@@ -81,7 +87,33 @@ export async function inviteUserAction({ projectId, email, role, userProfile }) 
   const targetEmail = email.toLowerCase();
 
   try {
-    // 2. Create the invitation doc
+    // 2. AUTHORIZATION CHECK: Verify if the user is an owner or editor
+    const projectRef = db.doc(DB_PATHS.project(projectId));
+    const projectSnap = await projectRef.get();
+
+    if (!projectSnap.exists) {
+      return { error: "Project not found." };
+    }
+
+    const projectData = projectSnap.data();
+    const members = projectData.members || {};
+    const userRole = members[user.uid]?.role;
+
+    if (userRole !== "owner" && userRole !== "editor") {
+      console.warn(
+        `User ${
+          user.uid
+        } attempted to invite to project ${projectId} but is only a ${
+          userRole || "non-member"
+        }.`
+      );
+      return {
+        error:
+          "Forbidden: Only project owners and editors can invite new members.",
+      };
+    }
+
+    // 3. Create the invitation doc
     const invitationId = db.collection(DB_PATHS.projects()).doc().id;
     const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
     const invitationPart = `/invite/${projectId}/${invitationId}`;
@@ -97,8 +129,6 @@ export async function inviteUserAction({ projectId, email, role, userProfile }) 
       createdAt: FieldValue.serverTimestamp(),
       expiresAt: new Date(Date.now() + sevenDaysInMs),
     };
-
-    const projectRef = db.doc(DB_PATHS.project(projectId));
 
     // Start a batch
     const batch = db.batch();

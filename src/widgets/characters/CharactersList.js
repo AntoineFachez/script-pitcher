@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 
 import { useInFocus } from "@/context/InFocusContext";
 import { useUi } from "@/context/UiContext";
+import { useAuth } from "@/context/AuthContext";
 
 import MultiItems from "@/components/multiItems/MultiItems";
 import SectionHeader from "@/components/sectionHeader/SectionHeader";
@@ -12,12 +13,17 @@ import { useCharacterConfig } from "./useCharacterConfig";
 import { useWidgetHandlers } from "../shared/useWidgetHandlers";
 
 const { widgetConfig, schemeDefinition } = config;
-// I am a comment
+
 export default function CharactersList({ data, containerRef, isLoading }) {
   const router = useRouter();
-  const { setCharacterInFocus, setItemInFocus } = useInFocus();
-  const { isMobile, showCardMedia } = useUi();
-  const [showDataGrid, setShowDataGrid] = useState(true);
+  const { firebaseUser } = useAuth();
+  const { showDataGrid, setShowDataGrid, showCardMedia, isMobile } = useUi();
+  const { projectInFocus, setCharacterInFocus, setItemInFocus } = useInFocus();
+
+  // Determine current user's role
+  const currentUserMember = projectInFocus?.members?.[firebaseUser?.uid];
+  const userRole = currentUserMember?.role?.role || currentUserMember?.role;
+  const isViewer = userRole === "viewer";
 
   const { handleAddItem, handleClickEdit, handleItemClick, handleRowClick } =
     useWidgetHandlers({
@@ -32,6 +38,7 @@ export default function CharactersList({ data, containerRef, isLoading }) {
     schemeDefinition,
     showCardMedia,
     isMobile,
+    userRole, // Pass the role
   });
 
   const bra = [{ sx: { sx: { sx: {} } } }];
@@ -41,7 +48,7 @@ export default function CharactersList({ data, containerRef, isLoading }) {
         widgetConfig={widgetConfig}
         showDataGrid={showDataGrid}
         setShowDataGrid={setShowDataGrid}
-        handleAddItem={handleAddItem}
+        handleAddItem={isViewer ? null : handleAddItem}
       />
       <MultiItems
         data={data}

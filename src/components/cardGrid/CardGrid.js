@@ -10,8 +10,6 @@ import { useUi } from "@/context/UiContext";
 import BasicCard from "../card/BasicCard";
 import DataTable from "../dataGridElements/DataTable";
 
-
-
 export default function CardGrid({
   containerRef,
   data,
@@ -51,11 +49,11 @@ export default function CardGrid({
           className="grid--container"
           ref={containerRef}
           container
-          spacing={0}
+          spacing={isMobile ? 2 : 5}
           sx={{
             width: "100%",
             height: "100%",
-            p: 0,
+            p: isMobile ? 2 : 5,
           }}
         >
           {data.map((item, index) => {
@@ -73,7 +71,7 @@ export default function CardGrid({
                 toggleDetails={toggleDetails}
                 disablePadding
 
-              // customItem prop can still be passed via cardActions if needed
+                // customItem prop can still be passed via cardActions if needed
               />
             );
           })}

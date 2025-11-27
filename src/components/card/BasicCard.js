@@ -70,6 +70,7 @@ const cardStyles = {
       lg: "400px", // Example: Desktop limit
     },
     height: "100%",
+    maxHeight: "25rem",
 
     flex: "8 6 220px",
     // flex: {
