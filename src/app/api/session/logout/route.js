@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
 
 export async function POST() {
-  const sessionCookie = cookies().get("__session");
+  const sessionCookie = (await cookies()).get("__session");
 
   // 1. Revoke the session in Firebase (security best practice)
   if (sessionCookie) {

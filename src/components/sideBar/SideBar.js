@@ -11,7 +11,7 @@ import { useThemeContext } from "@/context/ThemeContext";
 import { getButton } from "@/lib/maps/iconMap";
 import { sidePanelActions } from "@/lib/appConfig";
 
-export default function SideBar({ SIDEBAR_WIDTH }) {
+export default function SideBar({}) {
   const { appContext } = useApp();
   const { isDesktop } = useUi();
   const { toggleColorMode } = useThemeContext();
@@ -31,61 +31,29 @@ export default function SideBar({ SIDEBAR_WIDTH }) {
   );
 
   return (
-    <Box {...sidebarProps} sx={{ ...sidebarProps.sx, width: SIDEBAR_WIDTH }}>
-      <Divider />
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexFlow: "column nowrap",
-          alignItems: "center",
-        }}
-      >
-        {optionsToRender?.map((option, i) => {
-          const onClickHandler = (e) => {
-            e.stopPropagation();
+    <Box {...sidebarProps}>
+      {optionsToRender?.map((option, i) => {
+        const onClickHandler = (e) => {
+          e.stopPropagation();
 
-            option.action(option.prop);
-          };
+          option.action(option.prop);
+        };
 
-          return option.customNavBarButton
-            ? option.customNavBarButton
-            : getButton(
-                i, // i,
-                option.iconName, // iconName = "",
-                onClickHandler, // onClick,
-                option.disabled, // disabled = false,
-                option.size, // sx = iconButtonStyles.sx,
-                option.variant, // variant = "outlined",
-                option.href, // href = null,
-                option.buttonText, // label = "",
-                false, // toolTip,
-                true, // asNavigationAction = false,
-                false, // asTextButton = false,
-                false // startIcon = null
-              );
-        })}
-      </Box>
-      <Divider />
+        return option.customNavBarButton;
+      })}
     </Box>
   );
 }
 const sidebarProps = {
   className: "sidebar",
   sx: {
-    // position: "absolute",
-    // left: 0,
-    // zIndex: 2000,
-    // width: { xs: "3rem", sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
-    width: "fit-content",
+    width: "100%",
     height: "100%",
-
     display: "flex",
     flexDirection: "column",
-    justifyContent: "flex-start",
-    // alignItems: "center",
-    // pl: { xs: 0, sm: "10%", md: "15%", lg: "5rem", xl: "5rem" },
-
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "1rem 0",
     border: "1px solid transparent",
     backgroundColor: "bars.side",
   },

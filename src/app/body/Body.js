@@ -16,12 +16,11 @@ import { useAuth } from "@/context/AuthContext";
 
 import AppBar from "@/components/appBar/index";
 import CustomBottomNav from "@/components/bottomBar/BottomBar";
-import LoginForm from "@/components/auth/appAuth/LogInForm";
+import LoginForm from "@/widgets/appAuth/LogInForm";
 import SideNavBar from "@/components/sideBar/SideBar";
-import SignUpForm from "@/components/auth/appAuth/SignUpForm";
+import SignUpForm from "@/widgets/appAuth/SignUpForm";
 
 import { useUi } from "@/context/UiContext";
-
 
 import CircularIndeterminate from "@/components/progress/CircularIndeterminate";
 
@@ -56,11 +55,7 @@ export default function Body({ children }) {
   if (firebaseUser) {
     return (
       <>
-        <AppBar
-          spaceProps={{
-            sx: { height: NAV_HEIGHT, p: `0 ${SIDEBAR_WIDTH}` },
-          }}
-        />
+        <AppBar NAV_HEIGHT={NAV_HEIGHT} />
 
         <Box
           {...appMainProps}
@@ -75,12 +70,16 @@ export default function Body({ children }) {
               className="sidebar--container"
               sx={{
                 position: "absolute",
+                top: `calc(${NAV_HEIGHT})`,
                 left: 0,
                 zIndex: 2000,
-                height: `calc(100% - ${NAV_HEIGHT})`,
+                // height: `calc(100% - ${NAV_HEIGHT})`,
+                width: SIDEBAR_WIDTH,
+                height: `100%`,
+                // backgroundColor: "page.background",
               }}
             >
-              <SideNavBar SIDEBAR_WIDTH={SIDEBAR_WIDTH} />
+              <SideNavBar />
             </Box>
           )}
 

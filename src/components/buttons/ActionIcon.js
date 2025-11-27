@@ -39,6 +39,7 @@ export const ActionIcon = ({
   startIcon,
   showLabel = false,
   asNavigationAction = false,
+  badgeCount, // Destructure to prevent passing to DOM
   ...props
 }) => {
   const IconComponent = iconName ? iconMap[iconName] : null;
