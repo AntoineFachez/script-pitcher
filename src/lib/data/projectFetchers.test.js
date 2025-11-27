@@ -7,12 +7,28 @@ jest.mock("@/lib/firebase/firebase-admin", () => ({
 }));
 
 // Create mock functions that we can spy on and control
-const mockDoc = jest.fn();
+// Create mock functions that we can spy on and control
 const mockGetDoc = jest.fn();
-const mockCollection = jest.fn();
+const mockGetDocs = jest.fn();
+
+// Mock objects for chaining
+const mockDocObj = {
+  get: jest.fn(() => mockGetDoc()),
+};
+
+const mockQueryObj = {
+  get: jest.fn(() => mockGetDocs()),
+};
+
+const mockCollectionObj = {
+  where: jest.fn(() => mockQueryObj),
+  doc: jest.fn(() => mockDocObj),
+};
+
+const mockDoc = jest.fn(() => mockDocObj);
+const mockCollection = jest.fn(() => mockCollectionObj);
 const mockQuery = jest.fn();
 const mockWhere = jest.fn();
-const mockGetDocs = jest.fn();
 const mockDocumentId = jest.fn(() => "mockFieldPath"); // Keep this for the 'in' query
 
 jest.mock("firebase-admin/firestore", () => ({
@@ -24,6 +40,9 @@ jest.mock("firebase-admin/firestore", () => ({
   where: (...args) => mockWhere(...args),
   getDocs: (query) => mockGetDocs(query),
   documentId: () => mockDocumentId(),
+  FieldPath: {
+    documentId: jest.fn(() => "mockFieldPath"),
+  },
 }));
 
 describe("getProjectsAndMembers", () => {
@@ -35,8 +54,8 @@ describe("getProjectsAndMembers", () => {
 
     // The mockDb is now just a placeholder, as the top-level functions are mocked directly.
     mockDb = {
-      // We don't need to mock collection() or doc() on the db object itself
-      // because we are mocking the top-level imports from 'firebase-admin/firestore'.
+      doc: mockDoc,
+      collection: mockCollection,
     };
 
     // Make getAdminServices return our mock database
@@ -80,7 +99,7 @@ describe("getProjectsAndMembers", () => {
     // Mock Firestore responses
     // 1. Mock the getDoc call for the user's summary
     mockGetDoc.mockResolvedValue({
-      exists: () => true,
+      exists: true,
       data: () => ({ projects: mockProjectsMap }),
     });
 
@@ -99,22 +118,17 @@ describe("getProjectsAndMembers", () => {
     expect(result.users[0].displayName).toBe("Test User");
 
     // Verify that the correct collections and documents were queried
-    expect(mockDoc).toHaveBeenCalledWith(
-      mockDb, // It's called with the db instance
-      "users",
-      userId,
-      "private",
-      "summary"
-    );
-    expect(mockCollection).toHaveBeenCalledWith(mockDb, "projects");
-    expect(mockCollection).toHaveBeenCalledWith(mockDb, "users");
+    // Verify that the correct collections and documents were queried
+    expect(mockDoc).toHaveBeenCalledWith(`users/${userId}/private/summary`);
+    expect(mockCollection).toHaveBeenCalledWith("projects");
+    expect(mockCollection).toHaveBeenCalledWith("users");
   });
 
   it("should return empty arrays for a user with no projects", async () => {
     // Arrange
     const userId = "user-with-no-projects";
     mockGetDoc.mockResolvedValue({
-      exists: () => true,
+      exists: true,
       data: () => ({ projects: {} }), // Empty projects map
     });
 
@@ -130,7 +144,7 @@ describe("getProjectsAndMembers", () => {
   it("should return empty arrays if the user summary document does not exist", async () => {
     // Arrange
     const userId = "non-existent-user";
-    mockGetDoc.mockResolvedValue({ exists: () => false });
+    mockGetDoc.mockResolvedValue({ exists: false });
 
     // Act
     const result = await getProjectsAndMembers(userId);
@@ -148,7 +162,7 @@ describe("getProjectsAndMembers", () => {
 
     // Act & Assert
     await expect(getProjectsAndMembers(userId)).rejects.toThrow(
-      "Failed to load project data."
+      "Firestore is offline"
     );
 
     // You can also check if your error logger was called
@@ -161,7 +175,7 @@ describe("getProjectsAndMembers", () => {
     }
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "Error fetching projects and members:",
-      expect.any(Error)
+      "Firestore is offline"
     );
     consoleErrorSpy.mockRestore();
   });

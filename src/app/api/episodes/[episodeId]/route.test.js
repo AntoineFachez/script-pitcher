@@ -6,6 +6,15 @@ jest.mock("@/lib/firebase/firebase-admin", () => ({
   getAdminServices: jest.fn(),
 }));
 
+jest.mock("next/server", () => ({
+  NextResponse: {
+    json: jest.fn((data, init) => ({
+      status: init?.status || 200,
+      json: async () => data,
+    })),
+  },
+}));
+
 describe("PUT /api/episodes/[episodeId]", () => {
   let mockDb, mockAuth, mockCollection, mockDoc, mockGet, mockUpdate;
 
@@ -15,22 +24,40 @@ describe("PUT /api/episodes/[episodeId]", () => {
     // Setup mock Firestore functions
     mockUpdate = jest.fn().mockResolvedValue();
     mockGet = jest.fn();
-    mockDoc = jest.fn(() => ({
+
+    // Stable mock objects
+    const mockInnerDocObj = {
       get: mockGet,
       update: mockUpdate,
-      collection: jest.fn(() => ({
-        doc: jest.fn(() => ({
-          get: mockGet,
-          update: mockUpdate,
-        })),
-      })),
+    };
+    const mockInnerDoc = jest.fn((path) => ({
+      ...mockInnerDocObj,
+      id: path ? path.split("/").pop() : "mock-id",
     }));
-    mockCollection = jest.fn(() => ({
+
+    const mockInnerCollectionObj = {
+      doc: mockInnerDoc,
+    };
+    const mockInnerCollection = jest.fn(() => mockInnerCollectionObj);
+
+    const mockDocObj = {
+      get: mockGet,
+      update: mockUpdate,
+      collection: mockInnerCollection,
+    };
+    mockDoc = jest.fn((path) => ({
+      ...mockDocObj,
+      id: path ? path.split("/").pop() : "mock-id",
+    }));
+
+    const mockCollectionObj = {
       doc: mockDoc,
-    }));
+    };
+    mockCollection = jest.fn(() => mockCollectionObj);
 
     mockDb = {
       collection: mockCollection,
+      doc: mockDoc,
     };
 
     mockAuth = {
@@ -42,7 +69,8 @@ describe("PUT /api/episodes/[episodeId]", () => {
 
   const mockRequest = (body, token) => ({
     headers: {
-      get: (header) => (header === "authorization" ? `Bearer ${token}` : null),
+      get: (header) =>
+        header === "authorization" && token ? `Bearer ${token}` : null,
     },
     json: async () => body,
   });

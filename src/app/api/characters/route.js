@@ -89,7 +89,8 @@ export async function POST(request) {
       (userMember.role !== "owner" && userMember.role !== "editor")
     ) {
       console.warn(
-        `Permission denied: User ${decodedToken.uid} with role ${userMember?.role || "none"
+        `Permission denied: User ${decodedToken.uid} with role ${
+          userMember?.role || "none"
         } tried to create a character in project ${projectId}`
       );
       return NextResponse.json(
@@ -115,7 +116,8 @@ export async function POST(request) {
 
     // 4. Add the document to the /characters subcollection
     const charRef = await db
-      .collection(DB_PATHS.project(projectId), "characters")
+      .doc(DB_PATHS.project(projectId))
+      .collection("characters")
       .add(newCharacterDoc);
 
     // 5. Respond with the created data

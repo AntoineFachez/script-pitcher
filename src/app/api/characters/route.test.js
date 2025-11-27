@@ -6,6 +6,15 @@ jest.mock("@/lib/firebase/firebase-admin", () => ({
   getAdminServices: jest.fn(),
 }));
 
+jest.mock("next/server", () => ({
+  NextResponse: {
+    json: jest.fn((data, init) => ({
+      status: init?.status || 200,
+      json: async () => data,
+    })),
+  },
+}));
+
 describe("POST /api/characters", () => {
   let mockDb, mockAuth, mockCollection, mockDoc, mockGet, mockAdd;
 
@@ -13,20 +22,30 @@ describe("POST /api/characters", () => {
     jest.clearAllMocks();
 
     // Setup mock Firestore functions
+    // Setup mock Firestore functions
     mockAdd = jest.fn().mockResolvedValue({ id: "new-char-id" });
     mockGet = jest.fn();
-    mockDoc = jest.fn(() => ({
+
+    // Stable mock objects
+    const mockInnerCollectionObj = {
+      add: mockAdd,
+    };
+    const mockInnerCollection = jest.fn(() => mockInnerCollectionObj);
+
+    const mockDocObj = {
       get: mockGet,
-      collection: jest.fn(() => ({
-        add: mockAdd,
-      })),
-    }));
-    mockCollection = jest.fn(() => ({
+      collection: mockInnerCollection,
+    };
+    mockDoc = jest.fn(() => mockDocObj);
+
+    const mockCollectionObj = {
       doc: mockDoc,
-    }));
+    };
+    mockCollection = jest.fn(() => mockCollectionObj);
 
     mockDb = {
       collection: mockCollection,
+      doc: mockDoc,
     };
 
     mockAuth = {
@@ -38,7 +57,8 @@ describe("POST /api/characters", () => {
 
   const mockRequest = (body, token) => ({
     headers: {
-      get: (header) => (header === "authorization" ? `Bearer ${token}` : null),
+      get: (header) =>
+        header === "authorization" && token ? `Bearer ${token}` : null,
     },
     json: async () => body,
   });
@@ -116,8 +136,7 @@ describe("POST /api/characters", () => {
     expect(body.ownerId).toBe(userId);
 
     // Verify the correct Firestore calls were made
-    expect(mockCollection).toHaveBeenCalledWith("projects");
-    expect(mockDoc).toHaveBeenCalledWith(projectId);
+    expect(mockDoc).toHaveBeenCalledWith(`projects/${projectId}`);
     expect(mockAdd).toHaveBeenCalledWith(
       expect.objectContaining({
         name: characterData.name,

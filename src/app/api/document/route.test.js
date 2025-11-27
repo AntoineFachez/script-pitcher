@@ -6,6 +6,15 @@ jest.mock("@/lib/firebase/firebase-admin", () => ({
   getAdminServices: jest.fn(),
 }));
 
+jest.mock("next/server", () => ({
+  NextResponse: {
+    json: jest.fn((data, init) => ({
+      status: init?.status || 200,
+      json: async () => data,
+    })),
+  },
+}));
+
 describe("GET /api/document", () => {
   let mockDb, mockAuth, mockCollection, mockDoc, mockGet;
 
@@ -13,21 +22,34 @@ describe("GET /api/document", () => {
     jest.clearAllMocks();
 
     // Setup mock Firestore functions
+    // Setup mock Firestore functions
     mockGet = jest.fn();
-    mockDoc = jest.fn(() => ({
+
+    // Stable mock objects
+    const mockInnerDocObj = {
       get: mockGet,
-      collection: jest.fn(() => ({
-        doc: jest.fn(() => ({
-          get: mockGet,
-        })),
-      })),
-    }));
-    mockCollection = jest.fn(() => ({
+    };
+    const mockInnerDoc = jest.fn(() => mockInnerDocObj);
+
+    const mockInnerCollectionObj = {
+      doc: mockInnerDoc,
+    };
+    const mockInnerCollection = jest.fn(() => mockInnerCollectionObj);
+
+    const mockDocObj = {
+      get: mockGet,
+      collection: mockInnerCollection,
+    };
+    mockDoc = jest.fn(() => mockDocObj);
+
+    const mockCollectionObj = {
       doc: mockDoc,
-    }));
+    };
+    mockCollection = jest.fn(() => mockCollectionObj);
 
     mockDb = {
       collection: mockCollection,
+      doc: mockDoc,
     };
 
     mockAuth = {
@@ -40,7 +62,8 @@ describe("GET /api/document", () => {
   // Helper to create a mock request object
   const mockRequest = (queryParams, token) => ({
     headers: {
-      get: (header) => (header === "Authorization" ? `Bearer ${token}` : null),
+      get: (header) =>
+        header === "Authorization" && token ? `Bearer ${token}` : null,
     },
     url: `http://localhost/api/document?${new URLSearchParams(
       queryParams
@@ -152,8 +175,7 @@ describe("GET /api/document", () => {
     expect(body).toEqual(fileData);
 
     // Verify correct Firestore calls
-    expect(mockCollection).toHaveBeenCalledWith("projects");
-    expect(mockDoc).toHaveBeenCalledWith("proj1");
+    expect(mockDoc).toHaveBeenCalledWith(`projects/proj1`);
     // The mock is a bit complex, but this confirms the subcollection was accessed
     expect(mockDoc().collection).toHaveBeenCalledWith("files");
     expect(mockDoc().collection().doc).toHaveBeenCalledWith("file1");
