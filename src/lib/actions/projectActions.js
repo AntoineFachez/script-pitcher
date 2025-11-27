@@ -158,7 +158,7 @@ export async function inviteUserAction({
                 invitedById: decodedToken.uid,
                 invitedByName: userProfile.displayName,
                 invitedByEmail: userProfile.email,
-                state: "pending",
+                status: "pending",
                 sentAt: FieldValue.serverTimestamp(),
                 invitationPart: invitationPart,
               },

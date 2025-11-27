@@ -1,4 +1,4 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/ME/INDEX.JS
+// filepath: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/ME-PROFILE/index.js
 
 "use client";
 

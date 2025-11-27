@@ -103,7 +103,7 @@ export async function POST(request) {
       // 4. ⭐ NEW: Update Invitation Status in User Summary (for the badge)
       // We use dot notation to target the nested fields within the 'invitations' map.
       transaction.update(userSummaryRef, {
-        [`invitations.${token}.state`]: "accepted",
+        [`invitations.${token}.status`]: "accepted",
         [`invitations.${token}.acceptedAt`]: FieldValue.serverTimestamp(),
       });
     });

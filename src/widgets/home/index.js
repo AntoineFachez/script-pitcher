@@ -1,30 +1,22 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/PAGE.JS
+// filepath: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/HOME/index.js
 
 "use client";
 
-import NavBarButton from "@/components/appBar/navBarButton/NavBarButton";
+import React from "react";
 
 import { handleSetNewAppContext } from "@/lib/actions/appActions";
 import Widget from "./Widget";
+import { WidgetLayout } from "../shared/WidgetLayout";
 
 export default function HomeIndex({ layoutContext }) {
   return (
-    <>
-      {layoutContext === "navBar" ? (
-        <>
-          <NavBarButton
-            iconName="Home"
-            href="/"
-            prop="home"
-            badgeCount={null}
-            handleSetNewAppContext={handleSetNewAppContext}
-          />{" "}
-        </>
-      ) : (
-        <>
-          <Widget />
-        </>
-      )}
-    </>
+    <WidgetLayout
+      layoutContext={layoutContext}
+      onNavBarClick={handleSetNewAppContext}
+      iconName="Home"
+      href="/"
+    >
+      <Widget />
+    </WidgetLayout>
   );
 }
