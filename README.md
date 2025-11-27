@@ -1,6 +1,6 @@
 # 🎬 Script-Pitcher
 
-A **secure, full-stack application** built on **Next.js 14+** and **Firebase** designed for managing creative projects, scripts, characters, and team collaboration. This project utilizes a sophisticated **hybrid authentication system** combining Firebase Auth with NextAuth.js using a custom JWT synchronization strategy.
+A **secure, full-stack application** built on **Next.js 15+**, **React 19**, and **Firebase** designed for managing creative projects, scripts, characters, and team collaboration. This project utilizes a sophisticated **hybrid authentication system** combining Firebase Auth with NextAuth.js using a custom JWT synchronization strategy.
 
 ### 🏆 Core Value Proposition
 
@@ -46,21 +46,40 @@ Based on the project structure, Script-Pitcher offers the following core functio
 
 ## ⚙️ Tech Stack
 
-| Category          | Technology                                     | Purpose                                                                                                     |
-| ----------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **Frontend**      | Next.js (App Router), MUI (Material-UI)        | Full-stack framework with React, component library for fast UI development.                                 |
-| **Script Viewer** | `pdfviewer` components (e.g., `PDFEditor.js`)  | Provides the interactive, dynamic script editing and source-text linking view.                              |
-| **Backend/Auth**  | Firebase Auth, NextAuth.js, Firebase Admin SDK | Primary identity provider and secure session management (Hybrid JWT Strategy).                              |
-| **Database**      | Google Firestore                               | Primary NoSQL database for project data and real-time collaboration.                                        |
-| **Storage**       | Firebase Storage                               | Used for secure file storage (scripts, avatars, project images).                                            |
-| **Serverless**    | Firebase Cloud Functions (Node.js)             | Backend event triggers and database synchronization.                                                        |
-| **Microservices** | Cloud Run / Cloud Functions (Python, jose)     | **`pdf-processor`** (OCR/Structuring), **`gemini-processor`** (LLM analysis), and JWT signing/verification. |
+| Category          | Technology                                           | Purpose                                                                                                     |
+| ----------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Frontend**      | Next.js 15 (App Router), React 19, MUI (Material-UI) | Full-stack framework with React, component library for fast UI development.                                 |
+| **Script Viewer** | `pdfviewer` components (e.g., `PDFEditor.js`)        | Provides the interactive, dynamic script editing and source-text linking view.                              |
+| **Backend/Auth**  | Firebase Auth, NextAuth.js, Firebase Admin SDK       | Primary identity provider and secure session management (Hybrid JWT Strategy).                              |
+| **Database**      | Google Firestore                                     | Primary NoSQL database for project data and real-time collaboration.                                        |
+| **Storage**       | Firebase Storage                                     | Used for secure file storage (scripts, avatars, project images).                                            |
+| **Serverless**    | Firebase Cloud Functions (Node.js)                   | Backend event triggers and database synchronization.                                                        |
+| **Microservices** | Cloud Run / Cloud Functions (Python, jose)           | **`pdf-processor`** (OCR/Structuring), **`gemini-processor`** (LLM analysis), and JWT signing/verification. |
+
+## 🏗️ Architecture & Patterns
+
+### Server Actions
+
+We are migrating from traditional API routes to **Next.js Server Actions** for data mutations. This allows for:
+
+- **Type Safety:** Better integration with client-side code.
+- **Simplified Data Flow:** Direct function calls from components.
+- **Progressive Enhancement:** Works even without JavaScript (in some cases).
+- **Location:** `src/lib/actions`
+
+### Widget-Based UI
+
+The UI is organized into **Widgets** (`src/widgets`) to promote modularity and reusability.
+
+- **Encapsulation:** Each widget contains its own logic, data fetching, and sub-components.
+- **Composition:** Complex pages are built by composing these self-contained widgets.
+- **Config-Driven:** Many widgets utilize configuration hooks (e.g., `useProjectConfig`) to manage state and behavior.
 
 ## 🚀 Setup and Installation
 
 ### Prerequisites
 
-- **Node.js & npm:** (Node v18+ recommended)
+- **Node.js & npm:** (Node v20+ required)
 
 - **Firebase CLI:** `npm install -g firebase-tools`
 

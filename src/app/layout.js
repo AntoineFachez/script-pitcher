@@ -22,6 +22,7 @@ export default async function RootLayout({ children }) {
       meData = await getMeData(user.uid);
     } catch (e) {
       console.error("Failed to fetch invitation count for NavBar:", e);
+      window.location.href = "/login";
       // In case of error, count remains 0.
     }
   }
