@@ -3,7 +3,9 @@
     "widgetName": "files",
     "context": "files",
     "collection": "files",
-    "title": "Files"
+    "title": "Files",
+    "iconName": "Article",
+    "href": "/projects"
   },
   "schemeDefinition": {
     "id": "id",

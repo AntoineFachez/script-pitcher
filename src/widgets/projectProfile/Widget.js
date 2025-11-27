@@ -39,7 +39,6 @@ export default function Widget({
   const { invitations, characters, episodes, loading } = useProject();
   const { projectInFocus } = useInFocus();
   const containerRef = useRef();
-  console.log("projectInFocus", projectInFocus?.members);
 
   const tabStyles = {
     width: "100%",
@@ -107,6 +106,25 @@ export default function Widget({
     },
   ].filter(Boolean);
 
+  const menu = isViewer ? (
+    <Typography
+      sx={{
+        width: "100%",
+        height: "3rem",
+        display: "flex",
+        flexFlow: "row nowrap",
+        justifyContent: "flex-end",
+        alignItems: "center",
+      }}
+    >
+      Placeholder viewer menu
+    </Typography>
+  ) : (
+    <ProfileMenu
+      itemInFocus={projectInFocus}
+      togglePublishProject={togglePublishProject}
+    />
+  );
   return (
     <>
       <Box
@@ -130,17 +148,11 @@ export default function Widget({
           // gap: 2,
         }}
       >
-        {" "}
         <ProfileHeader
           containerRef={containerRef}
           bannerImageUrl={projectInFocus?.bannerUrl}
           avatarImageUrl={projectInFocus?.avatarUrl || projectInFocus?.imageUrl}
-          menu={
-            <ProfileMenu
-              itemInFocus={projectInFocus}
-              togglePublishProject={togglePublishProject}
-            />
-          }
+          menu={menu}
           titleText={projectInFocus?.title}
           descriptionText={projectInFocus?.logline}
         />

@@ -3,6 +3,7 @@
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import { IconButton, Toolbar } from "@mui/material";
+import { ActionIcon } from "../buttons/ActionIcon";
 
 export default function BasicDrawer({
   handleToggleDrawer,
@@ -16,7 +17,17 @@ export default function BasicDrawer({
 }) {
   const list = (anchor) => {
     return (
-      <Box sx={{}} role="presentation">
+      <Box
+        sx={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        role="presentation"
+      >
         {element}
       </Box>
     );
@@ -24,12 +35,18 @@ export default function BasicDrawer({
 
   return (
     <>
-      <IconButton
+      {" "}
+      <ActionIcon
+        iconName={iconToOpen}
+        onClick={(e) => handleToggleDrawer(anchor, true)(e)}
+        variant="outlined"
+      />
+      {/* <IconButton
         onClick={(e) => handleToggleDrawer(anchor, true)(e)}
         sx={{ transform: "rotate(180deg)" }}
       >
         {iconToOpen}
-      </IconButton>
+      </IconButton> */}
       <Drawer
         anchor={anchor}
         open={orientationDrawer[anchor]}

@@ -1,7 +1,8 @@
 import React from "react";
-import { IconButton } from "@mui/material";
-import { Favorite, Share } from "@mui/icons-material";
+import { Share } from "@mui/icons-material";
+
 import ShareButton from "@/components/share/ShareButton";
+import { ActionIcon } from "@/components/buttons/ActionIcon";
 
 const StandardCardFooter = ({
   onToggle,
@@ -14,9 +15,7 @@ const StandardCardFooter = ({
 }) => {
   return (
     <>
-      <IconButton aria-label="add to favorites">
-        <Favorite />
-      </IconButton>
+      <ActionIcon iconName={"Favorite"} />
       <ShareButton
         recipient={recipient}
         subject={emailSubject}
@@ -25,13 +24,11 @@ const StandardCardFooter = ({
         <Share />
       </ShareButton>
       {showToggle && onToggle && (
-        <IconButton
-          aria-label="toggle status"
+        <ActionIcon
+          iconName={toggleIcon}
           onClick={onToggle}
           sx={{ color: toggleColor }}
-        >
-          {toggleIcon}
-        </IconButton>
+        />
       )}
     </>
   );

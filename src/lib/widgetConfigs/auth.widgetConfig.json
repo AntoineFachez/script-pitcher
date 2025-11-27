@@ -1,0 +1,10 @@
+{
+  "widgetConfig": {
+    "widgetName": "auth",
+    "href": null,
+    "context": "auth",
+    "collection": "",
+    "title": "Auth",
+    "iconName": "Logout"
+  }
+}

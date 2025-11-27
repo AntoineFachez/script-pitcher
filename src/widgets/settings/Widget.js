@@ -53,14 +53,14 @@ export default function SettingsContent() {
       action: () => setShowDataGrid((prev) => !prev),
       iconName: showDataGrid ? "CreditCard" : "TableChart",
       label: "Show Table",
-      asNavigationAction: true,
+      // asNavigationAction: true,
     },
     {
       key: crypto.randomUUID(),
       action: () => setToggleDetails((prev) => !prev),
       iconName: "Expand",
       label: "Show Details",
-      asNavigationAction: true,
+      // asNavigationAction: true,
     },
 
     { action: toggleColorMode, iconName: "LightMode" },
@@ -69,9 +69,31 @@ export default function SettingsContent() {
   const componentMap = { toggle: ToggleButton, switch: Switch };
 
   return (
-    <Box>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        // p: 2,
+        // mt: 2,
+      }}
+    >
       <Typography variant="subtitle1">Settings {appContext}</Typography>
-      <FormGroup>
+      <FormGroup
+        sx={{
+          // width: "100%",
+          height: "100%",
+          display: "flex",
+          // flexDirection: "column",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          // p: 2,
+          // mt: 2,
+        }}
+      >
         {options.map((option, i) => {
           const Component = componentMap[option.type];
 
@@ -92,6 +114,18 @@ export default function SettingsContent() {
           ) : (
             <FormControlLabel
               key={i}
+              sx={
+                {
+                  // width: "100%",
+                  // height: "100%",
+                  // display: "flex",
+                  // flexDirection: "column",
+                  // justifyContent: "center",
+                  // alignItems: "center",
+                  // p: 2,
+                  // mt: 2,
+                }
+              }
               // 6. FIX: Pass props specifically to the control component
               control={
                 <Component
@@ -103,6 +137,18 @@ export default function SettingsContent() {
                     option.type === "switch"
                       ? { "aria-label": "controlled" }
                       : undefined
+                  }
+                  sx={
+                    {
+                      // width: "100%",
+                      // height: "100%",
+                      // display: "flex",
+                      // flexDirection: "column",
+                      // justifyContent: "center",
+                      // alignItems: "center",
+                      // p: 2,
+                      // mt: 2,
+                    }
                   }
                 />
               }

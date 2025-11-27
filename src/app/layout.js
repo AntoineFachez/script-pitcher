@@ -16,17 +16,13 @@ export default async function RootLayout({ children }) {
   const user = await getCurrentUser();
   let meData = [];
 
-  if (!user) {
-    return <div>Please log in to view your dashboard.</div>;
-  }
-
   if (user?.uid) {
     try {
       // 1. Call the memoized Server Function (hits DB once per request)
       meData = await getMeData(user.uid);
     } catch (e) {
       console.error("Failed to fetch invitation count for NavBar:", e);
-      window.location.href = "/login";
+      // window.location.href = "/login"; // Cannot use window in Server Component
       // In case of error, count remains 0.
     }
   }

@@ -3,6 +3,8 @@
 "use client";
 import React from "react";
 
+import widgetConfig from "@/lib/widgetConfigs/projects.widgetConfig.json";
+
 import { ProjectProvider } from "@/context/ProjectContext";
 import { WidgetLayout } from "../shared/WidgetLayout";
 
@@ -22,10 +24,9 @@ export default function ProjectIndex({
       <ProjectProvider projectId={projectId}>
         <WidgetContext>
           <WidgetLayout
+            widgetConfig={widgetConfig}
             layoutContext={layoutContext}
             onNavBarClick={handleSetNewAppContext}
-            iconName="Article"
-            href="/projects"
           >
             <Widget
               initialProject={initialProject}

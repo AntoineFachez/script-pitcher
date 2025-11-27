@@ -69,14 +69,13 @@ export default function Body({ children }) {
             <Box
               className="sidebar--container"
               sx={{
-                position: "absolute",
+                position: "fixed",
                 top: `calc(${NAV_HEIGHT})`,
                 left: 0,
                 zIndex: 2000,
-                // height: `calc(100% - ${NAV_HEIGHT})`,
                 width: SIDEBAR_WIDTH,
-                height: `100%`,
-                // backgroundColor: "page.background",
+                height: `calc(100% - ${NAV_HEIGHT})`,
+                overflow: "hidden",
               }}
             >
               <SideNavBar />

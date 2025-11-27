@@ -31,8 +31,23 @@ export const darkTheme = createTheme({
     warning: { main: "#e1931dff", dark: "#e1931dff", light: "#e1931dff" }, //["ffd400","d2ddab","c2dfe3","95aeb5","0e1929"]
     randomeRainbow:
       "#ff0000 0%, #ff9a00 10%, #d0de21 20%, #4fdc4a 30%, #3fdad8 40%, #2fc9e2 50%, #1c7fee 60%, #5f15f2 70%, #ba0cf8 80%, #fb07d9 90%, #ff0000 100%",
+    tileButtons: {
+      nw: {
+        background: "linear-gradient(135deg, #667eea91 0%, #764ba291 100%)",
+      },
+      ne: {
+        background: "linear-gradient(135deg, #2af59a91 0%, #009cfdb7 100%)",
+      },
+      sw: {
+        background: "linear-gradient(to top, #00000091 0%, #00000091 100%)",
+      },
+      se: {
+        background: "linear-gradient(135deg, #ffffffc1 0%, #a5a3a391 100%)",
+      },
+    },
     button: {
       inactive: "#6d7075ff",
+      disabled: "#6d7075ff",
       active: "#ff69b4",
       activeBackground: "#1f1f1fff",
       // background: "#4a4c4a0d",
@@ -142,6 +157,15 @@ export const brightTheme = createTheme({
       primary: "#1f2937",
       secondary: "#6b7280",
       contrast: "#fff",
+    },
+    tileButtons: {
+      nw: { background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" },
+      ne: { background: "linear-gradient(135deg, #2af598 0%, #009efd 100%)" },
+      sw: {
+        background:
+          "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)",
+      },
+      se: {},
     },
   },
   typography: {

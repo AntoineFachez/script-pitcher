@@ -3,6 +3,7 @@
 
 import { IconButton } from "@mui/material";
 import React from "react";
+import { ActionIcon } from "../buttons/ActionIcon";
 
 const ShareButton = ({ recipient = "", subject = "", body = "", children }) => {
   const handleShare = () => {
@@ -18,11 +19,7 @@ const ShareButton = ({ recipient = "", subject = "", body = "", children }) => {
     window.location.href = mailtoLink;
   };
 
-  return (
-    <IconButton onClick={handleShare}>
-      {children || "Share via Email"}
-    </IconButton>
-  );
+  return <ActionIcon iconName={"Share"} onClick={handleShare} />;
 };
 
 export default ShareButton;

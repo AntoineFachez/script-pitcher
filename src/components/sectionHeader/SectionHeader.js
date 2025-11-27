@@ -14,6 +14,7 @@ export default function SectionHeader({
       className={`${sectionHeaderProps.className}__${widgetConfig.context}`}
     >
       <SectionMenu
+        widgetConfig={widgetConfig}
         showDataGrid={showDataGrid}
         setShowDataGrid={setShowDataGrid}
         handleAddItem={handleAddItem}

@@ -20,12 +20,6 @@ import { CrudProvider } from "@/context/CrudItemContext";
 export function Providers({ children, meData }) {
   //TODO: finish device dependancies
   const theme = useTheme();
-  // 'up' means: true if the screen width is greater than or equal to the breakpoint.
-  const isDesktop = useMediaQuery(theme.breakpoints.up("lg")); // Using MUI's 'lg' breakpoint (usually 1200px or 1024px depending on setup)
-
-  // 'down' means: true if the screen width is less than or equal to the breakpoint.
-  const isMobile = useMediaQuery(theme.breakpoints.down("md")); // Using MUI's 'md' breakpoint (usually 900px or 768px depending on setup)
-  console.log("isDesktop", isDesktop, isMobile);
 
   return (
     <ThemeProvider>

@@ -18,7 +18,7 @@ export default function SettingsIndex({ layoutContext }) {
             handleToggleDrawer={handleToggleDrawer}
             orientationDrawer={orientationDrawer}
             anchor="right"
-            iconToOpen={<Settings />}
+            iconToOpen={"Settings"}
             element={<Widget />}
           />
         </>

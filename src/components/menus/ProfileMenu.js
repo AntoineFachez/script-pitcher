@@ -15,6 +15,7 @@ export default function ProfileMenu({ itemInFocus, togglePublishProject }) {
       <Box
         sx={{
           width: "100%",
+          height: "3rem",
           display: "flex",
           flexFlow: "row nowrap",
           justifyContent: "flex-end",

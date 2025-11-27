@@ -26,6 +26,7 @@ import {
   DensitySmall,
   Edit,
   Expand,
+  ExpandMore,
   Favorite,
   FavoriteBorder,
   Forward,
@@ -74,6 +75,7 @@ export const iconMap = {
   DensitySmall: DensitySmall,
   Edit: Edit,
   Expand: Expand,
+  ExpandMore: ExpandMore,
   Favorite: Favorite,
   FavoriteBorder: FavoriteBorder,
   Forward: ArrowForward,
@@ -163,5 +165,16 @@ export const getButton = (
   ) : null;
 };
 const iconButtonProps = {
-  sx: { width: 36, height: 36, "& >*": { fontSize: "1.2rem" } },
+  sx: {
+    width: 36,
+    height: 36,
+    color: "yellow",
+    backgroundColor: "inherit",
+    "&:hover": { color: "yellow", backgroundColor: "yellow" },
+    "& >*": {
+      color: "yellow",
+      backgroundColor: "inherit",
+      fontSize: "1.2rem",
+    },
+  },
 };

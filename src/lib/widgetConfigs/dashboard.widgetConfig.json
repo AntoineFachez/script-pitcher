@@ -1,0 +1,10 @@
+{
+  "widgetConfig": {
+    "widgetName": "dashboard",
+    "href": "/dashboard",
+    "context": "dashboard",
+    "collection": "",
+    "title": "Dashboard",
+    "iconName": "Dashboard"
+  }
+}

@@ -48,7 +48,7 @@ export function useUserConfig({
         emailSubject={emailSubject}
         emailBody={emailBody}
         onToggle={() => handleToggleActiveUser(user)}
-        toggleIcon={user?.userActive ? <Person /> : <PersonOff />}
+        toggleIcon={user?.userActive ? "Person" : "PersonOff"}
         toggleColor={user?.userActive ? "success.main" : "warning.main"}
       />
     );

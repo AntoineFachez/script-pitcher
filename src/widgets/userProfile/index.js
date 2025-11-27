@@ -3,6 +3,7 @@
 "use client";
 
 import React from "react";
+import widgetConfig from "@/lib/widgetConfigs/users.widgetConfig.json";
 
 import { WidgetLayout } from "../shared/WidgetLayout";
 
@@ -19,8 +20,7 @@ export default function UserIndex({
       <WidgetLayout
         layoutContext={layoutContext}
         onNavBarClick={handleSetNewAppContext}
-        iconName="Group"
-        href="/users"
+        widgetConfig={widgetConfig}
       >
         <Widget userProfile={userProfile} />
       </WidgetLayout>

@@ -1,0 +1,10 @@
+{
+  "widgetConfig": {
+    "widgetName": "home",
+    "href": "/",
+    "context": "home",
+    "collection": "",
+    "title": "Home",
+    "iconName": "Home"
+  }
+}

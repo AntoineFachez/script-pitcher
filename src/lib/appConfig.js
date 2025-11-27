@@ -33,7 +33,7 @@ export const topNavActions = (
           handleToggleDrawer={handleToggleDrawer}
           orientationDrawer={orientationDrawer}
           anchor="left"
-          iconToOpen={<ViewSidebarOutlined />}
+          iconToOpen={"ViewSidebarOutlined"}
           element={<SideNavBar />}
         />
       ) : (
@@ -66,16 +66,7 @@ export const topNavActions = (
     },
   ];
 };
-export const sidePanelActions = (
-  appContext,
-  showDataGrid,
-  setToggleDetails,
-  setShowDataGrid,
-  handleOpenAddItem,
-  toggleColorMode,
-  handleLogout,
-  isDesktop
-) => {
+export const sidePanelActions = (isDesktop) => {
   return [
     {
       customNavBarButton: <Divider key="dividerTop" sx={{ width: "100%" }} />,
@@ -83,6 +74,11 @@ export const sidePanelActions = (
     {
       customNavBarButton: (
         <NavBarButtonHome key="home" layoutContext="navBar" />
+      ),
+    },
+    {
+      customNavBarButton: (
+        <Divider key="dividerMiddle" sx={{ width: "100%" }} />
       ),
     },
     {
@@ -96,17 +92,17 @@ export const sidePanelActions = (
       ),
     },
     {
-      customNavBarButton: <NavBarButtonMe key="me" layoutContext="navBar" />,
-    },
-    {
       customNavBarButton: (
         <NavBarButtonUsers key="users" layoutContext="navBar" />
       ),
     },
     {
       customNavBarButton: (
-        <Divider key="dividerBottom" sx={{ width: "100%" }} />
+        <Divider key="dividerBottom" sx={{ width: "100%", p: 0, m: 0 }} />
       ),
+    },
+    {
+      customNavBarButton: <NavBarButtonMe key="me" layoutContext="navBar" />,
     },
     {
       customNavBarButton: (

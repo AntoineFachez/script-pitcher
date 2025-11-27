@@ -3,7 +3,7 @@
 "use client";
 import React from "react";
 
-import { useData } from "@/context/DataContext";
+import widgetConfig from "@/lib/widgetConfigs/dashboard.widgetConfig.json";
 
 import { WidgetContext } from "./Context";
 import Widget from "./Widget";
@@ -14,15 +14,13 @@ export default function DashboardIndex({
   // initialData,
   handleSetNewAppContext,
 }) {
-  const {} = useData();
   return (
     <>
       <WidgetContext>
         <WidgetLayout
+          widgetConfig={widgetConfig}
           layoutContext={layoutContext}
           onNavBarClick={handleSetNewAppContext}
-          iconName="Dashboard"
-          href="/dashboard"
         >
           <Widget
           // initialData={initialData}

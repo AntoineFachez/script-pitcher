@@ -5,7 +5,7 @@
 import React from "react";
 
 import { useUser } from "@/context/UserContext";
-
+import widgetConfig from "@/lib/widgetConfigs/me.widgetConfig.json";
 import { WidgetContext } from "./Context";
 import Widget from "./Widget";
 import { WidgetLayout } from "../shared/WidgetLayout";
@@ -28,10 +28,9 @@ export default function MeIndex({
   return (
     <WidgetContext>
       <WidgetLayout
+        widgetConfig={widgetConfig}
         layoutContext={layoutContext}
         onNavBarClick={handleSetNewAppContext}
-        iconName="Person"
-        href="/me"
       >
         <Widget
           initialProfile={initialProfile}

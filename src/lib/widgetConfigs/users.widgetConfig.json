@@ -3,7 +3,9 @@
     "widgetName": "users",
     "context": "users",
     "collection": "users",
-    "title": "Team"
+    "title": "Team",
+    "iconName": "Group",
+    "href": "/users"
   },
   "schemeDefinition": {
     "id": "uid",

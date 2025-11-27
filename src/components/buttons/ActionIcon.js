@@ -32,7 +32,7 @@ export const ActionIcon = ({
   onClick,
   href,
   disabled = false,
-  sx = { width: 36, height: 36, "& >*": { fontSize: "1.2rem" } },
+  sx = {},
   variant = "outlined",
   color,
   size,
@@ -100,7 +100,14 @@ export const ActionIcon = ({
       disabled={disabled}
       size={size}
       color={color}
-      sx={sx}
+      sx={{
+        ...actionButtonStyles,
+        "&.Mui-disabled": {
+          background: "button.activeBackground",
+          color: "button.active",
+        },
+        ...sx,
+      }}
       {...linkProps}
       {...props}
     >
@@ -113,4 +120,15 @@ export const ActionIcon = ({
   }
 
   return button;
+};
+
+const actionButtonStyles = {
+  width: 48,
+  height: 48,
+  p: 0,
+  m: 0,
+  color: "action.main",
+  backgroundColor: "button.background",
+  "&:hover": { color: "secondary.main", backgroundColor: "background.paper" },
+  "& >*": { fontSize: "1.2rem" },
 };

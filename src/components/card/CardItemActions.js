@@ -2,12 +2,13 @@
 
 import React from "react";
 import styled from "@emotion/styled";
-import { ExpandMore } from "@mui/icons-material";
-import { CardActions, IconButton } from "@mui/material";
+import { CardActions } from "@mui/material";
+
+import { ActionIcon } from "../buttons/ActionIcon";
 
 const Expand = styled((props) => {
   const { expand, ...other } = props;
-  return <IconButton {...other} />;
+  return <ActionIcon iconName={"ExpandMore"} {...other} />;
 })(({ theme, expand }) => ({
   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
   marginLeft: "auto",
@@ -43,9 +44,7 @@ export default function CardItemActions({ cardActions }) {
         aria-expanded={expanded}
         aria-label="show more"
         sx={{}}
-      >
-        <ExpandMore />
-      </Expand>
+      />
     </CardActions>
   );
 }

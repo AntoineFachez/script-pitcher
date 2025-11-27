@@ -3,6 +3,8 @@
 "use client";
 import React from "react";
 
+import widgetConfig from "@/lib/widgetConfigs/files.widgetConfig.json";
+
 import { FileProvider } from "@/context/FileContext";
 import { WidgetLayout } from "../shared/WidgetLayout";
 
@@ -21,10 +23,9 @@ export default function FileIndex({
       <FileProvider projectId={projectId} fileId={fileId}>
         <WidgetContext>
           <WidgetLayout
+            widgetConfig={widgetConfig}
             layoutContext={layoutContext}
             onNavBarClick={handleSetNewAppContext}
-            iconName="Article"
-            href="/projects"
           >
             <Widget togglePublishProject={togglePublishProject} />
           </WidgetLayout>
