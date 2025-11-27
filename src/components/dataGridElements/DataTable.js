@@ -40,13 +40,13 @@ export default function DataTable({
 
   // 3. Simplified Density Logic
   // Combine your effects to avoid race conditions
-  useEffect(() => {
-    if (isExpandedTable) {
-      setDensityDataGrid("comfortable");
-    } else {
-      setDensityDataGrid(isDesktop ? "compact" : "comfortable");
-    }
-  }, [isExpandedTable, isDesktop, setDensityDataGrid]);
+  // useEffect(() => {
+  //   if (isExpandedTable) {
+  //     setDensityDataGrid("comfortable");
+  //   } else {
+  //     setDensityDataGrid(isDesktop ? "compact" : "comfortable");
+  //   }
+  // }, [isExpandedTable, isDesktop, setDensityDataGrid]);
 
   return (
     <DataGrid
