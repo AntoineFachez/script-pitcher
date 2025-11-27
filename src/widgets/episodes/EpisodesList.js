@@ -19,7 +19,20 @@ import SectionHeader from "@/components/sectionHeader/SectionHeader";
 
 import CrudItem from "../crudItem";
 
-import { dataGridImageCellStyles } from "@/theme/muiProps";
+const dataGridImageCellStyles = {
+  sx: {
+    width: 100,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    align: "center",
+    objectFit: "cover",
+    borderRadius: "10px",
+    borderWidth: "3px",
+    borderStyle: "solid",
+    borderColor: "#333433",
+  },
+};
 import config from "@/lib/widgetConfigs/episodes.widgetConfig.json";
 const { widgetConfig, schemeDefinition } = config;
 

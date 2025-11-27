@@ -3,7 +3,8 @@
     "widgetName": "invitations",
     "collection": "users",
     "context": "users",
-    "title": "Invitations"
+    "title": "Invitations",
+    "isSearchable": true
   },
 
   "schemeDefinition": {

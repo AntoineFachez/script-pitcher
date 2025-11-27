@@ -2,6 +2,7 @@
 
 import { NextResponse } from "next/server";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { DB_PATHS } from "@/lib/firebase/paths";
 
 // --- NO initialization in the global scope ---
 
@@ -23,11 +24,7 @@ export async function GET(request, { params }) {
       );
     }
 
-    const summaryRef = db
-      .collection("users")
-      .doc(userId)
-      .collection("private")
-      .doc("summary");
+    const summaryRef = db.doc(DB_PATHS.userSummary(userId));
     const summaryDoc = await summaryRef.get();
 
     if (!summaryDoc.exists) {

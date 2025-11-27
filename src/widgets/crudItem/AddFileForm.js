@@ -17,7 +17,7 @@ import { Save } from "@mui/icons-material";
 
 import { useAuth } from "@/context/AuthContext";
 import { useCrud } from "@/context/CrudItemContext";
-import { formProps } from "@/theme/muiProps";
+import { formProps, formTitleProps } from "./formStyles";
 
 export default function AddFileForm({ widgetConfig }) {
   const { firebaseUser } = useAuth();

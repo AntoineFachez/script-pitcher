@@ -18,7 +18,7 @@ import {
   formFieldProps,
   formProps,
   formTitleProps,
-} from "@/theme/muiProps";
+} from "./formStyles";
 
 /**
  * Form for creating or editing a user document in Firestore.

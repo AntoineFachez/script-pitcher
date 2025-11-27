@@ -20,7 +20,17 @@ import CrudItem from "../crudItem";
 
 import ProcessingTimeCell from "@/components/timeCells/ProcessingTimeCell";
 
-import { subtitleProps } from "@/theme/muiProps";
+const subtitleProps = {
+  variant: "body1",
+  sx: {
+    width: "100%",
+    display: "flex",
+    flexFlow: "row wrap",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 1,
+  },
+};
 import config from "@/lib/widgetConfigs/receivedInvitations.widgetConfig.json";
 import MultiItems from "@/components/multiItems/MultiItems";
 import SectionHeader from "@/components/sectionHeader/SectionHeader";

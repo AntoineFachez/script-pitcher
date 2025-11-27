@@ -18,7 +18,7 @@ import {
   formFieldsGroupProps,
   formProps,
   formTitleProps,
-} from "@/theme/muiProps";
+} from "./formStyles";
 
 export default function BaseCrudForm({
   widgetConfig,

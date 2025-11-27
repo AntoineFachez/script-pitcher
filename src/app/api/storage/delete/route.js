@@ -3,6 +3,7 @@
 import { NextResponse } from "next/server";
 
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { DB_PATHS } from "@/lib/firebase/paths";
 
 const storageBucketName = "script-pitcher-extracted-images";
 
@@ -35,11 +36,7 @@ export async function POST(request) {
 
     // 3. Get the correct Firestore document
     // This matches your path: /projects/{projectId}/files/{fileId}
-    const docRef = db
-      .collection("projects")
-      .doc(projectId)
-      .collection("files")
-      .doc(fileId);
+    const docRef = db.doc(DB_PATHS.projectFile(projectId, fileId));
 
     const docSnap = await docRef.get();
 

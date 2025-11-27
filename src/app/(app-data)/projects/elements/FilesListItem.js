@@ -7,13 +7,28 @@ import { Box, Button, ListItem, Typography } from "@mui/material";
 import Image from "next/image";
 
 import { useRelativeTime } from "@/hooks/useRelativeTime";
-import { flexListItemStyles } from "@/theme/muiProps";
+
 
 export default function FilesListItem({ i, file }) {
   const customSubTitleItem = useRelativeTime(file?.createdAt);
 
   return (
-    <ListItem key={i} className="filesListItem" sx={flexListItemStyles.sx}>
+    <ListItem
+      key={i}
+      className="filesListItem"
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexGrow: 1,
+        flexShrink: 3,
+        flexFlow: "row wrap",
+        justifyContent: "space-around",
+        alignItems: "center",
+        gap: 1,
+        overflowY: "scroll",
+      }}
+    >
       <Box
         component="header"
         sx={{

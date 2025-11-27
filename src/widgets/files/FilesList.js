@@ -1,39 +1,18 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/WIDGETS/PROJECTS/WIDGET.JS
-
-"use client";
-
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Box, IconButton, Typography } from "@mui/material";
-import {
-  Add,
-  Edit,
-  Favorite,
-  Public,
-  PublicOff,
-  Share,
-} from "@mui/icons-material";
 
 import { useApp } from "@/context/AppContext";
-import { useData } from "@/context/DataContext";
 import { useInFocus } from "@/context/InFocusContext";
 import { useUi } from "@/context/UiContext";
 
-import KebabMenu from "@/components/menus/KebabMenu";
-
-import { formatShortTime, useRelativeTime } from "@/hooks/useRelativeTime";
-import CardGrid from "@/components/cardGrid/CardGrid";
-import ShareButton from "@/components/share/ShareButton";
+import MultiItems from "@/components/multiItems/MultiItems";
 import CrudItem from "../crudItem";
-import SectionMenu from "@/components/sectionHeader/SectionMenu";
-import { dataGridImageCellStyles } from "@/theme/muiProps";
-import ImageCell from "@/components/dataGridElements/ImageCell";
-
 import config from "@/lib/widgetConfigs/files.widgetConfig.json";
 import SectionHeader from "@/components/sectionHeader/SectionHeader";
+import { useFileConfig } from "./useFileConfig";
+
 const { widgetConfig, schemeDefinition } = config;
 
-// Receive handlers as props
 export default function FilesList({
   data,
   projectId,
@@ -41,10 +20,9 @@ export default function FilesList({
   isLoading,
 }) {
   const router = useRouter();
-  const { projectInFocus, setFileInFocus, genreInFocus } = useInFocus();
+  const { projectInFocus, setFileInFocus, setGenreInFocus } = useInFocus();
   const { setAppContext } = useApp();
-  const { isMobile, showCardMedia, setOpenModal, setModalContent } = useUi();
-  const { handleTogglePublishProject } = useData();
+  const { setOpenModal, setModalContent } = useUi();
 
   const [showDataGrid, setShowDataGrid] = useState(false);
 
@@ -52,42 +30,18 @@ export default function FilesList({
     setModalContent(<CrudItem context={widgetConfig.collection} crud="add" />);
     setOpenModal(true);
   };
+
   const handleClickEdit = (item) => {
-    setCharacterInFocus(item);
+    // setCharacterInFocus(item); // Was this intended? FilesList usually deals with files.
+    // Assuming we want to edit the file/episode
+    setFileInFocus(item);
     setModalContent(
       <CrudItem context={widgetConfig.collection} crud="update" />
     );
     setOpenModal(true);
   };
 
-  const handleRowClick = (params, event) => {
-    event.defaultMuiPrevented = true;
-    const item = params.row;
-    setAppContext(widgetConfig.context);
-
-    setFileInFocus(item);
-    if (item.id) {
-      router.push(`/projects/${projectInFocus.id}/files/${item.id}`);
-    }
-  };
-  const handleCellClick = (params, event) => {
-    if (params.field === "actions") {
-      event.defaultMuiPrevented = true;
-    }
-  };
-  const handleClickAvatar = (item) => {
-    console.log("item", item);
-
-    // setAppContext("projects");
-    // setFileInFocus(item);
-    // if (item.id) {
-    //   router.push(`/projects/${item.id}`);
-    // }
-  };
-  const handleClickTitle = (item) => {
-    console.log("projectInFocus", projectInFocus);
-    event.defaultMuiPrevented = true;
-
+  const handleItemClick = (item) => {
     setAppContext(widgetConfig.context);
     setFileInFocus(item);
     if (item?.id) {
@@ -95,191 +49,18 @@ export default function FilesList({
     }
   };
 
-  const handleClickSubTitle = (item) => {
-    const filtered = data.filter((project) =>
-      project.genres.some((g) => g.genre === item.genre)
-    );
-    setFilteredData(filtered);
-    setGenreInFocus(item.genre);
-  };
-  const article = {
-    title: "How to Build a Share Button in Next.js",
-    url: "https://yourawesomeblog.com/posts/share-button",
-    author: "Alex",
-  };
+  const { getCardActions, columns, rowActions } = useFileConfig({
+    handleClickEdit,
+    setFilteredData,
+    setGenreInFocus,
+    onItemClick: handleItemClick,
+    schemeDefinition,
+    data,
+  });
 
-  const emailSubject = `Check out this article: ${article.title}`;
-  const emailBody = `Hey,
-
-I thought you would find this article interesting:
-"${article.title}"
-
-You can read it here: ${article.url}
-
-Best,
-${article.author}
-`;
-  // --- getCardActions function ---
-  const getCardActions = (episode) => {
-    const kebabActions = [
-      {
-        id: "edit",
-        name: "Edit Episode",
-        icon: <Edit />,
-        action: () => handleClickEdit(episode),
-      },
-    ];
-
-    const footerActions = (
-      <>
-        <IconButton aria-label="add to favorites">
-          <Favorite />
-        </IconButton>
-        <ShareButton
-          recipient="friend@example.com"
-          subject={emailSubject}
-          body={emailBody}
-        >
-          <Share />
-        </ShareButton>
-      </>
-    );
-
-    return {
-      showCardMedia: showCardMedia,
-      schemeDefinition,
-      handleClickAvatar,
-      handleClickTitle,
-      handleClickSubTitle,
-      subTitleInFocus: null, // No subtitle focus for episodes
-      headerActions: <KebabMenu actions={kebabActions} />,
-      actions: footerActions,
-    };
-  };
-  const columns = [
-    {
-      field: "avatarUrl",
-      headerName: "",
-      align: dataGridImageCellStyles.sx.align,
-      width: dataGridImageCellStyles.sx.width,
-      // 4. Add a renderCell to make the icon clickable
-      renderCell: (params) => {
-        const { avatarUrl } = params.row;
-        return (
-          <ImageCell
-            avatarUrl={avatarUrl}
-            dataGridImageCellStyles={dataGridImageCellStyles}
-          />
-        );
-      },
-      disableColumnMenu: true,
-    },
-    {
-      field: "published",
-      headerName: "Published",
-      align: "center",
-      width: isMobile ? 40 : 80,
-      // 4. Add a renderCell to make the icon clickable
-      renderCell: (params) => {
-        const { id, published } = params.row;
-        return (
-          <IconButton
-            aria-label="publish"
-            onClick={(e) => {
-              e.stopPropagation(); // Stop row click
-              e.defaultMuiPrevented = true;
-              // Call the context handler directly
-              handleTogglePublishProject(id, published).catch((err) => {
-                // Catch errors here to show a toast if needed
-                console.error("Failed to toggle from widget", err);
-              });
-            }}
-            color={published ? "success" : "default"}
-          >
-            {published ? <Public /> : <PublicOff />}
-          </IconButton>
-        );
-      },
-      disableColumnMenu: isMobile && true,
-    },
-    {
-      field: "fileName",
-      headerName: "Title",
-      width: 300,
-      flex: 1,
-      disableColumnMenu: isMobile && true,
-    },
-    {
-      field: "filePurpose",
-      headerName: "Purpose",
-      align: "left",
-      width: 100,
-      flex: 1,
-      disableColumnMenu: isMobile && true,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      align: "center",
-      width: 100,
-      disableColumnMenu: isMobile && true,
-    },
-    {
-      field: "createdAt",
-      headerName: "Uploaded",
-      align: "center",
-      width: isMobile ? 40 : 80,
-      renderCell: (params) => {
-        const relativeCreatedTime = formatShortTime(params.row.createdAt);
-        return <>{relativeCreatedTime} ago</>;
-      },
-      disableColumnMenu: isMobile && true,
-    },
-
-    // {
-    //   field: "topReadDocIds",
-    //   headerName: "topReadDocIds",
-    //   align: "right",
-    //   width: 80,
-    // },
-  ];
-
-  const rowActions = {
-    header: "",
-    width: 40,
-    disableColumnMenu: true,
-    menu: (param) => {
-      const actions = [
-        {
-          id: "addDocument",
-          name: "Add Document",
-          icon: "Add",
-          action: () => console.log("handleOpenForm(param.collection)"),
-        },
-        {
-          id: "deleteCollection",
-          name: "Delete Collection",
-          icon: "Delete",
-          action: () => console.log("handleDeleteCollection(param.collection)"),
-        },
-        {
-          id: "publishProject",
-          name: param.published ? "Hide Project" : "Publish Project",
-          icon: param.published ? "Public" : "PublicOff",
-          sx: param.published ? { color: "success.main" } : { color: "#aaa" },
-          action: () => {
-            return handleTogglePublishProject(param.id, param.published).catch(
-              (err) => {
-                // Catch errors here to show a toast if needed
-                console.error("Failed to toggle from widget", err);
-              }
-            );
-          },
-        },
-      ];
-      // Render the KebabMenu component with the actions
-      return <KebabMenu actions={actions} />;
-    },
+  const handleRowClick = (params, event) => {
+    event.defaultMuiPrevented = true;
+    handleItemClick(params.row);
   };
 
   return (
@@ -290,13 +71,13 @@ ${article.author}
         setShowDataGrid={setShowDataGrid}
         handleAddItem={handleAddItem}
       />
-      <CardGrid
+      <MultiItems
         data={data}
         showDataGrid={showDataGrid}
         isLoading={isLoading}
         columns={columns}
         rowActions={rowActions}
-        collectionName={"files"}
+        collectionName="files"
         widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
         getCardActions={getCardActions}
@@ -305,3 +86,4 @@ ${article.author}
     </>
   );
 }
+

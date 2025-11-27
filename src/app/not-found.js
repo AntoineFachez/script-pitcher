@@ -4,13 +4,56 @@
 
 import { Box, Typography } from "@mui/material";
 import Link from "next/link";
-import { containerProps, titleProps } from "@/theme/muiProps";
+
 
 export default function NotFound() {
   return (
-    <Box {...containerProps}>
-      <Typography {...titleProps}>404</Typography>
-      <Typography {...titleProps}>This page could not be found.</Typography>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Typography
+        variant="h1"
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          fontWeight: 300,
+          fontSize: {
+            xs: "1.2rem",
+            sm: "1.2rem",
+            md: "1.5rem",
+            lg: "2rem",
+            xl: "2rem",
+          },
+        }}
+      >
+        404
+      </Typography>
+      <Typography
+        variant="h1"
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          fontWeight: 300,
+          fontSize: {
+            xs: "1.2rem",
+            sm: "1.2rem",
+            md: "1.5rem",
+            lg: "2rem",
+            xl: "2rem",
+          },
+        }}
+      >
+        This page could not be found.
+      </Typography>
 
       <Link
         href="/"

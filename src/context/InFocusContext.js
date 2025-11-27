@@ -11,6 +11,7 @@ import {
   useCallback,
 } from "react";
 import { useData } from "./DataContext";
+import { useSelection } from "@/hooks/useSelection";
 
 // 1. Create the context
 const InFocusContext = createContext(null);
@@ -20,17 +21,27 @@ export function InFocusProvider({ children }) {
   const { projects, users, rolesInProjects } = useData();
   const [data, setData] = useState(null);
 
-  const [projectInFocus, setProjectInFocus] = useState(null);
-  const [fileInFocus, setFileInFocus] = useState(null);
+  const { selected: projectInFocus, setSelected: setProjectInFocus } =
+    useSelection(null);
+  const { selected: fileInFocus, setSelected: setFileInFocus } =
+    useSelection(null);
 
-  const [genreInFocus, setGenreInFocus] = useState("");
+  const { selected: genreInFocus, setSelected: setGenreInFocus } =
+    useSelection("");
 
-  const [userInFocus, setUserInFocus] = useState(null);
-  const [userInFocusWithProjects, setUserInFocusWithProjects] = useState(null);
-  const [roleInFocus, setRoleInFocus] = useState("");
+  const { selected: userInFocus, setSelected: setUserInFocus } =
+    useSelection(null);
+  const {
+    selected: userInFocusWithProjects,
+    setSelected: setUserInFocusWithProjects,
+  } = useSelection(null);
+  const { selected: roleInFocus, setSelected: setRoleInFocus } =
+    useSelection("");
 
-  const [characterInFocus, setCharacterInFocus] = useState(null);
-  const [episodeInFocus, setEpisodeInFocus] = useState(null);
+  const { selected: characterInFocus, setSelected: setCharacterInFocus } =
+    useSelection(null);
+  const { selected: episodeInFocus, setSelected: setEpisodeInFocus } =
+    useSelection(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -51,13 +62,7 @@ export function InFocusProvider({ children }) {
   //   return () => {};
   // }, [userInFocus, projects, rolesInProjects]);
 
-  useEffect(() => {
-    return () => {};
-  }, [projectInFocus]);
 
-  useEffect(() => {
-    return () => {};
-  }, [projectInFocus]);
 
   const value = useMemo(
     () => ({

@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { DB_PATHS } from "@/lib/firebase/paths";
 
 /**
  * PUT /api/episodes/[episodeId]
@@ -52,7 +53,7 @@ export async function PUT(request, { params }) {
     }
 
     // --- START: AUTHORIZATION CHECK ---
-    const projectRef = db.collection("projects").doc(projectId);
+    const projectRef = db.doc(DB_PATHS.project(projectId));
     const projectDoc = await projectRef.get();
 
     if (!projectDoc.exists) {
@@ -71,8 +72,7 @@ export async function PUT(request, { params }) {
       (userMember.role !== "owner" && userMember.role !== "editor")
     ) {
       console.warn(
-        `Permission denied: User ${decodedToken.uid} with role ${
-          userMember?.role || "none"
+        `Permission denied: User ${decodedToken.uid} with role ${userMember?.role || "none"
         } tried to update episode ${episodeId} in project ${projectId}`
       );
       return NextResponse.json(
@@ -87,9 +87,7 @@ export async function PUT(request, { params }) {
 
     // 3. Define the episode document reference
     const episodeRef = db
-      .collection("projects")
-      .doc(projectId)
-      .collection("episodes") // <-- Changed from "characters"
+      .collection(DB_PATHS.project(projectId), "episodes") // <-- Changed from "characters"
       .doc(episodeId);
 
     const doc = await episodeRef.get();

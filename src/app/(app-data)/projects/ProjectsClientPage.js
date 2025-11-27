@@ -23,12 +23,12 @@ import { toggleProjectPublishState } from "@/lib/actions/projectActions";
 
 // Local elements
 
-import { pageMainProps, pageHeaderProps } from "@/theme/muiProps";
+
 
 import config from "@/lib/widgetConfigs/projects.widgetConfig.json";
 const { widgetConfig, schemeDefinition } = config;
 // We receive the server-fetched data as props
-export default function ProjectsClientPage({}) {
+export default function ProjectsClientPage({ }) {
   const { appContext, setAppContext } = useApp();
   const {
     modalContent,
@@ -120,13 +120,19 @@ export default function ProjectsClientPage({}) {
   useEffect(() => {
     setAppContext("projects");
 
-    return () => {};
+    return () => { };
   }, []);
   return (
     <>
       <Box
-        {...pageHeaderProps}
-        className={`${pageHeaderProps.className}__${widgetConfig.context}`}
+        sx={{
+          position: "sticky",
+          top: 0,
+          width: "100%",
+          height: "auto",
+          backgroundColor: "page.header",
+        }}
+        className={`pageHeader__${widgetConfig.context}`}
       >
         {toggleDetails && (
           <FilterBySelectList
@@ -138,8 +144,12 @@ export default function ProjectsClientPage({}) {
         )}
       </Box>
       <Box
-        {...pageMainProps}
-        className={`${pageMainProps.className}__${widgetConfig.context}`}
+        sx={{
+          width: "100%",
+          height: "100%",
+          overflow: "scroll",
+        }}
+        className={`page--main__${widgetConfig.context}`}
       >
         <List
           data={displayedData}

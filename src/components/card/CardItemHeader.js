@@ -8,7 +8,7 @@ import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
 
 import { stringAvatar } from "@/utils/colorHelpers";
-import { subtitleProps } from "@/theme/muiProps";
+
 
 export default function CardItemHeader({ cardActions }) {
   const {
@@ -48,8 +48,8 @@ export default function CardItemHeader({ cardActions }) {
               isSelected
                 ? { color: "text.secondary" }
                 : //   : item[schemeDefinition?.title]?.length > 25
-                  //   ? styled?.truncate
-                  { color: "text.secondary" }
+                //   ? styled?.truncate
+                { color: "text.secondary" }
             }
             variant="subtitle1"
           >
@@ -60,7 +60,16 @@ export default function CardItemHeader({ cardActions }) {
           subheader: isSelected ? {} : {},
         }}
         subheader={
-          <Box {...subtitleProps}>
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexFlow: "row wrap",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
             <Typography onClick={() => handleClick(item)}>
               {customSubTitleItem}{" "}
             </Typography>

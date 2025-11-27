@@ -3,7 +3,6 @@
 "use client";
 
 import { createTheme } from "@mui/material/styles";
-import { sharedComponents } from "./muiProps";
 
 export const deviceLayout = {
   pageContentWidth: {
@@ -107,9 +106,6 @@ export const darkTheme = createTheme({
     },
   },
 
-  components: {
-    ...sharedComponents,
-  },
   transitions: { duration: { shortest: 200 } },
   deviceLayout,
 });
@@ -161,9 +157,7 @@ export const brightTheme = createTheme({
       color: "#1f2937",
     },
   },
-  components: {
-    ...sharedComponents,
-  },
+
   transitions: { duration: { shortest: 200 } },
   baseValues: { borderRadius: "0.5rem" },
   deviceLayout,

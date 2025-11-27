@@ -21,7 +21,7 @@ import List from "@/widgets/users/UsersList";
 import config from "@/lib/widgetConfigs/users.widgetConfig.json";
 const { widgetConfig, schemeDefinition } = config;
 
-import { pageHeaderProps, pageMainProps } from "@/theme/muiProps";
+
 
 export default function Page() {
   const { appContext, setAppContext } = useApp();
@@ -98,14 +98,19 @@ export default function Page() {
     setAppContext("users");
     setModalContent(<CrudItem context={appContext} crud="create" />);
 
-    return () => {};
+    return () => { };
   }, [appContext, setModalContent]);
   return (
     <>
       <Box
-        className={`${pageHeaderProps.className}__${widgetConfig.context}`}
-        component={pageHeaderProps.component}
-        sx={pageHeaderProps.sx}
+        className={`pageHeader__${widgetConfig.context}`}
+        sx={{
+          position: "sticky",
+          top: 0,
+          width: "100%",
+          height: "auto",
+          backgroundColor: "page.header",
+        }}
       >
         {toggleDetails && (
           <FilterBySelectList
@@ -118,8 +123,12 @@ export default function Page() {
       </Box>
 
       <Box
-        className={`${pageMainProps.className}__${widgetConfig.context}`}
-        {...pageMainProps}
+        className={`page--main__${widgetConfig.context}`}
+        sx={{
+          width: "100%",
+          height: "100%",
+          overflow: "scroll",
+        }}
       >
         <List data={displayedData} />
       </Box>

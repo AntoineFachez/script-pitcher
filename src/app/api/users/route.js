@@ -2,6 +2,7 @@
 
 import { NextResponse } from "next/server";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { DB_PATHS } from "@/lib/firebase/paths";
 
 /**
  * POST /api/users
@@ -47,7 +48,7 @@ export async function POST(request) {
     };
 
     // 3. Set the document in the /users collection
-    const userRef = db.collection("users").doc(uid);
+    const userRef = db.doc(DB_PATHS.userProfile(uid));
     await userRef.set(newUserDoc);
 
     // 4. Respond with the created data

@@ -3,6 +3,7 @@
 "use server"; // Must be a Server Action/Function
 
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { DB_PATHS } from "@/lib/firebase/paths";
 
 // Helper for consistent serialization logic
 const serializeTimestamp = (timestamp) =>
@@ -22,11 +23,11 @@ export async function getMeData(userId) {
 
   try {
     // 1. Fetch User Profile
-    const userProfileSnap = await db.collection("users").doc(userId).get();
+    const userProfileSnap = await db.collection(DB_PATHS.users()).doc(userId).get();
     const initialProfile = userProfileSnap.data() || {};
 
     // 2. Fetch User Summary (where invitations are stored)
-    const summarySnap = await db.doc(`users/${userId}/private/summary`).get();
+    const summarySnap = await db.doc(DB_PATHS.userSummary(userId)).get();
     const summaryData = summarySnap.data() || {};
 
     const receivedInvitationsMap = summaryData.invitations || {};

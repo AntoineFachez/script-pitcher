@@ -5,6 +5,7 @@ import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useAuth } from "./AuthContext";
 import { getFirebaseDb } from "@/lib/firebase/firebase-client";
+import { DB_PATHS } from "@/lib/firebase/paths";
 
 // 1. Create the context
 const UserContext = createContext(null);
@@ -61,10 +62,7 @@ export function UserProvider({ children, meData }) {
     // This watches the 'private/summary' doc where dynamic data (like projects and invites) reside.
     const summaryDocRef = doc(
       db,
-      "users",
-      firebaseUser.uid,
-      "private",
-      "summary"
+      DB_PATHS.userSummary(firebaseUser.uid)
     );
 
     const unsubscribeSummary = onSnapshot(
@@ -103,7 +101,7 @@ export function UserProvider({ children, meData }) {
     // --- B. Real-time Listener for Static User Profile Data ---
     // This keeps the userProfile state updated if they change name, avatar, etc.,
     // even though the initial value came from the SC fetch.
-    const profileDocRef = doc(db, "users", firebaseUser.uid);
+    const profileDocRef = doc(db, DB_PATHS.userProfile(firebaseUser.uid));
     const unsubscribeProfile = onSnapshot(profileDocRef, (docSnap) => {
       if (docSnap.exists()) {
         setUserProfile(docSnap.data());

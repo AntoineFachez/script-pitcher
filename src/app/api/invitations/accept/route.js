@@ -3,6 +3,7 @@
 import { NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { DB_PATHS } from "@/lib/firebase/paths";
 
 export async function POST(request) {
   const { projectId, token } = await request.json();
@@ -39,9 +40,9 @@ export async function POST(request) {
     // 3. Run Firestore Transaction
     await db.runTransaction(async (transaction) => {
       // A. References
-      const projectRef = db.collection("projects").doc(projectId);
+      const projectRef = db.doc(DB_PATHS.project(projectId));
       const invitationRef = projectRef.collection("invitations").doc(token); // Token is the docId
-      const userSummaryRef = db.doc(`users/${userId}/private/summary`);
+      const userSummaryRef = db.doc(DB_PATHS.userSummary(userId));
 
       // B. Reads
       const projectSnap = await transaction.get(projectRef);

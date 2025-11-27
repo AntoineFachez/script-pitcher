@@ -19,6 +19,7 @@ import {
 } from "firebase/firestore";
 
 import { getFirebaseDb } from "@/lib/firebase/firebase-client";
+import { DB_PATHS } from "@/lib/firebase/paths";
 import { useAuth } from "./AuthContext";
 import { useData } from "./DataContext";
 
@@ -45,7 +46,7 @@ export function ProjectProvider({ projectId, children }) {
     if (!db || !projectId || !firebaseUser) return;
 
     // Use onSnapshot to listen for changes to the single project document
-    const projectDocRef = doc(db, "projects", projectId);
+    const projectDocRef = doc(db, DB_PATHS.project(projectId));
 
     const unsubscribe = onSnapshot(
       projectDocRef,
@@ -58,13 +59,13 @@ export function ProjectProvider({ projectId, children }) {
             // Ensures the project is updated and timestamps are serialized
             projectData
               ? {
-                  ...projectData,
-                  createdAt:
-                    projectData?.createdAt?.toDate().toISOString() || null,
-                  updatedAt:
-                    projectData?.updatedAt?.toDate().toISOString() || null,
-                  members: projectData.members, // assuming members are serialized on page load
-                }
+                ...projectData,
+                createdAt:
+                  projectData?.createdAt?.toDate().toISOString() || null,
+                updatedAt:
+                  projectData?.updatedAt?.toDate().toISOString() || null,
+                members: projectData.members, // assuming members are serialized on page load
+              }
               : null
           );
 
@@ -101,7 +102,7 @@ export function ProjectProvider({ projectId, children }) {
       return;
     }
     setLoading(true);
-    const charColRef = collection(db, "projects", projectId, "characters");
+    const charColRef = collection(db, DB_PATHS.project(projectId), "characters");
     const q = query(charColRef, orderBy("orderIndex", "asc"));
 
     // onSnapshot is the real-time listener
@@ -136,7 +137,7 @@ export function ProjectProvider({ projectId, children }) {
       return;
     }
     setLoading(true);
-    const epColRef = collection(db, "projects", projectId, "episodes");
+    const epColRef = collection(db, DB_PATHS.project(projectId), "episodes");
     const q = query(epColRef, orderBy("orderIndex", "asc"));
 
     const unsubscribe = onSnapshot(
@@ -170,7 +171,7 @@ export function ProjectProvider({ projectId, children }) {
       return;
     }
     setLoading(true);
-    const invitColRef = collection(db, "projects", projectId, "invitations");
+    const invitColRef = collection(db, DB_PATHS.project(projectId), "invitations");
 
     // ⭐ CHANGE THIS LINE: Use 'createdAt' instead of 'orderIndex'
     const q = query(invitColRef, orderBy("createdAt", "asc"));

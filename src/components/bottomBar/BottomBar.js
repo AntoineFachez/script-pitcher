@@ -13,7 +13,7 @@ import { getButton } from "@/lib/maps/iconMap";
 import { bottomNavActions } from "@/lib/appConfig";
 import AddNewItem from "@/widgets/crudItem";
 
-// import { bottomBarStyles, bottomNavcenterButtonStyles } from "@/theme/muiProps";
+
 import { useApp } from "@/context/AppContext";
 import { handleSetNewAppContext } from "@/lib/actions/appActions";
 import {

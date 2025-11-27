@@ -9,7 +9,7 @@ import { Add, BackupTable, Group } from "@mui/icons-material";
 import { useApp } from "@/context/AppContext";
 import { useData } from "@/context/DataContext";
 
-import { widgetcontainerProps } from "@/theme/muiProps";
+
 
 export default function HomeContent() {
   const { setAppContext } = useApp();
@@ -22,11 +22,23 @@ export default function HomeContent() {
   };
   useEffect(() => {
     setAppContext("home");
-    return () => {};
+    return () => { };
   }, []);
 
   return (
-    <Box {...widgetcontainerProps}>
+    <Box
+      sx={{
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "widget.background",
+        overflow: "auto",
+      }}
+    >
       <Box
         sx={{
           display: "flex",

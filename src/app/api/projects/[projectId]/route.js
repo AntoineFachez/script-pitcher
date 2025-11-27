@@ -3,6 +3,7 @@
 import { NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { DB_PATHS } from "@/lib/firebase/paths";
 
 /**
  * POST /api/characters
@@ -46,7 +47,7 @@ export async function PUT(request, { params }) {
     }
 
     // 3. Authorization Check: Is the caller a member of this project?
-    const projectRef = db.collection("projects").doc(projectId);
+    const projectRef = db.doc(DB_PATHS.project(projectId));
     const projectSnap = await projectRef.get();
     if (!projectSnap.exists) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });

@@ -4,6 +4,7 @@
 
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
 import { getDocsInBatches } from "../firebase/utils";
+import { DB_PATHS } from "@/lib/firebase/paths";
 
 export async function getProjectsAndMembers(userId) {
   // console.log(
@@ -17,7 +18,7 @@ export async function getProjectsAndMembers(userId) {
 
   try {
     // console.log("[getProjectsAndMembers] 1. Fetching user summary document...");
-    const summaryRef = db.doc(`users/${userId}/private/summary`);
+    const summaryRef = db.doc(DB_PATHS.userSummary(userId));
     const summarySnap = await summaryRef.get();
 
     if (!summarySnap.exists) {
@@ -42,7 +43,7 @@ export async function getProjectsAndMembers(userId) {
     //   `[getProjectsAndMembers] 3. Found ${projectIds.length} project ID(s):`
     // );
 
-    const projectsRef = db.collection("projects");
+    const projectsRef = db.collection(DB_PATHS.projects());
     const fetchedProjects = await getDocsInBatches(projectsRef, projectIds);
 
     // console.log(
@@ -66,7 +67,7 @@ export async function getProjectsAndMembers(userId) {
       // console.log(
       //   "[getProjectsAndMembers] 7. Fetching user profile documents..."
       // );
-      const usersRef = db.collection("users");
+      const usersRef = db.collection(DB_PATHS.users());
       fetchedUsers = await getDocsInBatches(usersRef, uniqueUserIds);
       // console.log(
       //   `[getProjectsAndMembers] 8. ✅ Fetched ${fetchedUsers.length} user profiles.`
@@ -81,14 +82,14 @@ export async function getProjectsAndMembers(userId) {
     const serializableProjects = fetchedProjects.map((project) => {
       const members = project.members
         ? Object.fromEntries(
-            Object.entries(project.members).map(([id, roleData]) => [
-              id,
-              {
-                ...roleData,
-                joinedAt: roleData?.joinedAt?.toDate().toISOString() || null,
-              },
-            ])
-          )
+          Object.entries(project.members).map(([id, roleData]) => [
+            id,
+            {
+              ...roleData,
+              joinedAt: roleData?.joinedAt?.toDate().toISOString() || null,
+            },
+          ])
+        )
         : {};
 
       return {

@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore"; // KEEP FieldValue, as it's a constant
 
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { DB_PATHS } from "@/lib/firebase/paths";
 
 /**
  * POST /api/uploads/initiate
@@ -75,10 +76,10 @@ export async function POST(request) {
     const storagePath = `${decodedToken.uid}/projects/${finalProjectId}/files/${fileId}.pdf`;
 
     // 4. Prepare Firestore document references
-    const projectRef = db.collection("projects").doc(finalProjectId); // ✅ Use stable db
+    const projectRef = db.doc(DB_PATHS.project(finalProjectId)); // ✅ Use stable db
     const fileRef = projectRef.collection("files").doc(fileId);
     // --- ADD THIS ---
-    const lookupRef = db.collection("fileId_to_projectId_lookup").doc(fileId); // ✅ Use stable db
+    const lookupRef = db.doc(DB_PATHS.fileLookup(fileId)); // ✅ Use stable db
 
     // 5. Run an atomic batch write
     const batch = db.batch(); // ✅ Use stable db

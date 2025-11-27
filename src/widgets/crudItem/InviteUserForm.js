@@ -20,6 +20,7 @@ import { Send } from "@mui/icons-material";
 import { useAuth } from "@/context/AuthContext";
 import { useInFocus } from "@/context/InFocusContext";
 import { useUser } from "@/context/UserContext";
+import { inviteUserAction } from "@/lib/actions/projectActions";
 
 /**
  * A form for project owners to invite new users.
@@ -57,28 +58,21 @@ export default function InviteUserForm({ crud }) {
     setError("");
     setSuccess("");
 
-    // Use projectInFocus.id which is available from context
-    const url = `/api/projects/${projectInFocus.id}/invite`;
-    const method = "POST";
-    const body = JSON.stringify({ email, role, userProfile });
-
     try {
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-          // Get the Firebase ID token for authorization in the API route
-          Authorization: `Bearer ${await firebaseUser.getIdToken()}`,
-        },
-        body: body,
+      // Use Server Action instead of API route
+      const result = await inviteUserAction({
+        projectId: projectInFocus.id,
+        email,
+        role,
+        userProfile,
       });
 
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error || "Failed to send invitation.");
+      if (result.error) {
+        throw new Error(result.error);
       }
-      const data = await response.json();
-      if (response.ok) {
+
+      const data = result.invitationData;
+      if (data) {
         // ✅ MECHANIC: Build the URL client-side using the window object
         // This creates: https://your-app.com/invite/project_123/invitation_456
         const inviteUrl = `${window.location.origin}/invite/${data.projectId}/${data.token}`;

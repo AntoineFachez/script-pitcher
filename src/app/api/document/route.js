@@ -2,6 +2,7 @@
 
 import { NextResponse } from "next/server";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { DB_PATHS } from "@/lib/firebase/paths";
 
 /**
  * Securely fetches a single document's data.
@@ -39,7 +40,7 @@ export async function GET(request) {
 
     // 3. Verify user permissions
     // Check if the user is a member of the project
-    const projectRef = db.collection("projects").doc(projectId);
+    const projectRef = db.doc(DB_PATHS.project(projectId));
     const projectSnap = await projectRef.get();
 
     if (!projectSnap.exists) {

@@ -22,7 +22,7 @@ import SignUpForm from "@/components/auth/appAuth/SignUpForm";
 
 import { useUi } from "@/context/UiContext";
 
-import { appFloorStyles } from "@/theme/muiProps";
+
 import CircularIndeterminate from "@/components/progress/CircularIndeterminate";
 
 export default function Body({ children }) {

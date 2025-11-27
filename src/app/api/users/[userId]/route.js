@@ -2,6 +2,7 @@
 
 import { NextResponse } from "next/server";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { DB_PATHS } from "@/lib/firebase/paths";
 import { FieldValue } from "firebase-admin/firestore";
 
 // API function to handle GET requests

@@ -8,7 +8,7 @@ import { useData } from "@/context/DataContext";
 
 import BasicRadar from "@/components/charts/BasicRadarChart";
 import BasicGauge from "@/components/charts/BasicGauge";
-import { widgetContainerProps, containerProps } from "@/theme/muiProps";
+
 import BasicBars from "@/components/charts/BasicBarChart";
 
 export default function DashboardContent() {
@@ -16,7 +16,7 @@ export default function DashboardContent() {
   const { projects, users } = useData();
   useEffect(() => {
     setAppContext("dashboard");
-    return () => {};
+    return () => { };
   }, []);
   console.log("projects", projects?.[3]);
 
@@ -36,11 +36,22 @@ export default function DashboardContent() {
   ];
   return (
     <>
-      <Box {...widgetContainerProps}>
+      <Box
+        sx={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "widget.background",
+          overflow: "auto",
+        }}
+      >
         <Box
-          {...containerProps}
           sx={{
-            ...containerProps.sx,
+            width: "100%",
             height: "fit-content",
             display: "flex",
             flexFlow: "column nowrap",
@@ -83,7 +94,7 @@ export default function DashboardContent() {
           <BasicGauge gaugeData={gaugeData} />
           <BasicBars />
         </Box>
-      </Box>
+      </Box >
     </>
   );
 }

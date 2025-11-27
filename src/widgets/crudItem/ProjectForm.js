@@ -20,7 +20,7 @@ import { useCrud } from "@/context/CrudItemContext";
 import { useUi } from "@/context/UiContext";
 import BasicSelect from "@/components/select/BasicSelect";
 import FileUploader from "./FileUploader";
-import { formFieldsGroupProps, formFieldProps } from "@/theme/muiProps";
+import { formFieldsGroupProps, formFieldProps } from "./formStyles";
 
 export default function CrudProjectForm({ crud, projectInFocus }) {
   const router = useRouter();
@@ -245,8 +245,8 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
         crud === "create"
           ? "Create New Project"
           : crud === "update"
-          ? "Edit Project"
-          : "Project Details"
+            ? "Edit Project"
+            : "Project Details"
       }
       formData={crudProject}
       setFormData={setCrudProject} // Allows the Base component's Drawer to update images

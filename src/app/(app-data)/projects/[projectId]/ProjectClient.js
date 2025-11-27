@@ -3,7 +3,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
-import { doc, onSnapshot, collection } from "firebase/firestore";
 
 import { getFirebaseDb } from "@/lib/firebase/firebase-client";
 
@@ -14,7 +13,6 @@ import { useUi } from "@/context/UiContext";
 
 import WidgetIndex from "@/widgets/projectProfile";
 import CrudItem from "@/widgets/crudItem";
-import { pageMainStyles } from "@/theme/muiProps";
 
 export default function ProjectClient({ initialProject, initialFiles }) {
   const projectId = initialProject?.id;
@@ -46,22 +44,6 @@ export default function ProjectClient({ initialProject, initialFiles }) {
       // Show an error toast/snackbar here if needed.
     }
   };
-  useEffect(() => {
-    if (!projectInFocus?.id || !db) return;
-
-    const projectRef = doc(db, "projects", projectInFocus?.id);
-
-    const unsubscribe = onSnapshot(projectRef, (docSnap) => {
-      if (docSnap.exists()) {
-        setProjectInFocus({ id: docSnap.id, ...docSnap.data() });
-      } else {
-        setProjectInFocus(null);
-      }
-    });
-
-    // Cleanup
-    return () => unsubscribe();
-  }, [db, projectInFocus?.id, setProjectInFocus]);
 
   useEffect(() => {
     if (initialProject && !projectInFocus) {

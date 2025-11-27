@@ -10,7 +10,7 @@ import { useUi } from "@/context/UiContext";
 import BasicCard from "../card/BasicCard";
 import DataTable from "../dataGridElements/DataTable";
 
-import { flexListItemStyles } from "@/theme/muiProps";
+
 
 export default function CardGrid({
   containerRef,
@@ -73,7 +73,7 @@ export default function CardGrid({
                 toggleDetails={toggleDetails}
                 disablePadding
 
-                // customItem prop can still be passed via cardActions if needed
+              // customItem prop can still be passed via cardActions if needed
               />
             );
           })}

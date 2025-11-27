@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { DB_PATHS } from "@/lib/firebase/paths";
 
 /**
  * POST /api/characters
@@ -69,7 +70,7 @@ export async function POST(request) {
     }
 
     // --- START: AUTHORIZATION CHECK ---
-    const projectRef = db.collection("projects").doc(projectId);
+    const projectRef = db.doc(DB_PATHS.project(projectId));
     const projectDoc = await projectRef.get();
 
     if (!projectDoc.exists) {
@@ -88,8 +89,7 @@ export async function POST(request) {
       (userMember.role !== "owner" && userMember.role !== "editor")
     ) {
       console.warn(
-        `Permission denied: User ${decodedToken.uid} with role ${
-          userMember?.role || "none"
+        `Permission denied: User ${decodedToken.uid} with role ${userMember?.role || "none"
         } tried to create a character in project ${projectId}`
       );
       return NextResponse.json(
@@ -115,9 +115,7 @@ export async function POST(request) {
 
     // 4. Add the document to the /characters subcollection
     const charRef = await db
-      .collection("projects")
-      .doc(projectId)
-      .collection("characters")
+      .collection(DB_PATHS.project(projectId), "characters")
       .add(newCharacterDoc);
 
     // 5. Respond with the created data

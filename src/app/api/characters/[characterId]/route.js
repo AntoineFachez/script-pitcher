@@ -2,6 +2,7 @@
 
 import { NextResponse } from "next/server";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
+import { DB_PATHS } from "@/lib/firebase/paths";
 import { FieldValue } from "firebase-admin/firestore";
 
 /**
@@ -43,7 +44,7 @@ export async function PUT(request, { params }) {
     // --- START: AUTHORIZATION CHECK ---
 
     // 3. Get the Project Document
-    const projectRef = db.collection("projects").doc(projectId);
+    const projectRef = db.doc(DB_PATHS.project(projectId));
     const projectDoc = await projectRef.get();
 
     if (!projectDoc.exists) {
@@ -67,8 +68,7 @@ export async function PUT(request, { params }) {
       (userMember.role !== "owner" && userMember.role !== "editor")
     ) {
       console.warn(
-        `Permission denied: User ${userId} with role ${
-          userMember?.role || "none"
+        `Permission denied: User ${userId} with role ${userMember?.role || "none"
         } tried to update character ${characterId} in project ${projectId}`
       );
       return NextResponse.json(
