@@ -2,44 +2,29 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useInFocus } from "@/context/InFocusContext";
-import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
 
 import MultiItems from "@/components/multiItems/MultiItems";
-import CrudItem from "../crudItem";
 import SectionHeader from "@/components/sectionHeader/SectionHeader";
 
 import config from "@/lib/widgetConfigs/characters.widgetConfig.json";
 import { useCharacterConfig } from "./useCharacterConfig";
+import { useWidgetHandlers } from "../shared/useWidgetHandlers";
 
 const { widgetConfig, schemeDefinition } = config;
 // I am a comment
 export default function CharactersList({ data, containerRef, isLoading }) {
   const router = useRouter();
   const { setCharacterInFocus, setItemInFocus } = useInFocus();
-  const { setAppContext } = useApp();
-  const { isMobile, showCardMedia, setOpenModal, setModalContent } = useUi();
+  const { isMobile, showCardMedia } = useUi();
   const [showDataGrid, setShowDataGrid] = useState(true);
 
-  const handleAddItem = () => {
-    setModalContent(
-      <CrudItem context={widgetConfig.collection} crud="create" />
-    );
-    setOpenModal(true);
-  };
-
-  const handleClickEdit = (item) => {
-    setCharacterInFocus(item);
-    setModalContent(
-      <CrudItem context={widgetConfig.collection} crud="update" />
-    );
-    setOpenModal(true);
-  };
-
-  const handleItemClick = (item) => {
-    setAppContext(widgetConfig.context);
-    setItemInFocus(item);
-  };
+  const { handleAddItem, handleClickEdit, handleItemClick, handleRowClick } =
+    useWidgetHandlers({
+      widgetConfig,
+      setEditInFocus: setCharacterInFocus,
+      setSelectInFocus: setItemInFocus,
+    });
 
   const { getCardActions, columns, rowActions } = useCharacterConfig({
     handleClickEdit,
@@ -48,11 +33,6 @@ export default function CharactersList({ data, containerRef, isLoading }) {
     showCardMedia,
     isMobile,
   });
-
-  const handleRowClick = (params, event) => {
-    event.defaultMuiPrevented = true;
-    handleItemClick(params.row);
-  };
 
   const bra = [{ sx: { sx: { sx: {} } } }];
   return (

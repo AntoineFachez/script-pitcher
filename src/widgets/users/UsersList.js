@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useInFocus } from "@/context/InFocusContext";
-import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
 import { useAuth } from "@/context/AuthContext";
 
@@ -11,24 +10,17 @@ import CrudItem from "../crudItem";
 import config from "@/lib/widgetConfigs/users.widgetConfig.json";
 import SectionHeader from "@/components/sectionHeader/SectionHeader";
 import { useUserConfig } from "./useUserConfig";
+import { useWidgetHandlers } from "../shared/useWidgetHandlers";
 
 const { widgetConfig, schemeDefinition } = config;
 
-export default function UsersList({
-  context,
-  data,
-  isLoading,
-}) {
+export default function UsersList({ context, data, isLoading }) {
   const router = useRouter();
   const { setAppContext } = useApp();
   const { firebaseUser } = useAuth();
   const { setUserInFocus, roleInFocus } = useInFocus();
 
-  const {
-    isMobile,
-    setOpenModal,
-    setModalContent,
-  } = useUi();
+  const { isMobile, setOpenModal, setModalContent } = useUi();
   const [showDataGrid, setShowDataGrid] = useState(true);
 
   const handleAddItem = () => {
@@ -36,15 +28,17 @@ export default function UsersList({
     setOpenModal(true);
   };
 
-  const handleItemClick = (user) => {
-    setAppContext("users");
-    setUserInFocus(user);
-    if (user.uid === firebaseUser.uid) {
-      router.push(`/me`);
-    } else if (user.uid) {
-      router.push(`/users/${user.uid}`);
-    }
-  };
+  const { handleItemClick, handleRowClick } = useWidgetHandlers({
+    widgetConfig,
+    setItemInFocus: setUserInFocus,
+    navigateTo: (user) => {
+      if (user.uid === firebaseUser.uid) {
+        router.push(`/me`);
+      } else if (user.uid) {
+        router.push(`/users/${user.uid}`);
+      }
+    },
+  });
 
   const handleClickEdit = (item) => {
     console.log("Edit clicked:", item);
@@ -67,11 +61,6 @@ export default function UsersList({
     schemeDefinition,
     isMobile,
   });
-
-  const handleRowClick = (params, event) => {
-    event.defaultMuiPrevented = true;
-    handleItemClick(params.row);
-  };
 
   return (
     <>
@@ -96,4 +85,3 @@ export default function UsersList({
     </>
   );
 }
-

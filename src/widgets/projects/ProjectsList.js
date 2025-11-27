@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { useApp } from "@/context/AppContext";
 import { useInFocus } from "@/context/InFocusContext";
 
 import MultiItems from "@/components/multiItems/MultiItems";
 import SectionHeader from "@/components/sectionHeader/SectionHeader";
 import config from "@/lib/widgetConfigs/projects.widgetConfig.json";
 import { useProjectConfig } from "./useProjectConfig";
+import { useWidgetHandlers } from "../shared/useWidgetHandlers";
 
 const { widgetConfig, schemeDefinition } = config;
 
@@ -19,16 +19,17 @@ export default function ProjectsList({
 }) {
   const router = useRouter();
   const { setProjectInFocus } = useInFocus();
-  const { setAppContext } = useApp();
   const [showDataGrid, setShowDataGrid] = useState(true);
 
-  const handleItemClick = (item) => {
-    setAppContext(widgetConfig.context);
-    setProjectInFocus(item);
-    if (item?.id) {
-      router.push(`/projects/${item.id}`);
-    }
-  };
+  const { handleItemClick, handleRowClick } = useWidgetHandlers({
+    widgetConfig,
+    setItemInFocus: setProjectInFocus,
+    navigateTo: (item) => {
+      if (item?.id) {
+        router.push(`/projects/${item.id}`);
+      }
+    },
+  });
 
   const { getCardActions, columns, rowActions } = useProjectConfig({
     onEditProject,
@@ -36,11 +37,6 @@ export default function ProjectsList({
     onItemClick: handleItemClick,
     schemeDefinition,
   });
-
-  const handleRowClick = (params, event) => {
-    event.defaultMuiPrevented = true;
-    handleItemClick(params.row);
-  };
 
   return (
     <>
@@ -65,4 +61,3 @@ export default function ProjectsList({
     </>
   );
 }
-
