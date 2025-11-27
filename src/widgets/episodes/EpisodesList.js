@@ -18,21 +18,8 @@ import ShareButton from "@/components/share/ShareButton";
 import SectionHeader from "@/components/sectionHeader/SectionHeader";
 
 import CrudItem from "../crudItem";
+import { dataGridImageCellStyles } from "../shared/constants";
 
-const dataGridImageCellStyles = {
-  sx: {
-    width: 100,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    align: "center",
-    objectFit: "cover",
-    borderRadius: "10px",
-    borderWidth: "3px",
-    borderStyle: "solid",
-    borderColor: "#333433",
-  },
-};
 import config from "@/lib/widgetConfigs/episodes.widgetConfig.json";
 const { widgetConfig, schemeDefinition } = config;
 
@@ -99,17 +86,12 @@ export default function EpisodesList({
     {
       field: "avatarUrl",
       headerName: "",
-      align: dataGridImageCellStyles.sx.align,
-      width: dataGridImageCellStyles.sx.width,
+      align: dataGridImageCellStyles.column.align,
+      width: dataGridImageCellStyles.column.width,
       // 4. Add a renderCell to make the icon clickable
       renderCell: (params) => {
         const { avatarUrl } = params.row;
-        return (
-          <ImageCell
-            url={avatarUrl}
-            dataGridImageCellStyles={dataGridImageCellStyles}
-          />
-        );
+        return <ImageCell url={avatarUrl} sx={dataGridImageCellStyles.sx} />;
       },
       disableColumnMenu: true,
     },

@@ -5,21 +5,7 @@ import { Favorite, Share, Edit } from "@mui/icons-material";
 import KebabMenu from "@/components/menus/KebabMenu";
 import ShareButton from "@/components/share/ShareButton";
 import ImageCell from "@/components/dataGridElements/ImageCell";
-
-const dataGridImageCellStyles = {
-  sx: {
-    width: 100,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    align: "center",
-    objectFit: "cover",
-    borderRadius: "10px",
-    borderWidth: "3px",
-    borderStyle: "solid",
-    borderColor: "#333433",
-  },
-};
+import { dataGridImageCellStyles } from "../shared/constants";
 
 export function useCharacterConfig({
   handleClickEdit,
@@ -74,16 +60,11 @@ export function useCharacterConfig({
     {
       field: "avatarUrl",
       headerName: "",
-      align: dataGridImageCellStyles.sx.align,
-      width: dataGridImageCellStyles.sx.width,
+      align: dataGridImageCellStyles.column.align,
+      width: dataGridImageCellStyles.column.width,
       renderCell: (params) => {
         const { avatarUrl } = params.row;
-        return (
-          <ImageCell
-            url={avatarUrl}
-            dataGridImageCellStyles={dataGridImageCellStyles}
-          />
-        );
+        return <ImageCell url={avatarUrl} sx={dataGridImageCellStyles.sx} />;
       },
       disableColumnMenu: true,
     },
