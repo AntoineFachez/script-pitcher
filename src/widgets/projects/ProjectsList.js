@@ -43,7 +43,7 @@ export default function ProjectsList({
 
   const handleRowClick = (params, event) => {
     event.defaultMuiPrevented = true;
-    setAppContext("projects");
+    setAppContext(widgetConfig.context);
     setProjectInFocus(params.row);
     if (params.row?.id) {
       router.push(`/projects/${params.row.id}`);
@@ -56,7 +56,7 @@ export default function ProjectsList({
   };
 
   const handleClickTitle = (item) => {
-    setAppContext("projects");
+    setAppContext(widgetConfig.context);
     setProjectInFocus(item);
     if (item.id) {
       router.push(`/projects/${item.id}`);

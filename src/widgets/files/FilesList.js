@@ -70,7 +70,11 @@ export default function FilesList({
       router.push(`/projects/${projectInFocus.id}/files/${item.id}`);
     }
   };
-
+  const handleCellClick = (params, event) => {
+    if (params.field === "actions") {
+      event.defaultMuiPrevented = true;
+    }
+  };
   const handleClickAvatar = (item) => {
     console.log("item", item);
 
@@ -83,17 +87,14 @@ export default function FilesList({
   const handleClickTitle = (item) => {
     console.log("projectInFocus", projectInFocus);
     event.defaultMuiPrevented = true;
-    setAppContext("files");
+
+    setAppContext(widgetConfig.context);
     setFileInFocus(item);
     if (item?.id) {
       router.push(`/projects/${projectInFocus.id}/files/${item.id}`);
     }
   };
-  const handleCellClick = (params, event) => {
-    if (params.field === "actions") {
-      event.defaultMuiPrevented = true;
-    }
-  };
+
   const handleClickSubTitle = (item) => {
     const filtered = data.filter((project) =>
       project.genres.some((g) => g.genre === item.genre)

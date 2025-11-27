@@ -7,10 +7,10 @@
   },
   "schemeDefinition": {
     "id": "id",
-    "title": "title",
+    "title": "fileName",
     "subtitleArray": "",
     "subtitleArrayItem": "",
-    "description": "",
+    "description": "filePurpose",
     "imageUrl": "imageUrl",
     "avatarUrl": "avatarUrl"
   }
