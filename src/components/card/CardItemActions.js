@@ -8,10 +8,25 @@ import { ActionIcon } from "../buttons/ActionIcon";
 
 const Expand = styled((props) => {
   const { expand, ...other } = props;
-  return <ActionIcon iconName={"ExpandMore"} {...other} />;
+  return (
+    <ActionIcon
+      iconName={"ExpandMore"}
+      {...other}
+      sx={{
+        "& >*": {
+          fontSize: "1.8rem",
+          // display: "flex",
+          // justifyContent: "center",
+          // alignItems: "center",
+          // scale: "1.2",
+        },
+      }}
+    />
+  );
 })(({ theme, expand }) => ({
   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
   marginLeft: "auto",
+
   transition: theme.transitions.create("transform", {
     duration: theme.transitions.duration.shortest,
   }),
@@ -43,7 +58,7 @@ export default function CardItemActions({ cardActions }) {
         onClick={handleExpandClick}
         aria-expanded={expanded}
         aria-label="show more"
-        sx={{}}
+        sx={{ width: "3rem", height: "3rem" }}
       />
     </CardActions>
   );
@@ -51,10 +66,16 @@ export default function CardItemActions({ cardActions }) {
 const cardActionProps = {
   className: "card--actions",
   sx: {
-    // width: "4ch",
+    position: "absolute",
+    // left: 0,
+    // right: 0,
+    bottom: 0,
+    width: "100%",
+    height: "3rem",
     // maxWidth: "4ch",
     display: "flex",
-    justifyContent: "center",
+    // justifyContent: "space-around",
     alignItems: "center",
+    backgroundColor: "inherit",
   },
 };

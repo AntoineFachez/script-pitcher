@@ -21,6 +21,7 @@ export default function MultiItems({
   widgetConfig,
   schemeDefinition,
   getCardActions, // Function from parent to get item-specific props
+  expandedCardContent,
   handleRowClick,
 }) {
   const { isMobile, toggleDetails, showCardMedia } = useUi();
@@ -58,6 +59,10 @@ export default function MultiItems({
           sx={{
             width: "100%",
             height: "100%",
+            display: "flex",
+            flexFlow: "row wrap",
+            justifyContent: "center",
+            alignItems: "flex-start",
             p: isMobile ? 2 : 5,
           }}
         >
@@ -75,7 +80,7 @@ export default function MultiItems({
                 cardActions={cardActions} // Pass all props (actions, handlers, etc.)
                 toggleDetails={toggleDetails}
                 disablePadding
-
+                expandedCardContent={expandedCardContent}
                 // customItem prop can still be passed via cardActions if needed
               />
             );

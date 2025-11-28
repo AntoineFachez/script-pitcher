@@ -2,8 +2,9 @@ import React from "react";
 import { Public, PublicOff, Edit, Delete, Add } from "@mui/icons-material";
 import KebabMenu from "@/components/menus/KebabMenu";
 import StandardCardFooter from "./StandardCardFooter";
+import { Box, Typography } from "@mui/material";
 
-export function useStandardConfig() {
+export function useStandardConfig(schemeDefinition) {
   const createRowActions = ({
     canAdd = true,
     canDelete = true,
@@ -55,9 +56,20 @@ export function useStandardConfig() {
       },
     };
   };
+  const expandedCardContent = (item) => {
+    console.log("item", item[schemeDefinition?.description]);
 
+    return (
+      <Box sx={{ height: "fit-content", p: 2, overflow: "auto", pb: "3rem" }}>
+        <Typography variant="body1">
+          {item[schemeDefinition?.description]}
+        </Typography>
+      </Box>
+    );
+  };
   return {
     createRowActions,
+    expandedCardContent,
     StandardCardFooter,
   };
 }

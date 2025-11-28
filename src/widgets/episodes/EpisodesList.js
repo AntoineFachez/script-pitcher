@@ -41,14 +41,15 @@ export default function EpisodesList({
       setSelectInFocus: setItemInFocus,
     });
 
-  const { getCardActions, columns, rowActions } = useEpisodeConfig({
-    handleClickEdit,
-    onItemClick: handleItemClick,
-    schemeDefinition,
-    showCardMedia,
-    isMobile,
-    userRole, // Pass the role
-  });
+  const { getCardActions, columns, rowActions, expandedCardContent } =
+    useEpisodeConfig({
+      handleClickEdit,
+      onItemClick: handleItemClick,
+      schemeDefinition,
+      showCardMedia,
+      isMobile,
+      userRole, // Pass the role
+    });
   return (
     <>
       <SectionHeader
@@ -68,6 +69,7 @@ export default function EpisodesList({
         widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
         getCardActions={getCardActions}
+        expandedCardContent={expandedCardContent}
         handleRowClick={handleRowClick}
       />
     </>

@@ -8,6 +8,7 @@ import SectionHeader from "@/components/sectionHeader/SectionHeader";
 import config from "@/lib/widgetConfigs/projects.widgetConfig.json";
 import { useProjectConfig } from "./useProjectConfig";
 import { useWidgetHandlers } from "../shared/useWidgetHandlers";
+import { Box, Typography } from "@mui/material";
 
 const { widgetConfig, schemeDefinition } = config;
 
@@ -19,7 +20,7 @@ export default function ProjectsList({
 }) {
   const router = useRouter();
   const { setProjectInFocus } = useInFocus();
-  const [showDataGrid, setShowDataGrid] = useState(true);
+  const [showDataGrid, setShowDataGrid] = useState(false);
 
   const { handleItemClick, handleRowClick } = useWidgetHandlers({
     widgetConfig,
@@ -31,12 +32,13 @@ export default function ProjectsList({
     },
   });
 
-  const { getCardActions, columns, rowActions } = useProjectConfig({
-    onEditProject,
-    onSetGenreFocus,
-    onItemClick: handleItemClick,
-    schemeDefinition,
-  });
+  const { getCardActions, columns, rowActions, expandedCardContent } =
+    useProjectConfig({
+      onEditProject,
+      onSetGenreFocus,
+      onItemClick: handleItemClick,
+      schemeDefinition,
+    });
 
   return (
     <>
@@ -56,6 +58,7 @@ export default function ProjectsList({
         widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
         getCardActions={getCardActions}
+        expandedCardContent={expandedCardContent}
         handleRowClick={handleRowClick}
       />
     </>

@@ -21,7 +21,8 @@ export function useProjectConfig({
 }) {
   const { handleTogglePublishProject } = useData();
   const { isMobile, showCardMedia } = useUi();
-  const { createRowActions, StandardCardFooter } = useStandardConfig();
+  const { createRowActions, expandedCardContent, StandardCardFooter } =
+    useStandardConfig(schemeDefinition);
 
   const { firebaseUser } = useAuth();
   const { myProjects } = useUser();
@@ -128,5 +129,6 @@ export function useProjectConfig({
     getCardActions,
     columns: visibleColumns,
     rowActions,
+    expandedCardContent,
   };
 }

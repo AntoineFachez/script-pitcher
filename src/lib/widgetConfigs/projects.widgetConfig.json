@@ -12,7 +12,7 @@
     "title": "title",
     "subtitleArray": "genres",
     "subtitleArrayItem": "genre",
-    "description": "",
+    "description": "logline",
     "imageUrl": "imageUrl",
     "avatarUrl": "avatarUrl"
   }

@@ -7,6 +7,7 @@ import ShareButton from "@/components/share/ShareButton";
 import ImageCell from "@/components/dataGridElements/ImageCell";
 import { dataGridImageCellStyles } from "../shared/constants";
 import { EMAIL_CONTENT } from "@/lib/constants/notifications";
+import { useStandardConfig } from "../shared/useStandardConfig";
 
 export function useCharacterConfig({
   handleClickEdit,
@@ -16,6 +17,8 @@ export function useCharacterConfig({
   isMobile,
   userRole,
 }) {
+  const { expandedCardContent } = useStandardConfig(schemeDefinition);
+
   // --- Card Actions ---
   const getCardActions = (character) => {
     const emailSubject = EMAIL_CONTENT.CHARACTER.SUBJECT;
@@ -120,5 +123,6 @@ export function useCharacterConfig({
     getCardActions,
     columns: visibleColumns,
     rowActions,
+    expandedCardContent,
   };
 }

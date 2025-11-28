@@ -7,6 +7,7 @@ import ShareButton from "@/components/share/ShareButton";
 import ImageCell from "@/components/dataGridElements/ImageCell";
 import { dataGridImageCellStyles } from "../shared/constants";
 import { EMAIL_CONTENT } from "@/lib/constants/notifications";
+import { useStandardConfig } from "../shared/useStandardConfig";
 
 export function useEpisodeConfig({
   handleClickEdit,
@@ -16,6 +17,7 @@ export function useEpisodeConfig({
   isMobile,
   userRole,
 }) {
+  const { expandedCardContent } = useStandardConfig(schemeDefinition);
   // Example email content
   const emailSubject = EMAIL_CONTENT.EPISODE.SUBJECT;
   const emailBody = EMAIL_CONTENT.EPISODE.BODY;
@@ -116,5 +118,6 @@ export function useEpisodeConfig({
     getCardActions,
     columns: visibleColumns,
     rowActions,
+    expandedCardContent,
   };
 }

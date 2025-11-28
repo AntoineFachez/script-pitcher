@@ -21,6 +21,7 @@ export default function CardGrid({
   widgetSpex,
   schemeDefinition,
   getCardActions, // Function from parent to get item-specific props
+  expandedCardContent,
   handleRowClick,
 }) {
   const { toggleDetails, showCardMedia } = useUi();
@@ -53,7 +54,12 @@ export default function CardGrid({
           sx={{
             width: "100%",
             height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
             p: isMobile ? 2 : 5,
+            overflow: "auto",
           }}
         >
           {data.map((item, index) => {
@@ -70,8 +76,7 @@ export default function CardGrid({
                 cardActions={cardActions} // Pass all props (actions, handlers, etc.)
                 toggleDetails={toggleDetails}
                 disablePadding
-
-                // customItem prop can still be passed via cardActions if needed
+                expandedCardContent={expandedCardContent}
               />
             );
           })}

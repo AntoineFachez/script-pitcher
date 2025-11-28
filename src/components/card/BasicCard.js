@@ -15,7 +15,7 @@ export default function BasicCard({
   itemInFocus,
   collection,
   schemeDefinition,
-  customItem,
+  expandedCardContent,
   toggleDetails,
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -26,8 +26,10 @@ export default function BasicCard({
 
   return (
     <Card
+      {...cardProps}
       sx={{
-        ...cardStyles.sx,
+        ...cardProps.sx,
+        maxHeight: expanded ? "fit-content" : "22rem",
         border:
           item === itemInFocus ? `white 1px solid` : `transparent 1px solid`,
       }}
@@ -52,7 +54,7 @@ export default function BasicCard({
         unmountOnExit
         sx={{ width: "100%", p: 0, m: 0 }}
       >
-        {customItem}
+        {expandedCardContent && expandedCardContent(item)}
       </Collapse>
       {toggleDetails && (
         <CardItemActions
@@ -62,21 +64,26 @@ export default function BasicCard({
     </Card>
   );
 }
-const cardStyles = {
+const cardProps = {
   sx: {
     position: "relative",
     maxWidth: {
       xs: "95%", // Mobile
+      md: "15rem", // Example: Desktop limit
       lg: "400px", // Example: Desktop limit
     },
     height: "100%",
-    maxHeight: "25rem",
+    maxHeight: {
+      xs: "14rem", // Mobile
+      md: "22rem", // Example: Desktop limit
+      lg: "22rem", // Example: Desktop limit
+    },
 
-    flex: "8 6 220px",
-    // flex: {
-    //   xs: "8 6 220px",
-    //   md: "4 2 120px",
-    //   lg: "1 1 100%", // Overrides with "8 6 220px" from 'lg' screen up
-    // },
+    // flex: "8 6 220px",
+    flex: {
+      xs: "8 6 220px",
+      md: "4 2 120px",
+      lg: "1 1 100%", // Overrides with "8 6 220px" from 'lg' screen up
+    },
   },
 };

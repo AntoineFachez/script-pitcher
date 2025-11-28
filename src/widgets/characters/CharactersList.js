@@ -32,14 +32,15 @@ export default function CharactersList({ data, containerRef, isLoading }) {
       setSelectInFocus: setItemInFocus,
     });
 
-  const { getCardActions, columns, rowActions } = useCharacterConfig({
-    handleClickEdit,
-    onItemClick: handleItemClick,
-    schemeDefinition,
-    showCardMedia,
-    isMobile,
-    userRole, // Pass the role
-  });
+  const { getCardActions, columns, rowActions, expandedCardContent } =
+    useCharacterConfig({
+      handleClickEdit,
+      onItemClick: handleItemClick,
+      schemeDefinition,
+      showCardMedia,
+      isMobile,
+      userRole, // Pass the role
+    });
 
   const bra = [{ sx: { sx: { sx: {} } } }];
   return (
@@ -60,6 +61,7 @@ export default function CharactersList({ data, containerRef, isLoading }) {
         widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
         getCardActions={getCardActions}
+        expandedCardContent={expandedCardContent}
         handleRowClick={handleRowClick}
       />
     </>
