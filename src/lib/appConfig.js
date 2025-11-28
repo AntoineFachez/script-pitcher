@@ -62,14 +62,14 @@ export const topNavActions = (
       key: "app-header",
       customNavBarButton: <AppHeader title={appContext} />,
     },
-    // {
-    //   key: "window-size",
-    //   customNavBarButton: (
-    //     <Typography variant="body2" sx={{ width: "2ch", p: 0, m: 0 }}>
-    //       {currentWindowSize}
-    //     </Typography>
-    //   ),
-    // },
+    {
+      key: "window-size",
+      customNavBarButton: (
+        <Typography variant="body2" sx={{ width: "2ch", p: 0, m: 0 }}>
+          {currentWindowSize}
+        </Typography>
+      ),
+    },
 
     {
       key: "settings",

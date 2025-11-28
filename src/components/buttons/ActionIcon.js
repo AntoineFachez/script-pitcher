@@ -35,7 +35,7 @@ export const ActionIcon = ({
   sx = {},
   variant = "outlined",
   color,
-  size,
+  size = "large",
   startIcon,
   showLabel = false,
   asNavigationAction = false,
