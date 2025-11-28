@@ -18,9 +18,6 @@ import { darkTheme } from "../../theme/theme";
 import { CrudProvider } from "@/context/CrudItemContext";
 
 export function Providers({ children, meData }) {
-  //TODO: finish device dependancies
-  const theme = useTheme();
-
   return (
     <ThemeProvider>
       {/* <SessionProvider> */}
@@ -34,6 +31,7 @@ export function Providers({ children, meData }) {
                     <Box
                       className="providers"
                       component="div" // Use div instead of body here
+                      theme={darkTheme === "dark" ? "dark" : "light"}
                       sx={{
                         width: "100%",
                         height: "100%",
@@ -45,9 +43,8 @@ export function Providers({ children, meData }) {
                         bgcolor: "transparent",
                         color: "text.primary",
                         fontFamily: "sans-serif",
-                        // backgroundColor: "page.background",
+                        backgroundColor: "page.background",
                       }}
-                      theme={darkTheme === "dark" ? "dark" : "light"}
                     >
                       <AuthenticatedLayout>{children}</AuthenticatedLayout>
                     </Box>

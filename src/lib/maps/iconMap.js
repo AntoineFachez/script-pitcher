@@ -28,6 +28,7 @@ import {
   Expand,
   ExpandMore,
   Favorite,
+  FavoriteOutlined,
   FavoriteBorder,
   Forward,
   Gavel,
@@ -47,6 +48,8 @@ import {
   Share,
   Storage,
   TableChart,
+  ViewSidebar,
+  ViewSidebarOutlined,
   Warning,
   //# SoMe
   Facebook,
@@ -77,6 +80,7 @@ export const iconMap = {
   Expand: Expand,
   ExpandMore: ExpandMore,
   Favorite: Favorite,
+  FavoriteOutlined: FavoriteOutlined,
   FavoriteBorder: FavoriteBorder,
   Forward: ArrowForward,
   Gavel: Gavel,
@@ -95,6 +99,8 @@ export const iconMap = {
   Share: Share,
   Settings: Settings,
   TableChart: TableChart,
+  ViewSidebar: ViewSidebar,
+  ViewSidebarOutlined: ViewSidebarOutlined,
   Warning: Warning,
 
   //# SoMe

@@ -10,7 +10,7 @@ import { topNavActions } from "@/lib/appConfig";
 import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
 
-export default function BasicAppBar({ NAV_HEIGHT }) {
+export default function BasicAppBar({ NAV_HEIGHT, SIDEBAR_WIDTH }) {
   const { appContext } = useApp();
   const {
     isDesktop,
@@ -24,7 +24,8 @@ export default function BasicAppBar({ NAV_HEIGHT }) {
     handleToggleDrawer,
     orientationDrawer,
     currentWindowSize,
-    isDesktop
+    isDesktop,
+    SIDEBAR_WIDTH
   );
   return (
     <AppBar {...appBarProps} sx={{ ...appBarProps.sx, height: NAV_HEIGHT }}>
@@ -42,11 +43,13 @@ const appBarProps = {
   className: "app--bar",
   sx: {
     width: "100%",
+    height: "100%",
     display: "flex",
     flexFlow: "row nowrap",
     justifyContent: "space-between",
+    // justifyContent: "flex-start",
     alignItems: "center",
-
-    backgroundColor: "bars.app",
+    padding: "0",
+    backgroundColor: "inherit",
   },
 };

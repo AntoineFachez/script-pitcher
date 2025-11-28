@@ -14,6 +14,7 @@ export default function BasicDrawer({
   element,
   anchor,
   iconToOpen,
+  iconVariant,
 }) {
   const list = (anchor) => {
     return (
@@ -35,11 +36,19 @@ export default function BasicDrawer({
 
   return (
     <>
-      {" "}
       <ActionIcon
         iconName={iconToOpen}
         onClick={(e) => handleToggleDrawer(anchor, true)(e)}
-        variant="outlined"
+        variant={iconVariant}
+        sx={{
+          width: "3rem",
+          height: "3rem",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          transform: "rotate(180deg)",
+        }}
       />
       {/* <IconButton
         onClick={(e) => handleToggleDrawer(anchor, true)(e)}

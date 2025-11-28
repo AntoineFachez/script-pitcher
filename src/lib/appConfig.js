@@ -1,6 +1,6 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/APPCONFIG.JS
 
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Add, ViewSidebar, ViewSidebarOutlined } from "@mui/icons-material";
 import Fab from "@mui/material/Fab";
@@ -23,40 +23,53 @@ export const topNavActions = (
   handleToggleDrawer,
   orientationDrawer,
   currentWindowSize,
-  isDesktop
+  isDesktop,
+  SIDEBAR_WIDTH
 ) => {
   return [
     {
       key: "drawer-toggle",
-      customNavBarButton: !isDesktop ? (
-        <BasicDrawer
-          handleToggleDrawer={handleToggleDrawer}
-          orientationDrawer={orientationDrawer}
-          anchor="left"
-          iconToOpen={"ViewSidebarOutlined"}
-          element={<SideNavBar />}
-        />
-      ) : (
-        <>
-          <Box
-            className="standin"
-            sx={{
-              width: "4rem",
-              height: "100%",
-              backgroundColor: "page.title",
-            }}
-          />
-        </>
+      customNavBarButton: (
+        <Box
+          sx={{
+            width: "3rem",
+            height: "3rem",
+            display: "flex",
+            // flexFlow: "row nowrap",
+            // justifyContent: "space-between",
+            // justifyContent: "flex-start",
+            // alignItems: "center",
+            backgroundColor: "inherit",
+            // p: 0,
+            // m: 0,
+          }}
+        >
+          {!isDesktop && (
+            <BasicDrawer
+              handleToggleDrawer={handleToggleDrawer}
+              orientationDrawer={orientationDrawer}
+              anchor="left"
+              iconToOpen={"ViewSidebarOutlined"}
+              iconVariant="outlined"
+              element={<SideNavBar />}
+              SIDEBAR_WIDTH={SIDEBAR_WIDTH}
+            />
+          )}
+        </Box>
       ),
     },
     {
       key: "app-header",
       customNavBarButton: <AppHeader title={appContext} />,
     },
-    {
-      key: "window-size",
-      customNavBarButton: currentWindowSize,
-    },
+    // {
+    //   key: "window-size",
+    //   customNavBarButton: (
+    //     <Typography variant="body2" sx={{ width: "2ch", p: 0, m: 0 }}>
+    //       {currentWindowSize}
+    //     </Typography>
+    //   ),
+    // },
 
     {
       key: "settings",

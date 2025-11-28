@@ -9,20 +9,14 @@ export default function AppHeader({ title }) {
 const pageTitleProps = {
   component: "",
   variant: "h2",
-  sx: {
+  sx: (theme) => ({
     width: "100%",
     height: "100%",
     display: "flex",
-    flexDirection: "column",
+    // flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    fontSize: {
-      xs: "1.4rem", // Element is completely hidden (no space) on small screens
-      sm: "1.8rem", // Element is visible and takes up space from 'md' up
-      md: "1.8rem", // Element is visible and takes up space from 'md' up
-      lg: "2rem", // Element is visible and takes up space from 'md' up
-      xl: "2.2rem", // Element is visible and takes up space from 'md' up
-    },
+
     // display: {
     //   xs: "none", // Element is completely hidden (no space) on small screens
     //   md: "block", // Element is visible and takes up space from 'md' up
@@ -32,6 +26,10 @@ const pageTitleProps = {
     // padding: "0 4rem",
     // textAlign: "center",
     // verticalAlign: "middle",
-    backgroundColor: "page.title",
-  },
+    color: "text.primary",
+    backgroundColor: "inherit",
+    p: 0,
+    m: 0,
+    ...theme.typography.h2,
+  }),
 };

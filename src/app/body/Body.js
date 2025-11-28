@@ -24,6 +24,7 @@ import { useUi } from "@/context/UiContext";
 
 import CircularIndeterminate from "@/components/progress/CircularIndeterminate";
 
+import { darkTheme } from "@/theme/theme";
 export default function Body({ children }) {
   const { appContext } = useApp();
   const { firebaseUser, isUserLoading } = useAuth();
@@ -55,7 +56,7 @@ export default function Body({ children }) {
   if (firebaseUser) {
     return (
       <>
-        <AppBar NAV_HEIGHT={NAV_HEIGHT} />
+        <AppBar NAV_HEIGHT={NAV_HEIGHT} SIDEBAR_WIDTH={SIDEBAR_WIDTH} />
 
         <Box
           {...appMainProps}
@@ -72,7 +73,7 @@ export default function Body({ children }) {
                 position: "fixed",
                 top: `calc(${NAV_HEIGHT})`,
                 left: 0,
-                zIndex: 2000,
+                zIndex: 100,
                 width: SIDEBAR_WIDTH,
                 height: `calc(100% - ${NAV_HEIGHT})`,
                 overflow: "hidden",

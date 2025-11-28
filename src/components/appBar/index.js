@@ -5,11 +5,11 @@ import React, { useContext, useState } from "react";
 import AppBar from "./AppBar";
 import { ContextProvider } from "./Context";
 
-export default function Index({ NAV_HEIGHT }) {
+export default function Index({ NAV_HEIGHT, SIDEBAR_WIDTH }) {
   return (
     <>
       <ContextProvider>
-        <AppBar NAV_HEIGHT={NAV_HEIGHT} />
+        <AppBar NAV_HEIGHT={NAV_HEIGHT} SIDEBAR_WIDTH={SIDEBAR_WIDTH} />
       </ContextProvider>
     </>
   );

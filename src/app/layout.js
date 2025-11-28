@@ -33,7 +33,6 @@ export default async function RootLayout({ children }) {
         style={{
           width: "100vw",
           height: "100vh",
-          backgroundColor: "secondary.main",
         }}
       >
         <Providers meData={meData}>{children}</Providers>

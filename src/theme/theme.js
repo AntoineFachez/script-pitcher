@@ -111,6 +111,22 @@ export const darkTheme = createTheme({
   border: "5px solid #fff",
   typography: {
     fontFamily: "sans-serif",
+    h2: {
+      fontSize: {
+        xs: "1.4rem", // Element is completely hidden (no space) on small screens
+        sm: "1.8rem", // Element is visible and takes up space from 'md' up
+        md: "1.8rem", // Element is visible and takes up space from 'md' up
+        lg: "2rem", // Element is visible and takes up space from 'md' up
+        xl: "2.2rem", // Element is visible and takes up space from 'md' up
+      },
+      fontWeight: {
+        xs: 100, // Element is completely hidden (no space) on small screens
+        sm: 100, // Element is visible and takes up space from 'md' up
+        md: 200, // Element is visible and takes up space from 'md' up
+        lg: 300, // Element is visible and takes up space from 'md' up
+        xl: 400, // Element is visible and takes up space from 'md' up
+      },
+    },
     h4: {
       fontSize: "1.5rem",
       fontWeight: 700,
@@ -148,6 +164,11 @@ export const brightTheme = createTheme({
       gridItem: "#c4c4cead",
       shadow: "#00000033",
     },
+    page: {
+      background: "#dadadaff",
+      header: "#c2c0c0ff",
+      title: "#aab6d8ff",
+    },
     card: {
       background: "#e5e5e7",
       actions: "#c4c4ce",
@@ -170,6 +191,17 @@ export const brightTheme = createTheme({
   },
   typography: {
     fontFamily: "sans-serif",
+    h2: {
+      fontSize: {
+        xs: "1.4rem", // Element is completely hidden (no space) on small screens
+        sm: "1.8rem", // Element is visible and takes up space from 'md' up
+        md: "1.8rem", // Element is visible and takes up space from 'md' up
+        lg: "2rem", // Element is visible and takes up space from 'md' up
+        xl: "2.2rem", // Element is visible and takes up space from 'md' up
+      },
+      fontWeight: 700,
+      color: "#1f2937",
+    },
     h4: {
       fontSize: "1.5rem",
       fontWeight: 700,

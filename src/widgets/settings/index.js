@@ -8,7 +8,7 @@ import BasicDrawer from "@/components/drawer/Drawer";
 
 import Widget from "./Widget";
 
-export default function SettingsIndex({ layoutContext }) {
+export default function SettingsIndex({ layoutContext, SIDEBAR_WIDTH }) {
   const { handleToggleDrawer, orientationDrawer } = useUi();
   return (
     <>
@@ -20,6 +20,7 @@ export default function SettingsIndex({ layoutContext }) {
             anchor="right"
             iconToOpen={"Settings"}
             element={<Widget />}
+            SIDEBAR_WIDTH={SIDEBAR_WIDTH}
           />
         </>
       ) : (
