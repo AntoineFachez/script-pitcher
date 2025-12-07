@@ -76,3 +76,73 @@ export async function GET(request) {
     );
   }
 }
+
+/**
+ * Updates a document's soundtrack configuration.
+ * Expects `projectId`, `fileId` in body, along with `playlistUrl` and `anchors`.
+ */
+export async function PATCH(request) {
+  try {
+    // 1. Authenticate
+    const { db, auth } = getAdminServices();
+    const idToken = request.headers.get("Authorization")?.split("Bearer ")[1];
+    if (!idToken) {
+      return NextResponse.json(
+        { error: "No authorization token provided." },
+        { status: 401 }
+      );
+    }
+    const decodedToken = await auth.verifyIdToken(idToken);
+    const uid = decodedToken.uid;
+
+    // 2. Parse body
+    const body = await request.json();
+    const { projectId, fileId, playlistUrl, anchors } = body;
+
+    if (!projectId || !fileId) {
+      return NextResponse.json(
+        { error: "Missing required fields: projectId, fileId" },
+        { status: 400 }
+      );
+    }
+
+    // 3. Verify permissions
+    const projectRef = db.doc(DB_PATHS.project(projectId));
+    const projectSnap = await projectRef.get();
+
+    if (!projectSnap.exists) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    const projectData = projectSnap.data();
+    const member = projectData.members?.[uid];
+
+    if (!member || (member.role !== "owner" && member.role !== "editor")) {
+      return NextResponse.json(
+        { error: "You do not have permission to edit this file." },
+        { status: 403 }
+      );
+    }
+
+    // 4. Update the document
+    const fileRef = projectRef.collection("files").doc(fileId);
+
+    // Construct update object to only update provided fields
+    const updateData = {};
+    if (playlistUrl !== undefined) updateData.playlistUrl = playlistUrl;
+    if (anchors !== undefined) updateData.anchors = anchors;
+
+    await fileRef.update(updateData);
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    console.error("Error updating document:", error);
+    if (error.code === "auth/id-token-expired") {
+      return NextResponse.json({ error: "Token expired." }, { status: 401 });
+    }
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}

@@ -16,15 +16,16 @@ const Loader = () => (
 
 // The main viewer component
 // The main viewer component
-function PdfViewerContent({ containerRef }) {
+function PdfViewerContent({ containerRef, onElementClick }) {
   const { fileData, loading, error } = useFile();
-  const { isEditing, addAnchor, anchors, activeTrack, playlistUrl, token } =
-    useSoundtrack();
+  const page = 2;
+  // console.log(fileData?.processedData?.pages[page]);
+  // console.log(fileData?.processedData?.pages[page].elements[0].src);
+  //
+  const { isEditing, anchors } = useSoundtrack();
   const { playTrack } = useSpotifyPlayer();
 
   const [scale, setScale] = useState(0.1);
-  const [selectorOpen, setSelectorOpen] = useState(false);
-  const [selectedElementId, setSelectedElementId] = useState(null);
 
   // Memoize the style map for efficiency
   const styleMap = useMemo(() => {
@@ -75,20 +76,20 @@ function PdfViewerContent({ containerRef }) {
 
             // Expand the paragraph's bounding box to include this span
             currentParagraph.position.x0 = Math.min(
-              currentParagraph.position.x0,
-              element.position.x0
+              currentParagraph?.position?.x0,
+              element?.position?.x0
             );
             currentParagraph.position.y0 = Math.min(
-              currentParagraph.position.y0,
-              element.position.y0
+              currentParagraph?.position?.y0,
+              element?.position?.y0
             );
             currentParagraph.position.x1 = Math.max(
-              currentParagraph.position.x1,
-              element.position.x1
+              currentParagraph?.position?.x1,
+              element?.position?.x1
             );
             currentParagraph.position.y1 = Math.max(
-              currentParagraph.position.y1,
-              element.position.y1
+              currentParagraph?.position?.y1,
+              element?.position?.y1
             );
           }
         }
@@ -197,19 +198,9 @@ function PdfViewerContent({ containerRef }) {
 
   const handleElementClick = (elementId) => {
     if (!isEditing) return;
-    setSelectedElementId(elementId);
-    setSelectorOpen(true);
-  };
-
-  const handleTrackSelect = (track) => {
-    addAnchor({
-      elementId: selectedElementId,
-      trackUri: track.uri,
-      trackName: track.name,
-      offsetMs: 0,
-    });
-    setSelectorOpen(false);
-    setSelectedElementId(null);
+    if (onElementClick) {
+      onElementClick(elementId);
+    }
   };
 
   if (loading) return <Loader />;
@@ -229,13 +220,6 @@ function PdfViewerContent({ containerRef }) {
   return (
     // This outer Box is the responsive container we measure
     <>
-      <SoundtrackPanel />
-      <TrackSelector
-        open={selectorOpen}
-        onClose={() => setSelectorOpen(false)}
-        onSelect={handleTrackSelect}
-      />
-
       {groupedPages.map((page, pageIndex) => {
         const aspectRatio = `${page.dimensions.width} / ${page.dimensions.height}`;
 
@@ -300,15 +284,9 @@ function PdfViewerContent({ containerRef }) {
   );
 }
 
-import { SoundtrackProvider, useSoundtrack } from "@/context/SoundtrackContext";
+import { useSoundtrack } from "@/context/SoundtrackContext";
 import { useSpotifyPlayer } from "@/lib/spotify/useSpotifyPlayer";
-import SoundtrackPanel from "./soundtrack/SoundtrackPanel";
-import TrackSelector from "./soundtrack/TrackSelector";
 
 export default function PdfViewer(props) {
-  return (
-    <SoundtrackProvider>
-      <PdfViewerContent {...props} />
-    </SoundtrackProvider>
-  );
+  return <PdfViewerContent {...props} />;
 }

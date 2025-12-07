@@ -31,6 +31,7 @@ export const topNavActions = (
       key: "drawer-toggle",
       customNavBarButton: (
         <Box
+          key="drawer-toggle-box"
           sx={{
             width: "3rem",
             height: "3rem",
@@ -60,12 +61,18 @@ export const topNavActions = (
     },
     {
       key: "app-header",
-      customNavBarButton: <AppHeader title={appContext} />,
+      customNavBarButton: (
+        <AppHeader key="app-header-component" title={appContext} />
+      ),
     },
     {
       key: "window-size",
       customNavBarButton: (
-        <Typography variant="body2" sx={{ width: "2ch", p: 0, m: 0 }}>
+        <Typography
+          key="window-size-text"
+          variant="body2"
+          sx={{ width: "2ch", p: 0, m: 0 }}
+        >
           {currentWindowSize}
         </Typography>
       ),
@@ -152,7 +159,9 @@ export const sidePanelActions = (isDesktop) => {
   ];
 };
 export const bottomNavActions = (handleOpenAddItem) => {
-  const StyledFab = styled(Fab)({
+  const StyledFab = styled(Fab, {
+    shouldForwardProp: (prop) => prop !== "showLabel",
+  })({
     position: "absolute",
     zIndex: 1,
     top: -30,
@@ -160,6 +169,9 @@ export const bottomNavActions = (handleOpenAddItem) => {
     right: 0,
     margin: "0 auto",
   });
+  const StyledBox = styled(Box, {
+    shouldForwardProp: (prop) => prop !== "showLabel",
+  })({});
   return [
     {
       key: "dashboard",
@@ -178,18 +190,19 @@ export const bottomNavActions = (handleOpenAddItem) => {
       key: "spacer",
       customNavBarButton: (
         // Wrapper to swallow props injected by BottomNavigation
-        <Box sx={{ width: "3rem" }} component="span" />
+        <StyledBox key="spacer-box" sx={{ width: "3rem" }} component="span" />
       ),
     },
     {
       key: "quick-menu",
-      customNavBarButton: <QuickMenu />,
+      customNavBarButton: <QuickMenu key="quick-menu-component" />,
     },
 
     {
       key: "add-fab",
       customNavBarButton: (
         <StyledFab
+          key="add-fab-btn"
           color="secondary"
           aria-label="add"
           onClick={() => handleOpenAddItem("create")}

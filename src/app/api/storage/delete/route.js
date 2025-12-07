@@ -35,14 +35,14 @@ export async function POST(request) {
     console.log(`Successfully deleted "${fileName}" from GCS.`);
 
     // 3. Get the correct Firestore document
-    // This matches your path: /projects/{projectId}/files/{fileId}
+    // This matches your path: /projects/{projectId}/files/{fileId}/upload/{fileName}
     const docRef = db.doc(DB_PATHS.projectFile(projectId, fileId));
 
     const docSnap = await docRef.get();
 
     if (!docSnap.exists) {
       console.warn(
-        `Document "${projectId}/files/${fileId}" not found, but GCS file was deleted.`
+        `Document "${projectId}/files/${fileId}/upload/${fileName}" not found, but GCS file was deleted.`
       );
       return NextResponse.json(
         { message: "File deleted from storage, but document not found." },

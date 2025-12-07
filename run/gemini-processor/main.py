@@ -90,7 +90,7 @@ def process_ai_extraction(data, context) -> None:
                 print(f"Target chars collection: {characters_collection_path}")
                 print(f"Target episodes collection: {episodes_collection_path}")
             else:
-                raise ValueError("Path not in expected format 'projects/{id}/files/{id}'")
+                raise ValueError("Path not in expected format 'projects/{id}/files/{id}/upload")
         except Exception as e:
             print(f"Error parsing project/file ID from path '{doc_path}': {e}")
         
@@ -122,9 +122,20 @@ def process_ai_extraction(data, context) -> None:
             return
 
         # --- START MODIFICATION ---
-        # 7. Call Gemini functions (now pass the key)
-        extracted_characters = call_gemini_for_characters(full_text, gemini_key)
-        extracted_episodes = call_gemini_for_episodes(full_text, gemini_key)
+        # 7. Check for enableAI flag
+        enable_ai = True # Default to True for backward compatibility
+        if "enableAI" in data_after:
+            enable_ai = data_after["enableAI"].boolean_value
+        
+        extracted_characters = []
+        extracted_episodes = []
+        
+        if enable_ai:
+            print(f"AI Extraction ENABLED for {doc_path}. Calling Gemini...")
+            extracted_characters = call_gemini_for_characters(full_text, gemini_key)
+            extracted_episodes = call_gemini_for_episodes(full_text, gemini_key)
+        else:
+             print(f"AI Extraction DISABLED for {doc_path}. Skipping Gemini calls.")
         # --- END MODIFICATION ---
         
         
@@ -134,7 +145,7 @@ def process_ai_extraction(data, context) -> None:
         # 9. Prepare the update for the original file document (no change)
         file_doc_ref = db.document(doc_path)
         file_update_data = {
-            "status": "PROCESSED",
+            "status": "PROCESSED" if enable_ai else "SKIPPED_AI",
             "aiProcessedAt": firestore.SERVER_TIMESTAMP
         }
         batch.update(file_doc_ref, file_update_data)

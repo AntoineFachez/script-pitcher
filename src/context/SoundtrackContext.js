@@ -4,9 +4,11 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 const SoundtrackContext = createContext();
 
-export function SoundtrackProvider({ children }) {
-  const [playlistUrl, setPlaylistUrl] = useState("");
-  const [anchors, setAnchors] = useState([]);
+export function SoundtrackProvider({ children, initialData }) {
+  const [playlistUrl, setPlaylistUrl] = useState(
+    initialData?.playlistUrl || ""
+  );
+  const [anchors, setAnchors] = useState(initialData?.anchors || []);
   const [token, setToken] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [activeTrack, setActiveTrack] = useState(null);
@@ -17,7 +19,7 @@ export function SoundtrackProvider({ children }) {
     const savedConfig = localStorage.getItem(
       "script_pitcher_soundtrack_config"
     );
-    if (savedConfig) {
+    if (savedConfig && !initialData) {
       const { playlistUrl, anchors } = JSON.parse(savedConfig);
       setPlaylistUrl(playlistUrl || "");
       setAnchors(anchors || []);
@@ -29,6 +31,13 @@ export function SoundtrackProvider({ children }) {
       setToken(storedToken);
     }
   }, []);
+
+  useEffect(() => {
+    if (initialData) {
+      setPlaylistUrl(initialData.playlistUrl || "");
+      setAnchors(initialData.anchors || []);
+    }
+  }, [initialData]);
 
   // Save configuration whenever it changes
   useEffect(() => {

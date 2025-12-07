@@ -157,9 +157,57 @@ export function FileProvider({ projectId, fileId, children }) {
     [firebaseUser, projectId, fileId, fileData]
   );
 
+  const saveSoundtrack = useCallback(
+    async ({ playlistUrl, anchors }) => {
+      if (!firebaseUser || !projectId || !fileId) return;
+
+      try {
+        const idToken = await firebaseUser.getIdToken();
+        const response = await fetch("/api/document", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify({
+            projectId,
+            fileId,
+            playlistUrl,
+            anchors,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to save soundtrack.");
+        }
+
+        // Update local state
+        setFileData((prev) => ({
+          ...prev,
+          playlistUrl,
+          anchors,
+        }));
+
+        return true;
+      } catch (err) {
+        console.error("Error saving soundtrack:", err);
+        throw err;
+      }
+    },
+    [firebaseUser, projectId, fileId]
+  );
+
   const value = useMemo(
-    () => ({ projectId, fileData, loading, error, handleDeleteElement }),
-    [projectId, fileData, loading, error, handleDeleteElement] // FIX 8: Add handler
+    () => ({
+      projectId,
+      fileData,
+      loading,
+      error,
+      handleDeleteElement,
+      saveSoundtrack,
+    }),
+    [projectId, fileData, loading, error, handleDeleteElement, saveSoundtrack]
   );
 
   return <FileContext.Provider value={value}>{children}</FileContext.Provider>;

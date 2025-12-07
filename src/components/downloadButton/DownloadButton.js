@@ -11,7 +11,12 @@ import { useAuth } from "@/context/AuthContext"; // Assuming useAuth is accessib
  * @param {string} storagePath - The GCS object path (fileData.storagePath).
  * @param {string} fileName - The original file name for the download header.
  */
-export default function DownloadFileButton({ storagePath, fileName }) {
+export default function DownloadFileButton({
+  storagePath,
+  fileName,
+  projectId,
+  fileId,
+}) {
   const { firebaseUser } = useAuth();
 
   const handleDownload = async () => {
@@ -30,7 +35,12 @@ export default function DownloadFileButton({ storagePath, fileName }) {
           Authorization: `Bearer ${idToken}`,
         },
         // Send the storage path and the desired filename
-        body: JSON.stringify({ gcsPath: storagePath, fileName }),
+        body: JSON.stringify({
+          gcsPath: storagePath,
+          fileName,
+          projectId,
+          fileId,
+        }),
       });
 
       if (!response.ok) {

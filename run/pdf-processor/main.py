@@ -48,13 +48,17 @@ def process_pdf(pdf_bytes, project_id, file_id, original_file_name, bucket_name)
         z_counter = 0
 
         # ... (visuals and text processing remains identical) ...
-        # 1. Process vector drawings
-        vector_elements, z_counter = process_shapes_and_lines(page, z_counter)
-        page_elements.extend(vector_elements)
+        # Juri's Fix: Swap image and vector processing order.
+        # Images must have a lower Z-index (be drawn first) so that cover shapes 
+        # (vector elements) can be drawn over them later with a higher Z-index.
 
-        # 2. Process images
+        # 1. Process images (Lower Z-index)
         image_elements, z_counter = process_images(doc, page, image_bucket, file_id, z_counter)
         page_elements.extend(image_elements)
+
+        # 2. Process vector drawings (Higher Z-index - includes image covers)
+        vector_elements, z_counter = process_shapes_and_lines(page, z_counter)
+        page_elements.extend(vector_elements)
 
         # 3. Process text
         text_elements, stylesheet, style_counter, z_counter = process_text(page, stylesheet, style_counter, z_counter)

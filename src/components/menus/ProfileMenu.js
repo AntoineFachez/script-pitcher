@@ -3,12 +3,16 @@
 "use client";
 import React from "react";
 import CrudItem from "@/widgets/crudItem";
-import { Edit, Public, PublicOff } from "@mui/icons-material";
+import { Edit, Public, PublicOff, Delete } from "@mui/icons-material";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import BasicDrawer from "../drawer/Drawer";
 import { useUi } from "@/context/UiContext";
 
-export default function ProfileMenu({ itemInFocus, togglePublishProject }) {
+export default function ProfileMenu({
+  itemInFocus,
+  togglePublishProject,
+  handleDeleteProject,
+}) {
   const { handleOpenAddItem } = useUi();
   return (
     <>
@@ -27,6 +31,9 @@ export default function ProfileMenu({ itemInFocus, togglePublishProject }) {
         </Typography>
         <IconButton onClick={() => handleOpenAddItem("update", itemInFocus)}>
           <Edit />
+        </IconButton>
+        <IconButton onClick={handleDeleteProject} color="error">
+          <Delete />
         </IconButton>
         <Typography variant="subtitle1" color="text.secondary">
           <Button

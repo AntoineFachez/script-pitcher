@@ -44,13 +44,10 @@ def process_shapes_and_lines(page, z_counter):
         if not bbox.is_valid or bbox.is_empty:
              continue
 
-        # Filter out large white background rectangles
-        is_white_background = (path.get("fill") == (1.0, 1.0, 1.0) and
-                               path.get("fill_opacity", 1.0) == 1.0 and
-                               bbox.get_area() > page_area * 0.90)
-        if is_white_background:
-            continue
-        
+        # Juri's Fix: We must keep vector shapes that cover parts of the image.
+        # This means removing the filtering of large white/background rectangles.
+        # We will keep the filter for clipping paths, as they are non-visible PDF operators.
+
         # Filter out clipping paths (they aren't visible elements)
         if path.get("clip"):
             continue
@@ -103,91 +100,73 @@ def process_shapes_and_lines(page, z_counter):
 
 def process_images(doc, page, image_bucket, document_id, z_counter):
     """
-    Extracts raster images from a page, uploads them, and determines 
-    the final visually cropped bounds and transformation data.
-    
-    The visually cropped bounds are determined by page.get_image_rects,
-    which respects PDF clipping paths.
+    Extracts raster images from a page using get_text("dict") to ensure correct
+    visual bounding boxes (cropping) are respected.
     """
     image_elements = []
-    page_cropbox = page.cropbox
-    image_info_list = page.get_image_info(xrefs=True)
+    
+    # get_text("dict") provides a structured representation of the page content,
+    # including image blocks with their final rendered bounding boxes.
+    text_dict = page.get_text("dict")
+    blocks = text_dict.get("blocks", [])
 
-    for img_index, info in enumerate(image_info_list):
-        xref = info["xref"]
-        if not xref: continue 
-
-        smask = info.get("smask", 0)
-        
-        # --- 1. Image Bytes Extraction and Transparency Handling ---
+    for index, block in enumerate(blocks):
+        if block["type"] != 1: # Type 1 is image
+            continue
+            
         try:
-            image_ext = "png" # Default ext if transparency is involved
-            base_image = doc.extract_image(xref)
-            image_bytes = None
+            # --- 1. Extract Basic Info ---
+            # block['bbox'] is the visual bounding box (crop)
+            bbox = fitz.Rect(block["bbox"])
             
-            if smask > 0:
-                # Handle images with transparency masks
-                mask_image = doc.extract_image(smask)
-                pix1 = fitz.Pixmap(doc, xref)
-                mask = fitz.Pixmap(mask_image["image"])
-                pix_with_mask = fitz.Pixmap(pix1, mask)
-                image_bytes = pix_with_mask.tobytes("png")
-                pix1 = mask = pix_with_mask = None 
-            else:
-                image_bytes = base_image["image"]
-                image_ext = base_image["ext"]
-
+            # block['image'] contains the image bytes
+            image_bytes = block.get("image")
+            image_ext = block.get("ext", "png")
+            
             if not image_bytes:
-                 print(f"Warning: Image xref {xref} has empty bytes. Skipping.")
-                 continue
-            
-            # --- 2. Determine Effective Crop Rectangle (Visual Bounds) ---
-            full_pos_rect = fitz.Rect(info["bbox"])
-            
-            # CRITICAL: get_image_rects provides the visually correct BBOX after clipping
-            rendered_rects = page.get_image_rects(xref, transform=True)
-            
-            if rendered_rects and isinstance(rendered_rects[0], tuple) and isinstance(rendered_rects[0][0], fitz.Rect):
-                # Use the rect component from the first occurrence (Rect, Matrix) tuple
-                rendered_rect = rendered_rects[0][0]
-            else:
-                # Fallback to the image BBOX from info
-                rendered_rect = full_pos_rect
+                print(f"Warning: Image block {index} on page {page.number + 1} has no bytes. Skipping.")
+                continue
 
-            effective_crop_rect = rendered_rect.intersect(page_cropbox)
-            if effective_crop_rect.is_empty:
-                effective_crop_rect = full_pos_rect 
-            
-            # --- 3. Transformation/Rotation Logic ---
+            # --- 2. Transformation/Rotation Logic ---
             rotation = 0
             is_flipped_horizontal = False
             is_flipped_vertical = False
             
-            transform_data = info.get("transform")
+            # block['transform'] is a tuple (a, b, c, d, e, f)
+            transform_data = block.get("transform")
             if transform_data and len(transform_data) == 6:
                 transform_matrix = fitz.Matrix(transform_data)
-                rotation = get_rotation_from_matrix(transform_matrix)
                 
                 # Check determinant for mirroring/flipping (negative determinant = mirror)
                 det = transform_matrix.a * transform_matrix.d - transform_matrix.b * transform_matrix.c
                 if det < 0:
-                    is_flipped_horizontal = True # Heuristic assumption for visual flip
-                
-            # --- 4. Upload Logic ---
-            image_filename = f"{document_id}/page{page.number + 1}_img{img_index}.{image_ext}"
+                    is_flipped_horizontal = True
+                    # Apply the same fix as before: "undo" the horizontal flip component
+                    # by inverting 'a' and 'c' before calculating rotation.
+                    transform_matrix = fitz.Matrix(-transform_matrix.a, transform_matrix.b, -transform_matrix.c, transform_matrix.d, transform_matrix.e, transform_matrix.f)
+
+                rotation = get_rotation_from_matrix(transform_matrix)
+
+            # --- 3. Upload Logic ---
+            # Since we don't have xrefs in get_text("dict"), we use page number and block index
+            image_filename = f"{document_id}/page{page.number + 1}_block{index}.{image_ext}"
             blob = image_bucket.blob(image_filename)
             blob.upload_from_string(image_bytes, content_type=f"image/{image_ext}")
             public_url = f"https://storage.googleapis.com/{image_bucket.name}/{image_filename}"
 
-            # --- 5. Build Element Data ---
+            # --- 4. Build Element Data ---
+            # For get_text("dict"), the bbox IS the crop.
+            # We can treat the "full position" as the same as the crop for simplicity,
+            # or if we wanted the intrinsic size we'd need more info, but for visual reproduction
+            # using the bbox as both position and crop is usually sufficient and correct.
+            
             image_element = {
                 "type": "image", "src": public_url,
-                "position": {'x0': full_pos_rect.x0, 'y0': full_pos_rect.y0, 'x1': full_pos_rect.x1, 'y1': full_pos_rect.y1},
-                # The 'crop' attribute now holds the precise visual dimensions.
-                "crop": {'x0': effective_crop_rect.x0, 'y0': effective_crop_rect.y0, 'x1': effective_crop_rect.x1, 'y1': effective_crop_rect.y1}, 
+                "position": {'x0': bbox.x0, 'y0': bbox.y0, 'x1': bbox.x1, 'y1': bbox.y1},
+                "crop": {'x0': bbox.x0, 'y0': bbox.y0, 'x1': bbox.x1, 'y1': bbox.y1}, 
                 "rotation": rotation, 
                 "isFlippedHorizontal": is_flipped_horizontal, 
-                "isFlippedVertical": is_flipped_vertical, # Assumed False unless complex logic added
+                "isFlippedVertical": is_flipped_vertical,
                 "zIndex": z_counter
             }
 
@@ -195,6 +174,6 @@ def process_images(doc, page, image_bucket, document_id, z_counter):
             z_counter += 1
 
         except Exception as e:
-            print(f"Error processing image xref {xref} on page {page.number + 1}. Error: {e}")
+            print(f"Error processing image block {index} on page {page.number + 1}. Error: {e}")
         
     return image_elements, z_counter

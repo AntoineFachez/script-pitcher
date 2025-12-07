@@ -1,4 +1,4 @@
-// file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/API/UPLOADS/INITIATE/ROUTE.JS
+// filepath: ~/DEVFOLD/SCRIPT-PITCHER/SRC/APP/API/UPLOADS/INITIATE/ROUTE.JS
 
 import { NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore"; // KEEP FieldValue, as it's a constant
@@ -73,6 +73,7 @@ export async function POST(request) {
 
     // 3. Generate secure IDs and the *canonical storage path*
     const fileId = crypto.randomUUID();
+    // const storagePath = `${decodedToken.uid}/projects/${finalProjectId}/files/${fileId}/upload/${fileId}.pdf`;
     const storagePath = `${decodedToken.uid}/projects/${finalProjectId}/files/${fileId}.pdf`;
 
     // 4. Prepare Firestore document references
@@ -126,15 +127,36 @@ export async function POST(request) {
     await batch.commit();
 
     // 6. Generate the Signed URL
-    const [signedUrl] = await storage // ✅ Use stable storage
-      .bucket(storageBucket)
-      .file(storagePath)
-      .getSignedUrl({
-        action: "write",
-        version: "v4",
-        expires: Date.now() + 15 * 60 * 1000, // 15 minutes
-        contentType: fileMetadata.fileType,
-      });
+    // 6. Generate the Signed URL
+    let signedUrl;
+    try {
+      [signedUrl] = await storage // ✅ Use stable storage
+        .bucket(storageBucket)
+        .file(storagePath)
+        .getSignedUrl({
+          action: "write",
+          version: "v4",
+          expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+          contentType: fileMetadata.fileType,
+        });
+    } catch (signError) {
+      console.error("Error signing URL:", signError);
+      // Check for specific IAM permission error
+      if (
+        signError.message &&
+        signError.message.includes("iam.serviceAccounts.signBlob")
+      ) {
+        return NextResponse.json(
+          {
+            error:
+              "Server Configuration Error: The service account is missing the 'iam.serviceAccounts.signBlob' permission. Please check your Google Cloud IAM settings or local credentials.",
+            details: signError.message,
+          },
+          { status: 500 }
+        );
+      }
+      throw signError; // Re-throw other errors to be caught by the outer catch
+    }
 
     // 7. Respond with the URL and IDs
     return NextResponse.json(

@@ -9,6 +9,7 @@ const {
   createOnFileCreateHandler,
   createProcessUserInvitationHandlerV1,
   createOnInvitationCreateHandler,
+  createOnProjectDeleteHandler,
 } = require("./services/databaseService");
 
 // --- CONFIGURATION ---
@@ -30,3 +31,4 @@ exports.processUserInvitation = createProcessUserInvitationHandlerV1(
   FieldValue
 );
 exports.sendInvitationEmail = createOnInvitationCreateHandler(db);
+exports.onProjectDelete = createOnProjectDeleteHandler(db, FieldValue);

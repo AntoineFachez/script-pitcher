@@ -28,7 +28,6 @@ export async function POST(request) {
 
     // 2. Get All Input Data (CRITICAL: Read request body ONCE)
     const { gcsPath, fileName, projectId, fileId } = await request.json();
-
     // 2.1. Input Validation
     if (!gcsPath || !projectId || !fileId) {
       return NextResponse.json(

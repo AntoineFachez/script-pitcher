@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 
-import { useFile } from "@/context/FileContext";
+import { useFile, FileProvider } from "@/context/FileContext";
 import { useUi } from "@/context/UiContext";
 
 import BasicDrawer from "@/components/drawer/Drawer";
@@ -26,21 +26,49 @@ import BackButton from "@/components/backButton/BackButton";
 import { useApp } from "@/context/AppContext";
 import PdfViewer from "@/components/pdfviewer/PDFViewer";
 
+import { SoundtrackProvider, useSoundtrack } from "@/context/SoundtrackContext";
+// import SoundtrackPanel from "@/widgets/soundtrack/SoundtrackPanel";
+// import TrackSelector from "@/widgets/soundtrack/TrackSelector";
+
 /**
  * This component consumes the DocumentContext and renders the UI.
  * It shows loading, error, and success states.
  */
-export default function Widget({ togglePublishProject }) {
+function WidgetContent({ togglePublishProject }) {
   const { setAppContext } = useApp();
   const { orientationDrawer, handleToggleDrawer } = useUi();
   const { projectId, fileData, loading, error, handleDeleteElement } =
     useFile();
+
+  // Soundtrack Context
+  const { addAnchor } = useSoundtrack();
+  const [selectorOpen, setSelectorOpen] = React.useState(false);
+  const [selectedElementId, setSelectedElementId] = React.useState(null);
+
   const containerRef = useRef();
   useEffect(() => {
     setAppContext("files");
 
     return () => {};
   }, []);
+
+  const handleElementClick = (elementId) => {
+    // We can add a check for isEditing here if needed, or rely on the caller
+    setSelectedElementId(elementId);
+    setSelectorOpen(true);
+  };
+
+  const handleTrackSelect = (track) => {
+    addAnchor({
+      elementId: selectedElementId,
+      trackUri: track.uri,
+      trackName: track.name,
+      offsetMs: 0,
+    });
+    setSelectorOpen(false);
+    setSelectedElementId(null);
+  };
+
   // 4. Handle the loading state
   if (loading) {
     return (
@@ -142,7 +170,23 @@ export default function Widget({ togglePublishProject }) {
           titleText={fileData.fileName || "Untitled Document"}
           descriptionText={buildDescription || "No description."}
         />
-        <PdfViewer containerRef={containerRef} />
+        {/* 
+        //TODO: move Spotify connection to a dedicated component "FileEditor"
+        <SoundtrackPanel />
+        <TrackSelector
+          open={selectorOpen}
+          onClose={() => setSelectorOpen(false)}
+          onSelect={handleTrackSelect}
+        />
+      */}
+
+        <PdfViewer
+          containerRef={containerRef}
+          onElementClick={handleElementClick}
+        />
+        {/* TODO: Create a second layer that renders the pages_to_png.py as a background layer of the PDFViewer
+        
+         */}
       </Box>{" "}
       <BasicDrawer
         handleToggleDrawer={handleToggleDrawer}
@@ -153,6 +197,30 @@ export default function Widget({ togglePublishProject }) {
         element={drawerContent}
         anchor="bottom"
       />
+    </>
+  );
+}
+
+export default function Widget(props) {
+  // We need to access fileData here to pass it to SoundtrackProvider.
+  // However, useFile is used inside WidgetContent.
+  // We should probably move the Provider inside WidgetContent or lift useFile up.
+  // Actually, WidgetContent uses useFile which is provided by FileProvider (which is likely higher up in the tree, in page.js).
+  // So we can use useFile here if we are inside FileProvider.
+
+  // Wait, Widget is the default export. Let's check where FileProvider is.
+  // Usually it's in the page.js.
+
+  return <WidgetContentWrapper {...props} />;
+}
+
+function WidgetContentWrapper(props) {
+  const { fileData } = useFile();
+  return (
+    <>
+      <SoundtrackProvider initialData={fileData}>
+        <WidgetContent {...props} />
+      </SoundtrackProvider>
     </>
   );
 }

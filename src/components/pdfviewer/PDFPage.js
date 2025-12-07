@@ -31,6 +31,8 @@ export default function PDFPage({
 
   // Use a switch to handle different element types
   switch (element.type) {
+    case "page_to_png": {
+    }
     case "text": {
       const style = styleMap[element.styleId] || {};
 
@@ -72,6 +74,7 @@ export default function PDFPage({
 
       return (
         <Box
+          className="pdf-paragraph"
           id={`element-${element.uniqueId}`} // ID for IntersectionObserver
           data-id={element.uniqueId} // Explicit data attribute for easier lookup
           onClick={onElementClick} // Click handler
@@ -121,6 +124,7 @@ export default function PDFPage({
           })}
           {isAnchored && (
             <Box
+              className="pdf-paragraph_isAnchored"
               sx={{
                 position: "absolute",
                 left: -24,
@@ -145,7 +149,7 @@ export default function PDFPage({
         zIndex: element.zIndex,
         backgroundColor: element.strokeColor, // Python script puts line color here
       };
-      return <Box sx={elementStyles} />;
+      return <Box sx={elementStyles} className="pdf-line" />;
     }
 
     case "shape": {
@@ -159,14 +163,18 @@ export default function PDFPage({
         backgroundColor: element.backgroundColor,
         opacity: element.opacity,
       };
-      return <Box sx={elementStyles} />;
+      console.log(element.opacity);
+
+      return <Box sx={elementStyles} className="pdf-shape" />;
     }
 
     case "image": {
       // The visible "window" on the page
-      const cropPos = element.crop;
+      const cropPos = element.crop || element.position;
       // The full, un-cropped image's original dimensions/position
       const fullPos = element.position;
+
+      if (!cropPos || !fullPos) return null;
 
       // Outer wrapper: This is the "window".
       // It's positioned and sized according to the crop.

@@ -181,3 +181,55 @@ export async function inviteUserAction({
     return { error: "Internal Server Error during invitation." };
   }
 }
+
+/**
+ * Deletes a project.
+ * Restricts access to project owners only.
+ * @param {string} projectId - The ID of the project to delete.
+ * @returns {Promise<{success: true} | {error: string}>}
+ */
+export async function deleteProjectAction(projectId) {
+  // 1. AUTHENTICATION
+  const user = await getCurrentUser();
+  if (!user || !user.uid) {
+    return { error: "Unauthorized: User not logged in." };
+  }
+  const userId = user.uid;
+
+  const { db } = getAdminServices();
+
+  try {
+    const projectRef = db.doc(DB_PATHS.project(projectId));
+    const projectSnap = await projectRef.get();
+
+    if (!projectSnap.exists) {
+      return { error: "Project not found." };
+    }
+
+    const projectData = projectSnap.data();
+    const members = projectData.members || {};
+
+    // 2. AUTHORIZATION CHECK: Verify if the user is the project owner
+    const userRole = members[userId]?.role;
+
+    if (userRole !== "owner") {
+      console.warn(
+        `User ${userId} attempted to delete project ${projectId} but is only a ${
+          userRole || "non-member"
+        }.`
+      );
+      return {
+        error: "Forbidden: Only the project owner can delete the project.",
+      };
+    }
+
+    // 3. DELETE PROJECT DOCUMENT
+    // This will trigger the Cloud Function 'onProjectDelete' which handles cascading deletions.
+    await projectRef.delete();
+
+    return { success: true };
+  } catch (error) {
+    console.error("Delete Project Action Failed:", error);
+    return { error: "Internal Server Error during project deletion." };
+  }
+}

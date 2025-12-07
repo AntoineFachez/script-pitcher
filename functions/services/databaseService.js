@@ -4,7 +4,9 @@ const { logger } = require("firebase-functions/v2");
 const {
   onDocumentWritten,
   onDocumentCreated,
+  onDocumentDeleted,
 } = require("firebase-functions/v2/firestore");
+const { getStorage } = require("firebase-admin/storage");
 const functions = require("firebase-functions/v1");
 const { sendInviteEmail } = require("./emailService"); // Import the new email service
 
@@ -349,5 +351,161 @@ exports.createOnInvitationCreateHandler = (db) => {
       logger.error(`Failed to send invitation email to ${email}.`, error);
       // You might consider updating the invitation document here to mark it as failed.
     }
+  });
+};
+
+/**
+ * Creates the onProjectDelete trigger.
+ * @param {FirebaseFirestore.Firestore} db The Firestore database instance.
+ * @param {FirebaseFirestore.FieldValue} FieldValue The Firestore FieldValue class.
+ * @returns {import("firebase-functions/v2/firestore").CloudFunction<import("firebase-functions/v2/firestore").DocumentSnapshot>}
+ */
+/**
+ * Creates the onProjectDelete trigger.
+ * @param {FirebaseFirestore.Firestore} db The Firestore database instance.
+ * @param {FirebaseFirestore.FieldValue} FieldValue The Firestore FieldValue class.
+ * @returns {import("firebase-functions/v2/firestore").CloudFunction<import("firebase-functions/v2/firestore").DocumentSnapshot>}
+ */
+exports.createOnProjectDeleteHandler = (db, FieldValue) => {
+  const triggerOptions = {
+    document: "projects/{projectId}",
+  };
+
+  /**
+   * Recursively deletes a collection and its subcollections.
+   * @param {FirebaseFirestore.CollectionReference} collectionRef
+   * @param {FirebaseFirestore.WriteBatch} batch
+   */
+  async function deleteCollection(collectionRef, batch) {
+    const snapshot = await collectionRef.get();
+    if (snapshot.empty) return;
+
+    for (const doc of snapshot.docs) {
+      // 1. Recursively delete subcollections of this document
+      const subcollections = await doc.ref.listCollections();
+      for (const subcol of subcollections) {
+        await deleteCollection(subcol, batch);
+      }
+      // 2. Delete the document itself
+      batch.delete(doc.ref);
+    }
+  }
+
+  return onDocumentDeleted(triggerOptions, async (event) => {
+    const projectId = event.params.projectId;
+    const projectData = event.data?.data() || {};
+    logger.info(`onProjectDelete triggered for project: ${projectId}`);
+
+    const batch = db.batch();
+    const storage = getStorage();
+    const bucket = storage.bucket();
+
+    // 1. Delete ALL subcollections recursively
+    // Known subcollections: files, invitations, characters, episodes
+    // We can list them dynamically if needed, but 'listCollections' is not available on DocumentReference in triggers context easily without a fresh fetch.
+    // However, we can just fetch the project ref again or use known names.
+    // Since the project doc is already deleted, we can't list its subcollections easily via the deleted doc ref in some SDK versions,
+    // BUT we can construct refs to known subcollections.
+    // Better approach: Try to list collections if possible, or iterate known ones.
+    // In Cloud Functions, we can access the path.
+
+    const projectRef = db.collection("projects").doc(projectId);
+    const subcollections = await projectRef.listCollections();
+
+    for (const subcol of subcollections) {
+      logger.info(`Deleting subcollection: ${subcol.id}`);
+      // Special handling for 'files' to delete from Storage
+      if (subcol.id === "files") {
+        const filesSnap = await subcol.get();
+        for (const fileDoc of filesSnap.docs) {
+          const fileData = fileDoc.data();
+
+          // A. Delete from Default Storage (Original PDF)
+          if (fileData.storagePath) {
+            try {
+              await bucket.file(fileData.storagePath).delete();
+            } catch (e) {
+              logger.warn(
+                `Failed to delete storage file ${fileData.storagePath}`,
+                e
+              );
+            }
+          } else {
+            // Try default path pattern if storagePath is missing
+            try {
+              await bucket.file(`projects/${projectId}/${fileDoc.id}`).delete();
+            } catch (e) {
+              logger.warn(
+                `Failed to delete storage file projects/${projectId}/${fileDoc.id}`,
+                e
+              );
+            }
+          }
+
+          // B. Delete Extracted Images from 'script-pitcher-extracted-images' bucket
+          // The folder structure is confirmed to be: {fileId}/...
+          try {
+            const extractedBucket = storage.bucket(
+              "script-pitcher-extracted-images"
+            );
+            await extractedBucket.deleteFiles({ prefix: `${fileDoc.id}/` });
+            logger.info(`Deleted extracted images for file ${fileDoc.id}`);
+          } catch (e) {
+            logger.warn(
+              `Failed to delete extracted images for file ${fileDoc.id}`,
+              e
+            );
+          }
+
+          // Delete fileId_to_projectId_lookup
+          const lookupRef = db
+            .collection("fileId_to_projectId_lookup")
+            .doc(fileDoc.id);
+          batch.delete(lookupRef);
+
+          // Delete file doc
+          batch.delete(fileDoc.ref);
+        }
+      }
+      // Generic recursive delete for the subcollection
+      await deleteCollection(subcol, batch);
+    }
+
+    // 2. Delete fileDownloads (Global collection, queried by projectId)
+    const downloadsRef = db.collection("fileDownloads");
+    const downloadsSnap = await downloadsRef
+      .where("projectId", "==", projectId)
+      .get();
+    downloadsSnap.forEach((doc) => batch.delete(doc.ref));
+
+    // 3. Update User Summaries (remove project)
+    const members = projectData.members || {};
+    for (const userId of Object.keys(members)) {
+      const summaryRef = db
+        .collection("users")
+        .doc(userId)
+        .collection("private")
+        .doc(SUMMARY_DOC_ID);
+      batch.update(summaryRef, {
+        [`projects.${projectId}`]: FieldValue.delete(),
+      });
+    }
+
+    // 4. Store deletion log
+    const logRef = db.collection("deletedProjects").doc(projectId);
+    batch.set(logRef, {
+      projectId,
+      deletedAt: FieldValue.serverTimestamp(),
+      projectName: projectData.name || projectData.title || "Unknown",
+      ownerId:
+        Object.keys(members).find((uid) => members[uid].role === "owner") ||
+        "Unknown",
+    });
+
+    // Commit batch (Note: Batches have a 500 op limit. For large projects, this might need chunking)
+    // For now, assuming reasonable size.
+    await batch.commit().catch((err) => {
+      logger.error("Error committing batch for project deletion:", err);
+    });
   });
 };

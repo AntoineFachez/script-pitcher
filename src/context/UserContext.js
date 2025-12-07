@@ -60,10 +60,7 @@ export function UserProvider({ children, meData }) {
 
     // --- A. Real-time Listener for Dynamic User Summary Data ---
     // This watches the 'private/summary' doc where dynamic data (like projects and invites) reside.
-    const summaryDocRef = doc(
-      db,
-      DB_PATHS.userSummary(firebaseUser.uid)
-    );
+    const summaryDocRef = doc(db, DB_PATHS.userSummary(firebaseUser.uid));
 
     const unsubscribeSummary = onSnapshot(
       summaryDocRef,

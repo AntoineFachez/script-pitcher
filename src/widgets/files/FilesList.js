@@ -42,11 +42,14 @@ export default function FilesList({
   };
 
   const handleItemClick = (item) => {
+    // console.log("item", item);
+
     setAppContext(widgetConfig.context);
     setFileInFocus(item);
-    if (item?.id) {
-      router.push(`/projects/${projectInFocus.id}/files/${item.id}`);
-    }
+    //TODO: check if this is the right way to do it
+    // if (item?.id) {
+    //   router.push(`/projects/${projectInFocus.id}/uploads/${item.id}`);
+    // }
   };
 
   const { getCardActions, columns, rowActions } = useFileConfig({
@@ -77,7 +80,7 @@ export default function FilesList({
         isLoading={isLoading}
         columns={columns}
         rowActions={rowActions}
-        collectionName="files"
+        collectionName={`projects/${projectInFocus.id}/files`}
         widgetConfig={widgetConfig}
         schemeDefinition={schemeDefinition}
         getCardActions={getCardActions}
@@ -86,4 +89,3 @@ export default function FilesList({
     </>
   );
 }
-

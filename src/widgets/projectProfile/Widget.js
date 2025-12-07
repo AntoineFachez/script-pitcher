@@ -3,7 +3,10 @@
 "use client";
 
 import React, { useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Box, Button, Typography } from "@mui/material";
+
+import { deleteProjectAction } from "@/lib/actions/projectActions";
 
 import { useApp } from "@/context/AppContext";
 import { useAuth } from "@/context/AuthContext";
@@ -39,6 +42,22 @@ export default function Widget({
   const { invitations, characters, episodes, loading } = useProject();
   const { projectInFocus } = useInFocus();
   const containerRef = useRef();
+  const router = useRouter();
+
+  const handleDeleteProject = async () => {
+    if (!projectInFocus?.id) return;
+    const confirm = window.confirm(
+      "Are you sure you want to delete this project? This action cannot be undone."
+    );
+    if (!confirm) return;
+
+    const res = await deleteProjectAction(projectInFocus.id);
+    if (res.success) {
+      router.push("/"); // Redirect to home or projects list
+    } else {
+      alert(res.error || "Failed to delete project.");
+    }
+  };
 
   const tabStyles = {
     width: "100%",
@@ -123,6 +142,7 @@ export default function Widget({
     <ProfileMenu
       itemInFocus={projectInFocus}
       togglePublishProject={togglePublishProject}
+      handleDeleteProject={handleDeleteProject}
     />
   );
   return (

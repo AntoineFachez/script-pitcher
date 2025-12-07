@@ -10,7 +10,9 @@ import React, { useEffect } from "react";
 // This is a pure CSS wrapper for Box. It ONLY takes theme and props.
 const BannerBase = styled(Box, {
   // This prop should not be forwarded to the underlying DOM element
-  shouldForwardProp: (prop) => prop !== "scrollratio",
+  // This prop should not be forwarded to the underlying DOM element
+  shouldForwardProp: (prop) =>
+    !["scrollratio", "imageUrl", "newHeight"].includes(prop),
 })(({ theme, imageUrl, scrollratio, newHeight }) => ({
   // 1. Set the fixed dimensions of the banner
   width: "100%",

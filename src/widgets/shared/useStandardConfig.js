@@ -57,8 +57,6 @@ export function useStandardConfig(schemeDefinition) {
     };
   };
   const expandedCardContent = (item) => {
-    console.log("item", item[schemeDefinition?.description]);
-
     return (
       <Box sx={{ height: "fit-content", p: 2, overflow: "auto", pb: "3rem" }}>
         <Typography variant="body1">

@@ -1,0 +1,342 @@
+--- Analyzing: src/lib/samplePDF/250724_SERIE_NICHT-GANZ-SAUBER_KONZEPT.pdf ---
+
+
+--- Page 1 ---
+Found 17 vector drawings.
+Found 2 images.
+
+  [Image 1] XREF: 12
+    • BBox (Page Coords): Rect(8.818897185847163e-05, -37.503021240234375, 720.0001831054688, 442.50311279296875)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 15
+    • BBox (Page Coords): Rect(77.84195709228516, 283.9375915527344, 277.20611572265625, 344.83758544921875)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 2 ---
+Found 6 vector drawings.
+Found 1 images.
+
+  [Image 1] XREF: 26
+    • BBox (Page Coords): Rect(0.0, 0.0, 720.0, 405.0)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 3 ---
+Found 12 vector drawings.
+Found 2 images.
+
+  [Image 1] XREF: 35
+    • BBox (Page Coords): Rect(345.89013671875, 195.4822998046875, 728.6527709960938, 404.99993896484375)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 36
+    • BBox (Page Coords): Rect(274.2535095214844, 0.0, 720.0001220703125, 195.48226928710938)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 4 ---
+Found 5 vector drawings.
+Found 2 images.
+
+  [Image 1] XREF: 44
+    • BBox (Page Coords): Rect(0.0001220703125, 52.7799072265625, 344.7381896972656, 569.8786010742188)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 45
+    • BBox (Page Coords): Rect(-29.09589195251465, 0.0, 373.8339538574219, 201.466552734375)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 5 ---
+Found 5 vector drawings.
+Found 1 images.
+
+  [Image 1] XREF: 53
+    • BBox (Page Coords): Rect(-1.2240135669708252, -38.31298828125, 720.000244140625, 463.5628356933594)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 6 ---
+Found 14 vector drawings.
+Found 1 images.
+
+  [Image 1] XREF: 60
+    • BBox (Page Coords): Rect(369.4114074707031, -12.196502685546875, 660.1102905273438, 278.4957580566406)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 7 ---
+Found 14 vector drawings.
+Found 1 images.
+
+  [Image 1] XREF: 67
+    • BBox (Page Coords): Rect(276.947265625, 0.0, 798.8958740234375, 218.02369689941406)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 8 ---
+Found 14 vector drawings.
+Found 1 images.
+
+  [Image 1] XREF: 74
+    • BBox (Page Coords): Rect(369.81103515625, 0.0, 696.4396362304688, 218.0254669189453)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 9 ---
+Found 14 vector drawings.
+Found 1 images.
+
+  [Image 1] XREF: 81
+    • BBox (Page Coords): Rect(367.43109130859375, -14.891143798828125, 672.81689453125, 275.8022766113281)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 10 ---
+Found 14 vector drawings.
+Found 1 images.
+
+  [Image 1] XREF: 88
+    • BBox (Page Coords): Rect(369.4104309082031, -27.732635498046875, 660.1087036132812, 262.9583740234375)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 11 ---
+Found 13 vector drawings.
+Found 1 images.
+
+  [Image 1] XREF: 95
+    • BBox (Page Coords): Rect(328.4737243652344, 0.0, 849.143310546875, 218.02359008789062)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 12 ---
+Found 15 vector drawings.
+Found 1 images.
+
+  [Image 1] XREF: 102
+    • BBox (Page Coords): Rect(290.072509765625, -6.86773681640625, 930.8585815429688, 261.4538879394531)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 13 ---
+Found 11 vector drawings.
+Found 1 images.
+
+  [Image 1] XREF: 109
+    • BBox (Page Coords): Rect(-35.640010833740234, -2.63250732421875, 720.2882080078125, 405.97198486328125)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 14 ---
+Found 14 vector drawings.
+Found 2 images.
+
+  [Image 1] XREF: 116
+    • BBox (Page Coords): Rect(0.0, -0.000244140625, 343.0730285644531, 143.6614227294922)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 117
+    • BBox (Page Coords): Rect(-0.7007874250411987, 139.7413330078125, 352.561279296875, 405.0000305175781)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 15 ---
+Found 8 vector drawings.
+Found 6 images.
+
+  [Image 1] XREF: 125
+    • BBox (Page Coords): Rect(-13.10586166381836, 193.8346405029297, 304.4479064941406, 405.0)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 126
+    • BBox (Page Coords): Rect(401.63775634765625, 193.8346405029297, 777.8113403320312, 404.9999694824219)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 3] XREF: 127
+    • BBox (Page Coords): Rect(417.7292785644531, 0.0, 764.5364379882812, 230.7407684326172)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 4] XREF: 128
+    • BBox (Page Coords): Rect(235.49021911621094, 152.4884490966797, 684.4275512695312, 405.0)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 5] XREF: 129
+    • BBox (Page Coords): Rect(-43.17823028564453, 0.0, 214.96896362304688, 193.8347625732422)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 6] XREF: 130
+    • BBox (Page Coords): Rect(204.92755126953125, 0.0, 463.0807800292969, 193.8347625732422)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 16 ---
+Found 12 vector drawings.
+Found 3 images.
+
+  [Image 1] XREF: 127
+    • BBox (Page Coords): Rect(0.0, 0.0, 343.0728454589844, 228.26156616210938)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 142
+    • BBox (Page Coords): Rect(0.0, 0.009857177734375, 343.07275390625, 257.583251953125)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 3] XREF: 143
+    • BBox (Page Coords): Rect(-0.35039371252059937, 146.83059692382812, 342.7225036621094, 489.9092712402344)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 17 ---
+Found 10 vector drawings.
+Found 1 images.
+
+  [Image 1] XREF: 151
+    • BBox (Page Coords): Rect(-4.536001205444336, 0.0, 962.5682373046875, 410.3460388183594)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 18 ---
+Found 11 vector drawings.
+Found 2 images.
+
+  [Image 1] XREF: 158
+    • BBox (Page Coords): Rect(0.0, 0.0, 343.7400817871094, 186.19296264648438)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 159
+    • BBox (Page Coords): Rect(-22.618099212646484, 186.19325256347656, 366.3581848144531, 405.0003967285156)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 19 ---
+Found 11 vector drawings.
+Found 2 images.
+
+  [Image 1] XREF: 167
+    • BBox (Page Coords): Rect(238.26962280273438, 0.0, 720.0001220703125, 240.84642028808594)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 168
+    • BBox (Page Coords): Rect(347.1437072753906, 240.844482421875, 719.9998779296875, 429.42626953125)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 20 ---
+Found 12 vector drawings.
+Found 2 images.
+
+  [Image 1] XREF: 176
+    • BBox (Page Coords): Rect(-168.7919158935547, -2.505401611328125, 469.18658447265625, 268.61236572265625)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 177
+    • BBox (Page Coords): Rect(-0.7007874250411987, 261.05584716796875, 343.0472412109375, 405.0)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 21 ---
+Found 11 vector drawings.
+Found 2 images.
+
+  [Image 1] XREF: 185
+    • BBox (Page Coords): Rect(347.143798828125, -24.981201171875, 719.9998779296875, 183.1902618408203)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 186
+    • BBox (Page Coords): Rect(261.4986572265625, 154.7535400390625, 719.9998779296875, 401.544921875)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 22 ---
+Found 11 vector drawings.
+Found 2 images.
+
+  [Image 1] XREF: 194
+    • BBox (Page Coords): Rect(-42.37778854370117, 0.0, 374.23199462890625, 174.45074462890625)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 195
+    • BBox (Page Coords): Rect(-0.7007874250411987, 174.4508056640625, 343.8263854980469, 404.9999694824219)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 23 ---
+Found 11 vector drawings.
+Found 2 images.
+
+  [Image 1] XREF: 203
+    • BBox (Page Coords): Rect(384.9980773925781, 0.0, 850.2384033203125, 197.73622131347656)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 204
+    • BBox (Page Coords): Rect(307.32696533203125, 197.7362060546875, 804.9466552734375, 405.0000915527344)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 24 ---
+Found 11 vector drawings.
+Found 2 images.
+
+  [Image 1] XREF: 212
+    • BBox (Page Coords): Rect(-188.5113525390625, 0.0, 431.0914306640625, 262.8955993652344)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 213
+    • BBox (Page Coords): Rect(-9.033679962158203, 259.73626708984375, 337.87774658203125, 405.00006103515625)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+--- Page 25 ---
+Found 27 vector drawings.
+Found 6 images.
+
+  [Image 1] XREF: 222
+    • BBox (Page Coords): Rect(0.0, 0.0, 720.0, 405.0)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 2] XREF: 222
+    • BBox (Page Coords): Rect(-2.5199999809265137, 0.0, 746.4959716796875, 404.99993896484375)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 3] XREF: 223
+    • BBox (Page Coords): Rect(33.1038818359375, 116.05506134033203, 351.9897155761719, 177.69679260253906)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 4] XREF: 224
+    • BBox (Page Coords): Rect(34.85826873779297, 355.4803161621094, 389.342529296875, 404.64959716796875)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 5] XREF: 225
+    • BBox (Page Coords): Rect(34.71941375732422, 143.93405151367188, 175.65444946289062, 193.97145080566406)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.
+
+  [Image 6] XREF: 226
+    • BBox (Page Coords): Rect(164.3936004638672, 143.9333038330078, 357.108154296875, 193.970703125)
+    • ❌ No explicit fill mask found.
+    • ℹ️  No intersecting clipping paths found.

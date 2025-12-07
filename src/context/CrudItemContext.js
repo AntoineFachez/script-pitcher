@@ -11,8 +11,9 @@ import {
   useCallback,
 } from "react";
 // Assuming this path is correct
-import defaultProjectSchema from "@/lib/definitions/project.json";
+
 import { useInFocus } from "./InFocusContext"; // Assuming this path is correct
+import { mockProjects } from "@/lib/mockData/mockProjects";
 
 // We'll use this key to save and load from local storage
 const DRAFT_PROJECT_KEY = "crudProjectDraft";
@@ -40,7 +41,7 @@ export function CrudProvider({ children }) {
 
   // 1. Initialize state with the server-safe default schema.
   // This runs on both the server (SSR) and the client.
-  const [crudProject, setCrudProject] = useState(defaultProjectSchema);
+  const [crudProject, setCrudProject] = useState(mockProjects[1]);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -63,6 +64,7 @@ export function CrudProvider({ children }) {
     }
     // Dependencies: empty array ensures this only runs ONCE after client mount.
   }, []);
+  console.log("crudProject", crudProject);
 
   // 3. This effect runs when 'crudProject' changes (to save the draft)
   useEffect(() => {

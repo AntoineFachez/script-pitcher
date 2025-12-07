@@ -34,12 +34,14 @@ export default function ProfileHeaderForm({
           <CameraAlt />
         </IconButton>
 
-        <Image
-          fill
-          src={formData?.bannerUrl}
-          alt={formData?.bannerUrl}
-          style={{ objectFit: "cover" }}
-        />
+        {formData?.bannerUrl && (
+          <Image
+            fill
+            src={formData?.bannerUrl}
+            alt={formData?.bannerUrl || formData?.title || "Project Banner"}
+            style={{ objectFit: "cover" }}
+          />
+        )}
       </Box>
       <Box
         {...profileHeaderAvatarcontainerProps}

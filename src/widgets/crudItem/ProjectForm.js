@@ -9,6 +9,8 @@ import {
   Autocomplete,
   Chip,
   LinearProgress,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
 
 // Shared Architecture
@@ -35,6 +37,7 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
   // Local state for file/form
   const [file, setFile] = useState(null);
   const [filePurpose, setFilePurpose] = useState("");
+  const [enableAI, setEnableAI] = useState(false);
 
   // Status/Upload state (unique to this form's submission process)
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -95,6 +98,7 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
           fileName: file.name,
           fileType: file.type,
           fileSize: file.size,
+          enableAI: enableAI,
         };
 
         // 1. Initiate Upload API call to get Signed URL
@@ -245,8 +249,8 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
         crud === "create"
           ? "Create New Project"
           : crud === "update"
-            ? "Edit Project"
-            : "Project Details"
+          ? "Edit Project"
+          : "Project Details"
       }
       formData={crudProject}
       setFormData={setCrudProject} // Allows the Base component's Drawer to update images
@@ -354,6 +358,27 @@ export default function CrudProjectForm({ crud, projectInFocus }) {
             onPurposeChange={setFilePurpose}
             initialPurpose={filePurpose}
           />
+
+          <FormControlLabel
+            control={
+              <Switch
+                checked={enableAI}
+                onChange={(e) => setEnableAI(e.target.checked)}
+                color="primary"
+              />
+            }
+            label={
+              <Box>
+                <Typography variant="body2">Enable AI Analysis</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Automatically extract characters and episodes (consumes
+                  tokens)
+                </Typography>
+              </Box>
+            }
+            sx={{ mt: 2, alignItems: "flex-start" }}
+          />
+
           {isUploading && uploadProgress > 0 && (
             <Box sx={{ width: "100%", mt: 1 }}>
               <Typography variant="caption" color="text.secondary">

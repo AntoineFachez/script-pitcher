@@ -27,8 +27,3 @@ CMD ["gunicorn", "--bind", "0.0.0.0:8080", "main:app"]
 #  --set-env-vars="GCP_PROJECT_ID=script-pitcher" \
 #  --set-env-vars="EXTRACTED_IMAGES_BUCKET=script-pitcher-extracted-images" \
 #  --allow-unauthenticated
-
-
-
-
-
