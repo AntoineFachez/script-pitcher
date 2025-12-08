@@ -30,6 +30,38 @@ app = Flask(__name__)
 
 # --- call_gemini_for_characters FUNCTION IS REMOVED ---
 
+import io
+
+# --- NEW FUNCTION FOR PDF PAGE RENDERING ---
+def render_page_to_png_and_upload(doc, page_num, image_bucket, file_id, zoom=1.5):
+    """Renders a PDF page to a high-res PNG, uploads it to the dedicated folder, and returns the public URL.
+
+    The path for the PNG will be: [fileId]/pages_to_png/page_N.png
+    """
+    page = doc.load_page(page_num)
+    
+    # Define a transformation matrix to set resolution (zoom=1.5 is a good balance for web)
+    matrix = fitz.Matrix(zoom, zoom)
+    
+    # Render page to a pixmap
+    pix = page.get_pixmap(matrix=matrix, alpha=True)
+    
+    # Convert the pixmap to bytes in PNG format
+    image_bytes = pix.tobytes("png")
+    
+    # Define the target path: [fileId]/pages_to_png/page_N.png
+    image_filename = f"{file_id}/pages_to_png/page_{page_num + 1}.png"
+    blob = image_bucket.blob(image_filename)
+    
+    # Upload from bytes
+    blob.upload_from_string(image_bytes, content_type="image/png")
+    
+    # Construct public URL (assumes public read access via GCS URL)
+    public_url = f"https://storage.googleapis.com/{image_bucket.name}/{image_filename}"
+    
+    return public_url
+# --- END NEW FUNCTION ---
+
 def process_pdf(pdf_bytes, project_id, file_id, original_file_name, bucket_name):
     """
     Orchestrates PDF processing and saves text for AI analysis.
@@ -48,7 +80,10 @@ def process_pdf(pdf_bytes, project_id, file_id, original_file_name, bucket_name)
         z_counter = 0
 
         # ... (visuals and text processing remains identical) ...
-        # Juri's Fix: Swap image and vector processing order.
+        # RENDER PDF PAGE TO PNG AND STORE URL (for hybrid view background)
+        page_png_url = render_page_to_png_and_upload(doc, page_num, image_bucket, file_id, zoom=1.5)
+
+        # Juri's Fix & Logic: Swap image and vector processing order for correct Z-index.
         # Images must have a lower Z-index (be drawn first) so that cover shapes 
         # (vector elements) can be drawn over them later with a higher Z-index.
 
@@ -77,7 +112,8 @@ def process_pdf(pdf_bytes, project_id, file_id, original_file_name, bucket_name)
             "dimensions": {"width": page.rect.width, "height": page.rect.height},
             "orientation": orientation,
             "elements": page_elements,
-            "plainText": plain_text_content
+            "plainText": plain_text_content,
+            "pngUrl": page_png_url
         })
 
     # --- NO LONGER CALLING GEMINI HERE ---

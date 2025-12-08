@@ -16,12 +16,13 @@ export default function PDFText({ element, style, styleMap, scale }) {
     backgroundColor: "transparent",
     zIndex: element.isParagraph ? 100 : element.zIndex,
     // backgroundColor: "pink",
+    border: "1px solid red",
   };
 
   return (
     <>
       <Box sx={finalTextStyle} className="pdf-page__text">
-        {element.content}
+        {/* {element.content} */}
       </Box>
     </>
   );

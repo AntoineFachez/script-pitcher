@@ -113,13 +113,15 @@ export default function PDFPage({
             };
 
             return (
-              <PDFText
-                key={span.uniqueId}
-                element={span}
-                style={spanRelativeStyles}
-                styleMap={styleMap}
-                scale={scale}
-              />
+              <>
+                <PDFText
+                  key={span.uniqueId}
+                  element={span}
+                  style={spanRelativeStyles}
+                  styleMap={styleMap}
+                  scale={scale}
+                />
+              </>
             );
           })}
           {isAnchored && (
@@ -152,21 +154,20 @@ export default function PDFPage({
       return <Box sx={elementStyles} className="pdf-line" />;
     }
 
-    case "shape": {
-      const elementStyles = {
-        position: "absolute",
-        left: `${pos.x0 * scale}px`,
-        top: `${pos.y0 * scale}px`,
-        width: `${(pos.x1 - pos.x0) * scale}px`,
-        height: `${(pos.y1 - pos.y0) * scale}px`,
-        zIndex: element.zIndex,
-        backgroundColor: element.backgroundColor,
-        opacity: element.opacity,
-      };
-      console.log(element.opacity);
+    // case "shape": {
+    //   const elementStyles = {
+    //     position: "absolute",
+    //     left: `${pos.x0 * scale}px`,
+    //     top: `${pos.y0 * scale}px`,
+    //     width: `${(pos.x1 - pos.x0) * scale}px`,
+    //     height: `${(pos.y1 - pos.y0) * scale}px`,
+    //     zIndex: element.zIndex,
+    //     backgroundColor: element.backgroundColor,
+    //     opacity: element.opacity,
+    //   };
 
-      return <Box sx={elementStyles} className="pdf-shape" />;
-    }
+    //   return <Box sx={elementStyles} className="pdf-shape" />;
+    // }
 
     case "image": {
       // The visible "window" on the page

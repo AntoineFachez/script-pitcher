@@ -7,6 +7,8 @@ import { motion } from "framer-motion"; // <--- Import
 import PDFEditor from "./PDFEditor";
 
 export default function PDFImage({ pageIndex, element, scale, style }) {
+  // console.log(element);
+
   const [customZIndex, setCustomZIndex] = useState(0);
   const ref = useRef(null);
 
@@ -106,13 +108,13 @@ export default function PDFImage({ pageIndex, element, scale, style }) {
         //   zIndex: element.zIndex,
         // }}
       >
-        <Image
+        {/* <Image
           src={element.src}
           alt={`Image on page ${pageIndex + 1}`}
           fill
           unoptimized
           style={{ objectFit: "cover" }}
-        />
+        /> */}
       </Box>
     </Box>
   );

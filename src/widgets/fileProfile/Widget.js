@@ -3,6 +3,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+
 import {
   Box,
   Typography,
@@ -10,6 +11,7 @@ import {
   Button,
   Alert,
   IconButton,
+  Paper,
 } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 
@@ -27,8 +29,13 @@ import { useApp } from "@/context/AppContext";
 import PdfViewer from "@/components/pdfviewer/PDFViewer";
 
 import { SoundtrackProvider, useSoundtrack } from "@/context/SoundtrackContext";
+import SoundtrackPanel from "../soundtrack/SoundtrackPanel";
+
+import TrackSelector from "../soundtrack/TrackSelector";
 // import SoundtrackPanel from "@/widgets/soundtrack/SoundtrackPanel";
 // import TrackSelector from "@/widgets/soundtrack/TrackSelector";
+
+// ExtractedElement component removed as it is now handled in PDFViewer/PDFPage
 
 /**
  * This component consumes the DocumentContext and renders the UI.
@@ -44,6 +51,12 @@ function WidgetContent({ togglePublishProject }) {
   const { addAnchor } = useSoundtrack();
   const [selectorOpen, setSelectorOpen] = React.useState(false);
   const [selectedElementId, setSelectedElementId] = React.useState(null);
+  const [viewMode, setViewMode] = React.useState("hybrid"); // 'hybrid', 'extracted', 'original'
+
+  // Access the page data
+  const processedData = fileData?.processedData;
+
+  // renderHybridPage function removed - logic moved to PDFViewer
 
   const containerRef = useRef();
   useEffect(() => {
@@ -170,23 +183,44 @@ function WidgetContent({ togglePublishProject }) {
           titleText={fileData.fileName || "Untitled Document"}
           descriptionText={buildDescription || "No description."}
         />
-        {/* 
+        {/*
         //TODO: move Spotify connection to a dedicated component "FileEditor"
+        */}
         <SoundtrackPanel />
         <TrackSelector
           open={selectorOpen}
           onClose={() => setSelectorOpen(false)}
           onSelect={handleTrackSelect}
         />
-      */}
+        <Paper style={{ padding: 20, width: "100%" }}>
+          <Typography variant="h5">File Processing View Options</Typography>
+          <Box sx={{ my: 2, display: "flex", gap: 1 }}>
+            <Button
+              variant={viewMode === "hybrid" ? "contained" : "outlined"}
+              onClick={() => setViewMode("hybrid")}
+            >
+              Hybrid
+            </Button>
+            <Button
+              variant={viewMode === "extracted" ? "contained" : "outlined"}
+              onClick={() => setViewMode("extracted")}
+            >
+              Extracted
+            </Button>
+            <Button
+              variant={viewMode === "original" ? "contained" : "outlined"}
+              onClick={() => setViewMode("original")}
+            >
+              Original
+            </Button>
+          </Box>
+        </Paper>
 
         <PdfViewer
           containerRef={containerRef}
           onElementClick={handleElementClick}
+          viewMode={viewMode}
         />
-        {/* TODO: Create a second layer that renders the pages_to_png.py as a background layer of the PDFViewer
-        
-         */}
       </Box>{" "}
       <BasicDrawer
         handleToggleDrawer={handleToggleDrawer}

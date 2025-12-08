@@ -16,7 +16,11 @@ const Loader = () => (
 
 // The main viewer component
 // The main viewer component
-function PdfViewerContent({ containerRef, onElementClick }) {
+function PdfViewerContent({
+  containerRef,
+  onElementClick,
+  viewMode = "hybrid",
+}) {
   const { fileData, loading, error } = useFile();
   const page = 2;
   // console.log(fileData?.processedData?.pages[page]);
@@ -238,6 +242,7 @@ function PdfViewerContent({ containerRef, onElementClick }) {
               position: "relative",
               marginBottom: 4, // Add some spacing between pages for better scroll feel
               // ... your other page styles
+              // backgroundColor: "transparent",
             }}
           >
             {page.orientation && (
@@ -258,24 +263,46 @@ function PdfViewerContent({ containerRef, onElementClick }) {
                 }}
               />
             )}
-            {/* The elements array now contains grouped paragraphs */}
-            {page.elements.map((element) => {
-              const isAnchored = anchors.some(
-                (a) => a.elementId === element.uniqueId
-              );
-              return (
-                <PDFPage
-                  key={element.uniqueId} // <-- Use the new stable key
-                  element={element}
-                  scale={scale}
-                  styleMap={styleMap}
-                  pageIndex={pageIndex}
-                  onElementClick={() => handleElementClick(element.uniqueId)}
-                  isEditing={isEditing}
-                  isAnchored={isAnchored}
+
+            {/* Background Layer: Original PDF PNG */}
+            {(viewMode === "hybrid" || viewMode === "original") &&
+              page.pngUrl && (
+                <img
+                  src={page.pngUrl}
+                  alt={`Page ${pageIndex + 1} Original Render`}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    zIndex: 0, // Base layer
+                    opacity: 1,
+                    pointerEvents: "none",
+                    objectFit: "contain",
+                  }}
                 />
-              );
-            })}
+              )}
+
+            {/* The elements array now contains grouped paragraphs */}
+            {(viewMode === "hybrid" || viewMode === "extracted") &&
+              page.elements.map((element) => {
+                const isAnchored = anchors.some(
+                  (a) => a.elementId === element.uniqueId
+                );
+                return (
+                  <PDFPage
+                    key={element.uniqueId} // <-- Use the new stable key
+                    element={element}
+                    scale={scale}
+                    styleMap={styleMap}
+                    pageIndex={pageIndex}
+                    onElementClick={() => handleElementClick(element.uniqueId)}
+                    isEditing={isEditing}
+                    isAnchored={isAnchored}
+                  />
+                );
+              })}
           </Box>
         );
       })}
