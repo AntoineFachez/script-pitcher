@@ -2,56 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useSoundtrack } from "@/context/SoundtrackContext";
 
 export function useSpotifyPlayer() {
-  const { token, deviceId, setDeviceId, setActiveTrack } = useSoundtrack();
-  const [player, setPlayer] = useState(null);
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    if (!token) return;
-
-    const script = document.createElement("script");
-    script.src = "https://sdk.scdn.co/spotify-player.js";
-    script.async = true;
-
-    document.body.appendChild(script);
-
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      const playerInstance = new window.Spotify.Player({
-        name: "Script Pitcher Soundtrack",
-        getOAuthToken: (cb) => {
-          cb(token);
-        },
-        volume: 0.5,
-      });
-
-      playerInstance.addListener("ready", ({ device_id }) => {
-        console.log("Ready with Device ID", device_id);
-        setDeviceId(device_id);
-        setIsReady(true);
-      });
-
-      playerInstance.addListener("not_ready", ({ device_id }) => {
-        console.log("Device ID has gone offline", device_id);
-        setDeviceId(null);
-        setIsReady(false);
-      });
-
-      playerInstance.addListener("player_state_changed", (state) => {
-        if (!state) return;
-        setActiveTrack(state.track_window.current_track);
-      });
-
-      playerInstance.connect();
-      setPlayer(playerInstance);
-    };
-
-    return () => {
-      if (player) {
-        player.disconnect();
-      }
-      // Cleanup script tag if needed, though usually fine to leave
-    };
-  }, [token]);
+  const { token, deviceId, player, isReady, isPaused } = useSoundtrack();
 
   const playTrack = useCallback(
     async (trackUri, deviceIdOverride) => {
@@ -86,5 +37,33 @@ export function useSpotifyPlayer() {
     [token, deviceId]
   );
 
-  return { player, isReady, playTrack };
+  const togglePlay = useCallback(() => {
+    player?.togglePlay();
+  }, [player]);
+
+  const nextTrack = useCallback(() => {
+    player?.nextTrack();
+  }, [player]);
+
+  const previousTrack = useCallback(() => {
+    player?.previousTrack();
+  }, [player]);
+
+  const setVolume = useCallback(
+    (val) => {
+      player?.setVolume(val);
+    },
+    [player]
+  );
+
+  return {
+    player,
+    isReady,
+    isPaused,
+    playTrack,
+    togglePlay,
+    nextTrack,
+    previousTrack,
+    setVolume,
+  };
 }

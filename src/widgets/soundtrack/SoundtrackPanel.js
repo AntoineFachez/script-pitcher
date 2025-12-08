@@ -1,25 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import {
   Box,
   Typography,
-  TextField,
-  Switch,
-  FormControlLabel,
-  List,
-  ListItem,
-  ListItemText,
-  IconButton,
   Paper,
-  Divider,
+  FormControlLabel,
+  Switch,
+  IconButton,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import MusicNoteIcon from "@mui/icons-material/MusicNote";
-import SaveIcon from "@mui/icons-material/Save";
-import { useSoundtrack } from "@/context/SoundtrackContext";
-import { useFile } from "@/context/FileContext";
 import SpotifyAuth from "@/lib/spotify/SpotifyAuth";
+import Controls from "./Controls";
+import EditTrackList from "./EditTrackList";
+import { useSoundtrack } from "@/context/SoundtrackContext";
+import { useState } from "react";
+import { List } from "@mui/icons-material";
 
 export default function SoundtrackPanel() {
   const {
@@ -33,175 +27,45 @@ export default function SoundtrackPanel() {
     activeTrack,
     deviceId,
   } = useSoundtrack();
-  const { saveSoundtrack } = useFile();
-  const [isSaving, setIsSaving] = useState(false);
-
-  const handleSave = async () => {
-    setIsSaving(true);
-    try {
-      await saveSoundtrack({ playlistUrl, anchors });
-      alert("Soundtrack saved successfully!");
-    } catch (error) {
-      alert("Failed to save soundtrack: " + error.message);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   return (
     <Paper
       elevation={3}
       sx={{
         position: "fixed",
+        zIndex: 1200,
         right: 20,
         top: 80,
-        width: 300,
+        width: "fit-content",
+        maxWidth: isEditing ? "400px" : "200px",
         maxHeight: "80vh",
         overflowY: "auto",
-        zIndex: 1200,
-        p: 2,
+        p: 1,
         borderRadius: 2,
+        transition: "all 0.3s ease-in-out",
       }}
     >
-      <Box className="flex justify-between items-center mb-4">
-        <Typography variant="h6" className="font-bold">
-          Soundtrack
-        </Typography>
-        <SpotifyAuth />
-      </Box>
-
-      {/* Save Button */}
-      <Box className="mb-4">
-        <IconButton
-          onClick={handleSave}
-          disabled={isSaving}
-          color="primary"
-          title="Save Soundtrack Configuration"
-        >
-          <SaveIcon />
-        </IconButton>
-      </Box>
-
-      {token && (
+      {!deviceId && <SpotifyAuth />}
+      {deviceId && (
         <>
-          <Box className="mb-4 p-3 bg-gray-100 rounded-lg border border-gray-200">
-            <Typography variant="subtitle2" className="font-bold mb-1">
-              Now Playing
-            </Typography>
-            {activeTrack ? (
-              <Box className="flex items-center gap-2">
-                {activeTrack.album?.images?.[0]?.url && (
-                  <img
-                    src={activeTrack.album.images[0].url}
-                    alt="Album Art"
-                    className="w-10 h-10 rounded shadow-sm"
-                    style={{ width: "40px", height: "40px" }}
-                  />
-                )}
-                <Box className="overflow-hidden">
-                  <Typography variant="body2" className="font-medium truncate">
-                    {activeTrack.name}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    className="text-gray-600 truncate block"
-                  >
-                    {activeTrack.artists?.[0]?.name}
-                  </Typography>
-                </Box>
-              </Box>
-            ) : (
-              <Typography variant="body2" className="text-gray-500 italic">
-                Waiting for playback...
-              </Typography>
-            )}
-            <Divider className="my-2" />
-            <Box className="flex justify-between items-center">
-              <Typography variant="caption" color="textSecondary">
-                Device ID: {deviceId ? "Connected" : "Connecting..."}
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box className="mb-4">
-            <TextField
-              label="Spotify Playlist URL"
-              variant="outlined"
-              size="small"
-              fullWidth
-              value={playlistUrl}
-              onChange={(e) => setPlaylistUrl(e.target.value)}
-              placeholder="https://open.spotify.com/playlist/..."
-              helperText="Paste a public Spotify playlist link"
-            />
-          </Box>
-
-          <Divider className="my-4" />
-
-          <FormControlLabel
-            control={
-              <Switch
-                checked={isEditing}
-                onChange={(e) => setIsEditing(e.target.checked)}
-                color="primary"
+          <Box sx={{ width: "100%", height: "auto", p: 0, m: 0 }}>
+            {activeTrack && (
+              <img
+                src={activeTrack?.album?.images?.[0]?.url}
+                alt=" Waiting for playback..."
+                className="w-10 h-10 rounded shadow-sm"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  borderRadius: "5px 5px 0 0",
+                  p: 0,
+                  m: 0,
+                  objectFit: "cover",
+                }}
               />
-            }
-            label={
-              <Typography variant="body2" className="font-medium">
-                Edit Mode (Click text to anchor)
-              </Typography>
-            }
-          />
-
-          <Box className="mt-4">
-            <Typography variant="subtitle2" className="text-gray-500 mb-2">
-              Anchors ({anchors.length})
-            </Typography>
-
-            {anchors.length === 0 ? (
-              <Typography variant="body2" className="text-gray-400 italic">
-                No anchors yet. Enable Edit Mode and click on a paragraph to add
-                one.
-              </Typography>
-            ) : (
-              <List dense>
-                {anchors.map((anchor, index) => (
-                  <ListItem
-                    key={index}
-                    secondaryAction={
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        size="small"
-                        onClick={() => removeAnchor(anchor.elementId)}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    }
-                    sx={{
-                      bgcolor: "background.default",
-                      mb: 1,
-                      borderRadius: 1,
-                      border: "1px solid",
-                      borderColor: "divider",
-                    }}
-                  >
-                    <ListItemText
-                      primary={
-                        <Box className="flex items-center gap-1">
-                          <MusicNoteIcon fontSize="inherit" color="primary" />
-                          <Typography variant="body2" noWrap>
-                            {anchor.trackName || "Unknown Track"}
-                          </Typography>
-                        </Box>
-                      }
-                      secondary={`Linked to: ${anchor.elementId}`}
-                    />
-                  </ListItem>
-                ))}
-              </List>
             )}
           </Box>
+          <Controls />
+          <EditTrackList />
         </>
       )}
     </Paper>

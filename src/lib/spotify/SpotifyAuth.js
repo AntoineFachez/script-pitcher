@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { Button, Box, Typography } from "@mui/material";
+import { Button, Box, Typography, IconButton } from "@mui/material";
 import { useSoundtrack } from "@/context/SoundtrackContext";
 import {
   generateRandomString,
   generateCodeChallenge,
 } from "@/lib/spotify/pkce";
+import SpotifyButton from "./SpotifyButton";
 
 // Replace with your actual Client ID from Spotify Dashboard
 const CLIENT_ID = "5521a55ea17847159d7ef2ec595f1002";
@@ -59,14 +60,19 @@ export default function SpotifyAuth() {
     window.location.href = `${AUTH_ENDPOINT}?${args}`;
   };
 
+  const handleLogout = (e) => {
+    e.preventDefault();
+    setToken(null);
+    localStorage.removeItem("spotify_access_token");
+    localStorage.removeItem("spotify_refresh_token");
+    // Optional: Only clear spotify related items
+    localStorage.removeItem("spotify_code_verifier");
+    localStorage.removeItem("spotify_return_url");
+    window.location.reload();
+  };
+
   if (token) {
-    return (
-      <Box className="flex items-center gap-2 p-2 bg-green-50 rounded text-green-800 text-sm">
-        <Typography variant="caption" className="font-bold">
-          Spotify Connected
-        </Typography>
-      </Box>
-    );
+    return <SpotifyButton onClick={handleLogout} />;
   }
 
   return (

@@ -64,7 +64,6 @@ export function CrudProvider({ children }) {
     }
     // Dependencies: empty array ensures this only runs ONCE after client mount.
   }, []);
-  console.log("crudProject", crudProject);
 
   // 3. This effect runs when 'crudProject' changes (to save the draft)
   useEffect(() => {

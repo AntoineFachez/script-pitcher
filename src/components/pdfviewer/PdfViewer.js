@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
-import { Box, Chip, Divider } from "@mui/material";
+import { Box, Chip, Divider, Paper } from "@mui/material";
 import { motion } from "framer-motion"; // <--- Import
 import { useFile } from "@/context/FileContext";
 import PDFPage from "./PDFPage";
@@ -14,18 +14,13 @@ const Loader = () => (
   </Box>
 );
 
-// The main viewer component
-// The main viewer component
 function PdfViewerContent({
   containerRef,
   onElementClick,
   viewMode = "hybrid",
 }) {
   const { fileData, loading, error } = useFile();
-  const page = 2;
-  // console.log(fileData?.processedData?.pages[page]);
-  // console.log(fileData?.processedData?.pages[page].elements[0].src);
-  //
+
   const { isEditing, anchors } = useSoundtrack();
   const { playTrack } = useSpotifyPlayer();
 
@@ -228,7 +223,7 @@ function PdfViewerContent({
         const aspectRatio = `${page.dimensions.width} / ${page.dimensions.height}`;
 
         return (
-          <Box
+          <Paper
             key={pageIndex}
             className="pdf-page"
             component={motion.div} // <--- Animate the Page Container
@@ -240,7 +235,9 @@ function PdfViewerContent({
               width: "100%",
               aspectRatio: aspectRatio,
               position: "relative",
+
               marginBottom: 4, // Add some spacing between pages for better scroll feel
+              overflow: "hidden",
               // ... your other page styles
               // backgroundColor: "transparent",
             }}
@@ -257,7 +254,7 @@ function PdfViewerContent({
                   position: "absolute",
                   top: 8,
                   right: 8,
-                  zIndex: 9999,
+                  zIndex: 100,
                   backgroundColor: "rgba(0, 0, 0, 0.6)",
                   color: "white",
                 }}
@@ -303,7 +300,7 @@ function PdfViewerContent({
                   />
                 );
               })}
-          </Box>
+          </Paper>
         );
       })}
       {/* {JSON.stringify(fileData?.processedData)} */}

@@ -148,6 +148,8 @@ const profileHeaderMediaProps = {
 const profileHeaderInfoProps = {
   className: "profileHeader--info",
   sx: {
+    // position: "fixed",
+    // top: 0,
     // position: "absolute",
     bottom: 0,
     zIndex: 50,

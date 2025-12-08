@@ -32,6 +32,7 @@ import { SoundtrackProvider, useSoundtrack } from "@/context/SoundtrackContext";
 import SoundtrackPanel from "../soundtrack/SoundtrackPanel";
 
 import TrackSelector from "../soundtrack/TrackSelector";
+import Menu from "./Menu";
 // import SoundtrackPanel from "@/widgets/soundtrack/SoundtrackPanel";
 // import TrackSelector from "@/widgets/soundtrack/TrackSelector";
 
@@ -169,6 +170,7 @@ function WidgetContent({ togglePublishProject }) {
           // flexFlow: "column nowrap",
           overflowY: "scroll", // Use overflowY for vertical scroll
           overflowX: "hidden",
+
           // overflow: "hidden",
           // gap: 2,
         }}
@@ -183,39 +185,14 @@ function WidgetContent({ togglePublishProject }) {
           titleText={fileData.fileName || "Untitled Document"}
           descriptionText={buildDescription || "No description."}
         />
-        {/*
-        //TODO: move Spotify connection to a dedicated component "FileEditor"
-        */}
+
         <SoundtrackPanel />
         <TrackSelector
           open={selectorOpen}
           onClose={() => setSelectorOpen(false)}
           onSelect={handleTrackSelect}
         />
-        <Paper style={{ padding: 20, width: "100%" }}>
-          <Typography variant="h5">File Processing View Options</Typography>
-          <Box sx={{ my: 2, display: "flex", gap: 1 }}>
-            <Button
-              variant={viewMode === "hybrid" ? "contained" : "outlined"}
-              onClick={() => setViewMode("hybrid")}
-            >
-              Hybrid
-            </Button>
-            <Button
-              variant={viewMode === "extracted" ? "contained" : "outlined"}
-              onClick={() => setViewMode("extracted")}
-            >
-              Extracted
-            </Button>
-            <Button
-              variant={viewMode === "original" ? "contained" : "outlined"}
-              onClick={() => setViewMode("original")}
-            >
-              Original
-            </Button>
-          </Box>
-        </Paper>
-
+        <Menu viewMode={viewMode} setViewMode={setViewMode} />
         <PdfViewer
           containerRef={containerRef}
           onElementClick={handleElementClick}
