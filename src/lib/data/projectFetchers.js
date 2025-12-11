@@ -46,9 +46,9 @@ export async function getProjectsAndMembers(userId) {
     const projectsRef = db.collection(DB_PATHS.projects());
     const fetchedProjects = await getDocsInBatches(projectsRef, projectIds);
 
-    // console.log(
-    //   `[getProjectsAndMembers] 5. ✅ Fetched ${fetchedProjects.length} project documents.`
-    // );
+    console.log(
+      `[getProjectsAndMembers] 5. ✅ Fetched ${fetchedProjects.length} project documents.`
+    );
 
     const allMemberIds = new Set();
     fetchedProjects.forEach((project) => {
@@ -82,14 +82,14 @@ export async function getProjectsAndMembers(userId) {
     const serializableProjects = fetchedProjects.map((project) => {
       const members = project.members
         ? Object.fromEntries(
-          Object.entries(project.members).map(([id, roleData]) => [
-            id,
-            {
-              ...roleData,
-              joinedAt: roleData?.joinedAt?.toDate().toISOString() || null,
-            },
-          ])
-        )
+            Object.entries(project.members).map(([id, roleData]) => [
+              id,
+              {
+                ...roleData,
+                joinedAt: roleData?.joinedAt?.toDate().toISOString() || null,
+              },
+            ])
+          )
         : {};
 
       return {

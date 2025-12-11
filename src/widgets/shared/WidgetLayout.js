@@ -9,7 +9,7 @@ export const WidgetLayout = ({
   badgeCount = null,
   children,
 }) => {
-  const { appContext } = useApp();
+  const { appContext, setAppContext } = useApp();
   const config = widgetConfig?.widgetConfig;
 
   if (layoutContext === "navBar") {
@@ -18,6 +18,7 @@ export const WidgetLayout = ({
         <ActionIcon
           iconName={config?.iconName}
           onClick={onNavBarClick}
+          // onClick={() => onNavBarClick(null, setAppContext)}
           href={config?.href}
           badgeCount={badgeCount}
           variant="outlined"

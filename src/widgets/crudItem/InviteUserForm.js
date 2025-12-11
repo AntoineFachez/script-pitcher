@@ -82,7 +82,9 @@ export default function InviteUserForm({ crud }) {
         if (inviteUrl)
           handleMailTo({ email: email, role: role, inviteUrl: inviteUrl });
       }
-      setSuccess(`Successfully invited ${email} as a ${role}.`);
+      setSuccess(
+        `Successfully posted an invitation as a  ${role} at ${email}'s profile.`
+      );
       setEmail(""); // Clear form
       setRole("viewer");
     } catch (err) {

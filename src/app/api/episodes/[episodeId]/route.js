@@ -72,7 +72,8 @@ export async function PUT(request, { params }) {
       (userMember.role !== "owner" && userMember.role !== "editor")
     ) {
       console.warn(
-        `Permission denied: User ${decodedToken.uid} with role ${userMember?.role || "none"
+        `Permission denied: User ${decodedToken.uid} with role ${
+          userMember?.role || "none"
         } tried to update episode ${episodeId} in project ${projectId}`
       );
       return NextResponse.json(
@@ -87,7 +88,8 @@ export async function PUT(request, { params }) {
 
     // 3. Define the episode document reference
     const episodeRef = db
-      .collection(DB_PATHS.project(projectId), "episodes") // <-- Changed from "characters"
+      .doc(DB_PATHS.project(projectId)) // Points to the project document
+      .collection("episodes") // Access the subcollection
       .doc(episodeId);
 
     const doc = await episodeRef.get();

@@ -69,7 +69,7 @@ const cardProps = {
     position: "relative",
     maxWidth: {
       xs: "95%", // Mobile
-      md: "15rem", // Example: Desktop limit
+      md: "25rem", // Example: Desktop limit
       lg: "400px", // Example: Desktop limit
     },
     height: "100%",
@@ -82,7 +82,7 @@ const cardProps = {
     // flex: "8 6 220px",
     flex: {
       xs: "8 6 220px",
-      md: "4 2 120px",
+      md: "4 2 220px",
       lg: "1 1 100%", // Overrides with "8 6 220px" from 'lg' screen up
     },
   },

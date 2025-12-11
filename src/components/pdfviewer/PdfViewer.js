@@ -6,6 +6,8 @@ import { Box, Chip, Divider, Paper } from "@mui/material";
 import { motion } from "framer-motion"; // <--- Import
 import { useFile } from "@/context/FileContext";
 import PDFPage from "./PDFPage";
+import { useSoundtrack } from "@/context/SoundtrackContext";
+import { useSpotifyPlayer } from "@/lib/spotify/useSpotifyPlayer";
 
 // A simple loading spinner component
 const Loader = () => (
@@ -232,12 +234,13 @@ function PdfViewerContent({
             viewport={{ once: true, amount: 0.1 }} // Trigger when 10% of page is visible
             transition={{ duration: 0.5 }}
             sx={{
+              position: "relative",
               width: "100%",
               aspectRatio: aspectRatio,
-              position: "relative",
 
               marginBottom: 4, // Add some spacing between pages for better scroll feel
               overflow: "hidden",
+
               // ... your other page styles
               // backgroundColor: "transparent",
             }}
@@ -269,8 +272,8 @@ function PdfViewerContent({
                   alt={`Page ${pageIndex + 1} Original Render`}
                   style={{
                     position: "absolute",
-                    top: 0,
-                    left: 0,
+                    top: 3,
+                    left: 2,
                     width: "100%",
                     height: "100%",
                     zIndex: 0, // Base layer
@@ -307,9 +310,6 @@ function PdfViewerContent({
     </>
   );
 }
-
-import { useSoundtrack } from "@/context/SoundtrackContext";
-import { useSpotifyPlayer } from "@/lib/spotify/useSpotifyPlayer";
 
 export default function PdfViewer(props) {
   return <PdfViewerContent {...props} />;

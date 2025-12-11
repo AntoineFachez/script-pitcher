@@ -10,12 +10,8 @@ import { WidgetContext } from "./Context";
 import Widget from "./Widget";
 import { WidgetLayout } from "../shared/WidgetLayout";
 
-export default function MeIndex({
-  handleSetNewAppContext,
-  layoutContext,
-  initialProfile,
-}) {
-  const { receivedInvitations } = useUser();
+export default function MeIndex({ handleSetNewAppContext, layoutContext }) {
+  const { userProfile, receivedInvitations } = useUser();
   let invitationCount;
   let pendingInvitations = [];
 
@@ -33,7 +29,7 @@ export default function MeIndex({
         onNavBarClick={handleSetNewAppContext}
       >
         <Widget
-          initialProfile={initialProfile}
+          initialProfile={userProfile}
           initialInvitations={pendingInvitations}
         />
       </WidgetLayout>

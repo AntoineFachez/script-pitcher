@@ -10,7 +10,6 @@ import {
   ListItemText,
   ListItemIcon,
   IconButton,
-  CircularProgress,
   Alert,
   Typography,
   ListSubheader,
@@ -24,6 +23,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import { useFile } from "@/context/FileContext";
 import SecureImage from "@/components/secureImage/SecureImage";
 import Image from "next/image";
+import CircularIndeterminate from "@/components/progress/CircularIndeterminate";
 
 /**
  * A component that lists ALL processed elements (text, shapes, lines, images)
@@ -53,7 +53,7 @@ export default function ElementList() {
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" my={4}>
-        <CircularProgress />
+        <CircularIndeterminate color="secondary" />
       </Box>
     );
   }

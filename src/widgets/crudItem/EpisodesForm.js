@@ -43,11 +43,14 @@ export default function EpisodeForm({ crud }) {
   // 4. PRE-FILL DATA
   useEffect(() => {
     if (crud === "update" && episodeInFocus) {
+      // setFormData({
+      //   title: episodeInFocus.title || "",
+      //   description: episodeInFocus.description || "",
+      //   imageUrl: episodeInFocus.imageUrl || "",
+      //   avatarUrl: episodeInFocus.avatarUrl || "",
+      // });
       setFormData({
-        title: episodeInFocus.title || "",
-        description: episodeInFocus.description || "",
-        imageUrl: episodeInFocus.imageUrl || "",
-        avatarUrl: episodeInFocus.avatarUrl || "",
+        ...episodeInFocus,
       });
     }
   }, [crud, episodeInFocus]);

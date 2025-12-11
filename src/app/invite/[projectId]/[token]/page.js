@@ -12,6 +12,7 @@ import {
   Paper,
 } from "@mui/material";
 import { getAuth, onAuthStateChanged } from "firebase/auth"; // Client SDK
+import CircularIndeterminate from "@/components/progress/CircularIndeterminate";
 
 export default function InvitePage({ params }) {
   const { projectId, token } = React.use(params); // Unwrap params in Next.js 15
@@ -177,7 +178,7 @@ export default function InvitePage({ params }) {
               gap: 2,
             }}
           >
-            <CircularProgress />
+            <CircularIndeterminate color="primary" />
             <Typography>Joining project...</Typography>
           </Box>
         )}

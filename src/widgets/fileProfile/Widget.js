@@ -26,13 +26,14 @@ import DownloadFileButton from "@/components/downloadButton/DownloadButton";
 import ElementList from "@/widgets/fileProfile/ElementsList";
 import BackButton from "@/components/backButton/BackButton";
 import { useApp } from "@/context/AppContext";
-import PdfViewer from "@/components/pdfviewer/PDFViewer";
+import PdfViewer from "../../components/pdfviewer/PDFViewer";
 
 import { SoundtrackProvider, useSoundtrack } from "@/context/SoundtrackContext";
 import SoundtrackPanel from "../soundtrack/SoundtrackPanel";
 
 import TrackSelector from "../soundtrack/TrackSelector";
 import Menu from "./Menu";
+import CircularIndeterminate from "@/components/progress/CircularIndeterminate";
 // import SoundtrackPanel from "@/widgets/soundtrack/SoundtrackPanel";
 // import TrackSelector from "@/widgets/soundtrack/TrackSelector";
 
@@ -94,7 +95,7 @@ function WidgetContent({ togglePublishProject }) {
           height: "80vh",
         }}
       >
-        <CircularProgress />
+        <CircularIndeterminate color="secondary" />
       </Box>
     );
   }
@@ -173,6 +174,7 @@ function WidgetContent({ togglePublishProject }) {
 
           // overflow: "hidden",
           // gap: 2,
+          // p: 5,
         }}
       >
         <ProfileHeader
@@ -185,19 +187,21 @@ function WidgetContent({ togglePublishProject }) {
           titleText={fileData.fileName || "Untitled Document"}
           descriptionText={buildDescription || "No description."}
         />
-
         <SoundtrackPanel />
         <TrackSelector
           open={selectorOpen}
           onClose={() => setSelectorOpen(false)}
           onSelect={handleTrackSelect}
         />
-        <Menu viewMode={viewMode} setViewMode={setViewMode} />
-        <PdfViewer
-          containerRef={containerRef}
-          onElementClick={handleElementClick}
-          viewMode={viewMode}
-        />
+        {/* <Menu viewMode={viewMode} setViewMode={setViewMode} /> */}
+        <Box sx={{ scale: 1, padding: "1rem 0" }}>
+          {" "}
+          <PdfViewer
+            containerRef={containerRef}
+            onElementClick={handleElementClick}
+            viewMode={viewMode}
+          />
+        </Box>{" "}
       </Box>{" "}
       <BasicDrawer
         handleToggleDrawer={handleToggleDrawer}

@@ -24,6 +24,7 @@ import {
 import Image from "next/image";
 import { useInFocus } from "@/context/InFocusContext";
 import { useAuth } from "@/context/AuthContext";
+import CircularIndeterminate from "../progress/CircularIndeterminate";
 
 /**
  * A component that fetches all file IDs from a Firestore subcollection
@@ -78,9 +79,8 @@ const AllProjectImages = ({ setFormData, imageType }) => {
         // Loop through each folder name and create list/get promises
         for (const folderName of folderNames) {
           // The storage path MUST match the new rule structure
-          const storagePath = `${folderName}`;
+          const storagePath = `${folderName}/page_images`;
           const listRef = ref(specificStorage, storagePath);
-
           const res = await listAll(listRef);
           const folderUrlPromises = res.items.map((itemRef) =>
             getDownloadURL(itemRef)
@@ -116,7 +116,7 @@ const AllProjectImages = ({ setFormData, imageType }) => {
         alignItems="center"
         minHeight="200px"
       >
-        <CircularProgress />
+        <CircularIndeterminate color="secondary" />
       </Box>
     );
   }
@@ -136,7 +136,6 @@ const AllProjectImages = ({ setFormData, imageType }) => {
       </Typography>
     );
   }
-
   return (
     <>
       <Box sx={{ width: "100%", height: "100%", overflowY: "scroll" }}>

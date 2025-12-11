@@ -104,6 +104,8 @@ export function useCharacterConfig({
   // --- Row Actions ---
   const rowActions = {
     header: "",
+    width: 40,
+    disableColumnMenu: true,
     menu: (param) => {
       if (userRole === "viewer") return null;
 
@@ -112,7 +114,7 @@ export function useCharacterConfig({
           id: "edit",
           name: "Edit Character",
           icon: "Edit",
-          action: () => handleClickEdit(param.row),
+          action: () => handleClickEdit(param),
         },
       ];
       return <KebabMenu actions={actions} />;

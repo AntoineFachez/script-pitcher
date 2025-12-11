@@ -59,6 +59,7 @@ export default function MeContent({ initialProfile, initialInvitations }) {
     setUserInFocus(firebaseUser);
     return () => {};
   }, []);
+  console.log(userInFocus);
 
   const tabsArray = [
     {
@@ -96,16 +97,16 @@ export default function MeContent({ initialProfile, initialInvitations }) {
       >
         <ProfileHeader
           containerRef={containerRef}
-          bannerImageUrl={userProfile?.imageUrl}
-          avatarImageUrl={userProfile?.avatarUrl || userProfile?.imageUrl}
+          bannerImageUrl={userInFocus?.imageUrl}
+          avatarImageUrl={userInFocus?.avatarUrl || userInFocus?.imageUrl}
           menu={
             <ProfileMenu
               itemInFocus={userInFocus}
               // togglePublishProject={togglePublishProject}
             />
           }
-          titleText={userProfile?.displayName}
-          descriptionText={`Welcome back ${userProfile?.displayName}`}
+          titleText={userInFocus?.displayName}
+          descriptionText={`Welcome back ${userInFocus?.email}`}
         />
         <BasicTabs tabsArray={tabsArray} />
       </Box>

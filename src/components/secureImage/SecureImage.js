@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Box, CircularProgress, Alert } from "@mui/material";
 import { useAuth } from "@/context/AuthContext";
+import CircularIndeterminate from "../progress/CircularIndeterminate";
 
 /**
  * Renders an image from a GCS object path by fetching a
@@ -84,7 +85,7 @@ export default function SecureImage({ gcsPath, sx = {} }) {
         ...sx,
       }}
     >
-      {loading && <CircularProgress size={20} />}
+      {loading && <CircularIndeterminate color="primary" />}
       {error && (
         <Alert severity="error" sx={{ fontSize: "0.75rem", padding: "0 4px" }}>
           !

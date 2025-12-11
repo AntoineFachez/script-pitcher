@@ -101,13 +101,12 @@ export function useEpisodeConfig({
     menu: (param) => {
       if (userRole === "viewer") return null;
 
-      const episode = param.row;
       const actions = [
         {
           id: "edit",
           name: "Edit Episode",
           icon: "Edit",
-          action: () => handleClickEdit(episode),
+          action: () => handleClickEdit(param),
         },
       ];
       return <KebabMenu actions={actions} />;

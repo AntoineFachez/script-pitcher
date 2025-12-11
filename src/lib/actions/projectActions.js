@@ -175,7 +175,14 @@ export async function inviteUserAction({
     // Commit the batch
     await batch.commit();
 
-    return { success: true, invitationData };
+    // Prepare serializable data for the client
+    const serializableInvitationData = {
+      ...invitationData,
+      createdAt: new Date().toISOString(), // Approximation for client UI
+      expiresAt: invitationData.expiresAt.toISOString(),
+    };
+
+    return { success: true, invitationData: serializableInvitationData };
   } catch (error) {
     console.error("Invite User Action Failed:", error);
     return { error: "Internal Server Error during invitation." };

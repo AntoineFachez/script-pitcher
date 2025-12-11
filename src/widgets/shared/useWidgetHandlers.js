@@ -21,6 +21,8 @@ export const useWidgetHandlers = ({
   };
 
   const handleClickEdit = (item) => {
+    console.log(item);
+
     const setter = setEditInFocus || setItemInFocus;
     if (setter) setter(item);
     setModalContent(

@@ -11,6 +11,7 @@ const MAX_SCROLL_DISTANCE = 100; // The distance (in pixels) over which the coll
 const HEADER_HEIGHT_MAX = 420; // Initial, fully expanded banner height
 const COLLAPSE_AMOUNT = 200; // The total vertical space (in pixels) we want to shrink the header by
 const HEADER_HEIGHT_MIN = HEADER_HEIGHT_MAX - COLLAPSE_AMOUNT; // Final minimum height (300 - 200 = 100px)
+let newHeight;
 
 const ProfileHeader = ({
   containerRef,
@@ -44,7 +45,7 @@ const ProfileHeader = ({
   const scrollRatio = clampedScroll / MAX_SCROLL_DISTANCE;
 
   // 3. Define Dynamic Styles based on scrollRatio
-  const newHeight = `${HEADER_HEIGHT_MAX - scrollRatio * COLLAPSE_AMOUNT}px`;
+  newHeight = `${HEADER_HEIGHT_MAX - scrollRatio * COLLAPSE_AMOUNT}px`;
   // Shrink and move the title up
   const titleTransform = `
     translateY(${scrollRatio * -80}px) 
@@ -133,12 +134,14 @@ const profileHeaderMediaProps = {
     // top: 0,
     width: "100%",
 
+    // minHeight: "4rem",
     // height: "fit-content",
     // height: "auto",
     // height: newHeight,
-    height: "70%",
+    // height: "70%",
+    height: "100%",
     // height: "50%",
-    maxHeight: "40vh",
+    maxHeight: "30vh",
     display: "flex",
     flexGrow: 1,
     alignItems: "flex-start",

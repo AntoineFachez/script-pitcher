@@ -16,6 +16,8 @@ export default async function FetchLayout({ children }) {
       // Data remains empty [] in case of error
     }
   }
+  console.log("projects", projects);
+  console.log("users", users);
 
   // 2. Wrap the children in the DataProvider (Client Component)
   // and pass the server-fetched data as props.

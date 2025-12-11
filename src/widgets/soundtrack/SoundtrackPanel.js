@@ -36,7 +36,9 @@ export default function SoundtrackPanel() {
         right: 20,
         top: 80,
         width: "fit-content",
-        maxWidth: isEditing ? "400px" : "200px",
+        maxWidth: isEditing
+          ? { xs: "200px", md: "400px" }
+          : { xs: "100px", md: "200px" },
         maxHeight: "80vh",
         overflowY: "auto",
         p: 1,

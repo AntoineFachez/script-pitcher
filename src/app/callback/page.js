@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import { exchangeToken } from "@/lib/spotify/pkce";
 import { useSoundtrack, SoundtrackProvider } from "@/context/SoundtrackContext";
+import CircularIndeterminate from "@/components/progress/CircularIndeterminate";
 
 // Must match the one in SpotifyAuth.js
 const CLIENT_ID = "5521a55ea17847159d7ef2ec595f1002";
@@ -69,7 +70,7 @@ function CallbackContent() {
 
   return (
     <Box className="flex flex-col items-center justify-center min-h-screen">
-      <CircularProgress />
+      <CircularIndeterminate color="primary" />
       <Typography className="mt-4 text-gray-500">
         Connecting to Spotify...
       </Typography>
@@ -79,7 +80,7 @@ function CallbackContent() {
 
 export default function CallbackPage() {
   return (
-    <Suspense fallback={<CircularProgress />}>
+    <Suspense fallback={<CircularIndeterminate color="primary" />}>
       <SoundtrackProvider>
         <CallbackContent />
       </SoundtrackProvider>

@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { fetchPlaylistTracks } from "@/lib/spotify/spotifyApi";
 import { useSoundtrack } from "@/context/SoundtrackContext";
+import CircularIndeterminate from "@/components/progress/CircularIndeterminate";
 
 export default function TrackSelector({ open, onClose, onSelect }) {
   const { playlistUrl, token } = useSoundtrack();
@@ -53,7 +54,7 @@ export default function TrackSelector({ open, onClose, onSelect }) {
 
         {loading ? (
           <Box className="flex justify-center p-8">
-            <CircularProgress />
+            <CircularIndeterminate color="primary" />
           </Box>
         ) : (
           <List>
