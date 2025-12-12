@@ -15,12 +15,11 @@ function CustomTabPanel(props) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      sx={{ height: "fit-content" }}
       {...other}
     >
       {/* 🛑 Adjusted: Only render children if value matches index */}
-      {value === index && (
-        <Box sx={{ height: "100%", overflow: "hidden" }}>{children}</Box>
-      )}
+      {value === index && <Box sx={{ overflow: "hidden" }}>{children}</Box>}
     </Box>
   );
 }
@@ -72,6 +71,7 @@ export default function DynamicTabs({ tabsArray = [], containerRef }) {
           position: "sticky",
           zIndex: 100,
           top: 0,
+          height: "fit-content",
           backgroundColor: "bars.tool",
         }}
         // indicatorColor="secondary"
@@ -84,7 +84,12 @@ export default function DynamicTabs({ tabsArray = [], containerRef }) {
       </Tabs>
       {/* 2. Map over the array to create the CustomTabPanel content */}
       {tabsArray.map((tab, index) => (
-        <CustomTabPanel key={index} value={value} index={index}>
+        <CustomTabPanel
+          key={index}
+          value={value}
+          index={index}
+          sx={{ height: "fit-content" }}
+        >
           {tab.content}
         </CustomTabPanel>
       ))}

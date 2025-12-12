@@ -11,6 +11,7 @@ import { useInFocus } from "@/context/InFocusContext";
 import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
 import { useAuth } from "@/context/AuthContext";
+import { deleteInvitationAction } from "@/lib/actions/projectActions";
 
 import ExpirationTimeCell from "@/components/timeCells/ExpirationTimeCell";
 import KebabMenu from "@/components/menus/KebabMenu";
@@ -61,7 +62,7 @@ export default function InvitationsList({
 
   const handleRowClick = (params, event) => {
     event.defaultMuiPrevented = true;
-    const item = params.row;
+    const item = params?.row;
     setAppContext(widgetConfig.context);
     setUserInFocus(item);
     if (user.uid) {
@@ -213,18 +214,32 @@ export default function InvitationsList({
     width: 40,
     disableColumnMenu: true,
     menu: (param) => {
+      const handleDeleteInvitation = async () => {
+        console.log("param", param);
+
+        if (!param?.projectId || !param?.token) {
+          console.error("Missing project ID or invitation ID");
+          return;
+        }
+        if (confirm("Are you sure you want to delete this invitation?")) {
+          const result = await deleteInvitationAction(
+            param?.projectId,
+            param?.token
+          );
+          if (result.success) {
+            router.refresh();
+          } else {
+            alert(result.error);
+          }
+        }
+      };
+
       const actions = [
         {
-          id: "addDocument",
-          name: "Add Document",
-          icon: "Add",
-          action: () => console.log("handleOpenForm(param.collection)"),
-        },
-        {
-          id: "deleteCollection",
-          name: "Delete Collection",
+          id: "deleteInvitation",
+          name: "Delete Invitation",
           icon: "Delete",
-          action: () => console.log("handleDeleteCollection(param.collection)"),
+          action: handleDeleteInvitation,
         },
       ];
       // Render the KebabMenu component with the actions

@@ -1,6 +1,7 @@
 // file path: ~/DEVFOLD/SCRIPT-PITCHER/SRC/LIB/AUTH/AUTH.JS
 
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { getAdminServices } from "@/lib/firebase/firebase-admin";
 
 // 🟢 FINAL CLEANUP: REMOVE all NextAuth imports (NextAuth, getServerSession, etc.)
@@ -52,9 +53,7 @@ export async function getCurrentUser() {
       error.message
     );
 
-    // Clear the invalid cookie
-    cookies().set(SESSION_COOKIE_NAME, "", { maxAge: 0, path: "/" });
-
-    return null;
+    // Redirect to the helper route to clear the cookie and go home
+    redirect("/api/auth/logout-redirect");
   }
 }

@@ -240,3 +240,248 @@ export async function deleteProjectAction(projectId) {
     return { error: "Internal Server Error during project deletion." };
   }
 }
+
+/**
+ * Deletes an invitation.
+ * @param {string} projectId - The ID of the project.
+ * @param {string} invitationId - The ID of the invitation to delete.
+ */
+export async function deleteInvitationAction(projectId, invitationId) {
+  // 1. AUTHENTICATION
+  const user = await getCurrentUser();
+  if (!user || !user.uid) {
+    return { error: "Unauthorized: User not logged in." };
+  }
+
+  const { db, auth } = getAdminServices();
+
+  try {
+    // 2. FETCH INVITATION TO GET EMAIL
+    // We need to know who was invited to clean up their summary
+    const invitationRef = db
+      .doc(DB_PATHS.project(projectId))
+      .collection("invitations")
+      .doc(invitationId);
+
+    const invitationSnap = await invitationRef.get();
+
+    if (!invitationSnap.exists) {
+      return { error: "Invitation not found." };
+    }
+
+    const invitationData = invitationSnap.data();
+    const targetEmail = invitationData.invitedEmail;
+
+    // 3. DELETE INVITATION DOC
+    await invitationRef.delete();
+
+    // 4. CLEANUP USER SUMMARY (if user exists)
+    if (targetEmail) {
+      try {
+        const userRecord = await auth.getUserByEmail(targetEmail);
+        if (userRecord) {
+          const userSummaryRef = db.doc(DB_PATHS.userSummary(userRecord.uid));
+          // Use FieldValue.delete() to remove the specific key from the map
+          await userSummaryRef.update({
+            [`invitations.${invitationId}`]: FieldValue.delete(),
+          });
+        }
+      } catch (e) {
+        // User might not exist or other error, which is fine since the invite is gone
+        console.log(
+          "Could not cleanup user summary (user likely not found):",
+          e.message
+        );
+      }
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Delete Invitation Action Failed:", error);
+    return { error: "Internal Server Error during invitation deletion." };
+  }
+}
+
+/**
+ * Fetches user profiles for a list of member IDs.
+ * Used to hydrate project members server-side to bypass client-side security rules.
+ * @param {string[]} memberIds - Array of user UIDs.
+ * @returns {Promise<{success: true, members: object[]} | {error: string}>}
+ */
+export async function fetchProjectMembersAction(memberIds) {
+  // 1. AUTHENTICATION
+  const user = await getCurrentUser();
+  if (!user || !user.uid) {
+    return { error: "Unauthorized: User not logged in." };
+  }
+
+  if (!memberIds || memberIds.length === 0) {
+    return { success: true, members: [] };
+  }
+
+  const { db } = getAdminServices();
+
+  try {
+    const userDocs = await Promise.all(
+      memberIds.map((uid) => db.collection("users").doc(uid).get())
+    );
+
+    const members = userDocs.map((doc) => {
+      const userData = doc.exists ? doc.data() : {};
+      return {
+        uid: doc.id,
+        ...userData,
+        // Serialize timestamps
+        createdAt: userData?.createdAt?.toDate
+          ? userData.createdAt.toDate().toISOString()
+          : null,
+        lastLogin: userData?.lastLogin?.toDate
+          ? userData.lastLogin.toDate().toISOString()
+          : null,
+        updatedAt: userData?.updatedAt?.toDate
+          ? userData.updatedAt.toDate().toISOString()
+          : null,
+      };
+    });
+
+    return { success: true, members };
+  } catch (error) {
+    console.error("Fetch Project Members Action Failed:", error);
+    return { error: "Internal Server Error during member fetching." };
+  }
+}
+
+/**
+ * Accepts an invitation.
+ * @param {string} projectId
+ * @param {string} invitationId
+ */
+export async function acceptInvitationAction(projectId, invitationId) {
+  const user = await getCurrentUser();
+  if (!user || !user.uid) {
+    return { error: "Unauthorized: User not logged in." };
+  }
+  const userId = user.uid;
+  const userEmail = user.email;
+
+  const { db } = getAdminServices();
+
+  try {
+    await db.runTransaction(async (transaction) => {
+      const projectRef = db.doc(DB_PATHS.project(projectId));
+      const invitationRef = projectRef
+        .collection("invitations")
+        .doc(invitationId);
+      const userSummaryRef = db.doc(DB_PATHS.userSummary(userId));
+
+      const [projectSnap, invitationSnap] = await Promise.all([
+        transaction.get(projectRef),
+        transaction.get(invitationRef),
+      ]);
+
+      if (!projectSnap.exists) throw new Error("Project does not exist.");
+      if (!invitationSnap.exists) throw new Error("Invitation not found.");
+
+      const inviteData = invitationSnap.data();
+      if (inviteData.status === "accepted") {
+        throw new Error("Invitation already accepted.");
+      }
+      if (
+        inviteData.expiresAt &&
+        inviteData.expiresAt.toMillis() < Date.now()
+      ) {
+        throw new Error("Invitation has expired.");
+      }
+
+      // Update Invitation
+      transaction.update(invitationRef, {
+        status: "accepted",
+        acceptedBy: userId,
+        acceptedAt: FieldValue.serverTimestamp(),
+      });
+
+      // Add Member to Project
+      const newMemberData = {
+        role: inviteData.role,
+        email: userEmail,
+        joinedAt: FieldValue.serverTimestamp(),
+      };
+      transaction.update(projectRef, {
+        [`members.${userId}`]: newMemberData,
+      });
+
+      // Add Project to User Summary
+      transaction.set(
+        userSummaryRef,
+        {
+          projects: {
+            [projectId]: {
+              role: inviteData.role,
+              addedAt: FieldValue.serverTimestamp(),
+            },
+          },
+        },
+        { merge: true }
+      );
+
+      // Update Invitation in User Summary
+      transaction.update(userSummaryRef, {
+        [`invitations.${invitationId}.status`]: "accepted",
+        [`invitations.${invitationId}.acceptedAt`]:
+          FieldValue.serverTimestamp(),
+      });
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Accept Invitation Action Failed:", error);
+    return { error: error.message || "Failed to accept invitation." };
+  }
+}
+
+/**
+ * Rejects an invitation.
+ * @param {string} projectId
+ * @param {string} invitationId
+ */
+export async function rejectInvitationAction(projectId, invitationId) {
+  const user = await getCurrentUser();
+  if (!user || !user.uid) {
+    return { error: "Unauthorized: User not logged in." };
+  }
+  const userId = user.uid;
+
+  const { db } = getAdminServices();
+
+  try {
+    await db.runTransaction(async (transaction) => {
+      const projectRef = db.doc(DB_PATHS.project(projectId));
+      const invitationRef = projectRef
+        .collection("invitations")
+        .doc(invitationId);
+      const userSummaryRef = db.doc(DB_PATHS.userSummary(userId));
+
+      const invitationSnap = await transaction.get(invitationRef);
+      if (!invitationSnap.exists) throw new Error("Invitation not found.");
+
+      // Update Invitation Status
+      transaction.update(invitationRef, {
+        status: "rejected",
+        rejectedBy: userId,
+        rejectedAt: FieldValue.serverTimestamp(),
+      });
+
+      // Update Invitation in User Summary
+      transaction.update(userSummaryRef, {
+        [`invitations.${invitationId}.status`]: "rejected",
+        [`invitations.${invitationId}.rejectedAt`]:
+          FieldValue.serverTimestamp(),
+      });
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Reject Invitation Action Failed:", error);
+    return { error: error.message || "Failed to reject invitation." };
+  }
+}

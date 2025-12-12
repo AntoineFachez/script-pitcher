@@ -64,6 +64,104 @@ const ProfileHeader = ({
   // 💡 FIX 3: Corrected `translateY` for the outer box (it should move up as it shrinks)
   const boxTranslateY = `${scrollRatio * -80}px`; // This makes the box move up on scroll
 
+  const profileHeaderProps = {
+    className: "profile--header",
+    sx: {
+      position: "relative",
+      zIndex: 10,
+
+      // height: "fit-content",
+      // height: "auto",
+      // height: newHeight,
+      // height: "100%",
+      height: bannerImageUrl ? "100%" : "auto",
+      // maxHeight: "40vh",
+      // maxHeight: "fit-content",
+
+      display: "flex",
+      flexFlow: "column nowrap",
+      justifyContent: "flex-start",
+      // justifyContent: "center",
+      alignItems: "flex-start",
+
+      backgroundColor: "background.paper",
+      borderBottom: "1px solid",
+      borderColor: "divider",
+      // transform: `translateY(${boxTranslateY})`,
+      transition: "height 0.1s linear, background-color 0.1s", // Smooth the height change
+    },
+  };
+  const profileHeaderMediaProps = {
+    className: "profileHeader--media",
+    sx: {
+      // position: "fixed",
+      position: "relative",
+      // top: 0,
+      width: "100%",
+
+      minHeight: "4rem",
+      // height: "fit-content",
+      // height: "auto",
+      // height: newHeight,
+      // height: "70%",
+      height: bannerImageUrl ? "100%" : "auto",
+      // height: "50%",
+      // maxHeight: "30vh",
+      display: "flex",
+      flexGrow: 1,
+      // justifyContent: "space-between",
+      alignItems: "flex-start",
+      flexFlow: "column nowrap",
+    },
+  };
+  const profileHeaderInfoProps = {
+    className: "profileHeader--info",
+    sx: {
+      // position: "fixed",
+      // top: 0,
+      // position: "absolute",
+      bottom: 0,
+      zIndex: 50,
+      width: "100%",
+      // height: "fit-content",
+      // height: "40%",
+      // minHeight: "fit-content",
+      // maxHeight: "fit-content",
+      // height: newHeight,
+      // height: "auto",
+
+      display: "flex",
+      flexGrow: 4,
+      flexFlow: "column nowrap",
+      justifyContent: "flex-start",
+      alignItems: "flex-start",
+      // p: 0,
+      // pt: 0,
+      // pb: 0,
+
+      p: "0 2rem",
+      overflow: "hidden",
+      backgroundColor: "background.nav",
+    },
+  };
+  const profileHeaderInfoDetailsProps = {
+    className: "profileHeader--info--details",
+    variant: "subtitle1",
+    color: "text.secondary",
+    sx: {
+      // height: "100%",
+      height: "fit-content",
+      maxHeight: "fit-content",
+      // maxHeight: descriptionMaxHeight,
+      // opacity: descriptionOpacity,
+      transition: "opacity 0.2s linear",
+      // mb: "1rem",
+      // p: "0 2rem",
+      pb: 2,
+      mb: "1rem",
+      backgroundColor: "transparent",
+    },
+  };
   return (
     <>
       {/* Outer container: sticky and sets the context */}
@@ -99,99 +197,3 @@ const ProfileHeader = ({
   );
 };
 export default ProfileHeader;
-
-const profileHeaderProps = {
-  className: "profile--header",
-  sx: {
-    position: "relative",
-    zIndex: 10,
-
-    // height: "fit-content",
-    // height: "auto",
-    // height: newHeight,
-    height: "100%",
-
-    maxHeight: "fit-content",
-
-    display: "flex",
-    flexFlow: "column nowrap",
-    justifyContent: "flex-start",
-    // justifyContent: "center",
-    alignItems: "flex-start",
-
-    backgroundColor: "background.paper",
-    borderBottom: "1px solid",
-    borderColor: "divider",
-    // transform: `translateY(${boxTranslateY})`,
-    transition: "height 0.1s linear, background-color 0.1s", // Smooth the height change
-  },
-};
-const profileHeaderMediaProps = {
-  className: "profileHeader--media",
-  sx: {
-    // position: "fixed",
-    position: "relative",
-    // top: 0,
-    width: "100%",
-
-    // minHeight: "4rem",
-    // height: "fit-content",
-    // height: "auto",
-    // height: newHeight,
-    // height: "70%",
-    height: "100%",
-    // height: "50%",
-    maxHeight: "30vh",
-    display: "flex",
-    flexGrow: 1,
-    alignItems: "flex-start",
-    flexFlow: "column nowrap",
-  },
-};
-const profileHeaderInfoProps = {
-  className: "profileHeader--info",
-  sx: {
-    // position: "fixed",
-    // top: 0,
-    // position: "absolute",
-    bottom: 0,
-    zIndex: 50,
-    width: "100%",
-    height: "40%",
-    minHeight: "fit-content",
-    maxHeight: "fit-content",
-    // height: newHeight,
-    // height: "auto",
-
-    display: "flex",
-    flexGrow: 4,
-    flexFlow: "column nowrap",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    // p: 0,
-    // pt: 0,
-    // pb: 0,
-
-    p: "0 2rem",
-    overflow: "hidden",
-    backgroundColor: "background.nav",
-  },
-};
-const profileHeaderInfoDetailsProps = {
-  className: "profileHeader--info--details",
-  variant: "subtitle1",
-  color: "text.secondary",
-  sx: {
-    // height: "100%",
-    height: "fit-content",
-    maxHeight: "fit-content",
-    // maxHeight: descriptionMaxHeight,
-    // opacity: descriptionOpacity,
-    transition: "opacity 0.2s linear",
-    // mb: "1rem",
-    // p: "0 2rem",
-    p: 0,
-    mb: "1rem",
-    backgroundColor: "transparent",
-  },
-};

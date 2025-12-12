@@ -17,12 +17,13 @@ import {
   createUserWithEmailAndPassword,
   Auth,
 } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
 // 🛑 IMPORTANT: ALL NEXTAUTH IMPORTS ARE REMOVED HERE
 // (signOut, useSession, signIn, etc.)
 
-import { getFirebaseAuth } from "@/lib/firebase/firebase-client";
+import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase-client";
 // import { createFirebaseCustomToken } from "@/lib/actions/authActions"; // Removed, as this was for NextAuth sync
 
 // (getFirebaseAuthErrorMessage helper remains the same)
@@ -119,7 +120,29 @@ export function AuthProvider({ children }) {
           );
         }
 
-        // 2. Success! Redirect home.
+        // 2. Success! Check for invitations and redirect.
+        const db = getFirebaseDb();
+        try {
+          const summaryRef = doc(
+            db,
+            "users",
+            firebaseUser.uid,
+            "private",
+            "summary"
+          );
+          const summarySnap = await getDoc(summaryRef);
+
+          if (summarySnap.exists()) {
+            const data = summarySnap.data();
+            if (data.invitations && Object.keys(data.invitations).length > 0) {
+              router.push("/me");
+              return;
+            }
+          }
+        } catch (redirErr) {
+          console.warn("Redirect check failed", redirErr);
+        }
+
         router.push("/");
       } catch (error) {
         console.error("handleLogin Error:", error);
@@ -163,6 +186,28 @@ export function AuthProvider({ children }) {
             .catch(() => ({ error: "Server session error" }));
           throw new Error(
             `Sign-up complete, but session failed: ${
+              errorData.error || "Unknown error"
+            }`
+          );
+        }
+        // 2. Create user record in your database (e.g., Firestore 'users' collection)
+        const userCreationResponse = await fetch("/api/me/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+          }),
+        });
+
+        if (!userCreationResponse.ok) {
+          const errorData = await userCreationResponse
+            .json()
+            .catch(() => ({ error: "Server user creation error" }));
+          throw new Error(
+            `Sign-up complete, session established, but user record creation failed: ${
               errorData.error || "Unknown error"
             }`
           );

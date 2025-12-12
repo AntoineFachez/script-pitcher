@@ -10,7 +10,20 @@ import { useApp } from "@/context/AppContext";
 import { useUi } from "@/context/UiContext";
 import { useAuth } from "@/context/AuthContext";
 import { IconButton, Chip, Typography, Box } from "@mui/material";
-import { Favorite, Share, Person, PersonOff, Edit } from "@mui/icons-material";
+import {
+  Favorite,
+  Share,
+  Person,
+  PersonOff,
+  Edit,
+  Check,
+  Close,
+} from "@mui/icons-material";
+
+import {
+  acceptInvitationAction,
+  rejectInvitationAction,
+} from "@/lib/actions/projectActions";
 
 import KebabMenu from "@/components/menus/KebabMenu";
 
@@ -200,21 +213,63 @@ export default function Widget({
     };
   };
 
+  const handleAccept = async (invite) => {
+    try {
+      if (!invite.projectId || !invite.id) {
+        console.error("Invalid invitation data", invite);
+        return;
+      }
+      const res = await acceptInvitationAction(invite.projectId, invite.id);
+      if (res.error) {
+        console.error("Failed to accept invitation:", res.error);
+        alert(res.error);
+      } else {
+        console.log("Invitation accepted successfully!");
+        // UI should update automatically due to real-time listeners
+      }
+    } catch (err) {
+      console.error("Error accepting invitation:", err);
+    }
+  };
+
+  const handleReject = async (invite) => {
+    if (!global.confirm("Are you sure you want to decline this invitation?")) {
+      return;
+    }
+    try {
+      if (!invite.projectId || !invite.id) {
+        console.error("Invalid invitation data", invite);
+        return;
+      }
+      const res = await rejectInvitationAction(invite.projectId, invite.id);
+      if (res.error) {
+        console.error("Failed to reject invitation:", res.error);
+        alert(res.error);
+      } else {
+        console.log("Invitation rejected successfully!");
+        // UI should update automatically due to real-time listeners
+      }
+    } catch (err) {
+      console.error("Error rejecting invitation:", err);
+    }
+  };
+
   const rowActions = {
     header: "",
-    menu: (param) => {
+    menu: (params) => {
+      const invite = params.row;
       const actions = [
         {
-          id: "addDocument",
-          name: "Add Document",
-          icon: "Add",
-          action: () => console.log("handleOpenForm(param.collection)"),
+          id: "acceptInvitation",
+          name: "Accept",
+          icon: <Check color="success" />, // Or just "Check" if string map is used, but passing element is usually supported
+          action: () => handleAccept(invite),
         },
         {
-          id: "deleteCollection",
-          name: "Delete Collection",
-          icon: "Delete",
-          action: () => console.log("handleDeleteCollection(param.collection)"),
+          id: "rejectInvitation",
+          name: "Decline",
+          icon: <Close color="error" />,
+          action: () => handleReject(invite),
         },
       ];
       // Render the KebabMenu component with the actions

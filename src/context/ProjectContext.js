@@ -18,6 +18,8 @@ import {
   doc,
 } from "firebase/firestore";
 
+import { fetchProjectMembersAction } from "@/lib/actions/projectActions";
+
 import { getFirebaseDb } from "@/lib/firebase/firebase-client";
 import { DB_PATHS } from "@/lib/firebase/paths";
 import { useAuth } from "./AuthContext";
@@ -50,22 +52,57 @@ export function ProjectProvider({ projectId, children }) {
 
     const unsubscribe = onSnapshot(
       projectDocRef,
-      (docSnap) => {
+      async (docSnap) => {
         if (docSnap.exists()) {
           const projectData = { id: docSnap.id, ...docSnap.data() };
+
+          // Hydrate members from user profiles
+          // Hydrate members from user profiles
+          let membersArray = [];
+          if (projectData.members) {
+            const memberIds = Object.keys(projectData.members);
+            if (memberIds.length > 0) {
+              try {
+                // Call Server Action to fetch profiles (bypasses client rules)
+                const res = await fetchProjectMembersAction(memberIds);
+                const userProfiles = res.success ? res.members : [];
+
+                membersArray = userProfiles.map((userData) => {
+                  return {
+                    // uid is already in userData from the action
+                    ...userData,
+                    role: projectData.members[userData.uid], // The role object from project doc
+                  };
+                });
+
+                // Serialize role timestamp if necessary
+                membersArray = membersArray.map((m) => ({
+                  ...m,
+                  role: {
+                    ...m.role,
+                    joinedAt: m.role?.joinedAt?.toDate
+                      ? m.role.joinedAt.toDate().toISOString()
+                      : m.role?.joinedAt,
+                  },
+                }));
+              } catch (err) {
+                console.error("Error fetching member profiles:", err);
+              }
+            }
+          }
 
           // 1. Update project in focus immediately
           setProjectInFocus((prev) =>
             // Ensures the project is updated and timestamps are serialized
             projectData
               ? {
-                ...projectData,
-                createdAt:
-                  projectData?.createdAt?.toDate().toISOString() || null,
-                updatedAt:
-                  projectData?.updatedAt?.toDate().toISOString() || null,
-                members: projectData.members, // assuming members are serialized on page load
-              }
+                  ...projectData,
+                  createdAt:
+                    projectData?.createdAt?.toDate().toISOString() || null,
+                  updatedAt:
+                    projectData?.updatedAt?.toDate().toISOString() || null,
+                  members: membersArray, // Use the hydrated array
+                }
               : null
           );
 
@@ -102,7 +139,11 @@ export function ProjectProvider({ projectId, children }) {
       return;
     }
     setLoading(true);
-    const charColRef = collection(db, DB_PATHS.project(projectId), "characters");
+    const charColRef = collection(
+      db,
+      DB_PATHS.project(projectId),
+      "characters"
+    );
     const q = query(charColRef, orderBy("orderIndex", "asc"));
 
     // onSnapshot is the real-time listener
@@ -171,7 +212,11 @@ export function ProjectProvider({ projectId, children }) {
       return;
     }
     setLoading(true);
-    const invitColRef = collection(db, DB_PATHS.project(projectId), "invitations");
+    const invitColRef = collection(
+      db,
+      DB_PATHS.project(projectId),
+      "invitations"
+    );
 
     // ⭐ CHANGE THIS LINE: Use 'createdAt' instead of 'orderIndex'
     const q = query(invitColRef, orderBy("createdAt", "asc"));

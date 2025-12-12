@@ -81,9 +81,11 @@ export default function Widget({
     !isViewer && {
       label: "Team",
       content:
-        initialProject?.members?.length > 0 ? (
+        (projectInFocus?.members || initialProject?.members)?.length > 0 ? (
           <Box className="tab--item" sx={tabStyles}>
-            <UsersList data={initialProject?.members} />
+            <UsersList
+              data={projectInFocus?.members || initialProject?.members}
+            />
             <InvitationsList data={invitations} />
           </Box>
         ) : (

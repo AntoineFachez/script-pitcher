@@ -21,8 +21,6 @@ import List from "@/widgets/users/UsersList";
 import config from "@/lib/widgetConfigs/users.widgetConfig.json";
 const { widgetConfig, schemeDefinition } = config;
 
-
-
 export default function Page() {
   const { appContext, setAppContext } = useApp();
   const {
@@ -98,7 +96,7 @@ export default function Page() {
     setAppContext("users");
     setModalContent(<CrudItem context={appContext} crud="create" />);
 
-    return () => { };
+    return () => {};
   }, [appContext, setModalContent]);
   return (
     <>

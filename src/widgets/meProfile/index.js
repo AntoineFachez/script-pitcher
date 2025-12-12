@@ -12,14 +12,17 @@ import { WidgetLayout } from "../shared/WidgetLayout";
 
 export default function MeIndex({ handleSetNewAppContext, layoutContext }) {
   const { userProfile, receivedInvitations } = useUser();
+
+  // console.log("userProfile", userProfile);
+  // console.log("receivedInvitations", receivedInvitations);
   let invitationCount;
   let pendingInvitations = [];
 
   invitationCount =
-    receivedInvitations?.filter((invite) => invite.state === "pending")
+    receivedInvitations?.filter((invite) => invite.status === "pending")
       .length || 0;
   pendingInvitations =
-    receivedInvitations?.filter((invite) => invite.state === "pending") || [];
+    receivedInvitations?.filter((invite) => invite.status === "pending") || [];
 
   return (
     <WidgetContext>

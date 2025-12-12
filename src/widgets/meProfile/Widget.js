@@ -27,6 +27,7 @@ export default function MeContent({ initialProfile, initialInvitations }) {
   const { appContext, setAppContext } = useApp();
   const { firebaseUser } = useAuth();
   const { userProfile } = useUser();
+  console.log("userProfile", userProfile);
 
   const { modalContent, setModalContent, openModal, setOpenModal } = useUi();
   const { userInFocus, setUserInFocus } = useInFocus();
@@ -79,7 +80,7 @@ export default function MeContent({ initialProfile, initialInvitations }) {
     <>
       <Box
         ref={containerRef}
-        className="projectProfile"
+        className="meProfile"
         sx={{
           position: "relative",
           width: "100%",
@@ -106,7 +107,11 @@ export default function MeContent({ initialProfile, initialInvitations }) {
             />
           }
           titleText={userInFocus?.displayName}
-          descriptionText={`Welcome back ${userInFocus?.email}`}
+          descriptionText={`Welcome back ${
+            !userInFocus?.displayName
+              ? userInFocus?.email
+              : userInFocus?.displayName
+          }`}
         />
         <BasicTabs tabsArray={tabsArray} />
       </Box>
